@@ -1,0 +1,191 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Playfair Display', serif;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #080809;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #D8AB55;
+    border-radius: 4px;
+    border: 2px solid #080809;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #A27B2B;
+  }
+}
+
+/* Dark theme card overrides */
+.bg-white {
+  background-color: #161619 !important;
+}
+.bg-\[\#FFFDFB\] {
+  background-color: #161619 !important;
+}
+
+/* Background grid patterns */
+.tech-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center;
+}
+
+.tech-grid-dense {
+  background-image:
+    linear-gradient(rgba(232, 198, 71, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232, 198, 71, 0.02) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: center;
+}
+
+/* Custom animations */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes pulse-slow {
+
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes draw-line {
+  0% {
+    stroke-dashoffset: 100;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 6s ease-in-out infinite;
+  animation-delay: 3s;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+}
+
+/* Glassmorphic border glow */
+.glass-border-glow {
+  position: relative;
+}
+
+.glass-border-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(135deg, rgba(24, 215, 230, 0.3), rgba(123, 63, 242, 0.1), rgba(18, 200, 165, 0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.glass-border-glow-hover:hover::before {
+  background: linear-gradient(135deg, rgba(24, 215, 230, 0.8), rgba(123, 63, 242, 0.5), rgba(18, 200, 165, 0.8));
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom Dual-Color Text Combination Utilities */
+.text-gold-metallic {
+  background: linear-gradient(to bottom, #FFE8B6 0%, #D8AB55 50%, #A27B2B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.45));
+  display: inline-block;
+}
+
+.text-dual-combo {
+  color: #FFFFFF; /* Main text color (White) */
+}
+.text-dual-combo span, 
+.text-dual-combo .highlight {
+  background: linear-gradient(to bottom, #FFE8B6 0%, #D8AB55 50%, #A27B2B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.45));
+  display: inline-block;
+}
+
+.text-dual-combo-reverse {
+  background: linear-gradient(to bottom, #FFE8B6 0%, #D8AB55 50%, #A27B2B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.45));
+  display: inline-block;
+}
+.text-dual-combo-reverse span, 
+.text-dual-combo-reverse .highlight {
+  color: #FFFFFF; /* Highlighted/Secondary text color (White) */
+  -webkit-text-fill-color: #FFFFFF;
+}
