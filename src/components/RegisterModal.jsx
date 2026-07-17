@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Send, CheckCircle2, AlertCircle, Upload, ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import { X, Send, CheckCircle2, AlertCircle, Upload, ArrowLeft, ArrowRight, Check, Eye } from 'lucide-react';
 
 export default function RegisterModal({ onClose }) {
   const [step, setStep] = useState(1);
@@ -123,6 +123,16 @@ export default function RegisterModal({ onClose }) {
     setStep((prev) => prev - 1);
   };
 
+  const previewLocalFile = (file) => {
+    if (!file) return;
+    try {
+      const url = URL.createObjectURL(file);
+      window.open(url, '_blank');
+    } catch (err) {
+      console.error('Failed to create file preview:', err);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateStep(1) || !validateStep(2) || !validateStep(3)) {
@@ -165,12 +175,17 @@ export default function RegisterModal({ onClose }) {
       submitData.append('consentLetter', formData.consentLetter);
 
       // Send to Backend API
-      const response = await fetch('http://localhost:5000/api/register', {
+      const response = await fetch('http://127.0.0.1:5000/api/register', {
         method: 'POST',
         body: submitData,
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseErr) {
+        data = { error: `Server error (${response.status}). Please check your file size (Max 10MB).` };
+      }
 
       if (response.ok) {
         setRegistrationResult(data);
@@ -179,7 +194,7 @@ export default function RegisterModal({ onClose }) {
       }
     } catch (err) {
       console.error(err);
-      setErrors({ submit: 'Could not connect to registration server. Ensure backend is running.' });
+      setErrors({ submit: 'Network error occurred. Please check your internet connection or server status.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -573,23 +588,39 @@ export default function RegisterModal({ onClose }) {
                           accept=".ppt,.pptx,.pdf"
                           onChange={(e) => handleFileChange(e, 'ideaPpt')}
                         />
-                        <label 
-                          htmlFor="ideaPpt-file"
-                          className="flex flex-col items-center cursor-pointer space-y-3"
-                        >
-                          <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center hover:scale-105 transition-transform">
-                            <Upload size={20} />
+                        <div className="flex flex-col items-center cursor-pointer space-y-3">
+                          <label 
+                            htmlFor="ideaPpt-file"
+                            className="flex flex-col items-center cursor-pointer space-y-2"
+                          >
+                            <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center hover:scale-105 transition-transform">
+                              <Upload size={20} />
+                            </div>
+                            <span className="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-full transition-all shadow-sm">
+                              Choose Idea PPT
+                            </span>
+                          </label>
+
+                          <div className="flex flex-col items-center space-y-1.5 w-full">
+                            <span className="text-xs text-slate-500 font-medium truncate max-w-full px-2">
+                              {formData.ideaPpt ? formData.ideaPpt.name : 'No file chosen'}
+                            </span>
+                            {formData.ideaPpt && (
+                              <button
+                                type="button"
+                                onClick={() => previewLocalFile(formData.ideaPpt)}
+                                className="flex items-center gap-1 text-[10px] text-emerald-600 hover:text-emerald-700 hover:underline font-bold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/50"
+                              >
+                                <Eye size={12} />
+                                <span>Preview Selected File</span>
+                              </button>
+                            )}
                           </div>
-                          <span className="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-full transition-all shadow-sm">
-                            Choose Idea PPT
-                          </span>
-                          <span className="text-xs text-slate-500 font-medium truncate max-w-full">
-                            {formData.ideaPpt ? formData.ideaPpt.name : 'No file chosen'}
-                          </span>
+
                           <span className="text-[10px] text-slate-400">
                             Supported files: PPT, PPTX, PDF (Max 10MB)
                           </span>
-                        </label>
+                        </div>
                       </div>
                       {errors.ideaPpt && (
                         <p className="text-[10px] text-red-500 mt-2 flex items-center gap-1">
@@ -617,23 +648,39 @@ export default function RegisterModal({ onClose }) {
                           accept=".pdf,.png,.jpg,.jpeg"
                           onChange={(e) => handleFileChange(e, 'consentLetter')}
                         />
-                        <label 
-                          htmlFor="consentLetter-file"
-                          className="flex flex-col items-center cursor-pointer space-y-3"
-                        >
-                          <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center hover:scale-105 transition-transform">
-                            <Upload size={20} />
+                        <div className="flex flex-col items-center cursor-pointer space-y-3">
+                          <label 
+                            htmlFor="consentLetter-file"
+                            className="flex flex-col items-center cursor-pointer space-y-2"
+                          >
+                            <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center hover:scale-105 transition-transform">
+                              <Upload size={20} />
+                            </div>
+                            <span className="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-full transition-all shadow-sm">
+                              Choose Consent Letter
+                            </span>
+                          </label>
+
+                          <div className="flex flex-col items-center space-y-1.5 w-full">
+                            <span className="text-xs text-slate-500 font-medium truncate max-w-full px-2">
+                              {formData.consentLetter ? formData.consentLetter.name : 'No file chosen'}
+                            </span>
+                            {formData.consentLetter && (
+                              <button
+                                type="button"
+                                onClick={() => previewLocalFile(formData.consentLetter)}
+                                className="flex items-center gap-1 text-[10px] text-emerald-600 hover:text-emerald-700 hover:underline font-bold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/50"
+                              >
+                                <Eye size={12} />
+                                <span>Preview Selected File</span>
+                              </button>
+                            )}
                           </div>
-                          <span className="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-full transition-all shadow-sm">
-                            Choose Consent Letter
-                          </span>
-                          <span className="text-xs text-slate-500 font-medium truncate max-w-full">
-                            {formData.consentLetter ? formData.consentLetter.name : 'No file chosen'}
-                          </span>
+
                           <span className="text-[10px] text-slate-400">
                             Supported files: PDF, PNG, JPG (Max 10MB)
                           </span>
-                        </label>
+                        </div>
                       </div>
                       {errors.consentLetter && (
                         <p className="text-[10px] text-red-500 mt-2 flex items-center gap-1">
@@ -735,11 +782,35 @@ export default function RegisterModal({ onClose }) {
                       </div>
                       <div>
                         <span className="text-slate-400 block">Idea PPT</span>
-                        <span className="text-emerald-600 font-medium truncate block max-w-xs">{formData.ideaPpt ? formData.ideaPpt.name : '-'}</span>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-emerald-600 font-medium truncate block max-w-[150px]">{formData.ideaPpt ? formData.ideaPpt.name : '-'}</span>
+                          {formData.ideaPpt && (
+                            <button
+                              type="button"
+                              onClick={() => previewLocalFile(formData.ideaPpt)}
+                              className="text-[10px] bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5"
+                            >
+                              <Eye size={10} />
+                              Preview
+                            </button>
+                          )}
+                        </div>
                       </div>
                       <div>
                         <span className="text-slate-400 block">Consent Letter</span>
-                        <span className="text-emerald-600 font-medium truncate block max-w-xs">{formData.consentLetter ? formData.consentLetter.name : '-'}</span>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-emerald-600 font-medium truncate block max-w-[150px]">{formData.consentLetter ? formData.consentLetter.name : '-'}</span>
+                          {formData.consentLetter && (
+                            <button
+                              type="button"
+                              onClick={() => previewLocalFile(formData.consentLetter)}
+                              className="text-[10px] bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5"
+                            >
+                              <Eye size={10} />
+                              Preview
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
