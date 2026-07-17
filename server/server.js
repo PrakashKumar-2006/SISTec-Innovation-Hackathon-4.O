@@ -12,8 +12,42 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
+const cloudinary = require('cloudinary').v2;
 
 const app = express();
+
+// Configure Cloudinary
+const isCloudinaryConfigured = 
+  process.env.CLOUDINARY_CLOUD_NAME && 
+  process.env.CLOUDINARY_CLOUD_NAME !== 'your_cloud_name';
+
+if (isCloudinaryConfigured) {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+  });
+  console.log('Cloudinary storage service configured successfully.');
+} else {
+  console.warn('WARNING: Cloudinary is not configured yet. Saving files locally as fallback.');
+}
+
+// Helper to upload files to Cloudinary
+const uploadToCloudinary = async (filePath, folder = 'sih_files') => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(
+      filePath,
+      {
+        folder: folder,
+        resource_type: 'auto', // Auto handles PPT, PDF, DOCX, PNG, etc.
+      },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result.secure_url);
+      }
+    );
+  });
+};
 const PORT = process.env.PORT || 5000;
 
 // Enable CORS for frontend requests
@@ -85,8 +119,8 @@ const registrationSchema = new mongoose.Schema({
   ],
   psid: { type: String, required: true },
   psTitle: { type: String, required: true },
-  ideaPpt: { type: String, required: true }, // Store path/filename
-  consentLetter: { type: String, required: true }, // Store path/filename
+  ideaPpt: { type: String, required: true }, // Store path/URL
+  consentLetter: { type: String, required: true }, // Store path/URL
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -97,6 +131,7 @@ app.post('/api/register', upload.fields([
   { name: 'ideaPpt', maxCount: 1 },
   { name: 'consentLetter', maxCount: 1 }
 ]), async (req, res) => {
+  const localFilePaths = [];
   try {
     const {
       teamName,
@@ -116,6 +151,12 @@ app.post('/api/register', upload.fields([
       return res.status(400).json({ error: 'Both files (Idea PPT and Consent Letter) are required.' });
     }
 
+    // Keep track of local files to clean up later
+    const ideaPptFile = req.files['ideaPpt'][0];
+    const consentLetterFile = req.files['consentLetter'][0];
+    localFilePaths.push(ideaPptFile.path);
+    localFilePaths.push(consentLetterFile.path);
+
     // Parse members from string
     let parsedMembers = [];
     if (members) {
@@ -130,6 +171,28 @@ app.post('/api/register', upload.fields([
     const randomHex = Math.random().toString(36).substring(2, 7).toUpperCase();
     const registrationId = `SIH4-${randomHex}`;
 
+    let ideaPptUrl = '';
+    let consentLetterUrl = '';
+
+    // Upload to Cloudinary if configured
+    if (isCloudinaryConfigured) {
+      console.log('Uploading files to Cloudinary...');
+      try {
+        ideaPptUrl = await uploadToCloudinary(ideaPptFile.path, 'sih_ppt');
+        consentLetterUrl = await uploadToCloudinary(consentLetterFile.path, 'sih_consent');
+        console.log('Files uploaded successfully to Cloudinary.');
+      } catch (uploadErr) {
+        console.error('Cloudinary upload failed, falling back to local files:', uploadErr);
+        // Fallback to local files
+        ideaPptUrl = `http://localhost:${PORT}/uploads/${ideaPptFile.filename}`;
+        consentLetterUrl = `http://localhost:${PORT}/uploads/${consentLetterFile.filename}`;
+      }
+    } else {
+      // Local fallback URLs
+      ideaPptUrl = `http://localhost:${PORT}/uploads/${ideaPptFile.filename}`;
+      consentLetterUrl = `http://localhost:${PORT}/uploads/${consentLetterFile.filename}`;
+    }
+
     const newRegistration = new Registration({
       registrationId,
       teamName,
@@ -142,11 +205,25 @@ app.post('/api/register', upload.fields([
       members: parsedMembers,
       psid,
       psTitle,
-      ideaPpt: req.files['ideaPpt'][0].filename,
-      consentLetter: req.files['consentLetter'][0].filename
+      ideaPpt: ideaPptUrl,
+      consentLetter: consentLetterUrl
     });
 
     await newRegistration.save();
+
+    // Clean up local files if uploaded to Cloudinary
+    if (isCloudinaryConfigured && ideaPptUrl.includes('cloudinary.com')) {
+      localFilePaths.forEach(filePath => {
+        try {
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            console.log(`Cleaned up temp local file: ${filePath}`);
+          }
+        } catch (unlinkErr) {
+          console.error(`Failed to delete temp file ${filePath}:`, unlinkErr);
+        }
+      });
+    }
 
     res.status(201).json({
       success: true,
@@ -169,6 +246,17 @@ app.get('/api/registrations', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+// Custom Error Handling Middleware
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ error: 'File is too large. Maximum limit is 10MB.' });
+    }
+    return res.status(400).json({ error: `Upload error: ${err.message}` });
+  }
+  res.status(500).json({ error: err.message || 'Internal server error.' });
 });
 
 // Server Start
