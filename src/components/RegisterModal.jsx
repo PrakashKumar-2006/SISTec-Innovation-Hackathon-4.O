@@ -183,7 +183,8 @@ export default function RegisterModal({ onClose }) {
       submitData.append('consentLetter', formData.consentLetter);
 
       // Send to Backend API
-      const response = await fetch('http://127.0.0.1:5000/api/register', {
+      const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${backendUrl}/api/register`, {
         method: 'POST',
         body: submitData,
       });

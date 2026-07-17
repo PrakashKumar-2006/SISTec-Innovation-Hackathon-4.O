@@ -13,6 +13,8 @@ const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
 const cloudinary = require('cloudinary').v2;
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 
@@ -50,8 +52,29 @@ const uploadToCloudinary = async (filePath, folder = 'sih_files') => {
 };
 const PORT = process.env.PORT || 5000;
 
-// Enable CORS for frontend requests
-app.use(cors());
+// Enable Helmet for security headers
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" } // Allows frontend to load images/files served statically
+}));
+
+// Configure CORS origin whitelist
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',') 
+  : ['http://localhost:5173', 'http://127.0.0.1:5173'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -66,7 +89,9 @@ app.use('/uploads', express.static(uploadsDir));
 
 // Connect to MongoDB
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sih_registrations';
-console.log('Connecting to MongoDB at:', MONGODB_URI);
+// Mask credentials in connection log for security
+const maskedUri = MONGODB_URI.replace(/:([^:@]+)@/, ':******@');
+console.log('Connecting to MongoDB at:', maskedUri);
 mongoose.connect(MONGODB_URI)
   .then(() => console.log('Successfully connected to MongoDB.'))
   .catch((err) => console.error('MongoDB connection error:', err));
@@ -126,8 +151,17 @@ const registrationSchema = new mongoose.Schema({
 
 const Registration = mongoose.model('Registration', registrationSchema);
 
+// Rate Limiter for registration requests (Max 10 per hour per IP)
+const registrationLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10,
+  message: { error: 'Too many registration requests from this IP. Please try again after an hour.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // Endpoint for Registration Submission
-app.post('/api/register', upload.fields([
+app.post('/api/register', registrationLimiter, upload.fields([
   { name: 'ideaPpt', maxCount: 1 },
   { name: 'consentLetter', maxCount: 1 }
 ]), async (req, res) => {
@@ -238,8 +272,19 @@ app.post('/api/register', upload.fields([
   }
 });
 
+// Middleware to verify administrative API Key
+const verifyAdminKey = (req, res, next) => {
+  const adminKey = req.headers['x-admin-key'];
+  const expectedKey = process.env.ADMIN_API_KEY || 'sih_secret_admin_key_2026';
+  
+  if (!adminKey || adminKey !== expectedKey) {
+    return res.status(401).json({ error: 'Unauthorized. Invalid administrative key.' });
+  }
+  next();
+};
+
 // Endpoint to view all registrations (for admin/checking purposes)
-app.get('/api/registrations', async (req, res) => {
+app.get('/api/registrations', verifyAdminKey, async (req, res) => {
   try {
     const registrations = await Registration.find().sort({ createdAt: -1 });
     res.json(registrations);
