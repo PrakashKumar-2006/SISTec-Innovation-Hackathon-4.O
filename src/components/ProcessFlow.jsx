@@ -38,9 +38,9 @@ export default function ProcessFlow() {
         {/* Header */}
         <div className="space-y-4 max-w-2xl mx-auto text-center mb-16">
 
-          <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-brand-navy">
+          <h2 className="text-5xl sm:text-6xl font-bold tracking-tight text-navyDeep">
             The Hackathon{' '}
-            <span className="bg-gradient-to-r from-brand-orange to-brand-pink bg-clip-text text-transparent">
+            <span className="text-gold-metallic">
               Process Flow
             </span>
           </h2>

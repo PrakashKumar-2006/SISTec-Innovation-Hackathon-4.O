@@ -78,7 +78,7 @@ export default function Committee() {
   const renderMemberCard = (member, idx, bannerBgClass) => (
     <div 
       key={idx} 
-      className="relative overflow-hidden rounded-[24px] bg-[#FAFBFD] border border-brand-navy/10 hover:border-brand-blue/30 transition-all duration-300 shadow-card-shadow hover:shadow-card-hover flex flex-col items-center pb-6 text-center w-full max-w-[320px] mx-auto group/member"
+      className="relative overflow-hidden rounded-[24px] bg-[#FFFDFB] border border-brand-navy/10 hover:border-brand-blue/30 transition-all duration-300 shadow-card-shadow hover:shadow-card-hover flex flex-col items-center pb-6 text-center w-full max-w-[320px] mx-auto group/member"
     >
       {/* Solid Color Banner at top */}
       <div className={`w-full h-24 ${bannerBgClass} rounded-t-[22px] transition-all duration-300`}></div>
@@ -116,9 +116,9 @@ export default function Committee() {
         
         {/* Header */}
         <div className="space-y-4 max-w-2xl mx-auto mb-12">
-          <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-brand-navy">
+          <h2 className="text-5xl sm:text-6xl font-bold tracking-tight text-navyDeep">
             Our{' '}
-            <span className="bg-gradient-to-r from-brand-orange to-brand-pink bg-clip-text text-transparent">
+            <span className="text-gold-metallic">
               Committee
             </span>
           </h2>
@@ -136,7 +136,7 @@ export default function Committee() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-8 py-3 rounded-2xl text-xs sm:text-sm font-bold tracking-wide transition-all duration-300 cursor-pointer ${
+              className={`px-8 py-3 rounded-2xl text-xs sm:text-sm font-bold tracking-wide transition-all duration-300 cursor-pointer hover:scale-[1.02] active:scale-95 ${
                 activeTab === tab.id
                   ? 'bg-btn-gradient text-white shadow-cyan-glow'
                   : 'bg-white border border-brand-navy/10 text-brand-navy/60 hover:text-brand-blue hover:border-brand-blue/30'

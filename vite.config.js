@@ -18,10 +18,10 @@ try {
   }
 
   // 2. Copy Sih 4.0 banner image
-  const srcBanner = 'c:/SHIVAM UI WORK/SISTec-R HACKTHON WEBSITE/#Sih 4.0.png';
+  const srcBanner = 'c:/SHIVAM UI WORK/SISTec-R HACKTHON WEBSITE/Sih 4.0.png';
   if (fs.existsSync(srcBanner)) {
     fs.copyFileSync(srcBanner, path.join(destDir, 'sih4.png'));
-    console.log('Sih 4.0 banner copied successfully!');
+    console.log('Sih 4.0 banner copied successfully! Updated version.');
   } else {
     console.warn('Source banner not found at:', srcBanner);
   }

@@ -36,9 +36,9 @@ export default function Objectives() {
           <div className="lg:col-span-5 space-y-6 text-left">
 
             
-            <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-brand-navy">
+            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-navyDeep leading-[1.1]">
               Objective of{' '}
-              <span className="bg-gradient-to-r from-brand-orange via-brand-pink to-brand-purple bg-clip-text text-transparent">
+              <span className="text-gold-metallic">
                 SIH 4.0
               </span>
             </h2>

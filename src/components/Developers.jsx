@@ -32,9 +32,9 @@ export default function Developers() {
         {/* Header */}
         <div className="space-y-4 max-w-2xl mx-auto mb-16">
 
-          <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-brand-navy">
+          <h2 className="text-5xl sm:text-6xl font-bold tracking-tight text-navyDeep">
             Developers of{' '}
-            <span className="bg-gradient-to-r from-brand-orange to-brand-pink bg-clip-text text-transparent">
+            <span className="text-gold-metallic">
               SIH
             </span>
           </h2>
@@ -53,7 +53,7 @@ export default function Developers() {
               {/* Profile Image with Ring */}
               <div className="w-24 h-24 rounded-full border-2 border-brand-blue/60 overflow-hidden mb-4 shadow-sm relative group">
                 <img src={dev.image} alt={dev.name} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-brand-navy/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <Globe size={18} className="text-brand-cyan" />
                 </div>
               </div>

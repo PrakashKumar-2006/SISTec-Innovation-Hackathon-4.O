@@ -212,16 +212,16 @@ export default function RegisterModal({ onClose }) {
       {/* Dark overlay */}
       <div 
         onClick={onClose}
-        className="absolute inset-0 bg-brand-navy/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
       ></div>
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-4xl bg-[#f7f9fd] border border-brand-navy/10 rounded-3xl p-6 sm:p-8 shadow-2xl z-10 max-h-[92vh] overflow-y-auto">
+      <div className="relative w-full max-w-4xl bg-[#0F0F11] border border-brand-navy/10 rounded-3xl p-6 sm:p-8 shadow-2xl z-10 max-h-[92vh] overflow-y-auto">
         
         {/* Close Button */}
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full bg-white border border-brand-navy/10 text-brand-gray hover:text-brand-blue transition-all cursor-pointer shadow-sm"
+          className="absolute top-4 right-4 p-2 rounded-full bg-brand-dark border border-brand-navy/10 text-brand-gray hover:text-brand-gold transition-all cursor-pointer shadow-sm"
         >
           <X size={18} />
         </button>
@@ -230,7 +230,7 @@ export default function RegisterModal({ onClose }) {
           <>
             {/* Form Title */}
             <div className="text-center space-y-2 mb-8">
-              <h3 className="text-3xl font-black font-display text-brand-navy tracking-tight">
+              <h3 className="text-3xl font-bold font-display text-gold-metallic tracking-tight">
                 SIH 4.0 Registration Form
               </h3>
             </div>
@@ -240,7 +240,7 @@ export default function RegisterModal({ onClose }) {
               {/* Progress Line */}
               <div className="absolute top-5 left-10 right-10 h-[2px] bg-slate-200 -z-10">
                 <div 
-                  className="h-full bg-emerald-500 transition-all duration-300"
+                  className="h-full bg-brand-gold transition-all duration-300"
                   style={{ width: `${((step - 1) / (stepLabels.length - 1)) * 100}%` }}
                 ></div>
               </div>
@@ -253,9 +253,9 @@ export default function RegisterModal({ onClose }) {
                     <div 
                       className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border-2 transition-all duration-300 ${
                         isCurrent 
-                          ? 'bg-emerald-500 border-emerald-500 text-white shadow-[0_0_12px_rgba(16,185,129,0.3)] scale-110' 
+                          ? 'bg-brand-gold border-brand-gold text-white shadow-[0_0_12px_rgba(16,185,129,0.3)] scale-110' 
                           : isActive 
-                            ? 'bg-emerald-500 border-emerald-500 text-white' 
+                            ? 'bg-brand-gold border-brand-gold text-white' 
                             : 'bg-white border-slate-300 text-slate-400'
                       }`}
                     >
@@ -266,7 +266,7 @@ export default function RegisterModal({ onClose }) {
                         isCurrent 
                           ? 'text-brand-navy font-bold' 
                           : isActive 
-                            ? 'text-emerald-600' 
+                            ? 'text-brand-gold' 
                             : 'text-slate-400'
                       }`}
                     >
@@ -278,11 +278,11 @@ export default function RegisterModal({ onClose }) {
             </div>
 
             {/* Steps Container */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-indigo-50/50">
+            <div className="bg-white rounded-3xl p-6 shadow-sm border border-brand-navy/10">
               
               {/* Error Alert */}
               {errors.submit && (
-                <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm flex items-center gap-2">
+                <div className="mb-6 p-4 rounded-xl bg-red-950/20 border border-red-900/50 text-red-400 text-sm flex items-center gap-2">
                   <AlertCircle size={18} />
                   <span>{errors.submit}</span>
                 </div>
@@ -303,8 +303,8 @@ export default function RegisterModal({ onClose }) {
                         onChange={handleInputChange}
                         placeholder="Leader Name"
                         className={`w-full px-6 py-3 rounded-full bg-white border ${
-                          errors.leaderName ? 'border-red-500' : 'border-slate-200 focus:border-brand-blue'
-                        } focus:outline-none text-slate-700 placeholder-slate-300 transition-colors shadow-sm`}
+                          errors.leaderName ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
+                        } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
                       />
                       {errors.leaderName && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -324,8 +324,8 @@ export default function RegisterModal({ onClose }) {
                         onChange={handleInputChange}
                         placeholder="Team Name"
                         className={`w-full px-6 py-3 rounded-full bg-white border ${
-                          errors.teamName ? 'border-red-500' : 'border-slate-200 focus:border-brand-blue'
-                        } focus:outline-none text-slate-700 placeholder-slate-300 transition-colors shadow-sm`}
+                          errors.teamName ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
+                        } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
                       />
                       {errors.teamName && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -342,7 +342,7 @@ export default function RegisterModal({ onClose }) {
                         name="theme"
                         value={formData.theme}
                         onChange={handleInputChange}
-                        className="w-full px-6 py-3 rounded-full bg-white border border-slate-200 focus:border-brand-blue focus:outline-none text-slate-700 transition-colors shadow-sm cursor-pointer"
+                        className="w-full px-6 py-3 rounded-full bg-white border border-slate-800 focus:border-brand-blue focus:outline-none text-slate-200 transition-colors shadow-sm cursor-pointer"
                       >
                         <option value="AI & Open Innovation">AI & Open Innovation</option>
                         <option value="AgriTech">AgriTech</option>
@@ -361,7 +361,7 @@ export default function RegisterModal({ onClose }) {
                         name="leaderGender"
                         value={formData.leaderGender}
                         onChange={handleInputChange}
-                        className="w-full px-6 py-3 rounded-full bg-white border border-slate-200 focus:border-brand-blue focus:outline-none text-slate-700 transition-colors shadow-sm cursor-pointer"
+                        className="w-full px-6 py-3 rounded-full bg-white border border-slate-800 focus:border-brand-blue focus:outline-none text-slate-200 transition-colors shadow-sm cursor-pointer"
                       >
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -380,8 +380,8 @@ export default function RegisterModal({ onClose }) {
                         onChange={handleInputChange}
                         placeholder="Leader phone"
                         className={`w-full px-6 py-3 rounded-full bg-white border ${
-                          errors.leaderPhone ? 'border-red-500' : 'border-slate-200 focus:border-brand-blue'
-                        } focus:outline-none text-slate-700 placeholder-slate-300 transition-colors shadow-sm`}
+                          errors.leaderPhone ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
+                        } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
                       />
                       {errors.leaderPhone && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -401,8 +401,8 @@ export default function RegisterModal({ onClose }) {
                         onChange={handleInputChange}
                         placeholder="Leader Email"
                         className={`w-full px-6 py-3 rounded-full bg-white border ${
-                          errors.leaderEmail ? 'border-red-500' : 'border-slate-200 focus:border-brand-blue'
-                        } focus:outline-none text-slate-700 placeholder-slate-300 transition-colors shadow-sm`}
+                          errors.leaderEmail ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
+                        } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
                       />
                       {errors.leaderEmail && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -423,8 +423,8 @@ export default function RegisterModal({ onClose }) {
                       onChange={handleInputChange}
                       placeholder="Institute Name"
                       className={`w-full px-6 py-3 rounded-full bg-white border ${
-                        errors.instituteName ? 'border-red-500' : 'border-slate-200 focus:border-brand-blue'
-                      } focus:outline-none text-slate-700 placeholder-slate-300 transition-colors shadow-sm`}
+                        errors.instituteName ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
+                      } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
                     />
                     {errors.instituteName && (
                       <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -439,8 +439,8 @@ export default function RegisterModal({ onClose }) {
               {step === 2 && (
                 <div className="space-y-8 max-h-[50vh] overflow-y-auto pr-2">
                   {[1, 2, 3, 4].map((num) => (
-                    <div key={num} className="p-5 border border-slate-100 rounded-2xl bg-slate-50/50 space-y-4">
-                      <h4 className="text-sm font-bold text-emerald-600 font-display flex items-center gap-1.5 border-b border-slate-200/50 pb-2">
+                    <div key={num} className="p-5 border border-slate-800 rounded-2xl bg-[#080809]/40 space-y-4">
+                      <h4 className="text-sm font-bold text-brand-gold font-display flex items-center gap-1.5 border-b border-slate-800/50 pb-2">
                         <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] font-mono">
                           0{num}
                         </span>
@@ -456,8 +456,8 @@ export default function RegisterModal({ onClose }) {
                             onChange={handleInputChange}
                             placeholder={`Member ${num} Name`}
                             className={`w-full px-5 py-2.5 rounded-full bg-white border ${
-                              errors[`member${num}Name`] ? 'border-red-500' : 'border-slate-200 focus:border-brand-blue'
-                            } focus:outline-none text-sm text-slate-700 placeholder-slate-300 transition-colors shadow-sm`}
+                              errors[`member${num}Name`] ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
+                            } focus:outline-none text-sm text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
                           />
                           {errors[`member${num}Name`] && (
                             <p className="text-[10px] text-red-500 mt-1">
@@ -471,7 +471,7 @@ export default function RegisterModal({ onClose }) {
                             name={`member${num}Gender`}
                             value={formData[`member${num}Gender`]}
                             onChange={handleInputChange}
-                            className="w-full px-5 py-2.5 rounded-full bg-white border border-slate-200 focus:border-brand-blue focus:outline-none text-sm text-slate-700 transition-colors shadow-sm cursor-pointer"
+                            className="w-full px-5 py-2.5 rounded-full bg-white border border-slate-800 focus:border-brand-blue focus:outline-none text-sm text-slate-200 transition-colors shadow-sm cursor-pointer"
                           >
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -487,8 +487,8 @@ export default function RegisterModal({ onClose }) {
                             onChange={handleInputChange}
                             placeholder={`Member ${num} Email`}
                             className={`w-full px-5 py-2.5 rounded-full bg-white border ${
-                              errors[`member${num}Email`] ? 'border-red-500' : 'border-slate-200 focus:border-brand-blue'
-                            } focus:outline-none text-sm text-slate-700 placeholder-slate-300 transition-colors shadow-sm`}
+                              errors[`member${num}Email`] ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
+                            } focus:outline-none text-sm text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
                           />
                           {errors[`member${num}Email`] && (
                             <p className="text-[10px] text-red-500 mt-1">
@@ -505,8 +505,8 @@ export default function RegisterModal({ onClose }) {
                             onChange={handleInputChange}
                             placeholder={`Member ${num} Phone`}
                             className={`w-full px-5 py-2.5 rounded-full bg-white border ${
-                              errors[`member${num}Phone`] ? 'border-red-500' : 'border-slate-200 focus:border-brand-blue'
-                            } focus:outline-none text-sm text-slate-700 placeholder-slate-300 transition-colors shadow-sm`}
+                              errors[`member${num}Phone`] ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
+                            } focus:outline-none text-sm text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
                           />
                           {errors[`member${num}Phone`] && (
                             <p className="text-[10px] text-red-500 mt-1">
@@ -535,8 +535,8 @@ export default function RegisterModal({ onClose }) {
                         onChange={handleInputChange}
                         placeholder="e.g. SIH1234"
                         className={`w-full px-6 py-3 rounded-full bg-white border ${
-                          errors.psid ? 'border-red-500' : 'border-slate-200 focus:border-brand-blue'
-                        } focus:outline-none text-slate-700 placeholder-slate-300 transition-colors shadow-sm`}
+                          errors.psid ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
+                        } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
                       />
                       {errors.psid && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -556,8 +556,8 @@ export default function RegisterModal({ onClose }) {
                         onChange={handleInputChange}
                         placeholder="Problem Statement Title"
                         className={`w-full px-6 py-3 rounded-full bg-white border ${
-                          errors.psTitle ? 'border-red-500' : 'border-slate-200 focus:border-brand-blue'
-                        } focus:outline-none text-slate-700 placeholder-slate-300 transition-colors shadow-sm`}
+                          errors.psTitle ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
+                        } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
                       />
                       {errors.psTitle && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -579,7 +579,7 @@ export default function RegisterModal({ onClose }) {
                           ? 'border-red-300 bg-red-50/20' 
                           : formData.ideaPpt 
                             ? 'border-emerald-300 bg-emerald-50/10' 
-                            : 'border-emerald-500/30 hover:border-emerald-500/60 bg-slate-50/50'
+                            : 'border-brand-gold/30 hover:border-brand-gold/60 bg-[#080809]/40'
                       }`}>
                         <input
                           type="file"
@@ -593,10 +593,10 @@ export default function RegisterModal({ onClose }) {
                             htmlFor="ideaPpt-file"
                             className="flex flex-col items-center cursor-pointer space-y-2"
                           >
-                            <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center hover:scale-105 transition-transform">
+                            <div className="w-12 h-12 rounded-full bg-emerald-100 text-brand-gold flex items-center justify-center hover:scale-105 transition-transform">
                               <Upload size={20} />
                             </div>
-                            <span className="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-full transition-all shadow-sm">
+                            <span className="px-4 py-1.5 bg-brand-gold hover:bg-emerald-600 text-white font-bold text-xs rounded-full transition-all shadow-sm">
                               Choose Idea PPT
                             </span>
                           </label>
@@ -609,7 +609,7 @@ export default function RegisterModal({ onClose }) {
                               <button
                                 type="button"
                                 onClick={() => previewLocalFile(formData.ideaPpt)}
-                                className="flex items-center gap-1 text-[10px] text-emerald-600 hover:text-emerald-700 hover:underline font-bold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/50"
+                                className="flex items-center gap-1 text-[10px] text-brand-gold hover:text-emerald-700 hover:underline font-bold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/50"
                               >
                                 <Eye size={12} />
                                 <span>Preview Selected File</span>
@@ -639,7 +639,7 @@ export default function RegisterModal({ onClose }) {
                           ? 'border-red-300 bg-red-50/20' 
                           : formData.consentLetter 
                             ? 'border-emerald-300 bg-emerald-50/10' 
-                            : 'border-emerald-500/30 hover:border-emerald-500/60 bg-slate-50/50'
+                            : 'border-brand-gold/30 hover:border-brand-gold/60 bg-[#080809]/40'
                       }`}>
                         <input
                           type="file"
@@ -653,10 +653,10 @@ export default function RegisterModal({ onClose }) {
                             htmlFor="consentLetter-file"
                             className="flex flex-col items-center cursor-pointer space-y-2"
                           >
-                            <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center hover:scale-105 transition-transform">
+                            <div className="w-12 h-12 rounded-full bg-emerald-100 text-brand-gold flex items-center justify-center hover:scale-105 transition-transform">
                               <Upload size={20} />
                             </div>
-                            <span className="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-full transition-all shadow-sm">
+                            <span className="px-4 py-1.5 bg-brand-gold hover:bg-emerald-600 text-white font-bold text-xs rounded-full transition-all shadow-sm">
                               Choose Consent Letter
                             </span>
                           </label>
@@ -669,7 +669,7 @@ export default function RegisterModal({ onClose }) {
                               <button
                                 type="button"
                                 onClick={() => previewLocalFile(formData.consentLetter)}
-                                className="flex items-center gap-1 text-[10px] text-emerald-600 hover:text-emerald-700 hover:underline font-bold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/50"
+                                className="flex items-center gap-1 text-[10px] text-brand-gold hover:text-emerald-700 hover:underline font-bold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/50"
                               >
                                 <Eye size={12} />
                                 <span>Preview Selected File</span>
@@ -698,44 +698,44 @@ export default function RegisterModal({ onClose }) {
                   
                   {/* Team Details Block */}
                   <div className="space-y-3 text-left">
-                    <h4 className="text-sm font-bold text-emerald-600 font-display border-b border-slate-100 pb-1.5">
+                    <h4 className="text-sm font-bold text-brand-gold font-display border-b border-slate-800 pb-1.5">
                       TEAM DETAILS
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                       <div>
                         <span className="text-slate-400 block">Leader Name</span>
-                        <span className="text-slate-700 font-semibold text-sm">{formData.leaderName || '-'}</span>
+                        <span className="text-slate-200 font-semibold text-sm">{formData.leaderName || '-'}</span>
                       </div>
                       <div>
                         <span className="text-slate-400 block">Team Name</span>
-                        <span className="text-slate-700 font-semibold text-sm">{formData.teamName || '-'}</span>
+                        <span className="text-slate-200 font-semibold text-sm">{formData.teamName || '-'}</span>
                       </div>
                       <div>
                         <span className="text-slate-400 block">Choose Theme</span>
-                        <span className="text-slate-700 font-semibold text-sm">{formData.theme || '-'}</span>
+                        <span className="text-slate-200 font-semibold text-sm">{formData.theme || '-'}</span>
                       </div>
                       <div>
                         <span className="text-slate-400 block">Leader Gender</span>
-                        <span className="text-slate-700 font-semibold text-sm">{formData.leaderGender || '-'}</span>
+                        <span className="text-slate-200 font-semibold text-sm">{formData.leaderGender || '-'}</span>
                       </div>
                       <div>
                         <span className="text-slate-400 block">Leader Phone</span>
-                        <span className="text-slate-700 font-semibold text-sm">{formData.leaderPhone || '-'}</span>
+                        <span className="text-slate-200 font-semibold text-sm">{formData.leaderPhone || '-'}</span>
                       </div>
                       <div>
                         <span className="text-slate-400 block">Leader Email</span>
-                        <span className="text-slate-700 font-semibold text-sm">{formData.leaderEmail || '-'}</span>
+                        <span className="text-slate-200 font-semibold text-sm">{formData.leaderEmail || '-'}</span>
                       </div>
                       <div className="sm:col-span-2">
                         <span className="text-slate-400 block">Institute Name</span>
-                        <span className="text-slate-700 font-semibold text-sm">{formData.instituteName || '-'}</span>
+                        <span className="text-slate-200 font-semibold text-sm">{formData.instituteName || '-'}</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Members Details Block */}
                   <div className="space-y-3 text-left pt-2">
-                    <h4 className="text-sm font-bold text-emerald-600 font-display border-b border-slate-100 pb-1.5">
+                    <h4 className="text-sm font-bold text-brand-gold font-display border-b border-slate-800 pb-1.5">
                       MEMBER DETAILS
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -746,16 +746,16 @@ export default function RegisterModal({ onClose }) {
                           <div key={num} className="p-3 bg-slate-50 rounded-xl space-y-1.5 text-xs">
                             <span className="font-bold text-slate-600 block">Member {num}</span>
                             <div>
-                              <span className="text-slate-400">Name:</span> <span className="text-slate-700 font-medium">{name}</span>
+                              <span className="text-slate-400">Name:</span> <span className="text-slate-200 font-medium">{name}</span>
                             </div>
                             <div>
-                              <span className="text-slate-400">Gender:</span> <span className="text-slate-700 font-medium">{formData[`member${num}Gender`]}</span>
+                              <span className="text-slate-400">Gender:</span> <span className="text-slate-200 font-medium">{formData[`member${num}Gender`]}</span>
                             </div>
                             <div>
-                              <span className="text-slate-400">Email:</span> <span className="text-slate-700 font-medium">{formData[`member${num}Email`]}</span>
+                              <span className="text-slate-400">Email:</span> <span className="text-slate-200 font-medium">{formData[`member${num}Email`]}</span>
                             </div>
                             <div>
-                              <span className="text-slate-400">Phone:</span> <span className="text-slate-700 font-medium">{formData[`member${num}Phone`]}</span>
+                              <span className="text-slate-400">Phone:</span> <span className="text-slate-200 font-medium">{formData[`member${num}Phone`]}</span>
                             </div>
                           </div>
                         );
@@ -768,22 +768,22 @@ export default function RegisterModal({ onClose }) {
 
                   {/* Solution Block */}
                   <div className="space-y-3 text-left pt-2">
-                    <h4 className="text-sm font-bold text-emerald-600 font-display border-b border-slate-100 pb-1.5">
+                    <h4 className="text-sm font-bold text-brand-gold font-display border-b border-slate-800 pb-1.5">
                       SOLUTION DETAILS
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                       <div>
                         <span className="text-slate-400 block">PSID</span>
-                        <span className="text-slate-700 font-semibold text-sm">{formData.psid || '-'}</span>
+                        <span className="text-slate-200 font-semibold text-sm">{formData.psid || '-'}</span>
                       </div>
                       <div>
                         <span className="text-slate-400 block">PS Title</span>
-                        <span className="text-slate-700 font-semibold text-sm">{formData.psTitle || '-'}</span>
+                        <span className="text-slate-200 font-semibold text-sm">{formData.psTitle || '-'}</span>
                       </div>
                       <div>
                         <span className="text-slate-400 block">Idea PPT</span>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="text-emerald-600 font-medium truncate block max-w-[150px]">{formData.ideaPpt ? formData.ideaPpt.name : '-'}</span>
+                          <span className="text-brand-gold font-medium truncate block max-w-[150px]">{formData.ideaPpt ? formData.ideaPpt.name : '-'}</span>
                           {formData.ideaPpt && (
                             <button
                               type="button"
@@ -799,7 +799,7 @@ export default function RegisterModal({ onClose }) {
                       <div>
                         <span className="text-slate-400 block">Consent Letter</span>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="text-emerald-600 font-medium truncate block max-w-[150px]">{formData.consentLetter ? formData.consentLetter.name : '-'}</span>
+                          <span className="text-brand-gold font-medium truncate block max-w-[150px]">{formData.consentLetter ? formData.consentLetter.name : '-'}</span>
                           {formData.consentLetter && (
                             <button
                               type="button"
@@ -825,7 +825,7 @@ export default function RegisterModal({ onClose }) {
                 <button
                   type="button"
                   onClick={handlePrev}
-                  className="px-8 py-2.5 rounded-full border border-emerald-500 text-emerald-600 font-bold hover:bg-emerald-50/50 transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm"
+                  className="px-8 py-2.5 rounded-full border border-brand-gold text-brand-gold font-bold hover:bg-brand-gold/10 transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm"
                 >
                   <ArrowLeft size={16} />
                   <span>Prev</span>
@@ -838,7 +838,7 @@ export default function RegisterModal({ onClose }) {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="px-8 py-2.5 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm border-none ml-auto"
+                  className="px-8 py-2.5 rounded-full bg-btn-gradient hover:opacity-90 text-white font-bold transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm border-none ml-auto"
                 >
                   <span>Next</span>
                   <ArrowRight size={16} />
@@ -848,7 +848,7 @@ export default function RegisterModal({ onClose }) {
                   type="button"
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className="px-8 py-2.5 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm border-none ml-auto disabled:opacity-50"
+                  className="px-8 py-2.5 rounded-full bg-btn-gradient hover:opacity-90 text-white font-bold transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm border-none ml-auto disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <>
@@ -869,26 +869,26 @@ export default function RegisterModal({ onClose }) {
           /* Success Screen */
           <div className="py-8 text-center space-y-6">
             <div className="flex justify-center">
-              <div className="w-20 h-20 rounded-full bg-emerald-100 border-2 border-emerald-500 flex items-center justify-center text-emerald-600 shadow-emerald-500/20 shadow-lg animate-bounce">
+              <div className="w-20 h-20 rounded-full bg-emerald-950/20 border-2 border-brand-gold flex items-center justify-center text-emerald-500 shadow-emerald-500/10 shadow-lg animate-bounce">
                 <CheckCircle2 size={40} />
               </div>
             </div>
             <div className="space-y-3">
-              <h3 className="text-3xl font-black font-display text-brand-navy">Registration Successful!</h3>
-              <p className="text-sm text-slate-500 max-w-lg mx-auto leading-relaxed">
-                Thank you for registering team <strong className="text-slate-800">"{registrationResult.teamName}"</strong>. Your Registration ID is:
+              <h3 className="text-3xl font-bold font-display text-brand-navy">Registration Successful!</h3>
+              <p className="text-sm text-slate-400 max-w-lg mx-auto leading-relaxed">
+                Thank you for registering team <strong className="text-white">"{registrationResult.teamName}"</strong>. Your Registration ID is:
               </p>
-              <div className="inline-block py-2.5 px-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 font-mono font-bold text-lg tracking-wider shadow-sm select-all">
+              <div className="inline-block py-2.5 px-6 rounded-2xl bg-brand-gold/10 border border-brand-gold/20 text-brand-gold font-mono font-bold text-lg tracking-wider shadow-sm select-all">
                 {registrationResult.registrationId}
               </div>
-              <p className="text-xs text-slate-400 max-w-md mx-auto pt-2">
-                Save this ID for references. Abstract guidelines and event notifications will be sent to <strong className="text-slate-700">{formData.leaderEmail}</strong>.
+              <p className="text-xs text-slate-500 max-w-md mx-auto pt-2">
+                Save this ID for references. Abstract guidelines and event notifications will be sent to <strong className="text-slate-200">{formData.leaderEmail}</strong>.
               </p>
             </div>
             <div className="pt-6">
               <button
                 onClick={onClose}
-                className="px-8 py-3 rounded-full bg-brand-navy hover:bg-slate-800 text-white font-bold tracking-wide text-xs transition-all cursor-pointer shadow-md"
+                className="px-8 py-3 rounded-full bg-btn-gradient hover:opacity-90 text-white font-bold tracking-wide text-xs transition-all cursor-pointer shadow-md"
               >
                 Close Window
               </button>

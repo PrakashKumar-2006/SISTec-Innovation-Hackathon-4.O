@@ -58,9 +58,9 @@ export default function Themes() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div className="space-y-4 text-left max-w-xl">
 
-            <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-brand-navy">
+            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-navyDeep leading-[1.1]">
               SIH 4.0{' '}
-              <span className="bg-gradient-to-r from-brand-orange to-brand-pink bg-clip-text text-transparent">
+              <span className="text-gold-metallic">
                 Themes & Tracks
               </span>
             </h2>

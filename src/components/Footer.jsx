@@ -5,7 +5,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer id="contact" className="relative bg-[#FFFAFA] border-t border-brand-navy/10 pt-16 pb-8 overflow-hidden text-brand-navy">
+    <footer id="contact" className="relative bg-brand-darker border-t border-brand-navy/10 pt-16 pb-8 overflow-hidden text-brand-navy">
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-pink/5 rounded-full blur-[120px]"></div>
 
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 relative z-10">

@@ -10,7 +10,7 @@ export default function Prizes() {
       subtitle: 'Claim the second spot in glory!',
       cardBg: 'bg-white',
       borderColor: 'border-brand-blue/30',
-      glowShadow: 'hover:shadow-[0_10px_30px_rgba(47,102,255,0.15)]',
+      glowShadow: 'hover:shadow-[0_10px_30px_rgba(255,99,90,0.15)]',
       iconColor: 'text-brand-blue',
       badge: 'Silver Medalist'
     },
@@ -21,7 +21,7 @@ export default function Prizes() {
       subtitle: 'Claim the ultimate victory prize!',
       cardBg: 'bg-white',
       borderColor: 'border-brand-orange/40',
-      glowShadow: 'hover:shadow-[0_15px_35px_rgba(255,106,0,0.2)]',
+      glowShadow: 'hover:shadow-[0_15px_35px_rgba(255,99,90,0.2)]',
       iconColor: 'text-brand-orange',
       badge: 'Grand Champion',
       featured: true
@@ -33,7 +33,7 @@ export default function Prizes() {
       subtitle: 'Secure your place on the podium!',
       cardBg: 'bg-white',
       borderColor: 'border-brand-pink/30',
-      glowShadow: 'hover:shadow-[0_10px_30px_rgba(255,27,117,0.15)]',
+      glowShadow: 'hover:shadow-[0_10px_30px_rgba(251,208,154,0.25)]',
       iconColor: 'text-brand-pink',
       badge: 'Bronze Medalist'
     }
@@ -48,9 +48,9 @@ export default function Prizes() {
         {/* Section Heading */}
         <div className="space-y-4 max-w-2xl mx-auto mb-16">
 
-          <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-brand-navy">
+          <h2 className="text-5xl sm:text-6xl font-bold tracking-tight text-navyDeep">
             Your Ideas, Your Victory,{' '}
-            <span className="bg-gradient-to-r from-brand-orange via-brand-pink to-brand-purple bg-clip-text text-transparent">
+            <span className="text-gold-metallic">
               Your Prizes! 🏆
             </span>
           </h2>

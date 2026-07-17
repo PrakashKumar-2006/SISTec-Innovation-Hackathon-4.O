@@ -3,7 +3,7 @@ import path from 'path'
 
 // Dynamic copy logic executed in Tailwind config process on node side
 try {
-  const srcBanner = 'c:/SHIVAM UI WORK/SISTec-R HACKTHON WEBSITE/#Sih 4.0.png';
+  const srcBanner = 'c:/SHIVAM UI WORK/SISTec-R HACKTHON WEBSITE/Sih 4.0.png';
   const destLogo = 'c:/SHIVAM UI WORK/SISTec-R HACKTHON WEBSITE/public/logo.png';
   const destBanner = 'c:/SHIVAM UI WORK/SISTec-R HACKTHON WEBSITE/public/sih4.png';
 
@@ -32,36 +32,41 @@ export default {
   theme: {
     extend: {
       colors: {
+        gold: "#D8AB55",
+        navyDeep: "#FFFFFF",
         brand: {
-          navy: "#0D246C",
-          blue: "#2F66FF",
-          purple: "#7B3FF2",
-          cyan: "#00E5FF",
-          teal: "#12C8A5",
-          orange: "#FF6A00",
-          pink: "#FF1B75",
-          dark: "#FFFAFA",      // Snow White base background
-          darker: "#FFFAFA",    // Snow White main background
-          text: "#0D246C",      // Deep navy for text
-          gray: "#4A5568"       // Slate gray for body text
+          navy: "#F8FAFC",       // Clean Off-White for text/contrast in Dark Mode
+          blue: "#FFFFFF",       // Primary Color (White)
+          purple: "#E2E8F0",     // Light Silver-Gray
+          cyan: "#D8AB55",       // Secondary Color (Gold)
+          teal: "#A27B2B",       // Darker Gold
+          orange: "#D8AB55",     // Secondary Color (Gold)
+          pink: "#FFE8B6",       // Amber/Light Gold
+          dark: "#0F0F11",       // Obsidian black base background
+          darker: "#080809",     // Pitch black body background
+          card: "#161619",       // Obsidian card surface background
+          text: "#F8FAFC",       // Clean Off-White for headings
+          gray: "#A1A1AA",       // Muted gray for readable body text
+          gold: "#D8AB55",       // Custom gold color
+          navyDeep: "#FFFFFF"    // Custom white color
         }
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        display: ["Space Grotesk", "sans-serif"],
+        sans: ["Plus Jakarta Sans", "sans-serif"],
+        display: ["Playfair Display", "serif"],
       },
       backgroundImage: {
-        'sih-gradient': 'linear-gradient(135deg, #FF6A00 0%, #FF1B75 50%, #7B3FF2 100%)',
-        'bg-gradient': 'linear-gradient(180deg, #FFFAFA 0%, #FFFAFA 100%)',
-        'btn-gradient': 'linear-gradient(90deg, #0D246C 0%, #2F66FF 100%)',
-        'wave-gradient': 'linear-gradient(135deg, #FFFAFA 0%, #FFFAFA 100%)',
+        'sih-gradient': 'linear-gradient(135deg, #FFFFFF 0%, #D8AB55 100%)', // White to Gold gradient
+        'bg-gradient': 'linear-gradient(180deg, #0F0F11 0%, #080809 100%)',
+        'btn-gradient': 'linear-gradient(90deg, #D8AB55 0%, #A27B2B 100%)', // Gold gradient for buttons
+        'wave-gradient': 'linear-gradient(135deg, #0F0F11 0%, #080809 100%)',
       },
       boxShadow: {
-        'cyan-glow': '0 0 15px rgba(0, 229, 255, 0.2)',
-        'purple-glow': '0 0 15px rgba(123, 63, 242, 0.2)',
-        'pink-glow': '0 0 15px rgba(255, 27, 117, 0.2)',
-        'card-shadow': '0 10px 30px -10px rgba(13, 36, 108, 0.08)',
-        'card-hover': '0 20px 40px -15px rgba(13, 36, 108, 0.15)',
+        'cyan-glow': '0 0 15px rgba(216, 171, 85, 0.20)', // Gold glow
+        'purple-glow': '0 0 15px rgba(255, 255, 255, 0.15)', // White glow
+        'pink-glow': '0 0 15px rgba(216, 171, 85, 0.20)', // Gold glow
+        'card-shadow': '0 10px 30px -10px rgba(0, 0, 0, 0.6)', // Obsidian card shadow
+        'card-hover': '0 20px 40px -15px rgba(0, 0, 0, 0.8)', // Obsidian hover shadow
       }
     },
   },

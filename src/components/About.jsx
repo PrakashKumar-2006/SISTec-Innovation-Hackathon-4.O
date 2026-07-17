@@ -21,13 +21,13 @@ export default function About() {
           
           {/* Left Text Column */}
           <div className="lg:col-span-6 space-y-6 text-left">
-            <h3 className="text-base sm:text-lg font-bold text-brand-blue tracking-wide">
+            <h3 className="text-xs sm:text-sm font-black text-brand-gold tracking-[0.2em] uppercase font-mono">
               Department of Computer Science & Engineering
             </h3>
             
-            <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-brand-navy">
+            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-navyDeep leading-[1.1] sm:leading-[1.15]">
               SIH is{' '}
-              <span className="bg-gradient-to-r from-brand-orange to-brand-pink bg-clip-text text-transparent">
+              <span className="text-gold-metallic">
                 Organized by SISTec Ratibad
               </span>
             </h2>
@@ -63,7 +63,7 @@ export default function About() {
               {!isPlaying ? (
                 <>
                   {/* Custom image thumbnail from banner element */}
-                  <div className="absolute inset-0 bg-brand-navy flex flex-col items-center justify-center p-6 text-center">
+                  <div className="absolute inset-0 bg-brand-dark flex flex-col items-center justify-center p-6 text-center">
                     {/* Wavy background style */}
                     <div className="absolute inset-0 bg-wave-gradient opacity-90"></div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>

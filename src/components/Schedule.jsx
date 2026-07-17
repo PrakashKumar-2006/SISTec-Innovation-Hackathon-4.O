@@ -104,9 +104,9 @@ export default function Schedule() {
         
         {/* Header */}
         <div className="space-y-4 max-w-2xl mx-auto mb-12">
-          <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-brand-navy">
+          <h2 className="text-5xl sm:text-6xl font-bold tracking-tight text-navyDeep">
             Event{' '}
-            <span className="bg-gradient-to-r from-brand-orange to-brand-pink bg-clip-text text-transparent">
+            <span className="text-gold-metallic">
               Schedule
             </span>
           </h2>
@@ -124,7 +124,7 @@ export default function Schedule() {
             <button
               key={day.id}
               onClick={() => setActiveDay(day.id)}
-              className={`px-8 py-3 rounded-2xl text-sm font-bold tracking-wider transition-all duration-300 shadow-sm cursor-pointer ${
+              className={`px-8 py-3 rounded-2xl text-sm font-bold tracking-wider transition-all duration-300 shadow-sm cursor-pointer hover:scale-[1.02] active:scale-95 ${
                 activeDay === day.id
                   ? 'bg-btn-gradient text-white shadow-cyan-glow'
                   : 'bg-white border border-brand-navy/10 text-brand-navy/60 hover:text-brand-blue hover:border-brand-blue/30'
