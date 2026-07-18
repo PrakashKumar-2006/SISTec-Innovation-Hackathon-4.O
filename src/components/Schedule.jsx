@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, Coffee, Utensils, Lightbulb, Users, Trophy } from 'lucide-react';
+import { Calendar, Clock, Coffee, Utensils, Lightbulb, Users, Trophy, Sparkles, CheckCircle, ArrowRight } from 'lucide-react';
 
 export default function Schedule() {
   const [activeDay, setActiveDay] = useState(1);
   const [activeNode, setActiveNode] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   const day1Schedule = [
     {
@@ -11,42 +12,72 @@ export default function Schedule() {
       title: 'Inauguration Ceremony',
       desc: 'Official inauguration of the hackathon by chief guests, keynote speakers, and department heads.',
       category: 'Morning Session',
-      icon: <Users size={16} className="text-brand-blue" />
+      icon: Users,
+      iconColor: 'text-brand-orange',
+      color: 'from-orange-500/10 to-transparent',
+      borderColor: 'border-orange-500/30',
+      activeGlow: 'shadow-[0_0_25px_rgba(249,115,22,0.15)]',
+      highlights: ['Keynote Addresses', 'Chief Guests Welcome', 'Rules & Guidelines Briefing']
     },
     {
       time: '11:30 AM',
       title: 'Coding Commences & First Judgement',
       desc: 'Hackathon starts! Teams begin coding. First round judgement by judges to evaluate initial architectural ideas.',
       category: 'Morning Session',
-      icon: <Lightbulb size={16} className="text-brand-purple" />
+      icon: Lightbulb,
+      iconColor: 'text-brand-pink',
+      color: 'from-pink-500/10 to-transparent',
+      borderColor: 'border-pink-500/30',
+      activeGlow: 'shadow-[0_0_25px_rgba(236,72,153,0.15)]',
+      highlights: ['36-Hour Coding Kickoff', 'Mentor Allocation', 'Initial Idea Pitching']
     },
     {
       time: '01:30 PM',
       title: 'Lunch Break & Networking',
       desc: 'Refuel during lunch, fostering connections and providing an opportunity for participants to recharge.',
       category: 'Afternoon Session',
-      icon: <Utensils size={16} className="text-brand-teal" />
+      icon: Utensils,
+      iconColor: 'text-brand-blue',
+      color: 'from-blue-500/10 to-transparent',
+      borderColor: 'border-blue-500/30',
+      activeGlow: 'shadow-[0_0_25px_rgba(59,130,246,0.15)]',
+      highlights: ['Catered Buffet Lunch', 'Cross-Team Networking', 'Informal Mentor Q&A']
     },
     {
       time: '05:00 PM',
       title: 'Tea & Refreshments',
       desc: 'Recharge with a brief high-tea break, creating a dynamic environment for the continuation of coding.',
       category: 'Afternoon Session',
-      icon: <Coffee size={16} className="text-brand-orange" />
+      icon: Coffee,
+      iconColor: 'text-brand-orange',
+      color: 'from-orange-500/10 to-transparent',
+      borderColor: 'border-orange-500/30',
+      activeGlow: 'shadow-[0_0_25px_rgba(249,115,22,0.15)]',
+      highlights: ['Hot Tea & Snacks', 'Relaxation Zone Access', 'Tech Support Desk Open']
     },
     {
       time: '05:30 PM',
       title: 'Second Round of Judgement',
       desc: 'Start the second round of evaluations based on the suggestions and corrections given by the judges.',
       category: 'Evening Session',
-      icon: <Clock size={16} className="text-brand-pink" />
+      icon: Clock,
+      iconColor: 'text-brand-pink',
+      color: 'from-pink-500/10 to-transparent',
+      borderColor: 'border-pink-500/30',
+      activeGlow: 'shadow-[0_0_25px_rgba(236,72,153,0.15)]',
+      highlights: ['Prototype Progress Check', 'Code Base Inspection', 'Mentor Feedback Sync']
     },
     {
       time: '11:30 PM',
       title: 'Late Night Dinner',
       desc: 'Conclude the Day 1 milestones with a hearty late-night meal, providing a relaxed setting for teams.',
       category: 'Night Session',
-      icon: <Utensils size={16} className="text-brand-blue" />
+      icon: Utensils,
+      iconColor: 'text-brand-blue',
+      color: 'from-blue-500/10 to-transparent',
+      borderColor: 'border-blue-500/30',
+      activeGlow: 'shadow-[0_0_25px_rgba(59,130,246,0.15)]',
+      highlights: ['Overnight Energy Refuel', 'Midnight Coffee Station', 'Continuous Hacking Support']
     }
   ];
 
@@ -56,28 +87,48 @@ export default function Schedule() {
       title: 'Healthy Breakfast',
       desc: 'Morning refuel to boost energy levels for the final coding sprint.',
       category: 'Morning Session',
-      icon: <Coffee size={16} className="text-brand-orange" />
+      icon: Coffee,
+      iconColor: 'text-brand-orange',
+      color: 'from-orange-500/10 to-transparent',
+      borderColor: 'border-orange-500/30',
+      activeGlow: 'shadow-[0_0_25px_rgba(249,115,22,0.15)]',
+      highlights: ['Breakfast Buffet', 'Energy Drink Stations', 'Day 2 Overview Brief']
     },
     {
       time: '09:00 AM - 12:00 PM',
       title: 'Final Coding Sprint',
       desc: 'Closing in on final integrations, UI polish, testing, and deployment preparation.',
       category: 'Morning Session',
-      icon: <Clock size={16} className="text-brand-blue" />
+      icon: Clock,
+      iconColor: 'text-brand-pink',
+      color: 'from-pink-500/10 to-transparent',
+      borderColor: 'border-pink-500/30',
+      activeGlow: 'shadow-[0_0_25px_rgba(236,72,153,0.15)]',
+      highlights: ['Deployment & Hosting', 'Final UI/UX Refinement', 'Slide Deck Preparation']
     },
     {
       time: '12:00 PM - 02:30 PM',
       title: 'Grand Finale Evaluation',
       desc: 'Final round of project pitches and live prototype demonstrations to the expert judging panel.',
       category: 'Afternoon Session',
-      icon: <Users size={16} className="text-brand-purple" />
+      icon: Sparkles,
+      iconColor: 'text-brand-blue',
+      color: 'from-blue-500/10 to-transparent',
+      borderColor: 'border-blue-500/30',
+      activeGlow: 'shadow-[0_0_25px_rgba(59,130,246,0.15)]',
+      highlights: ['3-Min Live Pitching', 'Prototype Demonstrations', 'Jury Q&A Sessions']
     },
     {
       time: '03:00 PM',
       title: 'Valedictory & Prizes',
       desc: 'Announcement of the winners, runner-ups, and track-specific prizes, followed by the trophy ceremony.',
       category: 'Afternoon Session',
-      icon: <Trophy size={16} className="text-brand-pink" />
+      icon: Trophy,
+      iconColor: 'text-brand-orange',
+      color: 'from-orange-500/10 to-transparent',
+      borderColor: 'border-orange-500/30',
+      activeGlow: 'shadow-[0_0_25px_rgba(249,115,22,0.15)]',
+      highlights: ['Winner Trophy Ceremony', 'Incubation Opportunity Awards', 'Participation Certs']
     }
   ];
 
@@ -88,35 +139,35 @@ export default function Schedule() {
     setActiveNode(0);
   }, [activeDay]);
 
-  // Continuous looping sequence chase glow effect
+  // Autoplay loop sequence chase glow effect
   useEffect(() => {
+    if (isHovered) return;
     const interval = setInterval(() => {
       setActiveNode((prev) => (prev + 1) % currentSchedule.length);
-    }, 3500); // shift glow every 3.5 seconds
+    }, 3000); // shift active node every 3 seconds
     return () => clearInterval(interval);
-  }, [currentSchedule.length]);
+  }, [isHovered, currentSchedule.length]);
+
+  const activeItem = currentSchedule[activeNode] || currentSchedule[0];
+  const ActiveIcon = activeItem.icon;
 
   return (
-    <section id="schedule" className="relative py-24 bg-brand-dark overflow-hidden">
-      <div className="absolute top-1/2 right-0 w-80 h-80 bg-brand-pink/5 rounded-full blur-[100px]"></div>
+    <section id="schedule" className="relative py-24 bg-brand-darker overflow-hidden tech-grid-dense">
+      {/* Background visual glows */}
+      <div className="absolute top-1/3 left-0 w-96 h-96 bg-brand-blue/5 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-1/3 right-0 w-96 h-96 bg-brand-pink/5 rounded-full blur-[120px] pointer-events-none"></div>
 
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 relative z-10 text-center">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 relative z-10">
         
         {/* Header */}
-        <div className="space-y-4 max-w-2xl mx-auto mb-12">
-          <h2 className="text-5xl sm:text-6xl font-bold tracking-tight text-navyDeep">
-            Event{' '}
-            <span className="text-gold-metallic">
-              Schedule
-            </span>
+        <div className="max-w-2xl mx-auto text-center mb-16">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight font-display">
+            Event <span className="text-gold-metallic">Schedule</span>
           </h2>
-          <p className="text-brand-gray text-sm sm:text-base font-normal">
-            Stay on track with our day-wise timeline. Click on the day buttons to toggle details.
-          </p>
         </div>
 
         {/* Day Toggles */}
-        <div className="flex justify-center gap-4 mb-12">
+        <div className="flex justify-center gap-4 mb-16">
           {[
             { id: 1, label: 'Day 1' },
             { id: 2, label: 'Day 2' }
@@ -127,7 +178,7 @@ export default function Schedule() {
               className={`px-8 py-3 rounded-2xl text-sm font-bold tracking-wider transition-all duration-300 shadow-sm cursor-pointer hover:scale-[1.02] active:scale-95 ${
                 activeDay === day.id
                   ? 'bg-btn-gradient text-white shadow-cyan-glow'
-                  : 'bg-white border border-brand-navy/10 text-brand-navy/60 hover:text-brand-blue hover:border-brand-blue/30'
+                  : 'bg-brand-card/25 border border-white/5 text-brand-gray hover:text-white hover:border-white/10'
               }`}
             >
               {day.label}
@@ -135,229 +186,117 @@ export default function Schedule() {
           ))}
         </div>
 
-        {/* Schedule Presentation Layout */}
-        <div className="relative max-w-full mx-auto">
-
-          {/* 1. DESKTOP VIEW: Alternating Grid Timeline with Loop Glow Chase */}
-          <div className="hidden md:block relative h-[420px] max-w-full">
-            {/* Horizontal middle connector line */}
-            <div className="absolute top-[200px] left-6 right-6 h-[2px] bg-brand-navy/10 z-0"></div>
+        {/* Schedule Dashboard layout (Zero overlapping, extremely unique) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-6xl mx-auto items-stretch">
+          
+          {/* Left Column: Interactive Winding Timeline Stepper list */}
+          <div className="lg:col-span-5 flex flex-row lg:flex-col gap-3 overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 scrollbar-none pr-0 lg:pr-4 lg:border-r border-white/5 relative">
             
-            {/* Active glowing connector line */}
-            <div className="absolute top-[200px] left-6 right-6 h-[2px] bg-gradient-to-r from-brand-orange via-brand-pink to-brand-blue z-0 animate-pulse-slow"></div>
+            {/* Desktop Vertical timeline track */}
+            <div className="hidden lg:block absolute left-[31px] top-6 bottom-6 w-[1.5px] bg-white/5 -z-10"></div>
+            
+            {currentSchedule.map((item, idx) => {
+              const ItemIcon = item.icon;
+              const isActive = activeNode === idx;
 
-            {/* Alternating Cards Grid */}
-            <div 
-              key={activeDay} 
-              className={`grid gap-4 z-10 relative h-[400px] ${
-                currentSchedule.length === 6 ? 'grid-cols-6' : 'grid-cols-4'
-              }`}
-            >
-              {currentSchedule.map((item, idx) => {
-                const isEven = idx % 2 === 0;
-                const isActive = activeNode === idx;
-
-                return (
-                  <div 
-                    key={idx} 
-                    className="relative h-[400px] w-full group animate-fade-in opacity-0"
-                    style={{ animationDelay: `${idx * 120}ms` }}
-                    onMouseEnter={() => setActiveNode(idx)}
-                  >
-                    
-                    {isEven ? (
-                      /* Card Sits ABOVE center line */
-                      <>
-                        {/* Card Body */}
-                        <div 
-                          className={`absolute top-0 left-0 right-0 h-[180px] p-5 rounded-3xl bg-white border transition-all duration-300 flex flex-col justify-between text-left ${
-                            isActive
-                              ? 'border-brand-pink/50 shadow-[0_0_20px_rgba(255,30,132,0.15)] scale-[1.02]'
-                              : 'border-brand-navy/10 group-hover:border-brand-pink/30 shadow-card-shadow hover:shadow-card-hover'
-                          }`}
-                        >
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between gap-1">
-                              <span className="inline-block px-3 py-1 rounded-full bg-brand-dark border border-brand-navy/5 text-[10px] text-brand-pink font-extrabold tracking-widest font-mono uppercase">
-                                {item.time}
-                              </span>
-                            </div>
-                            
-                            <h3 className="text-xs font-bold text-brand-navy tracking-wide font-display flex items-center gap-1.5 mt-1">
-                              <span className="shrink-0 p-0.5 rounded bg-brand-dark border border-brand-navy/5">
-                                {item.icon}
-                              </span>
-                              {item.title}
-                            </h3>
-                            
-                            <p className="text-[10px] text-brand-gray/80 leading-relaxed font-normal mt-1 line-clamp-4">
-                              {item.desc}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Stem line going down to center line */}
-                        <div 
-                          className={`absolute top-[180px] left-[24px] w-[2px] h-[20px] transition-colors duration-300 ${
-                            isActive ? 'bg-brand-pink/60' : 'bg-brand-navy/15 group-hover:bg-brand-pink/30'
-                          }`}
-                        ></div>
-
-                        {/* Node Dot (Centered at 200px) */}
-                        <div className="absolute top-[186px] left-[11px] z-20">
-                          <div 
-                            className={`w-7 h-7 rounded-full bg-white border-2 flex items-center justify-center transition-all duration-300 shadow-sm relative ${
-                              isActive 
-                                ? 'border-brand-pink text-brand-pink font-extrabold scale-110 shadow-[0_0_10px_rgba(255,30,132,0.3)] bg-brand-pink/5' 
-                                : 'border-brand-navy/30 text-brand-navy/60 group-hover:border-brand-pink group-hover:text-brand-pink'
-                            }`}
-                          >
-                            <span className="text-[10px] font-mono relative z-10">
-                              0{idx + 1}
-                            </span>
-                            {isActive && (
-                              <span className="w-full h-full rounded-full bg-brand-pink/20 animate-ping absolute scale-125"></span>
-                            )}
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      /* Card Sits BELOW center line */
-                      <>
-                        {/* Node Dot (Centered at 200px) */}
-                        <div className="absolute top-[186px] left-[11px] z-20">
-                          <div 
-                            className={`w-7 h-7 rounded-full bg-white border-2 flex items-center justify-center transition-all duration-300 shadow-sm relative ${
-                              isActive 
-                                ? 'border-brand-pink text-brand-pink font-extrabold scale-110 shadow-[0_0_10px_rgba(255,30,132,0.3)] bg-brand-pink/5' 
-                                : 'border-brand-navy/30 text-brand-navy/60 group-hover:border-brand-pink group-hover:text-brand-pink'
-                            }`}
-                          >
-                            <span className="text-[10px] font-mono relative z-10">
-                              0{idx + 1}
-                            </span>
-                            {isActive && (
-                              <span className="w-full h-full rounded-full bg-brand-pink/20 animate-ping absolute scale-125"></span>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Stem line going down from center line to Card */}
-                        <div 
-                          className={`absolute top-[200px] left-[24px] w-[2px] h-[20px] transition-colors duration-300 ${
-                            isActive ? 'bg-brand-pink/60' : 'bg-brand-navy/15 group-hover:bg-brand-pink/30'
-                          }`}
-                        ></div>
-
-                        {/* Card Body */}
-                        <div 
-                          className={`absolute top-[220px] left-0 right-0 h-[180px] p-5 rounded-3xl bg-white border transition-all duration-300 flex flex-col justify-between text-left ${
-                            isActive
-                              ? 'border-brand-pink/50 shadow-[0_0_20px_rgba(255,30,132,0.15)] scale-[1.02]'
-                              : 'border-brand-navy/10 group-hover:border-brand-pink/30 shadow-card-shadow hover:shadow-card-hover'
-                          }`}
-                        >
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between gap-1">
-                              <span className="inline-block px-3 py-1 rounded-full bg-brand-dark border border-brand-navy/5 text-[10px] text-brand-pink font-extrabold tracking-widest font-mono uppercase">
-                                {item.time}
-                              </span>
-                            </div>
-                            
-                            <h3 className="text-xs font-bold text-brand-navy tracking-wide font-display flex items-center gap-1.5 mt-1">
-                              <span className="shrink-0 p-0.5 rounded bg-brand-dark border border-brand-navy/5">
-                                {item.icon}
-                              </span>
-                              {item.title}
-                            </h3>
-                            
-                            <p className="text-[10px] text-brand-gray/80 leading-relaxed font-normal mt-1 line-clamp-4">
-                              {item.desc}
-                            </p>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                    
+              return (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setIsHovered(true);
+                    setActiveNode(idx);
+                  }}
+                  onMouseEnter={() => {
+                    setIsHovered(true);
+                    setActiveNode(idx);
+                  }}
+                  onMouseLeave={() => {
+                    setIsHovered(false);
+                  }}
+                  className={`w-full min-w-[200px] flex items-center gap-4 p-3 rounded-2xl border text-left transition-all duration-500 cursor-pointer ${
+                    isActive
+                      ? `bg-brand-card/45 border-brand-gold/40 shadow-inner -translate-y-0.5 ${item.activeGlow}`
+                      : 'bg-transparent border-transparent hover:bg-white/5'
+                  }`}
+                >
+                  {/* Step Circle Node */}
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center border transition-all duration-500 shrink-0 ${
+                    isActive 
+                      ? 'border-brand-gold bg-brand-gold/20 text-brand-gold shadow-md'
+                      : 'border-white/10 bg-brand-darker/60 text-brand-gray'
+                  }`}>
+                    <ItemIcon className="w-4.5 h-4.5" />
                   </div>
-                );
-              })}
-            </div>
+
+                  <div className="min-w-0">
+                    <span className="text-[10px] font-mono font-bold text-brand-gold/85 block">
+                      {item.time}
+                    </span>
+                    <h4 className="text-xs font-bold text-white tracking-wide truncate">
+                      {item.title}
+                    </h4>
+                  </div>
+                </button>
+              );
+            })}
           </div>
 
-          {/* 2. MOBILE VIEW: Staggered Stacked Vertical Timeline with Loop Glow Chase */}
-          <div className="md:hidden relative max-w-md mx-auto text-left pl-8">
-            {/* Vertical connector line */}
-            <div className="absolute left-[9px] top-6 bottom-6 w-[2px] bg-brand-navy/10"></div>
-            
-            {/* Active glowing vertical line */}
-            <div className="absolute left-[9px] top-6 bottom-6 w-[2px] bg-gradient-to-b from-brand-orange via-brand-pink to-brand-blue animate-pulse-slow"></div>
+          {/* Right Column: High-Fidelity Details Panel Display */}
+          <div className="lg:col-span-7 flex">
+            <div className={`w-full rounded-[2.5rem] bg-brand-card/45 backdrop-blur-md border border-white/5 bg-gradient-to-b ${activeItem.color} ${activeItem.borderColor} ${activeItem.activeGlow} p-6 sm:p-8 text-left transition-all duration-500 flex flex-col justify-between relative overflow-hidden group`}>
+              
+              {/* Background Watermark Icon */}
+              <div className="absolute right-0 bottom-0 text-[16rem] text-white/[0.005] pointer-events-none transform translate-x-12 translate-y-12 group-hover:scale-110 group-hover:text-white/[0.01] transition-all duration-700 flex items-center justify-center">
+                <ActiveIcon className="w-56 h-56" />
+              </div>
 
-            {/* List */}
-            <div key={`mobile-${activeDay}`} className="space-y-6">
-              {currentSchedule.map((item, idx) => {
-                const isActive = activeNode === idx;
+              {/* Upper Section */}
+              <div className="space-y-6 relative z-10">
+                
+                {/* Meta details */}
+                <div className="flex items-center justify-between">
+                  <span className={`inline-block px-3 py-1 rounded-full bg-brand-darker border border-white/5 text-[10px] ${activeItem.iconColor} font-bold font-mono uppercase`}>
+                    {activeItem.category}
+                  </span>
+                  <span className="text-xs font-bold font-mono text-brand-gold">
+                    {activeItem.time}
+                  </span>
+                </div>
 
-                return (
-                  <div 
-                    key={idx} 
-                    className="relative flex items-start gap-4 group animate-fade-in opacity-0"
-                    style={{ animationDelay: `${idx * 120}ms` }}
-                    onMouseEnter={() => setActiveNode(idx)}
-                  >
-                    
-                    {/* Connected Node Dot */}
-                    <div className="absolute -left-[27px] top-5 z-20">
-                      <div 
-                        className={`w-7 h-7 rounded-full bg-white border-2 flex items-center justify-center transition-all duration-300 shadow-sm relative ${
-                          isActive 
-                            ? 'border-brand-pink text-brand-pink font-extrabold scale-110 shadow-[0_0_10px_rgba(255,30,132,0.3)] bg-brand-pink/5' 
-                            : 'border-brand-navy/30 text-brand-navy/60 group-hover:border-brand-pink group-hover:text-brand-pink'
-                        }`}
-                      >
-                        <span className="text-[10px] font-mono relative z-10">
-                          0{idx + 1}
-                        </span>
-                        {isActive && (
-                          <span className="w-full h-full rounded-full bg-brand-pink/20 animate-ping absolute scale-125"></span>
-                        )}
-                      </div>
+                {/* Main Session Title */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-2xl bg-brand-darker border border-white/5 flex items-center justify-center shadow-inner">
+                      <ActiveIcon className={`w-5.5 h-5.5 ${activeItem.iconColor}`} />
                     </div>
-
-                    {/* Card Body */}
-                    <div 
-                      className={`flex-1 p-5 rounded-3xl bg-white border transition-all duration-300 flex flex-col justify-between ${
-                        isActive
-                          ? 'border-brand-pink/50 shadow-[0_0_20px_rgba(255,30,132,0.15)] scale-[1.02]'
-                          : 'border-brand-navy/10 group-hover:border-brand-pink/30 shadow-card-shadow hover:shadow-card-hover'
-                      }`}
-                    >
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="inline-block px-2.5 py-0.5 rounded-full bg-brand-dark border border-brand-navy/5 text-[9px] text-brand-pink font-bold tracking-widest font-mono uppercase">
-                            {item.time}
-                          </span>
-                          <span className="text-[9px] text-brand-gray/60 font-bold tracking-widest uppercase">
-                            {item.category}
-                          </span>
-                        </div>
-                        
-                        <h3 className="text-sm font-bold text-brand-navy tracking-wide font-display flex items-center gap-1.5 mt-2">
-                          <span className="shrink-0 p-1 rounded bg-brand-dark border border-brand-navy/5">
-                            {item.icon}
-                          </span>
-                          {item.title}
-                        </h3>
-                        
-                        <p className="text-xs text-brand-gray/80 leading-relaxed font-normal mt-1.5">
-                          {item.desc}
-                        </p>
-                      </div>
-                    </div>
-
+                    <h3 className="text-xl sm:text-2xl font-bold text-white tracking-wide font-display">
+                      {activeItem.title}
+                    </h3>
                   </div>
-                );
-              })}
+                  
+                  <p className="text-xs sm:text-sm text-brand-gray leading-relaxed font-normal">
+                    {activeItem.desc}
+                  </p>
+                </div>
+
+              </div>
+
+              {/* Lower Section: Highlights Checkbox List */}
+              <div className="mt-8 pt-6 border-t border-white/5 relative z-10">
+                <h4 className="text-[10px] font-bold tracking-wider text-white/50 uppercase mb-4">What to Expect</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm text-brand-gray font-normal">
+                  {activeItem.highlights.map((highlight, hIdx) => (
+                    <div key={hIdx} className="flex items-center gap-2.5">
+                      <CheckCircle className={`w-4 h-4 ${activeItem.iconColor} shrink-0`} />
+                      <span>{highlight}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Dynamic bottom border slide glow indicator */}
+              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-brand-orange via-brand-pink to-brand-blue pointer-events-none"></div>
+
             </div>
           </div>
 

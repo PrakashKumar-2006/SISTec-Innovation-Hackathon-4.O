@@ -64,31 +64,31 @@ export default function Hero({ onRegisterClick }) {
         {/* Countdown Timer Overlay positioned below 'LET THE INNOVATION BEGINS' */}
         <div className="absolute left-[8.5%] top-[77%] w-[40.5%] flex justify-between gap-[0.8vw]">
           {[
-            { label: 'Days', value: timeLeft.days, border: 'border-brand-orange/20' },
-            { label: 'Hours', value: timeLeft.hours, border: 'border-brand-pink/20' },
-            { label: 'Minutes', value: timeLeft.minutes, border: 'border-brand-purple/20' },
-            { label: 'Seconds', value: timeLeft.seconds, border: 'border-brand-blue/20' }
+            { label: 'Days', value: timeLeft.days, border: 'border-brand-orange/60', shadow: 'shadow-[0_0_20px_rgba(249,115,22,0.35)]', numClass: 'text-brand-orange drop-shadow-[0_0_8px_rgba(249,115,22,0.6)]' },
+            { label: 'Hours', value: timeLeft.hours, border: 'border-brand-pink/60', shadow: 'shadow-[0_0_20px_rgba(236,72,153,0.35)]', numClass: 'text-brand-pink drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]' },
+            { label: 'Minutes', value: timeLeft.minutes, border: 'border-brand-blue/60', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.35)]', numClass: 'text-brand-blue drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]' },
+            { label: 'Seconds', value: timeLeft.seconds, border: 'border-brand-gold/60', shadow: 'shadow-[0_0_20px_rgba(216,171,85,0.35)]', numClass: 'text-gold-metallic drop-shadow-[0_0_8px_rgba(216,171,85,0.6)]' }
           ].map((time, idx) => (
             <div 
               key={idx} 
-              className={`flex flex-col items-center justify-center w-[22%] py-[0.8vw] rounded-[1vw] bg-brand-darker/60 backdrop-blur-[4px] border ${time.border} shadow-[0_4px_12px_rgba(0,0,0,0.6)] transition-all duration-300 relative overflow-hidden group`}
+              className={`flex flex-col items-center justify-center w-[22%] py-[0.8vw] rounded-[1vw] bg-black/90 backdrop-blur-[12px] border-2 ${time.border} ${time.shadow} transition-all duration-300 relative overflow-hidden group`}
             >
-              {/* Top color accent strip */}
-              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-orange via-brand-pink to-brand-blue"></div>
-              
-              {/* Large Gradient Number */}
-              <span className="text-[2.2vw] leading-none font-black font-display bg-gradient-to-r from-brand-orange via-brand-pink to-brand-purple bg-clip-text text-transparent">
-                {formatNumber(time.value)}
-              </span>
-              
-              {/* Tag Label */}
-              <span className="text-[0.65vw] font-bold text-brand-navy mt-[0.3vw] tracking-widest font-sans uppercase">
-                {time.label}
-              </span>
-            </div>
-          ))}
+                {/* Top color accent strip */}
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-orange via-brand-pink to-brand-blue"></div>
+                
+                {/* Large Glowing Number */}
+                <span className={`text-[2.2vw] leading-none font-black font-display ${time.numClass}`}>
+                  {formatNumber(time.value)}
+                </span>
+                
+                {/* Tag Label */}
+                <span className="text-[0.65vw] font-bold text-white mt-[0.3vw] tracking-widest font-sans uppercase opacity-90 group-hover:opacity-100 group-hover:text-brand-gold transition-all duration-300">
+                  {time.label}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
+    );
+  }

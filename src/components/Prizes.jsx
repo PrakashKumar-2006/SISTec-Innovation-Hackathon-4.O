@@ -4,126 +4,172 @@ import { Trophy, Calendar, MapPin, Sparkles } from 'lucide-react';
 export default function Prizes() {
   const prizes = [
     {
+      place: '02',
       title: '2ND PRIZE',
-      amount: '₹ 30,000/-',
+      amount: '₹30,000',
       description: 'Runner Up Trophy & Certificates',
       subtitle: 'Claim the second spot in glory!',
-      cardBg: 'bg-white',
-      borderColor: 'border-brand-blue/30',
-      glowShadow: 'hover:shadow-[0_10px_30px_rgba(255,99,90,0.15)]',
-      iconColor: 'text-brand-blue',
-      badge: 'Silver Medalist'
+      badge: 'Silver Medalist',
+      perks: [
+        '₹30,000 Cash Reward',
+        'Official Runner-up Trophy',
+        'Silver Medals for Team',
+        'Excellence Certificates'
+      ],
+      gradient: 'from-blue-500/10 to-transparent',
+      textGradient: 'from-white via-slate-200 to-slate-400',
+      borderColor: 'border-slate-500/30',
+      badgeBg: 'bg-slate-500/10 text-slate-300 border-slate-500/30',
+      glow: 'shadow-[0_0_30px_rgba(148,163,184,0.1)] hover:border-slate-400/50',
+      icon: <Trophy className="w-8 h-8 text-slate-300 animate-pulse" />
     },
     {
+      place: '01',
       title: '1ST PRIZE',
-      amount: '₹ 50,000/-',
+      amount: '₹50,000',
       description: 'Grand Winner Trophy & Certificates',
       subtitle: 'Claim the ultimate victory prize!',
-      cardBg: 'bg-white',
-      borderColor: 'border-brand-orange/40',
-      glowShadow: 'hover:shadow-[0_15px_35px_rgba(255,99,90,0.2)]',
-      iconColor: 'text-brand-orange',
       badge: 'Grand Champion',
-      featured: true
+      featured: true,
+      perks: [
+        '₹50,000 Cash Reward',
+        'Official Champion Trophy',
+        'Gold Medals for Team',
+        'Excellence Certificates',
+        'Incubation Opportunity'
+      ],
+      gradient: 'from-brand-gold/15 to-transparent',
+      textGradient: 'from-[#FFE8B6] via-[#D8AB55] to-[#A27B2B]',
+      borderColor: 'border-brand-gold/50',
+      badgeBg: 'bg-brand-gold/15 text-brand-gold border-brand-gold/30',
+      glow: 'shadow-[0_0_50px_rgba(216,171,85,0.2)] hover:border-brand-gold',
+      icon: <Trophy className="w-10 h-10 text-brand-gold animate-bounce" />
     },
     {
+      place: '03',
       title: '3RD PRIZE',
-      amount: '₹ 20,000/-',
+      amount: '₹20,000',
       description: '2nd Runner Up Trophy & Certificates',
       subtitle: 'Secure your place on the podium!',
-      cardBg: 'bg-white',
-      borderColor: 'border-brand-pink/30',
-      glowShadow: 'hover:shadow-[0_10px_30px_rgba(251,208,154,0.25)]',
-      iconColor: 'text-brand-pink',
-      badge: 'Bronze Medalist'
+      badge: 'Bronze Medalist',
+      perks: [
+        '₹20,000 Cash Reward',
+        '2nd Runner-up Trophy',
+        'Bronze Medals for Team',
+        'Excellence Certificates'
+      ],
+      gradient: 'from-orange-500/10 to-transparent',
+      textGradient: 'from-[#FED7AA] via-[#F97316] to-[#C2410C]',
+      borderColor: 'border-orange-500/30',
+      badgeBg: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
+      glow: 'shadow-[0_0_30px_rgba(249,115,22,0.1)] hover:border-orange-400/50',
+      icon: <Trophy className="w-8 h-8 text-orange-400 animate-pulse" />
     }
   ];
 
   return (
     <section id="prizes" className="relative py-24 bg-brand-darker overflow-hidden tech-grid-dense">
-      <div className="absolute top-1/4 right-0 w-96 h-96 bg-brand-pink/5 rounded-full blur-[120px]"></div>
+      {/* Visual glowing effects in the background */}
+      <div className="absolute top-1/4 right-0 w-96 h-96 bg-brand-gold/5 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-brand-blue/5 rounded-full blur-[120px] pointer-events-none"></div>
 
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 relative z-10 text-center">
         
         {/* Section Heading */}
-        <div className="space-y-4 max-w-2xl mx-auto mb-16">
-
-          <h2 className="text-5xl sm:text-6xl font-bold tracking-tight text-navyDeep">
+        <div className="max-w-2xl mx-auto mb-12">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white font-display">
             Your Ideas, Your Victory,{' '}
-            <span className="text-gold-metallic">
+            <span className="text-gold-metallic block sm:inline">
               Your Prizes! 🏆
             </span>
           </h2>
-          <p className="text-brand-gray text-sm sm:text-base font-normal">
-            Compete for Bhopal's most prestigious collegiate technical crown and amazing prizes!
-          </p>
         </div>
 
         {/* Prizes Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-end max-w-6xl mx-auto mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 lg:gap-12 items-end max-w-5xl mx-auto mb-16">
           {/* Re-ordering for UI display: 2nd, 1st, 3rd to show 1st in center elevated */}
           {[prizes[0], prizes[1], prizes[2]].map((prize, idx) => (
             <div
               key={idx}
-              className={`relative rounded-3xl ${prize.cardBg} border ${prize.borderColor} p-6 sm:p-8 flex flex-col justify-between transition-all duration-500 hover:-translate-y-2 shadow-card-shadow ${prize.glowShadow} ${
+              className={`relative rounded-3xl bg-brand-card/45 backdrop-blur-md border ${prize.borderColor} p-6 flex flex-col justify-between transition-all duration-500 hover:-translate-y-2 ${prize.glow} ${
                 prize.featured 
-                  ? 'md:scale-105 md:z-10 border-brand-orange/60 shadow-xl min-h-[380px]' 
-                  : 'min-h-[340px]'
-              }`}
+                  ? 'md:scale-105 md:z-10 min-h-[390px] bg-gradient-to-b ' + prize.gradient
+                  : 'min-h-[350px] bg-gradient-to-b ' + prize.gradient
+              } group overflow-hidden`}
             >
-              {/* Highlight Badge */}
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-brand-dark border border-brand-navy/10 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-brand-navy shadow-sm">
-                {prize.badge}
-              </div>
+              {/* Large background number for editorial touch */}
+              <span className="absolute -right-2 -bottom-4 text-[6.5rem] font-black font-display text-white/[0.02] select-none leading-none group-hover:text-white/[0.04] transition-colors duration-500">
+                {prize.place}
+              </span>
 
-              <div className="space-y-4 pt-4">
-                <div className="flex justify-center">
-                  <div className={`p-4 rounded-full bg-brand-dark border border-brand-navy/5 shadow-inner ${prize.iconColor}`}>
-                    <Trophy size={prize.featured ? 36 : 28} className="animate-pulse" />
-                  </div>
+              <div className="space-y-4 pt-2 relative z-10">
+                {/* Header Badge */}
+                <div className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full border text-[10px] sm:text-xs font-bold uppercase tracking-wider ${prize.badgeBg}`}>
+                  {prize.badge}
                 </div>
 
                 <div className="space-y-1">
-                  <h3 className="text-xs sm:text-sm font-bold tracking-widest text-brand-gray font-sans uppercase">
+                  <h3 className="text-[10px] sm:text-xs font-bold tracking-widest text-brand-gray font-sans uppercase">
                     {prize.title}
                   </h3>
-                  <p className="text-3.5xl sm:text-5xl font-black font-display text-brand-navy">
+                  <p className={`text-3xl sm:text-4xl font-black font-display bg-gradient-to-b ${prize.textGradient} bg-clip-text text-transparent leading-none`}>
                     {prize.amount}
+                  </p>
+                  <p className="text-xs text-brand-navy font-bold tracking-wide mt-0.5">
+                    {prize.description}
                   </p>
                 </div>
 
-                <p className="text-xs sm:text-sm text-brand-navy font-bold tracking-wide">
-                  {prize.description}
-                </p>
+                {/* List of Perks */}
+                <ul className="space-y-2 pt-1.5">
+                  {prize.perks.map((perk, pIdx) => (
+                    <li key={pIdx} className="flex items-center gap-2 text-left text-xs text-brand-gray font-medium">
+                      <span className="w-1.2 h-1.2 rounded-full bg-brand-gold shrink-0"></span>
+                      <span>{perk}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              <div className="pt-6 border-t border-brand-navy/10 mt-4 text-xs text-brand-gray font-normal">
-                {prize.subtitle}
+              {/* Bottom footer text of card */}
+              <div className="pt-3 border-t border-white/5 mt-4 text-[10px] sm:text-xs text-brand-gray/80 font-medium italic relative z-10">
+                "{prize.subtitle}"
               </div>
             </div>
           ))}
         </div>
 
-        {/* Quick Date and Venue details cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto pt-8 border-t border-brand-navy/10">
-          <div className="flex items-center gap-4 p-5 rounded-2xl bg-brand-dark border border-brand-navy/10 text-left hover:border-brand-blue/20 transition-all duration-300">
-            <div className="p-3 rounded-xl bg-white border border-brand-navy/5 text-brand-orange">
-              <Calendar size={20} />
+        {/* Venue and Date Panel */}
+        <div className="relative max-w-4xl mx-auto mt-16 p-1 rounded-3xl bg-gradient-to-r from-brand-orange/20 via-brand-pink/20 to-brand-blue/20 shadow-xl border border-white/5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center p-6 md:p-8 rounded-[1.7rem] bg-brand-card/85 backdrop-blur-xl">
+            
+            {/* Date block */}
+            <div className="flex items-center gap-4 text-left group">
+              <div className="p-3.5 rounded-2xl bg-brand-orange/15 border border-brand-orange/25 text-brand-orange shadow-inner group-hover:scale-105 transition-transform duration-300">
+                <Calendar className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-[10px] text-brand-gray font-bold tracking-widest uppercase">GRAND FINALE DATE</p>
+                <p className="text-lg font-black text-white font-display mt-0.5">08 November 2026</p>
+                <p className="text-xs text-brand-gray mt-0.5">Mark your calendars for the final pitch</p>
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-brand-gray font-bold tracking-widest uppercase">GRAND FINALE</p>
-              <p className="text-base font-bold text-brand-navy mt-0.5">08 November 2026</p>
-            </div>
-          </div>
 
-          <div className="flex items-center gap-4 p-5 rounded-2xl bg-brand-dark border border-brand-navy/10 text-left hover:border-brand-blue/20 transition-all duration-300">
-            <div className="p-3 rounded-xl bg-white border border-brand-navy/5 text-brand-blue">
-              <MapPin size={20} />
+            {/* Visual separator line for larger screens */}
+            <div className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1px] h-12 bg-white/10"></div>
+
+            {/* Venue block */}
+            <div className="flex items-center gap-4 text-left group pl-0 md:pl-8">
+              <div className="p-3.5 rounded-2xl bg-brand-blue/15 border border-brand-blue/25 text-brand-blue shadow-inner group-hover:scale-105 transition-transform duration-300">
+                <MapPin className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-[10px] text-brand-gray font-bold tracking-widest uppercase">OFFICIAL VENUE</p>
+                <p className="text-lg font-black text-white font-display mt-0.5">SISTec-R Campus</p>
+                <p className="text-xs text-brand-gray mt-0.5">Ratibad, Bhopal, Madhya Pradesh</p>
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-brand-gray font-bold tracking-widest uppercase">VENUE</p>
-              <p className="text-base font-bold text-brand-navy mt-0.5">SISTec-R Campus, Ratibad, Bhopal</p>
-            </div>
+
           </div>
         </div>
 

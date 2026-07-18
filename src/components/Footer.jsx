@@ -1,7 +1,7 @@
 import React from 'react';
-import { Linkedin, Facebook, Instagram, Twitter, Phone, Mail, MapPin } from 'lucide-react';
+import { Linkedin, Facebook, Instagram, Phone, Mail, MapPin } from 'lucide-react';
 
-export default function Footer() {
+export default function Footer({ onViewChange }) {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -30,15 +30,36 @@ export default function Footer() {
             {/* Social Icons */}
             <div className="flex gap-3 pt-2">
               {[
-                { icon: <Linkedin size={16} />, href: '#' },
-                { icon: <Facebook size={16} />, href: '#' },
-                { icon: <Instagram size={16} />, href: '#' },
-                { icon: <Twitter size={16} />, href: '#' }
+                { 
+                  icon: <Linkedin size={16} />, 
+                  href: '#',
+                  hoverClass: 'hover:bg-[#0077b5] hover:border-[#0077b5] hover:text-white' 
+                },
+                { 
+                  icon: <Facebook size={16} />, 
+                  href: '#',
+                  hoverClass: 'hover:bg-[#1877f2] hover:border-[#1877f2] hover:text-white' 
+                },
+                { 
+                  icon: <Instagram size={16} />, 
+                  href: '#',
+                  hoverClass: 'hover:bg-gradient-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] hover:border-transparent hover:text-white' 
+                },
+                { 
+                  icon: (
+                    <svg viewBox="0 0 24 24" className="w-[15px] h-[15px]" fill="currentColor">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                  ), 
+                  href: '#',
+                  hoverClass: 'hover:bg-white hover:border-white hover:text-black' 
+                }
               ].map((soc, index) => (
                 <a
                   key={index}
                   href={soc.href}
-                  className="p-2 rounded-xl bg-brand-dark border border-brand-navy/10 text-brand-gray hover:text-brand-blue hover:border-brand-blue transition-all"
+                  onClick={(e) => { if (soc.href === '#') e.preventDefault(); }}
+                  className={`p-2 rounded-xl bg-brand-dark border border-brand-navy/10 text-brand-gray transition-all ${soc.hoverClass}`}
                 >
                   {soc.icon}
                 </a>
@@ -52,11 +73,11 @@ export default function Footer() {
               SIH
             </h4>
             <ul className="space-y-3 text-xs sm:text-sm text-brand-gray font-normal">
-              <li><a href="#home" className="hover:text-brand-blue transition-colors">Home</a></li>
-              <li><a href="#about" className="hover:text-brand-blue transition-colors">About SIH</a></li>
-              <li><a href="#timeline" className="hover:text-brand-blue transition-colors">SIH 2025</a></li>
-              <li><a href="#timeline" className="hover:text-brand-blue transition-colors">SIH 2024</a></li>
-              <li><a href="#contact" className="hover:text-brand-blue transition-colors">Contact</a></li>
+              <li><a href="#home" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#home'); }} className="hover:text-brand-blue transition-colors">Home</a></li>
+              <li><a href="#about" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#about'); }} className="hover:text-brand-blue transition-colors">About SIH</a></li>
+              <li><a href="#timeline" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#timeline'); }} className="hover:text-brand-blue transition-colors">SIH 2025</a></li>
+              <li><a href="#timeline" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#timeline'); }} className="hover:text-brand-blue transition-colors">SIH 2024</a></li>
+              <li><a href="#contact" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#contact'); }} className="hover:text-brand-blue transition-colors">Contact</a></li>
             </ul>
           </div>
 
@@ -66,10 +87,10 @@ export default function Footer() {
               Participants
             </h4>
             <ul className="space-y-3 text-xs sm:text-sm text-brand-gray font-normal">
-              <li><a href="#objectives" className="hover:text-brand-blue transition-colors">Instructions</a></li>
-              <li><a href="#process" className="hover:text-brand-blue transition-colors">How to Apply</a></li>
-              <li><a href="#process" className="hover:text-brand-blue transition-colors">Idea Template</a></li>
-              <li><a href="#faqs" className="hover:text-brand-blue transition-colors">FAQs</a></li>
+              <li><a href="#objectives" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#objectives'); }} className="hover:text-brand-blue transition-colors">Instructions</a></li>
+              <li><a href="#process" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#process'); }} className="hover:text-brand-blue transition-colors">How to Apply</a></li>
+              <li><a href="#process" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#process'); }} className="hover:text-brand-blue transition-colors">Idea Template</a></li>
+              <li><a href="#faqs" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#faqs'); }} className="hover:text-brand-blue transition-colors">FAQs</a></li>
             </ul>
           </div>
 

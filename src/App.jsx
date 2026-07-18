@@ -13,9 +13,26 @@ import FAQs from './components/FAQs';
 import Developers from './components/Developers';
 import Footer from './components/Footer';
 import RegisterModal from './components/RegisterModal';
+import ProblemStatements from './components/ProblemStatements';
 
 export default function App() {
   const [showRegister, setShowRegister] = useState(false);
+  const [currentView, setCurrentView] = useState('landing'); // 'landing' or 'problem-statements'
+
+  // Function to switch view and scroll to hash if landing
+  const handleViewChange = (view, hash) => {
+    setCurrentView(view);
+    if (view === 'landing' && hash) {
+      setTimeout(() => {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="relative min-h-screen bg-brand-darker text-brand-navy font-sans overflow-x-hidden">
@@ -23,35 +40,35 @@ export default function App() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-brand-blue/10 via-brand-purple/5 to-transparent rounded-full blur-[160px] pointer-events-none -z-10"></div>
       
       {/* Header Navigation */}
-      <Navbar onRegisterClick={() => setShowRegister(true)} />
+      <Navbar 
+        onRegisterClick={() => setShowRegister(true)} 
+        currentView={currentView} 
+        onViewChange={handleViewChange}
+      />
 
       {/* Main Sections */}
       <main>
-        <Hero onRegisterClick={() => setShowRegister(true)} />
-        
-        <About />
-        
-        <Prizes />
-        
-        <Objectives />
-        
-        <Themes />
-        
-        <ProcessFlow />
-        
-        <Timeline />
-        
-        <Schedule />
-        
-        <Committee />
-        
-        <FAQs />
-        
-        <Developers />
+        {currentView === 'landing' ? (
+          <>
+            <Hero onRegisterClick={() => setShowRegister(true)} />
+            <About />
+            <Prizes />
+            <Objectives />
+            <Themes onViewChange={handleViewChange} />
+            <ProcessFlow />
+            <Timeline />
+            <Schedule />
+            <Committee />
+            <FAQs />
+            <Developers />
+          </>
+        ) : (
+          <ProblemStatements />
+        )}
       </main>
 
       {/* Footer Details */}
-      <Footer />
+      <Footer onViewChange={handleViewChange} />
 
       {/* Registration Modal Overlay */}
       {showRegister && (

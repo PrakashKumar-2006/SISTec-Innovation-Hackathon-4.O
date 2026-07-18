@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 
-export default function Navbar({ onRegisterClick }) {
+export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -73,7 +73,10 @@ export default function Navbar({ onRegisterClick }) {
           <div className="flex items-center justify-between">
             
             {/* Logo */}
-            <div className="flex items-center group/logo cursor-pointer">
+            <div 
+              onClick={() => onViewChange && onViewChange('landing', '#home')}
+              className="flex items-center group/logo cursor-pointer"
+            >
               <img 
                 src="/logo.png" 
                 alt="SISTec Logo" 
@@ -88,7 +91,7 @@ export default function Navbar({ onRegisterClick }) {
                   {item.dropdown ? (
                     <button
                       onClick={() => toggleDropdown(idx)}
-                      className="flex items-center gap-1.5 text-sm font-semibold text-brand-navy/80 hover:text-brand-blue hover:bg-brand-blue/5 px-3.5 py-2 rounded-xl active:scale-95 transition-all duration-200 cursor-pointer border-none"
+                      className="flex items-center gap-1.5 text-sm font-semibold text-brand-navy/80 hover:text-brand-blue hover:bg-brand-blue/5 px-3.5 py-2 rounded-xl active:scale-95 transition-all duration-200 cursor-pointer border-none bg-transparent"
                     >
                       {item.name}
                       <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300 text-brand-navy/60" />
@@ -96,7 +99,19 @@ export default function Navbar({ onRegisterClick }) {
                   ) : (
                     <a
                       href={item.href}
-                      className="inline-block text-sm font-semibold text-brand-navy/80 hover:text-brand-blue hover:bg-brand-blue/5 px-3.5 py-2 rounded-xl active:scale-95 transition-all duration-200"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (item.name === 'Problem Statements') {
+                          onViewChange && onViewChange('problem-statements');
+                        } else {
+                          onViewChange && onViewChange('landing', item.href);
+                        }
+                      }}
+                      className={`inline-block text-sm font-semibold px-3.5 py-2 rounded-xl active:scale-95 transition-all duration-200 ${
+                        (item.name === 'Problem Statements' && currentView === 'problem-statements') || (item.name === 'Home' && currentView === 'landing')
+                          ? 'text-brand-blue bg-brand-blue/5 border border-brand-blue/10'
+                          : 'text-brand-navy/80 hover:text-brand-blue hover:bg-brand-blue/5'
+                      }`}
                     >
                       {item.name}
                     </a>
@@ -109,6 +124,10 @@ export default function Navbar({ onRegisterClick }) {
                         <a
                           key={sIdx}
                           href={sub.href}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            onViewChange && onViewChange('landing', sub.href);
+                          }}
                           className="block px-4 py-2.5 text-xs font-semibold rounded-xl text-brand-navy/70 hover:text-brand-blue hover:bg-brand-blue/5 hover:translate-x-1 active:scale-95 transition-all duration-200"
                         >
                           {sub.name}
@@ -162,7 +181,11 @@ export default function Navbar({ onRegisterClick }) {
                           <a
                             key={sIdx}
                             href={sub.href}
-                            onClick={() => setIsOpen(false)}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setIsOpen(false);
+                              onViewChange && onViewChange('landing', sub.href);
+                            }}
                             className="py-1.5 text-xs font-medium text-brand-navy/60 hover:text-brand-blue active:scale-[0.97] transition-all"
                           >
                             {sub.name}
@@ -174,8 +197,20 @@ export default function Navbar({ onRegisterClick }) {
                 ) : (
                   <a
                     href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className="py-2 px-3 text-sm font-semibold text-brand-navy/80 hover:text-brand-blue rounded-lg hover:bg-brand-dark/30 active:scale-[0.97] transition-all"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsOpen(false);
+                      if (item.name === 'Problem Statements') {
+                        onViewChange && onViewChange('problem-statements');
+                      } else {
+                        onViewChange && onViewChange('landing', item.href);
+                      }
+                    }}
+                    className={`py-2 px-3 text-sm font-semibold rounded-lg active:scale-[0.97] transition-all ${
+                      (item.name === 'Problem Statements' && currentView === 'problem-statements') || (item.name === 'Home' && currentView === 'landing')
+                        ? 'text-brand-blue bg-brand-blue/5'
+                        : 'text-brand-navy/80 hover:text-brand-blue hover:bg-brand-dark/30'
+                    }`}
                   >
                     {item.name}
                   </a>
