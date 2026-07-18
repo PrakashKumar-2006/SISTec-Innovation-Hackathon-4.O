@@ -243,7 +243,9 @@ const PORT = process.env.PORT || 5000;
 // Enable Helmet for security headers
 app.use(helmet({
   contentSecurityPolicy: false,
-  crossOriginResourcePolicy: { policy: "cross-origin" } // Allows frontend to load images/files served statically
+  crossOriginResourcePolicy: { policy: "cross-origin" }, // Allows frontend to load images/files served statically
+  crossOriginOpenerPolicy: false, // Allows Razorpay popups to communicate with the main window
+  crossOriginEmbedderPolicy: false
 }));
 
 // Configure CORS origin whitelist
