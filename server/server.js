@@ -485,7 +485,7 @@ app.post('/api/register', registrationLimiter, upload.fields([
       existingPending.psTitle = psTitle;
       existingPending.ideaPpt = ideaPptUrl;
       existingPending.consentLetter = consentLetterUrl;
-      existingPending.amountPaid = Number(process.env.REGISTRATION_FEE_INR || 150);
+      existingPending.amountPaid = Number(process.env.REGISTRATION_FEE_INR || 1);
       existingPending.expireAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // Reset expiry to 24h from now on edit
 
       await existingPending.save();
@@ -513,7 +513,7 @@ app.post('/api/register', registrationLimiter, upload.fields([
       return res.status(200).json({
         success: true,
         orderId: existingPending.paymentOrderId,
-        amount: Number(process.env.REGISTRATION_FEE_INR || 150) * 100, // paise
+        amount: Number(process.env.REGISTRATION_FEE_INR || 1) * 100, // paise
         keyId: process.env.RAZORPAY_KEY_ID || '',
         teamName,
         leaderName,
@@ -523,7 +523,7 @@ app.post('/api/register', registrationLimiter, upload.fields([
     }
 
     // Generate Razorpay Order
-    const amountInINR = Number(process.env.REGISTRATION_FEE_INR || 150);
+    const amountInINR = Number(process.env.REGISTRATION_FEE_INR || 1);
     const amountInPaise = amountInINR * 100;
 
     let rpOrder;
@@ -886,7 +886,7 @@ app.post('/api/registrations/:registrationId/refund', verifyAdminKey, async (req
     reg.paymentStatus = 'failed'; // Mark failed to deactivate
     reg.refundStatus = 'processed';
     reg.refundId = refundId || `manual_refund_${Date.now()}`;
-    reg.refundAmount = refundAmount || reg.amountPaid || 150;
+    reg.refundAmount = refundAmount || reg.amountPaid || 1;
     reg.refundReason = refundReason || 'Requested by user / dispute';
     reg.refundDate = new Date();
     reg.refundProcessedBy = refundProcessedBy || 'Admin Override';

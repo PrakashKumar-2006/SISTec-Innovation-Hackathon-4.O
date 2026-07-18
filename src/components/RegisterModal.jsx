@@ -1227,7 +1227,7 @@ export default function RegisterModal({ onClose }) {
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-slate-400">Amount to Pay</span>
-                        <span className="text-brand-gold font-bold">₹150.00</span>
+                        <span className="text-brand-gold font-bold">₹1.00</span>
                       </div>
                     </div>
 
