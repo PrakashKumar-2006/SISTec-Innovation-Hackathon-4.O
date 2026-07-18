@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  getPaginationRowModel,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -15,33 +14,36 @@ import {
 } from "@/admin/components/ui/table";
 import { Button } from "@/admin/components/ui/button";
 
-export function DataTable({ columns, data }) {
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-
+export function DataTable({ 
+  columns, 
+  data,
+  pageCount,
+  pagination,
+  onPaginationChange,
+  isLoading
+}) {
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination,
+    pageCount: pageCount,
     state: {
       pagination,
     },
+    onPaginationChange: onPaginationChange,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
   });
 
   return (
     <div className="space-y-4">
-      <div className="rounded-md border">
+      <div className="rounded-md border border-brand-purple/20 overflow-hidden">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-brand-darker">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="border-brand-purple/20 hover:bg-transparent">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="text-brand-gray font-medium">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -54,15 +56,22 @@ export function DataTable({ columns, data }) {
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
+          <TableBody className="bg-brand-card">
+            {isLoading ? (
+               <TableRow>
+                 <TableCell colSpan={columns.length} className="h-24 text-center text-brand-gray">
+                   Loading data...
+                 </TableCell>
+               </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="border-brand-purple/20 hover:bg-brand-purple/10 transition-colors"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="text-brand-text py-3">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -70,31 +79,38 @@ export function DataTable({ columns, data }) {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                <TableCell colSpan={columns.length} className="h-24 text-center text-brand-gray">
+                  No results found.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
+      <div className="flex items-center justify-between px-2">
+        <div className="text-sm text-brand-gray">
+          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+        </div>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage() || isLoading}
+            className="border-brand-purple/30 text-brand-text hover:bg-brand-purple/20 hover:text-brand-gold"
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage() || isLoading}
+            className="border-brand-purple/30 text-brand-text hover:bg-brand-purple/20 hover:text-brand-gold"
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   );

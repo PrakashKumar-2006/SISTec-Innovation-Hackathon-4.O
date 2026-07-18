@@ -293,7 +293,16 @@ if (!fs.existsSync(uploadsDir)) {
 app.use('/uploads', express.static(uploadsDir));
 
 const adminAuthRoutes = require("./routes/adminAuth");
+const adminTeamsRoutes = require("./routes/adminTeams");
+const adminProblemsRoutes = require("./routes/adminProblems");
+const adminChangeRequestsRoutes = require("./routes/adminChangeRequests");
+const adminAnalyticsRoutes = require("./routes/adminAnalytics");
+
 app.use('/api/admin', adminAuthRoutes);
+app.use('/api/admin/teams', adminTeamsRoutes);
+app.use('/api/admin/problems', adminProblemsRoutes);
+app.use('/api/admin/change-requests', adminChangeRequestsRoutes);
+app.use('/api/admin/analytics', adminAnalyticsRoutes);
 
 // Connect to MongoDB
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sih_registrations';
@@ -378,7 +387,24 @@ const registrationSchema = new mongoose.Schema({
   refundAmount: { type: Number },
   refundReason: { type: String },
   refundDate: { type: Date },
-  refundProcessedBy: { type: String }
+  refundProcessedBy: { type: String },
+  
+  // Admin fields (added for Dashboard)
+  registrationStatus: { 
+    type: String, 
+    enum: ['pending', 'approved', 'rejected'], 
+    default: 'pending' 
+  },
+  verificationStatus: { 
+    type: String, 
+    enum: ['pending', 'verified', 'flagged'], 
+    default: 'pending' 
+  },
+  adminRemarks: { type: String, default: '' },
+  verifiedBy: { type: String },
+  verifiedAt: { type: Date },
+  lastUpdatedBy: { type: String },
+  lastUpdatedAt: { type: Date }
 });
 
 // TTL index to automatically expire registrations when expireAt is reached
