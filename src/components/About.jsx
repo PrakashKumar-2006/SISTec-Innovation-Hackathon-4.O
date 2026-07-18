@@ -110,9 +110,9 @@ export default function About() {
               
               {/* Premium Gradient Outer Frame */}
               <div className="relative p-1.5 rounded-[2.2rem] bg-gradient-to-tr from-brand-orange/40 via-brand-pink/20 to-transparent shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-white/10 backdrop-blur-3xl">
-                <div className="relative w-full aspect-video rounded-[1.8rem] overflow-hidden bg-brand-darker group">
+                <div className="relative w-full aspect-[4/3] sm:aspect-video rounded-[1.8rem] overflow-hidden bg-brand-darker group">
                   {!isPlaying ? (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-6 text-center">
                       
                       {/* Blurred backdrop image from sih4 banner */}
                       <img 
@@ -128,20 +128,20 @@ export default function About() {
                       {/* Pulsing play button */}
                       <div className="relative z-10">
                         <div className="absolute inset-0 rounded-full bg-brand-gold/30 blur-md animate-ping"></div>
-                        <div className="relative w-20 h-20 rounded-full bg-brand-darker/80 border border-brand-gold/45 flex items-center justify-center cursor-pointer group-hover:scale-110 group-hover:bg-brand-darker group-hover:border-brand-gold transition-all duration-300 shadow-cyan-glow">
-                          <Play size={28} className="text-brand-gold fill-brand-gold translate-x-0.5" />
+                        <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-brand-darker/80 border border-brand-gold/45 flex items-center justify-center cursor-pointer group-hover:scale-110 group-hover:bg-brand-darker group-hover:border-brand-gold transition-all duration-300 shadow-cyan-glow">
+                          <Play size={22} className="text-brand-gold fill-brand-gold translate-x-0.5 sm:scale-125" />
                         </div>
                       </div>
                       
                       {/* Banner Video Title Text */}
-                      <div className="relative z-10 mt-6 space-y-1.5">
+                      <div className="relative z-10 mt-3 sm:mt-6 space-y-1 sm:space-y-1.5">
                         <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-brand-orange/10 border border-brand-orange/30 text-brand-orange text-[10px] font-bold tracking-widest uppercase">
                           Featured Video
                         </div>
-                        <h4 className="font-bold text-base sm:text-lg text-white font-display tracking-wide drop-shadow-sm">
+                        <h4 className="font-bold text-sm sm:text-lg text-white font-display tracking-wide drop-shadow-sm">
                           SISTec Innovation Hackathon (SIH 4.0)
                         </h4>
-                        <p className="text-xs text-brand-gray/80 font-medium">
+                        <p className="text-[10px] sm:text-xs text-brand-gray/80 font-medium">
                           Bhopal's Biggest National Tech Festival
                         </p>
                       </div>

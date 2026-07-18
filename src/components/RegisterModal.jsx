@@ -453,7 +453,7 @@ export default function RegisterModal({ onClose }) {
   const isPredefined = problemStatements.some(ps => ps.psNumber === formData.psid && formData.psid !== '');
 
   return (
-    <div className="fixed inset-0 w-full h-full bg-[#080809] z-50 overflow-y-auto flex flex-col font-sans">
+    <div className="fixed inset-0 w-full h-full bg-[#080809] z-[100] overflow-y-auto flex flex-col font-sans">
       {/* Secure Header */}
       <div className="w-full bg-[#0D0D0F]/85 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-20">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">

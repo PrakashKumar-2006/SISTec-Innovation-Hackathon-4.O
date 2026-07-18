@@ -315,39 +315,63 @@ export default function SIH2025Finalists({ onViewChange }) {
 
         {/* ── Pagination ── */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-6 flex-wrap">
-            <button
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="px-4 py-2 rounded-xl bg-brand-card border border-white/10 text-xs font-bold text-brand-gray hover:text-white hover:border-brand-gold/40 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
-            >
-              ← Prev
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(pg => (
+          <div className="mt-6">
+            {/* Desktop Pagination */}
+            <div className="hidden md:flex items-center justify-center gap-2">
               <button
-                key={pg}
-                onClick={() => setCurrentPage(pg)}
-                className={`w-9 h-9 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                  pg === currentPage
-                    ? 'bg-brand-gold text-brand-dark border-brand-gold shadow-md'
-                    : 'bg-brand-card/30 text-brand-gray border-white/10 hover:border-brand-gold/30 hover:text-white'
-                }`}
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 rounded-xl bg-brand-card border border-white/10 text-xs font-bold text-brand-gray hover:text-white hover:border-brand-gold/40 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
               >
-                {pg}
+                ← Prev
               </button>
-            ))}
-            <button
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-              className="px-4 py-2 rounded-xl bg-brand-card border border-white/10 text-xs font-bold text-brand-gray hover:text-white hover:border-brand-gold/40 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
-            >
-              Next →
-            </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(pg => (
+                <button
+                  key={pg}
+                  onClick={() => setCurrentPage(pg)}
+                  className={`w-9 h-9 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                    pg === currentPage
+                      ? 'bg-brand-gold text-brand-dark border-brand-gold shadow-md'
+                      : 'bg-brand-card/30 text-brand-gray border-white/10 hover:border-brand-gold/30 hover:text-white'
+                  }`}
+                >
+                  {pg}
+                </button>
+              ))}
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 rounded-xl bg-brand-card border border-white/10 text-xs font-bold text-brand-gray hover:text-white hover:border-brand-gold/40 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+              >
+                Next →
+              </button>
+            </div>
+
+            {/* Mobile Pagination */}
+            <div className="flex md:hidden items-center justify-between w-full max-w-[280px] mx-auto">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 rounded-xl bg-brand-card border border-white/10 text-xs font-bold text-brand-gray hover:text-white hover:border-brand-gold/40 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+              >
+                ← Prev
+              </button>
+              <span className="text-xs font-bold text-brand-gray/80">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 rounded-xl bg-brand-card border border-white/10 text-xs font-bold text-brand-gray hover:text-white hover:border-brand-gold/40 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+              >
+                Next →
+              </button>
+            </div>
           </div>
         )}
 
-        <p className="text-center text-[10px] text-brand-gray/40 mt-3">
-          Page {currentPage} of {totalPages} · {filtered.length} teams shown
+        <p className="text-center text-[10px] text-brand-gray/40 mt-4">
+          {filtered.length} teams shown
         </p>
       </div>
     </section>

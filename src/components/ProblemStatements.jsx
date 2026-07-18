@@ -206,13 +206,13 @@ export default function ProblemStatements() {
 
         {/* Detailed Modal Overlay */}
         {activeModalItem && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             <div 
               className="absolute inset-0 bg-brand-darker/80 backdrop-blur-md"
               onClick={() => setActiveModalItem(null)}
             ></div>
             
-            <div className="relative w-full max-w-2xl rounded-3xl bg-brand-card/95 border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.5)] p-6 md:p-8 overflow-hidden relative z-10 text-left animate-fade-in">
+            <div className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-3xl bg-brand-card/95 border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.5)] p-6 md:p-8 z-10 text-left animate-fade-in custom-scrollbar">
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-orange via-brand-pink to-brand-blue"></div>
 
               <button 

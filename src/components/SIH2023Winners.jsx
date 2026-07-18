@@ -100,7 +100,7 @@ export default function SIH2023Winners({ onViewChange }) {
         </div>
 
         {/* Premium Slideshow Carousel */}
-        <div className="w-full max-w-5xl mx-auto mb-16 relative rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.6)] bg-brand-card aspect-[16/9] sm:aspect-[21/9]">
+        <div className="w-full max-w-5xl mx-auto mb-16 relative rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.6)] bg-brand-card aspect-[4/3] xs:aspect-[16/9] sm:aspect-[21/9]">
           
           {/* Slide Renderer */}
           <div className="w-full h-full relative">
