@@ -200,7 +200,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ 
   storage: storage,
   fileFilter: fileFilter,
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+  limits: { fileSize: 20 * 1024 * 1024 } // 20MB limit
 });
 
 // MongoDB Registration Schema
@@ -524,7 +524,7 @@ app.get('/api/registrations', verifyAdminKey, async (req, res) => {
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({ error: 'File is too large. Maximum limit is 10MB.' });
+      return res.status(400).json({ error: 'File is too large. Maximum limit is 20MB.' });
     }
     return res.status(400).json({ error: `Upload error: ${err.message}` });
   }

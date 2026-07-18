@@ -55,6 +55,21 @@ export default function RegisterModal({ onClose }) {
   const handleFileChange = (e, fieldName) => {
     const file = e.target.files[0];
     if (file) {
+      const maxSizeBytes = 20 * 1024 * 1024; // 20MB
+      if (file.size > maxSizeBytes) {
+        setErrors((prev) => ({ 
+          ...prev, 
+          [fieldName]: `File is too large. Maximum limit is 20MB (Your file: ${(file.size / (1024 * 1024)).toFixed(1)}MB).` 
+        }));
+        // Reset file input element value so they can re-select
+        e.target.value = '';
+        setFormData((prev) => ({
+          ...prev,
+          [fieldName]: null,
+        }));
+        return;
+      }
+
       setFormData((prev) => ({
         ...prev,
         [fieldName]: file,
