@@ -80,6 +80,19 @@ const defaultFormData = {
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
+    // If Razorpay is already loaded (e.g. user clicked Pay a second time), resolve immediately
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
+    // Also avoid appending a duplicate script tag if one is already in the DOM
+    const existing = document.querySelector('script[src*="checkout.razorpay.com"]');
+    if (existing) {
+      // Script is in DOM but window.Razorpay isn't ready yet — wait for its load event
+      existing.addEventListener('load', () => resolve(true));
+      existing.addEventListener('error', () => resolve(false));
+      return;
+    }
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.onload = () => resolve(true);
@@ -411,6 +424,15 @@ export default function RegisterModal({ onClose }) {
       };
 
       const rzp = new window.Razorpay(options);
+
+      // Surface payment failure errors to the user
+      rzp.on('payment.failed', function (response) {
+        const reason = response?.error?.description || response?.error?.reason || 'Payment failed.';
+        const code = response?.error?.code ? ` (${response.error.code})` : '';
+        setErrors({ submit: `Payment failed: ${reason}${code}. Please try again or use a different payment method.` });
+        setIsSubmitting(false);
+      });
+
       rzp.open();
 
     } catch (err) {
