@@ -15,8 +15,15 @@ require('dotenv').config();
 const cloudinary = require('cloudinary').v2;
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const Razorpay = require('razorpay');
 
 const app = express();
+
+// Initialize Razorpay SDK client
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_placeholder',
+  key_secret: process.env.RAZORPAY_KEY_SECRET || 'secret_placeholder'
+});
 
 // Configure Cloudinary
 const isCloudinaryConfigured = 
@@ -60,7 +67,7 @@ app.use(helmet({
 // Configure CORS origin whitelist
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',') 
-  : ['http://localhost:5173', 'http://127.0.0.1:5173'];
+  : ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000', 'http://127.0.0.1:3000'];
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -75,7 +82,11 @@ app.use(cors({
   credentials: true
 }));
 
-app.use(express.json());
+app.use(express.json({
+  verify: (req, res, buf) => {
+    req.rawBody = buf;
+  }
+}));
 app.use(express.urlencoded({ extended: true }));
 
 // Ensure uploads folder exists
@@ -126,7 +137,7 @@ const upload = multer({
 
 // MongoDB Registration Schema
 const registrationSchema = new mongoose.Schema({
-  registrationId: { type: String, unique: true },
+  registrationId: { type: String, unique: true, sparse: true },
   teamName: { type: String, required: true },
   leaderName: { type: String, required: true },
   leaderEmail: { type: String, required: true },
@@ -146,6 +157,14 @@ const registrationSchema = new mongoose.Schema({
   psTitle: { type: String, required: true },
   ideaPpt: { type: String, required: true }, // Store path/URL
   consentLetter: { type: String, required: true }, // Store path/URL
+  paymentStatus: { 
+    type: String, 
+    enum: ['pending', 'completed', 'failed'], 
+    default: 'pending' 
+  },
+  paymentOrderId: { type: String, unique: true },
+  paymentId: { type: String },
+  amountPaid: { type: Number },
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -227,8 +246,23 @@ app.post('/api/register', registrationLimiter, upload.fields([
       consentLetterUrl = `http://localhost:${PORT}/uploads/${consentLetterFile.filename}`;
     }
 
+    // Generate Razorpay Order
+    const amountInINR = Number(process.env.REGISTRATION_FEE_INR || 150);
+    const amountInPaise = amountInINR * 100;
+
+    let rpOrder;
+    try {
+      rpOrder = await razorpay.orders.create({
+        amount: amountInPaise,
+        currency: 'INR',
+        receipt: `receipt_${Date.now()}_${Math.round(Math.random() * 1000)}`
+      });
+    } catch (orderErr) {
+      console.error('Failed to create Razorpay order:', orderErr);
+      return res.status(500).json({ error: 'Failed to initialize payment gateway order.' });
+    }
+
     const newRegistration = new Registration({
-      registrationId,
       teamName,
       leaderName,
       leaderEmail,
@@ -240,7 +274,10 @@ app.post('/api/register', registrationLimiter, upload.fields([
       psid,
       psTitle,
       ideaPpt: ideaPptUrl,
-      consentLetter: consentLetterUrl
+      consentLetter: consentLetterUrl,
+      paymentStatus: 'pending',
+      paymentOrderId: rpOrder.id,
+      amountPaid: amountInINR
     });
 
     await newRegistration.save();
@@ -259,16 +296,122 @@ app.post('/api/register', registrationLimiter, upload.fields([
       });
     }
 
+    // Return Razorpay credentials and order details to client
     res.status(201).json({
       success: true,
-      message: 'Registration created successfully!',
-      registrationId: registrationId,
-      teamName: teamName
+      orderId: rpOrder.id,
+      amount: rpOrder.amount,
+      keyId: process.env.RAZORPAY_KEY_ID || '',
+      teamName,
+      leaderName,
+      leaderEmail,
+      leaderPhone
     });
 
   } catch (error) {
     console.error('Error creating registration:', error);
     res.status(500).json({ error: error.message || 'Server error occurred during registration.' });
+  }
+});
+
+const crypto = require('crypto');
+
+// Cryptographic Payment Verification Route
+app.post('/api/payment/verify', async (req, res) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({ error: 'Missing required payment verification tokens.' });
+    }
+
+    // 1. Generate expected signature using SHA256 HMAC
+    const signSource = razorpay_order_id + '|' + razorpay_payment_id;
+    const expectedSignature = crypto
+      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || 'secret_placeholder')
+      .update(signSource.toString())
+      .digest('hex');
+
+    // 2. Check if signature matches
+    if (expectedSignature === razorpay_signature) {
+      // 3. Generate a secure, unique Registration ID
+      const randomHex = crypto.randomBytes(3).toString('hex').toUpperCase(); // 6 chars hex
+      const registrationId = `SIH4-${randomHex}`;
+
+      // 4. Update the pending registration document in MongoDB
+      const updatedReg = await Registration.findOneAndUpdate(
+        { paymentOrderId: razorpay_order_id },
+        { 
+          paymentStatus: 'completed',
+          paymentId: razorpay_payment_id,
+          registrationId: registrationId
+        },
+        { new: true }
+      );
+
+      if (!updatedReg) {
+        return res.status(404).json({ error: 'Associated registration record not found.' });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: 'Payment verified and registration finalized.',
+        registrationId: updatedReg.registrationId,
+        teamName: updatedReg.teamName
+      });
+    } else {
+      res.status(400).json({ error: 'Payment signature verification failed. Tampering detected.' });
+    }
+  } catch (err) {
+    console.error('Error during payment verification:', err);
+    res.status(500).json({ error: err.message || 'Server error verifying transaction.' });
+  }
+});
+
+// Razorpay Webhook callback route (verifies webhook events using raw req.rawBody)
+app.post('/api/payment/webhook', async (req, res) => {
+  try {
+    const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
+    const signature = req.headers['x-razorpay-signature'];
+
+    if (!secret || !signature) {
+      // Webhook not fully configured or missing headers - ignore/acknowledge
+      return res.status(200).send('Webhook configured but skipped signature verification.');
+    }
+
+    const expectedSignature = crypto
+      .createHmac('sha256', secret)
+      .update(req.rawBody)
+      .digest('hex');
+
+    if (expectedSignature === signature) {
+      const eventData = req.body;
+      
+      // If payment is captured or order is paid
+      if (eventData.event === 'order.paid' || eventData.event === 'payment.captured') {
+        const payloadOrder = eventData.payload.order?.entity || eventData.payload.payment?.entity;
+        const orderId = payloadOrder?.order_id || payloadOrder?.id;
+        const paymentId = eventData.payload.payment?.entity?.id || '';
+
+        if (orderId) {
+          const reg = await Registration.findOne({ paymentOrderId: orderId });
+          if (reg && reg.paymentStatus !== 'completed') {
+            const randomHex = crypto.randomBytes(3).toString('hex').toUpperCase();
+            reg.paymentStatus = 'completed';
+            reg.paymentId = paymentId;
+            reg.registrationId = `SIH4-${randomHex}`;
+            await reg.save();
+            console.log(`Webhook updated registration for order ${orderId} successfully.`);
+          }
+        }
+      }
+      res.status(200).send('OK');
+    } else {
+      res.status(400).send('Invalid webhook signature');
+    }
+  } catch (err) {
+    console.error('Webhook processing error:', err);
+    res.status(500).send('Webhook server error');
   }
 });
 

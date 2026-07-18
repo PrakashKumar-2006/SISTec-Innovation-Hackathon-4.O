@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import { X, Send, CheckCircle2, AlertCircle, Upload, ArrowLeft, ArrowRight, Check, Eye } from 'lucide-react';
 
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 export default function RegisterModal({ onClose }) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -182,7 +192,7 @@ export default function RegisterModal({ onClose }) {
       submitData.append('ideaPpt', formData.ideaPpt);
       submitData.append('consentLetter', formData.consentLetter);
 
-      // Send to Backend API
+      // Send details to Backend API to create Razorpay Order
       const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const response = await fetch(`${backendUrl}/api/register`, {
         method: 'POST',
@@ -196,15 +206,73 @@ export default function RegisterModal({ onClose }) {
         data = { error: `Server error (${response.status}). Please check your file size (Max 10MB).` };
       }
 
-      if (response.ok) {
-        setRegistrationResult(data);
-      } else {
-        setErrors({ submit: data.error || 'Failed to submit registration. Please try again.' });
+      if (!response.ok) {
+        setErrors({ submit: data.error || 'Failed to initialize order. Please try again.' });
+        setIsSubmitting(false);
+        return;
       }
+
+      // Load Razorpay Script dynamically
+      const isLoaded = await loadRazorpayScript();
+      if (!isLoaded) {
+        setErrors({ submit: 'Failed to load Razorpay checkout overlay. Check your internet connection.' });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Configure checkout options
+      const options = {
+        key: data.keyId,
+        amount: data.amount,
+        currency: 'INR',
+        name: 'SIH 4.0 Hackathon',
+        description: `Registration Fee for team ${data.teamName}`,
+        order_id: data.orderId,
+        handler: async function (paymentRes) {
+          try {
+            setIsSubmitting(true);
+            const verifyRes = await fetch(`${backendUrl}/api/payment/verify`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: paymentRes.razorpay_order_id,
+                razorpay_payment_id: paymentRes.razorpay_payment_id,
+                razorpay_signature: paymentRes.razorpay_signature,
+              }),
+            });
+
+            const verifyData = await verifyRes.json();
+            if (verifyRes.ok) {
+              setRegistrationResult(verifyData);
+            } else {
+              setErrors({ submit: verifyData.error || 'Payment verification failed.' });
+            }
+          } catch (verifyErr) {
+            console.error(verifyErr);
+            setErrors({ submit: 'Verification server connection error. Please contact organizers.' });
+          } finally {
+            setIsSubmitting(false);
+          }
+        },
+        prefill: {
+          name: data.leaderName,
+          email: data.leaderEmail,
+          contact: data.leaderPhone,
+        },
+        theme: { color: '#D8AB55' }, // Match gold branding
+        modal: {
+          ondismiss: function () {
+            setIsSubmitting(false);
+          },
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+
     } catch (err) {
       console.error(err);
       setErrors({ submit: 'Network error occurred. Please check your internet connection or server status.' });
-    } finally {
       setIsSubmitting(false);
     }
   };
