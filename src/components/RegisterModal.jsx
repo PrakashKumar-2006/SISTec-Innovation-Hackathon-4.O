@@ -208,7 +208,11 @@ export default function RegisterModal({ onClose }) {
       submitData.append('consentLetter', formData.consentLetter);
 
       // Send details to Backend API to create Razorpay Order
-      const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const backendUrl = import.meta.env.VITE_API_URL !== undefined 
+        ? import.meta.env.VITE_API_URL 
+        : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+          ? 'http://localhost:5000'
+          : '';
       const response = await fetch(`${backendUrl}/api/register`, {
         method: 'POST',
         body: submitData,
