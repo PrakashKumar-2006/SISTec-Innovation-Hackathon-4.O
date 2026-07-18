@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { X, Send, CheckCircle2, AlertCircle, Upload, ArrowLeft, ArrowRight, Check, Eye } from 'lucide-react';
+import { X, Send, CheckCircle2, AlertCircle, Upload, ArrowLeft, ArrowRight, Check, Eye, CreditCard } from 'lucide-react';
+
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
 
 export default function RegisterModal({ onClose }) {
   const [step, setStep] = useState(1);
@@ -9,15 +19,15 @@ export default function RegisterModal({ onClose }) {
     leaderName: '',
     leaderEmail: '',
     leaderPhone: '',
-    leaderGender: 'Male',
-    theme: 'AI & Open Innovation',
+    leaderGender: '',
+    theme: '',
     instituteName: '',
 
     // Step 2: Member Details
-    member1Name: '', member1Gender: 'Male', member1Email: '', member1Phone: '',
-    member2Name: '', member2Gender: 'Male', member2Email: '', member2Phone: '',
-    member3Name: '', member3Gender: 'Male', member3Email: '', member3Phone: '',
-    member4Name: '', member4Gender: 'Male', member4Email: '', member4Phone: '',
+    member1Name: '', member1Gender: '', member1Email: '', member1Phone: '',
+    member2Name: '', member2Gender: '', member2Email: '', member2Phone: '',
+    member3Name: '', member3Gender: '', member3Email: '', member3Phone: '',
+    member4Name: '', member4Gender: '', member4Email: '', member4Phone: '',
 
     // Step 3: Solution Details
     psid: '',
@@ -45,6 +55,21 @@ export default function RegisterModal({ onClose }) {
   const handleFileChange = (e, fieldName) => {
     const file = e.target.files[0];
     if (file) {
+      const maxSizeBytes = 20 * 1024 * 1024; // 20MB
+      if (file.size > maxSizeBytes) {
+        setErrors((prev) => ({ 
+          ...prev, 
+          [fieldName]: `File is too large. Maximum limit is 20MB (Your file: ${(file.size / (1024 * 1024)).toFixed(1)}MB).` 
+        }));
+        // Reset file input element value so they can re-select
+        e.target.value = '';
+        setFormData((prev) => ({
+          ...prev,
+          [fieldName]: null,
+        }));
+        return;
+      }
+
       setFormData((prev) => ({
         ...prev,
         [fieldName]: file,
@@ -61,6 +86,12 @@ export default function RegisterModal({ onClose }) {
     if (currentStep === 1) {
       if (!formData.teamName.trim()) newErrors.teamName = 'Team name is required';
       if (!formData.leaderName.trim()) newErrors.leaderName = 'Leader name is required';
+      if (!formData.leaderGender) {
+        newErrors.leaderGender = 'Leader gender selection is required';
+      }
+      if (!formData.theme) {
+        newErrors.theme = 'Theme selection is required';
+      }
       if (!formData.leaderEmail.trim()) {
         newErrors.leaderEmail = 'Leader email is required';
       } else if (!/\S+@\S+\.\S+/.test(formData.leaderEmail)) {
@@ -80,9 +111,11 @@ export default function RegisterModal({ onClose }) {
         const name = formData[`member${index}Name`]?.trim();
         const email = formData[`member${index}Email`]?.trim();
         const phone = formData[`member${index}Phone`]?.trim();
+        const gender = formData[`member${index}Gender`];
 
-        if (name || email || phone) {
+        if (name || email || phone || gender) {
           if (!name) newErrors[`member${index}Name`] = 'Name is required';
+          if (!gender) newErrors[`member${index}Gender`] = 'Gender is required';
           if (!email) {
             newErrors[`member${index}Email`] = 'Email is required';
           } else if (!/\S+@\S+\.\S+/.test(email)) {
@@ -174,8 +207,9 @@ export default function RegisterModal({ onClose }) {
       submitData.append('ideaPpt', formData.ideaPpt);
       submitData.append('consentLetter', formData.consentLetter);
 
-      // Send to Backend API
-      const response = await fetch('http://127.0.0.1:5000/api/register', {
+      // Send details to Backend API to create Razorpay Order
+      const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${backendUrl}/api/register`, {
         method: 'POST',
         body: submitData,
       });
@@ -187,15 +221,73 @@ export default function RegisterModal({ onClose }) {
         data = { error: `Server error (${response.status}). Please check your file size (Max 10MB).` };
       }
 
-      if (response.ok) {
-        setRegistrationResult(data);
-      } else {
-        setErrors({ submit: data.error || 'Failed to submit registration. Please try again.' });
+      if (!response.ok) {
+        setErrors({ submit: data.error || 'Failed to initialize order. Please try again.' });
+        setIsSubmitting(false);
+        return;
       }
+
+      // Load Razorpay Script dynamically
+      const isLoaded = await loadRazorpayScript();
+      if (!isLoaded) {
+        setErrors({ submit: 'Failed to load Razorpay checkout overlay. Check your internet connection.' });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Configure checkout options
+      const options = {
+        key: data.keyId,
+        amount: data.amount,
+        currency: 'INR',
+        name: 'SIH 4.0 Hackathon',
+        description: `Registration Fee for team ${data.teamName}`,
+        order_id: data.orderId,
+        handler: async function (paymentRes) {
+          try {
+            setIsSubmitting(true);
+            const verifyRes = await fetch(`${backendUrl}/api/payment/verify`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: paymentRes.razorpay_order_id,
+                razorpay_payment_id: paymentRes.razorpay_payment_id,
+                razorpay_signature: paymentRes.razorpay_signature,
+              }),
+            });
+
+            const verifyData = await verifyRes.json();
+            if (verifyRes.ok) {
+              setRegistrationResult(verifyData);
+            } else {
+              setErrors({ submit: verifyData.error || 'Payment verification failed.' });
+            }
+          } catch (verifyErr) {
+            console.error(verifyErr);
+            setErrors({ submit: 'Verification server connection error. Please contact organizers.' });
+          } finally {
+            setIsSubmitting(false);
+          }
+        },
+        prefill: {
+          name: data.leaderName,
+          email: data.leaderEmail,
+          contact: data.leaderPhone,
+        },
+        theme: { color: '#D8AB55' }, // Match gold branding
+        modal: {
+          ondismiss: function () {
+            setIsSubmitting(false);
+          },
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+
     } catch (err) {
       console.error(err);
       setErrors({ submit: 'Network error occurred. Please check your internet connection or server status.' });
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -205,26 +297,37 @@ export default function RegisterModal({ onClose }) {
     { num: 2, title: 'Team Member Details' },
     { num: 3, title: 'Solution' },
     { num: 4, title: 'Review Details' },
+    { num: 5, title: 'Payment' },
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Dark overlay */}
-      <div 
-        onClick={onClose}
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-      ></div>
+    <div className="fixed inset-0 w-full h-full bg-[#080809] z-50 overflow-y-auto flex flex-col font-sans">
+      {/* Secure Header */}
+      <div className="w-full bg-[#0D0D0F]/85 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-20">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></div>
+            <span className="text-[10px] sm:text-xs font-mono font-bold tracking-widest text-emerald-500 uppercase">
+              Secure Submission Channel
+            </span>
+          </div>
+          <button
+            onClick={() => {
+              if (window.confirm("Are you sure you want to exit? Any unsaved registration progress will be lost.")) {
+                onClose();
+              }
+            }}
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 border border-slate-800 text-xs font-bold text-slate-400 hover:text-brand-gold hover:border-brand-gold/40 hover:bg-slate-800/50 transition-all cursor-pointer shadow-md"
+          >
+            <ArrowLeft size={14} />
+            <span>Cancel & Return</span>
+          </button>
+        </div>
+      </div>
 
-      {/* Modal Container */}
-      <div className="relative w-full max-w-4xl bg-[#0F0F11] border border-brand-navy/10 rounded-3xl p-6 sm:p-8 shadow-2xl z-10 max-h-[92vh] overflow-y-auto">
-        
-        {/* Close Button */}
-        <button 
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full bg-brand-dark border border-brand-navy/10 text-brand-gray hover:text-brand-gold transition-all cursor-pointer shadow-sm"
-        >
-          <X size={18} />
-        </button>
+      {/* Main Page Container */}
+      <div className="flex-grow flex items-center justify-center p-4 sm:p-8">
+        <div className="relative w-full max-w-4xl bg-[#0F0F11] border border-slate-800/80 rounded-3xl p-6 sm:p-8 shadow-2xl z-10">
 
         {!registrationResult ? (
           <>
@@ -238,9 +341,9 @@ export default function RegisterModal({ onClose }) {
             {/* Horizontal Steps Progress Indicator */}
             <div className="relative flex justify-between items-center max-w-2xl mx-auto mb-10 px-4">
               {/* Progress Line */}
-              <div className="absolute top-5 left-10 right-10 h-[2px] bg-slate-200 -z-10">
+              <div className="absolute top-5 left-10 right-10 h-[2px] bg-slate-800 -z-10">
                 <div 
-                  className="h-full bg-brand-gold transition-all duration-300"
+                  className="h-full bg-brand-gold transition-all duration-500 ease-out shadow-[0_0_8px_#D8AB55]"
                   style={{ width: `${((step - 1) / (stepLabels.length - 1)) * 100}%` }}
                 ></div>
               </div>
@@ -251,23 +354,23 @@ export default function RegisterModal({ onClose }) {
                 return (
                   <div key={lbl.num} className="flex flex-col items-center text-center w-24">
                     <div 
-                      className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border-2 transition-all duration-300 ${
+                      className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border-2 transition-all duration-500 ease-out ${
                         isCurrent 
-                          ? 'bg-brand-gold border-brand-gold text-white shadow-[0_0_12px_rgba(16,185,129,0.3)] scale-110' 
+                          ? 'bg-brand-gold border-brand-gold text-[#080809] shadow-[0_0_15px_rgba(216,171,85,0.4)] scale-110' 
                           : isActive 
-                            ? 'bg-brand-gold border-brand-gold text-white' 
-                            : 'bg-white border-slate-300 text-slate-400'
+                            ? 'bg-brand-gold border-brand-gold text-[#080809]' 
+                            : 'bg-[#121214] border-slate-800 text-slate-500'
                       }`}
                     >
                       {isActive && !isCurrent ? <Check size={16} /> : lbl.num}
                     </div>
                     <span 
-                      className={`text-[10px] sm:text-xs font-semibold mt-2 select-none min-h-[32px] leading-tight ${
+                      className={`text-[10px] sm:text-xs font-semibold mt-2 select-none min-h-[32px] leading-tight transition-all duration-300 ${
                         isCurrent 
-                          ? 'text-brand-navy font-bold' 
+                          ? 'text-white font-bold' 
                           : isActive 
                             ? 'text-brand-gold' 
-                            : 'text-slate-400'
+                            : 'text-slate-500'
                       }`}
                     >
                       {lbl.title}
@@ -278,7 +381,8 @@ export default function RegisterModal({ onClose }) {
             </div>
 
             {/* Steps Container */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-brand-navy/10">
+            <div className="bg-[#161619] rounded-3xl p-6 sm:p-8 border border-slate-800/80 min-h-[500px] flex flex-col justify-between shadow-lg">
+              <div className="flex-grow">
               
               {/* Error Alert */}
               {errors.submit && (
@@ -290,7 +394,7 @@ export default function RegisterModal({ onClose }) {
 
               {/* Step 1: Team Details */}
               {step === 1 && (
-                <div className="space-y-6">
+                <div className="animate-fade-in space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase">
@@ -342,8 +446,11 @@ export default function RegisterModal({ onClose }) {
                         name="theme"
                         value={formData.theme}
                         onChange={handleInputChange}
-                        className="w-full px-6 py-3 rounded-full bg-white border border-slate-800 focus:border-brand-blue focus:outline-none text-slate-200 transition-colors shadow-sm cursor-pointer"
+                        className={`w-full px-6 py-3 rounded-full bg-white border ${
+                          errors.theme ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
+                        } focus:outline-none text-slate-200 transition-colors shadow-sm cursor-pointer`}
                       >
+                        <option value="" disabled className="text-slate-500 bg-slate-900">Select Theme</option>
                         <option value="AI & Open Innovation">AI & Open Innovation</option>
                         <option value="AgriTech">AgriTech</option>
                         <option value="EduTech">EduTech</option>
@@ -351,6 +458,11 @@ export default function RegisterModal({ onClose }) {
                         <option value="Fintech & Web3">Fintech & Web3</option>
                         <option value="Smart Automation">Smart Automation</option>
                       </select>
+                      {errors.theme && (
+                        <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                          <AlertCircle size={10} /> {errors.theme}
+                        </p>
+                      )}
                     </div>
 
                     <div>
@@ -361,12 +473,20 @@ export default function RegisterModal({ onClose }) {
                         name="leaderGender"
                         value={formData.leaderGender}
                         onChange={handleInputChange}
-                        className="w-full px-6 py-3 rounded-full bg-white border border-slate-800 focus:border-brand-blue focus:outline-none text-slate-200 transition-colors shadow-sm cursor-pointer"
+                        className={`w-full px-6 py-3 rounded-full bg-white border ${
+                          errors.leaderGender ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
+                        } focus:outline-none text-slate-200 transition-colors shadow-sm cursor-pointer`}
                       >
+                        <option value="" disabled className="text-slate-500 bg-slate-900">Select Gender</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                         <option value="Other">Other</option>
                       </select>
+                      {errors.leaderGender && (
+                        <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                          <AlertCircle size={10} /> {errors.leaderGender}
+                        </p>
+                      )}
                     </div>
 
                     <div>
@@ -471,12 +591,20 @@ export default function RegisterModal({ onClose }) {
                             name={`member${num}Gender`}
                             value={formData[`member${num}Gender`]}
                             onChange={handleInputChange}
-                            className="w-full px-5 py-2.5 rounded-full bg-white border border-slate-800 focus:border-brand-blue focus:outline-none text-sm text-slate-200 transition-colors shadow-sm cursor-pointer"
+                            className={`w-full px-5 py-2.5 rounded-full bg-white border ${
+                              errors[`member${num}Gender`] ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
+                            } focus:outline-none text-sm text-slate-200 transition-colors shadow-sm cursor-pointer`}
                           >
+                            <option value="" disabled className="text-slate-500 bg-slate-900">Select Gender</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                             <option value="Other">Other</option>
                           </select>
+                          {errors[`member${num}Gender`] && (
+                            <p className="text-[10px] text-red-500 mt-1">
+                              {errors[`member${num}Gender`]}
+                            </p>
+                          )}
                         </div>
 
                         <div>
@@ -609,7 +737,7 @@ export default function RegisterModal({ onClose }) {
                               <button
                                 type="button"
                                 onClick={() => previewLocalFile(formData.ideaPpt)}
-                                className="flex items-center gap-1 text-[10px] text-brand-gold hover:text-emerald-700 hover:underline font-bold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/50"
+                                className="flex items-center gap-1 text-[10px] text-brand-gold hover:text-brand-gold/80 hover:underline font-bold bg-brand-gold/10 px-2.5 py-1 rounded-full border border-brand-gold/30 cursor-pointer"
                               >
                                 <Eye size={12} />
                                 <span>Preview Selected File</span>
@@ -669,7 +797,7 @@ export default function RegisterModal({ onClose }) {
                               <button
                                 type="button"
                                 onClick={() => previewLocalFile(formData.consentLetter)}
-                                className="flex items-center gap-1 text-[10px] text-brand-gold hover:text-emerald-700 hover:underline font-bold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/50"
+                                className="flex items-center gap-1 text-[10px] text-brand-gold hover:text-brand-gold/80 hover:underline font-bold bg-brand-gold/10 px-2.5 py-1 rounded-full border border-brand-gold/30 cursor-pointer"
                               >
                                 <Eye size={12} />
                                 <span>Preview Selected File</span>
@@ -743,19 +871,25 @@ export default function RegisterModal({ onClose }) {
                         const name = formData[`member${num}Name`]?.trim();
                         if (!name) return null;
                         return (
-                          <div key={num} className="p-3 bg-slate-50 rounded-xl space-y-1.5 text-xs">
-                            <span className="font-bold text-slate-600 block">Member {num}</span>
-                            <div>
-                              <span className="text-slate-400">Name:</span> <span className="text-slate-200 font-medium">{name}</span>
-                            </div>
-                            <div>
-                              <span className="text-slate-400">Gender:</span> <span className="text-slate-200 font-medium">{formData[`member${num}Gender`]}</span>
-                            </div>
-                            <div>
-                              <span className="text-slate-400">Email:</span> <span className="text-slate-200 font-medium">{formData[`member${num}Email`]}</span>
-                            </div>
-                            <div>
-                              <span className="text-slate-400">Phone:</span> <span className="text-slate-200 font-medium">{formData[`member${num}Phone`]}</span>
+                          <div key={num} className="p-4 bg-[#080809]/60 border border-slate-800/80 rounded-2xl space-y-2 text-xs">
+                            <span className="font-bold text-brand-gold block tracking-wide">Member {num}</span>
+                            <div className="space-y-1">
+                              <div>
+                                <span className="text-slate-400">Name: </span> 
+                                <span className="text-slate-200 font-medium">{name}</span>
+                              </div>
+                              <div>
+                                <span className="text-slate-400">Gender: </span> 
+                                <span className="text-slate-200 font-medium">{formData[`member${num}Gender`]}</span>
+                              </div>
+                              <div>
+                                <span className="text-slate-400">Email: </span> 
+                                <span className="text-slate-200 font-medium">{formData[`member${num}Email`]}</span>
+                              </div>
+                              <div>
+                                <span className="text-slate-400">Phone: </span> 
+                                <span className="text-slate-200 font-medium">{formData[`member${num}Phone`]}</span>
+                              </div>
                             </div>
                           </div>
                         );
@@ -788,7 +922,7 @@ export default function RegisterModal({ onClose }) {
                             <button
                               type="button"
                               onClick={() => previewLocalFile(formData.ideaPpt)}
-                              className="text-[10px] bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5"
+                              className="text-[10px] bg-brand-gold/10 hover:bg-brand-gold/20 border border-brand-gold/30 text-brand-gold font-bold px-3 py-1 rounded-full flex items-center gap-1 cursor-pointer transition-colors"
                             >
                               <Eye size={10} />
                               Preview
@@ -804,7 +938,7 @@ export default function RegisterModal({ onClose }) {
                             <button
                               type="button"
                               onClick={() => previewLocalFile(formData.consentLetter)}
-                              className="text-[10px] bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5"
+                              className="text-[10px] bg-brand-gold/10 hover:bg-brand-gold/20 border border-brand-gold/30 text-brand-gold font-bold px-3 py-1 rounded-full flex items-center gap-1 cursor-pointer transition-colors"
                             >
                               <Eye size={10} />
                               Preview
@@ -817,52 +951,95 @@ export default function RegisterModal({ onClose }) {
                 </div>
               )}
 
-            </div>
+              {/* Step 5: Payment */}
+              {step === 5 && (
+                <div className="animate-fade-in space-y-6 text-center py-6">
+                  <div className="max-w-md mx-auto bg-[#101012] border border-slate-800/80 rounded-2xl p-6 space-y-6">
+                    <div className="w-16 h-16 bg-brand-gold/10 border border-brand-gold/20 rounded-full flex items-center justify-center mx-auto text-brand-gold shadow-sm">
+                      <CreditCard size={28} />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <h4 className="text-xl font-bold font-display text-white">Registration Payment</h4>
+                      <p className="text-xs text-slate-400">
+                        Please complete the registration fee to submit your nomination for SIH 4.0.
+                      </p>
+                    </div>
 
-            {/* Navigation Buttons */}
-            <div className="mt-8 flex justify-between items-center">
-              {step > 1 ? (
-                <button
-                  type="button"
-                  onClick={handlePrev}
-                  className="px-8 py-2.5 rounded-full border border-brand-gold text-brand-gold font-bold hover:bg-brand-gold/10 transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm"
-                >
-                  <ArrowLeft size={16} />
-                  <span>Prev</span>
-                </button>
-              ) : (
-                <div /> // placeholder for alignment
+                    <div className="border-t border-b border-slate-800/60 py-4 space-y-3">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Team Name</span>
+                        <span className="text-white font-semibold">{formData.teamName}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Team Leader</span>
+                        <span className="text-white font-semibold">{formData.leaderName}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Category Theme</span>
+                        <span className="text-white font-semibold">{formData.theme}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Amount to Pay</span>
+                        <span className="text-brand-gold font-bold">₹150.00</span>
+                      </div>
+                    </div>
+
+                    <div className="text-xs text-slate-500 bg-[#161619]/40 rounded-xl p-3 leading-relaxed border border-slate-900">
+                      Payment is processed securely by Razorpay. Once payment is confirmed, your registration ID will be generated and confirmation sent to <span className="text-slate-300 font-semibold">{formData.leaderEmail}</span>.
+                    </div>
+                  </div>
+                </div>
               )}
 
-              {step < 4 ? (
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  className="px-8 py-2.5 rounded-full bg-btn-gradient hover:opacity-90 text-white font-bold transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm border-none ml-auto"
-                >
-                  <span>Next</span>
-                  <ArrowRight size={16} />
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={isSubmitting}
-                  className="px-8 py-2.5 rounded-full bg-btn-gradient hover:opacity-90 text-white font-bold transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm border-none ml-auto disabled:opacity-50"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin"></div>
-                      <span>Registering...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Submit Nomination</span>
-                      <Send size={14} />
-                    </>
-                  )}
-                </button>
-              )}
+              </div>
+
+              {/* Navigation Buttons */}
+              <div className="mt-8 pt-6 border-t border-slate-800/50 flex justify-between items-center">
+                {step > 1 ? (
+                  <button
+                    type="button"
+                    onClick={handlePrev}
+                    className="px-8 py-2.5 rounded-full border border-brand-gold text-brand-gold font-bold hover:bg-brand-gold/10 transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm"
+                  >
+                    <ArrowLeft size={16} />
+                    <span>Prev</span>
+                  </button>
+                ) : (
+                  <div /> // placeholder for alignment
+                )}
+
+                {step < 5 ? (
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    className="px-8 py-2.5 rounded-full bg-btn-gradient hover:opacity-90 text-white font-bold transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm border-none ml-auto"
+                  >
+                    <span>Next</span>
+                    <ArrowRight size={16} />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    className="px-8 py-2.5 rounded-full bg-btn-gradient hover:opacity-90 text-white font-bold transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm border-none ml-auto disabled:opacity-50"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin"></div>
+                        <span>Processing Payment...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Pay & Register</span>
+                        <Send size={14} />
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+
             </div>
           </>
         ) : (
@@ -898,5 +1075,6 @@ export default function RegisterModal({ onClose }) {
 
       </div>
     </div>
+  </div>
   );
 }
