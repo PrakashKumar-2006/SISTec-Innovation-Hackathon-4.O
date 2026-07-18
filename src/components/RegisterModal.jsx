@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Send, CheckCircle2, AlertCircle, Upload, ArrowLeft, ArrowRight, Check, Eye, CreditCard } from 'lucide-react';
+import { problemStatements } from '../data/problemStatements';
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
