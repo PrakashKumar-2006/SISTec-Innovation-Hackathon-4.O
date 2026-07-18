@@ -1,6 +1,82 @@
-import React, { useState } from 'react';
-import { X, Send, CheckCircle2, AlertCircle, Upload, ArrowLeft, ArrowRight, Check, Eye, CreditCard } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, Send, CheckCircle2, AlertCircle, Upload, ArrowLeft, ArrowRight, Check, Eye, CreditCard, RotateCcw } from 'lucide-react';
 import { problemStatements } from '../data/problemStatements';
+
+// ---------------------------------------------------------------------------
+// RegistrationSession — localStorage auto-save & recovery utility
+// ---------------------------------------------------------------------------
+const STORAGE_KEY = 'sih4_registration_draft';
+const SESSION_TTL_MS = 48 * 60 * 60 * 1000; // 48 hours
+
+const RegistrationSession = {
+  /** Serialize step + formData to localStorage.
+   *  File objects are stored as lightweight metadata so filenames survive refresh. */
+  save(step, formData) {
+    try {
+      const serializable = {};
+      for (const [key, val] of Object.entries(formData)) {
+        if (val instanceof File) {
+          // Store only metadata — File objects are not serializable
+          serializable[key] = {
+            __fileMeta: true,
+            name: val.name,
+            size: val.size,
+            type: val.type,
+            lastModified: val.lastModified,
+          };
+        } else {
+          serializable[key] = val;
+        }
+      }
+      const payload = JSON.stringify({ timestamp: Date.now(), step, formData: serializable });
+      localStorage.setItem(STORAGE_KEY, payload);
+    } catch (e) {
+      // Quota exceeded or private mode — fail silently
+      console.warn('[RegistrationSession] Could not save draft:', e);
+    }
+  },
+
+  /** Load a saved session. Returns null if missing, corrupt, or expired. */
+  load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed || !parsed.timestamp || !parsed.formData) return null;
+      if (Date.now() - parsed.timestamp > SESSION_TTL_MS) {
+        localStorage.removeItem(STORAGE_KEY);
+        return null;
+      }
+      return parsed;
+    } catch (e) {
+      return null;
+    }
+  },
+
+  /** Remove the saved draft from localStorage. Call on success or explicit cancel. */
+  clear() {
+    localStorage.removeItem(STORAGE_KEY);
+  },
+};
+
+// Default blank form data (used as fallback for lazy initializers)
+const defaultFormData = {
+  teamName: '',
+  leaderName: '',
+  leaderEmail: '',
+  leaderPhone: '',
+  leaderGender: '',
+  theme: '',
+  instituteName: '',
+  member1Name: '', member1Gender: '', member1Email: '', member1Phone: '',
+  member2Name: '', member2Gender: '', member2Email: '', member2Phone: '',
+  member3Name: '', member3Gender: '', member3Email: '', member3Phone: '',
+  member4Name: '', member4Gender: '', member4Email: '', member4Phone: '',
+  psid: '',
+  psTitle: '',
+  ideaPpt: null,
+  consentLetter: null,
+};
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
@@ -13,33 +89,65 @@ const loadRazorpayScript = () => {
 };
 
 export default function RegisterModal({ onClose }) {
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    // Step 1: Team Details
-    teamName: '',
-    leaderName: '',
-    leaderEmail: '',
-    leaderPhone: '',
-    leaderGender: '',
-    theme: '',
-    instituteName: '',
+  // ---------------------------------------------------------------------------
+  // Lazy initializers — restore from saved session if available
+  // ---------------------------------------------------------------------------
+  const [step, setStep] = useState(() => RegistrationSession.load()?.step ?? 1);
+  const [formData, setFormData] = useState(() => {
+    const saved = RegistrationSession.load();
+    if (!saved) return defaultFormData;
+    // Re-hydrate: file metadata placeholders become null (File cannot be stored)
+    const hydrated = { ...defaultFormData };
+    for (const [key, val] of Object.entries(saved.formData)) {
+      hydrated[key] = (val && val.__fileMeta) ? null : val;
+    }
+    return hydrated;
+  });
 
-    // Step 2: Member Details
-    member1Name: '', member1Gender: '', member1Email: '', member1Phone: '',
-    member2Name: '', member2Gender: '', member2Email: '', member2Phone: '',
-    member3Name: '', member3Gender: '', member3Email: '', member3Phone: '',
-    member4Name: '', member4Gender: '', member4Email: '', member4Phone: '',
-
-    // Step 3: Solution Details
-    psid: '',
-    psTitle: '',
-    ideaPpt: null,
-    consentLetter: null,
+  // Track whether we recovered a session and which files need re-uploading
+  const [recoveredSession, setRecoveredSession] = useState(() => {
+    const saved = RegistrationSession.load();
+    if (!saved) return false;
+    return saved.timestamp ? true : false;
+  });
+  const [recoveredFiles, setRecoveredFiles] = useState(() => {
+    const saved = RegistrationSession.load();
+    if (!saved) return [];
+    const files = [];
+    if (saved.formData?.ideaPpt?.__fileMeta) files.push({ field: 'ideaPpt', name: saved.formData.ideaPpt.name });
+    if (saved.formData?.consentLetter?.__fileMeta) files.push({ field: 'consentLetter', name: saved.formData.consentLetter.name });
+    return files;
+  });
+  // Store file metadata separately so we can show the "re-upload" hint even after clearing recovery banner
+  const [fileMetaHints, setFileMetaHints] = useState(() => {
+    const saved = RegistrationSession.load();
+    if (!saved) return {};
+    const hints = {};
+    if (saved.formData?.ideaPpt?.__fileMeta) hints.ideaPpt = saved.formData.ideaPpt.name;
+    if (saved.formData?.consentLetter?.__fileMeta) hints.consentLetter = saved.formData.consentLetter.name;
+    return hints;
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [registrationResult, setRegistrationResult] = useState(null);
+
+  // Debounce timer ref for auto-save
+  const autoSaveTimerRef = useRef(null);
+
+  // ---------------------------------------------------------------------------
+  // Auto-save effect — fires 400ms after any change to step or formData
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    if (registrationResult) return; // Don't save after successful registration
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    autoSaveTimerRef.current = setTimeout(() => {
+      RegistrationSession.save(step, formData);
+    }, 400);
+    return () => {
+      if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    };
+  }, [step, formData, registrationResult]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -75,6 +183,8 @@ export default function RegisterModal({ onClose }) {
         ...prev,
         [fieldName]: file,
       }));
+      // Once user selects a real file, remove the recovery hint for this field
+      setFileMetaHints((prev) => { const next = { ...prev }; delete next[fieldName]; return next; });
       if (errors[fieldName]) {
         setErrors((prev) => ({ ...prev, [fieldName]: null }));
       }
@@ -263,6 +373,8 @@ export default function RegisterModal({ onClose }) {
 
             const verifyData = await verifyRes.json();
             if (verifyRes.ok) {
+              // Clear saved draft — registration completed successfully
+              RegistrationSession.clear();
               setRegistrationResult(verifyData);
             } else {
               setErrors({ submit: verifyData.error || 'Payment verification failed.' });
@@ -320,14 +432,16 @@ export default function RegisterModal({ onClose }) {
           </div>
           <button
             onClick={() => {
-              if (window.confirm("Are you sure you want to exit? Any unsaved registration progress will be lost.")) {
+              if (window.confirm("Are you sure you want to exit? Your progress will be saved and restored when you return.")) {
+                // User chose to exit but we keep the draft — they can resume later.
+                // If they want to truly discard, they can clear via browser DevTools or session expiry.
                 onClose();
               }
             }}
             className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 border border-slate-800 text-xs font-bold text-slate-400 hover:text-brand-gold hover:border-brand-gold/40 hover:bg-slate-800/50 transition-all cursor-pointer shadow-md"
           >
             <ArrowLeft size={14} />
-            <span>Cancel & Return</span>
+            <span>Save & Exit</span>
           </button>
         </div>
       </div>
@@ -339,11 +453,48 @@ export default function RegisterModal({ onClose }) {
         {!registrationResult ? (
           <>
             {/* Form Title */}
-            <div className="text-center space-y-2 mb-8">
+            <div className="text-center space-y-2 mb-6">
               <h3 className="text-3xl font-bold font-display text-gold-metallic tracking-tight">
                 SIH 4.0 Registration Form
               </h3>
             </div>
+
+            {/* Session Recovery Banner */}
+            {recoveredSession && (
+              <div className="mb-6 p-4 rounded-2xl bg-amber-950/30 border border-amber-700/50 flex items-start gap-3 animate-fade-in">
+                <div className="mt-0.5 text-amber-400 shrink-0">
+                  <RotateCcw size={16} />
+                </div>
+                <div className="flex-grow text-left">
+                  <p className="text-xs font-bold text-amber-300 mb-1">Progress Restored</p>
+                  <p className="text-[11px] text-amber-200/80 leading-relaxed">
+                    Your previous registration progress has been automatically restored from where you left off.
+                    {recoveredFiles.length > 0 && (
+                      <>
+                        {' '}Please re-select your uploaded file{recoveredFiles.length > 1 ? 's' : ''}{' '}
+                        (Step 3):{' '}
+                        {recoveredFiles.map((f, i) => (
+                          <span key={f.field}>
+                            <strong className="text-amber-100">{f.name}</strong>
+                            {i < recoveredFiles.length - 1 ? ', ' : ''}
+                          </span>
+                        ))}
+                      </>
+                    )}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setRecoveredSession(false);
+                  }}
+                  className="shrink-0 text-amber-500 hover:text-amber-300 transition-colors cursor-pointer mt-0.5"
+                  aria-label="Dismiss"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            )}
 
             {/* Horizontal Steps Progress Indicator */}
             <div className="relative flex justify-between items-center max-w-2xl mx-auto mb-10 px-4">
@@ -726,12 +877,23 @@ export default function RegisterModal({ onClose }) {
                       <label className="w-full text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase text-left">
                         Idea PPT
                       </label>
+                      {/* Recovery hint — shown when we have metadata but no actual File */}
+                      {!formData.ideaPpt && fileMetaHints.ideaPpt && (
+                        <div className="w-full mb-2 px-3 py-2 rounded-xl bg-amber-950/30 border border-amber-700/40 flex items-center gap-2">
+                          <RotateCcw size={12} className="text-amber-400 shrink-0" />
+                          <p className="text-[10px] text-amber-300 leading-snug">
+                            Previously uploaded: <strong>{fileMetaHints.ideaPpt}</strong> — please re-select this file.
+                          </p>
+                        </div>
+                      )}
                       <div className={`w-full border-2 border-dashed rounded-2xl p-6 text-center transition-all ${
                         errors.ideaPpt 
                           ? 'border-red-300 bg-red-50/20' 
                           : formData.ideaPpt 
-                            ? 'border-emerald-300 bg-emerald-50/10' 
-                            : 'border-brand-gold/30 hover:border-brand-gold/60 bg-[#080809]/40'
+                            ? 'border-emerald-300 bg-emerald-50/10'
+                            : fileMetaHints.ideaPpt
+                              ? 'border-amber-600/50 bg-amber-950/10'
+                              : 'border-brand-gold/30 hover:border-brand-gold/60 bg-[#080809]/40'
                       }`}>
                         <input
                           type="file"
@@ -749,7 +911,7 @@ export default function RegisterModal({ onClose }) {
                               <Upload size={20} />
                             </div>
                             <span className="px-4 py-1.5 bg-brand-gold hover:bg-emerald-600 text-white font-bold text-xs rounded-full transition-all shadow-sm">
-                              Choose Idea PPT
+                              {fileMetaHints.ideaPpt && !formData.ideaPpt ? 'Re-select Idea PPT' : 'Choose Idea PPT'}
                             </span>
                           </label>
 
@@ -786,12 +948,23 @@ export default function RegisterModal({ onClose }) {
                       <label className="w-full text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase text-left">
                         Consent Letter
                       </label>
+                      {/* Recovery hint — shown when we have metadata but no actual File */}
+                      {!formData.consentLetter && fileMetaHints.consentLetter && (
+                        <div className="w-full mb-2 px-3 py-2 rounded-xl bg-amber-950/30 border border-amber-700/40 flex items-center gap-2">
+                          <RotateCcw size={12} className="text-amber-400 shrink-0" />
+                          <p className="text-[10px] text-amber-300 leading-snug">
+                            Previously uploaded: <strong>{fileMetaHints.consentLetter}</strong> — please re-select this file.
+                          </p>
+                        </div>
+                      )}
                       <div className={`w-full border-2 border-dashed rounded-2xl p-6 text-center transition-all ${
                         errors.consentLetter 
                           ? 'border-red-300 bg-red-50/20' 
                           : formData.consentLetter 
-                            ? 'border-emerald-300 bg-emerald-50/10' 
-                            : 'border-brand-gold/30 hover:border-brand-gold/60 bg-[#080809]/40'
+                            ? 'border-emerald-300 bg-emerald-50/10'
+                            : fileMetaHints.consentLetter
+                              ? 'border-amber-600/50 bg-amber-950/10'
+                              : 'border-brand-gold/30 hover:border-brand-gold/60 bg-[#080809]/40'
                       }`}>
                         <input
                           type="file"
@@ -809,7 +982,7 @@ export default function RegisterModal({ onClose }) {
                               <Upload size={20} />
                             </div>
                             <span className="px-4 py-1.5 bg-brand-gold hover:bg-emerald-600 text-white font-bold text-xs rounded-full transition-all shadow-sm">
-                              Choose Consent Letter
+                              {fileMetaHints.consentLetter && !formData.consentLetter ? 'Re-select Consent Letter' : 'Choose Consent Letter'}
                             </span>
                           </label>
 
