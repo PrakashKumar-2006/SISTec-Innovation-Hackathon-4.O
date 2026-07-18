@@ -16,6 +16,7 @@ const cloudinary = require('cloudinary').v2;
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const Razorpay = require('razorpay');
+const nodemailer = require('nodemailer');
 
 const app = express();
 
@@ -24,6 +25,73 @@ const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_placeholder',
   key_secret: process.env.RAZORPAY_KEY_SECRET || 'secret_placeholder'
 });
+
+// Setup Nodemailer SMTP Transporter
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+  port: parseInt(process.env.EMAIL_PORT || '587', 10),
+  secure: process.env.EMAIL_PORT === '465', // true for 465, false for other ports
+  auth: {
+    user: process.env.EMAIL_USER || '',
+    pass: process.env.EMAIL_PASS || '',
+  },
+  tls: {
+    rejectUnauthorized: false // Helps bypass local TLS cert errors during development
+  }
+});
+
+// Helper to send registration confirmation email
+const sendConfirmationEmail = async (leaderEmail, leaderName, teamName, registrationId) => {
+  // If email configuration is missing, print warning and skip to prevent backend errors
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.warn('WARNING: SMTP email configurations not set in .env. Skipping email dispatch.');
+    return;
+  }
+
+  const mailOptions = {
+    from: `"SIH 4.0 Hackathon" <${process.env.EMAIL_USER}>`,
+    to: leaderEmail,
+    subject: `SIH 4.0 Registration Successful! - Team ${teamName}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #fdfdfd;">
+        <div style="text-align: center; border-bottom: 2px solid #D8AB55; padding-bottom: 15px; margin-bottom: 20px;">
+          <h2 style="color: #161619; margin: 0;">Smart India Hackathon 4.0</h2>
+          <p style="color: #D8AB55; font-size: 14px; font-weight: bold; margin: 5px 0 0 0; letter-spacing: 1px;">SISTec Innovation Hackathon</p>
+        </div>
+        
+        <div style="color: #333333; line-height: 1.6;">
+          <p>Dear <strong>${leaderName}</strong>,</p>
+          
+          <p>Congratulations! Your team <strong>"${teamName}"</strong> has successfully registered for the <strong>Smart India Hackathon 4.0 (SIH 4.0)</strong> at Sagar Institute of Science & Technology (SISTec-R).</p>
+          
+          <div style="background-color: #f9f9f9; border-left: 4px solid #D8AB55; padding: 15px; margin: 20px 0; border-radius: 4px;">
+            <p style="margin: 0; font-size: 14px; color: #666666;">Your Unique Registration ID is:</p>
+            <h3 style="margin: 5px 0 0 0; color: #D8AB55; font-family: monospace; font-size: 22px; letter-spacing: 2px;">${registrationId}</h3>
+          </div>
+          
+          <p>Please keep this Registration ID safe. You will need it to reference your nomination, check results, and upload future project milestone guidelines.</p>
+          
+          <p><strong>Next Steps:</strong></p>
+          <ul style="padding-left: 20px;">
+            <li>Abstract guidelines and submission templates will be sent to this email address shortly.</li>
+            <li>Ensure your team members are notified of the success.</li>
+          </ul>
+          
+          <p style="margin-top: 30px; font-size: 12px; color: #888888; text-align: center; border-top: 1px solid #eeeeee; padding-top: 15px;">
+            This is an automated notification. Please do not reply directly to this email. For any queries, contact the hackathon organization committee.
+          </p>
+        </div>
+      </div>
+    `
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`Confirmation email successfully sent to ${leaderEmail}. MessageId: ${info.messageId}`);
+  } catch (err) {
+    console.error(`ERROR: Failed to send confirmation email to ${leaderEmail}:`, err.message);
+  }
+};
 
 // Configure Cloudinary
 const isCloudinaryConfigured = 
@@ -353,6 +421,14 @@ app.post('/api/payment/verify', async (req, res) => {
         return res.status(404).json({ error: 'Associated registration record not found.' });
       }
 
+      // 5. Send Email confirmation in background
+      sendConfirmationEmail(
+        updatedReg.leaderEmail,
+        updatedReg.leaderName,
+        updatedReg.teamName,
+        updatedReg.registrationId
+      );
+
       res.status(200).json({
         success: true,
         message: 'Payment verified and registration finalized.',
@@ -400,8 +476,16 @@ app.post('/api/payment/webhook', async (req, res) => {
             reg.paymentStatus = 'completed';
             reg.paymentId = paymentId;
             reg.registrationId = `SIH4-${randomHex}`;
-            await reg.save();
+            const savedReg = await reg.save();
             console.log(`Webhook updated registration for order ${orderId} successfully.`);
+            
+            // Send confirmation email asynchronously
+            sendConfirmationEmail(
+              savedReg.leaderEmail,
+              savedReg.leaderName,
+              savedReg.teamName,
+              savedReg.registrationId
+            );
           }
         }
       }
