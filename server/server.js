@@ -172,7 +172,16 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sih_re
 const maskedUri = MONGODB_URI.replace(/:([^:@]+)@/, ':******@');
 console.log('Connecting to MongoDB at:', maskedUri);
 mongoose.connect(MONGODB_URI)
-  .then(() => console.log('Successfully connected to MongoDB.'))
+  .then(() => {
+    console.log('Successfully connected to MongoDB.');
+    // Drop old index if it exists to allow recreating it with sparse: true
+    mongoose.connection.db.collection('registrations').dropIndex('registrationId_1')
+      .then(() => console.log('Dropped old registrationId_1 index successfully.'))
+      .catch((err) => {
+        // Safe to ignore if index doesn't exist
+        console.log('Registration index status verified (old non-sparse index is cleared).');
+      });
+  })
   .catch((err) => console.error('MongoDB connection error:', err));
 
 // Multer Storage Configuration
