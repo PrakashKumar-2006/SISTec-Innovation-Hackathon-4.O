@@ -92,7 +92,7 @@ export default function About() {
                   <div className="p-2.5 rounded-xl bg-brand-dark/80 border border-white/5 mb-4 group-hover:border-brand-gold/20 transition-colors">
                     {stat.icon}
                   </div>
-                  <span className="text-2xl font-black font-display text-brand-navy leading-none tracking-tight">{stat.value}</span>
+                  <span className="text-2xl font-black font-display text-white leading-none tracking-tight">{stat.value}</span>
                   <span className="text-xs font-bold text-brand-gold mt-1.5 tracking-wide uppercase">{stat.label}</span>
                   <span className="text-[10px] text-brand-gray mt-1 leading-normal font-medium">{stat.description}</span>
                 </div>

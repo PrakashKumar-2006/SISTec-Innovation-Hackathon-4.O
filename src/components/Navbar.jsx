@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
 
 export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [activeMobileSubDropdown, setActiveMobileSubDropdown] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,8 +22,18 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
   const toggleDropdown = (index) => {
     if (activeDropdown === index) {
       setActiveDropdown(null);
+      setActiveMobileSubDropdown(null);
     } else {
       setActiveDropdown(index);
+      setActiveMobileSubDropdown(null);
+    }
+  };
+
+  const toggleMobileSubDropdown = (index) => {
+    if (activeMobileSubDropdown === index) {
+      setActiveMobileSubDropdown(null);
+    } else {
+      setActiveMobileSubDropdown(index);
     }
   };
 
@@ -31,30 +42,55 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
     {
       name: 'Explore SIH',
       dropdown: [
-        { name: 'SIH 2024', href: '#timeline' },
-        { name: 'SIH 2023', href: '#timeline' }
+        { name: 'About SIH', href: '#about' },
+        { name: 'Timeline', href: '#timeline' },
+        { name: 'Program Schedule', href: '#schedule' }
       ]
     },
     {
       name: 'Guidelines',
       dropdown: [
-        { name: 'Instructions', href: '#objectives' },
+        { name: 'Instructions', href: '#instructions' },
         { name: 'How to Apply', href: '#process' },
-        { name: 'Idea Template', href: '#process' }
+        { name: 'Idea Template', href: '#process' },
+        { name: 'Consent Letter', href: '#process' }
       ]
     },
     { name: 'Problem Statements', href: '#themes' },
     {
       name: 'Result',
       dropdown: [
-        { name: 'SIH 4.0 Finalist Teams', href: '#prizes' }
+        { name: 'Grand Finale Teams', href: '#prizes' },
+        { name: 'Winner Of SIH 2025', href: '#prizes' }
       ]
     },
     {
       name: 'Previous SIH',
       dropdown: [
-        { name: 'SIH 3.0 (2025)', href: '#timeline' },
-        { name: 'SIH 2.0 (2024)', href: '#timeline' }
+        {
+          name: 'SIH 3.0',
+          subItems: [
+            { name: 'SIH 2025' },
+            { name: 'Grand Finale Teams', view: 'sih-2025-finalists' },
+            { name: 'Winner Of SIH 2025' }
+          ]
+        },
+        {
+          name: 'SIH 2.0',
+          subItems: [
+            { name: 'SIH 2024', view: 'sih-2024' },
+            { name: 'Grand Finale Teams', view: 'sih-2024-finalists' },
+            { name: 'Winner Of SIH 2024', view: 'sih-2024-winners' }
+          ]
+        },
+        {
+          name: 'SIH 1.0',
+          subItems: [
+            { name: 'SIH 2023' },
+            { name: 'Grand Finale Teams', view: 'sih-2023-finalists' },
+            { name: 'Winner Of SIH 2023', view: 'sih-2023-winners' }
+          ]
+        }
       ]
     },
     { name: 'Contact Us', href: '#contact' }
@@ -120,19 +156,59 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                   {/* Dropdown Menu */}
                   {item.dropdown && (
                     <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-52 rounded-2xl bg-brand-card/95 backdrop-blur-xl border border-brand-navy/10 p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible translate-y-3 group-hover:translate-y-0 transition-all duration-300 shadow-[0_20px_40px_rgba(45,30,27,0.1)]">
-                      {item.dropdown.map((sub, sIdx) => (
-                        <a
-                          key={sIdx}
-                          href={sub.href}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            onViewChange && onViewChange('landing', sub.href);
-                          }}
-                          className="block px-4 py-2.5 text-xs font-semibold rounded-xl text-brand-navy/70 hover:text-brand-blue hover:bg-brand-blue/5 hover:translate-x-1 active:scale-95 transition-all duration-200"
-                        >
-                          {sub.name}
-                        </a>
-                      ))}
+                      {item.dropdown.map((sub, sIdx) => {
+                        const hasSubItems = !!sub.subItems;
+                        return (
+                          <div key={sIdx} className="relative group/sub">
+                            {hasSubItems ? (
+                              <div className="flex items-center justify-between w-full px-4 py-2.5 text-xs font-semibold rounded-xl text-brand-navy/70 hover:text-brand-blue hover:bg-brand-blue/5 transition-all duration-200 cursor-pointer">
+                                <span>{sub.name}</span>
+                                <ChevronRight size={12} className="text-brand-navy/40 group-hover/sub:text-white transition-colors" />
+                              </div>
+                            ) : (
+                              <a
+                                href={sub.href}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  if (sub.name === 'Instructions') {
+                                    onViewChange && onViewChange('instructions');
+                                  } else {
+                                    onViewChange && onViewChange('landing', sub.href);
+                                  }
+                                }}
+                                className="block px-4 py-2.5 text-xs font-semibold rounded-xl text-brand-navy/70 hover:text-brand-blue hover:bg-brand-blue/5 hover:translate-x-1 active:scale-95 transition-all duration-200"
+                              >
+                                {sub.name}
+                              </a>
+                            )}
+
+                            {/* Secondary Flyout Menu (aligned to the left to match target screenshot) */}
+                            {hasSubItems && (
+                              <div className="absolute top-0 right-full mr-2 w-52 rounded-2xl bg-brand-card/95 backdrop-blur-xl border border-brand-navy/10 p-2 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible translate-x-[-10px] group-hover/sub:translate-x-0 transition-all duration-300 shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
+                                {sub.subItems.map((nested, nIdx) => (
+                                  <a
+                                    key={nIdx}
+                                    href="#timeline"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      if (nested.view) {
+                                        onViewChange && onViewChange(nested.view);
+                                      } else if (nested.name === 'SIH 2023') {
+                                        onViewChange && onViewChange('sih-2023');
+                                      } else {
+                                        onViewChange && onViewChange('landing', '#timeline');
+                                      }
+                                    }}
+                                    className="block px-4 py-2.5 text-xs font-semibold rounded-xl text-brand-navy/70 hover:text-brand-blue hover:bg-brand-blue/5 hover:translate-x-1 active:scale-95 transition-all duration-200 text-left"
+                                  >
+                                    {nested.name}
+                                  </a>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -163,7 +239,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
 
         {/* Mobile Drawer */}
         {isOpen && (
-          <div className="lg:hidden absolute top-full left-0 w-full mt-3 bg-brand-card/95 backdrop-blur-xl border border-brand-navy/10 p-4 rounded-2xl flex flex-col gap-3 shadow-[0_20px_40px_rgba(45,30,27,0.1)] animate-fade-in">
+          <div className="lg:hidden absolute top-full left-0 w-full mt-3 bg-brand-card/95 backdrop-blur-xl border border-brand-navy/10 p-4 rounded-2xl flex flex-col gap-3 shadow-[0_20px_40px_rgba(45,30,27,0.1)] animate-fade-in max-h-[calc(100vh-120px)] overflow-y-auto">
             {navItems.map((item, idx) => (
               <div key={idx} className="flex flex-col">
                 {item.dropdown ? (
@@ -177,20 +253,64 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                     </button>
                     {activeDropdown === idx && (
                       <div className="pl-6 flex flex-col gap-1 mt-1 border-l border-brand-navy/10">
-                        {item.dropdown.map((sub, sIdx) => (
-                          <a
-                            key={sIdx}
-                            href={sub.href}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setIsOpen(false);
-                              onViewChange && onViewChange('landing', sub.href);
-                            }}
-                            className="py-1.5 text-xs font-medium text-brand-navy/60 hover:text-brand-blue active:scale-[0.97] transition-all"
-                          >
-                            {sub.name}
-                          </a>
-                        ))}
+                        {item.dropdown.map((sub, sIdx) => {
+                          const hasSubItems = !!sub.subItems;
+                          return (
+                            <div key={sIdx} className="flex flex-col">
+                              {hasSubItems ? (
+                                <>
+                                  <button
+                                    onClick={() => toggleMobileSubDropdown(sIdx)}
+                                    className="flex items-center justify-between w-full py-2 px-3 text-xs font-semibold text-brand-navy/60 hover:text-brand-blue rounded-lg hover:bg-brand-dark/20 transition-all text-left"
+                                  >
+                                    <span>{sub.name}</span>
+                                    <ChevronDown size={14} className={`transition-transform duration-200 ${activeMobileSubDropdown === sIdx ? 'rotate-180' : ''}`} />
+                                  </button>
+                                  {activeMobileSubDropdown === sIdx && (
+                                    <div className="pl-4 flex flex-col gap-1 mt-1 border-l border-brand-navy/5">
+                                      {sub.subItems.map((nested, nIdx) => (
+                                        <a
+                                          key={nIdx}
+                                          href="#timeline"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            setIsOpen(false);
+                                            if (nested.view) {
+                                              onViewChange && onViewChange(nested.view);
+                                            } else if (nested.name === 'SIH 2023') {
+                                              onViewChange && onViewChange('sih-2023');
+                                            } else {
+                                              onViewChange && onViewChange('landing', '#timeline');
+                                            }
+                                          }}
+                                          className="py-1.5 pl-2 text-[11px] font-medium text-brand-navy/50 hover:text-brand-blue transition-all block text-left"
+                                        >
+                                          {nested.name}
+                                        </a>
+                                      ))}
+                                    </div>
+                                  )}
+                                </>
+                              ) : (
+                                <a
+                                  href={sub.href}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    setIsOpen(false);
+                                    if (sub.name === 'Instructions') {
+                                      onViewChange && onViewChange('instructions');
+                                    } else {
+                                      onViewChange && onViewChange('landing', sub.href);
+                                    }
+                                  }}
+                                  className="py-1.5 px-3 text-xs font-medium text-brand-navy/60 hover:text-brand-blue active:scale-[0.97] transition-all"
+                                >
+                                  {sub.name}
+                                </a>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     )}
                   </>
