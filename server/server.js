@@ -907,6 +907,22 @@ app.post('/api/registrations/:registrationId/refund', verifyAdminKey, async (req
   }
 });
 
+// Admin endpoint: delete all pending (unpaid) registrations — clears stale test orders
+app.delete('/api/registrations/pending-cleanup', verifyAdminKey, async (req, res) => {
+  try {
+    const result = await Registration.deleteMany({ paymentStatus: 'pending' });
+    console.log(`[ADMIN] Deleted ${result.deletedCount} stale pending registrations.`);
+    logPaymentEvent('ADMIN_PENDING_CLEANUP', { payload: { deletedCount: result.deletedCount } });
+    res.status(200).json({
+      success: true,
+      message: `Deleted ${result.deletedCount} stale pending registrations.`,
+      deletedCount: result.deletedCount
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Custom Error Handling Middleware
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
