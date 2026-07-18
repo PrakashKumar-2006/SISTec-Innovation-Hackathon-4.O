@@ -658,67 +658,36 @@ export default function RegisterModal({ onClose }) {
               {/* Step 3: Solution */}
               {step === 3 && (
                 <div className="space-y-6">
-                  {/* Problem Statement Dropdown Selector */}
-                  <div>
-                    <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase text-left">
-                      Choose Problem Statement Challenge
-                    </label>
-                    <select
-                      onChange={(e) => {
-                        const selectedVal = e.target.value;
-                        if (selectedVal === 'custom') {
-                          setFormData(prev => ({
-                            ...prev,
-                            psid: '',
-                            psTitle: ''
-                          }));
-                        } else if (selectedVal) {
-                          const psObj = problemStatements.find(ps => ps.psNumber === selectedVal);
-                          if (psObj) {
-                            setFormData(prev => ({
-                              ...prev,
-                              psid: psObj.psNumber,
-                              psTitle: psObj.statement
-                            }));
-                          }
-                        }
-                      }}
-                      value={problemStatements.some(ps => ps.psNumber === formData.psid && ps.statement === formData.psTitle) 
-                        ? formData.psid 
-                        : (formData.psid || formData.psTitle) 
-                          ? 'custom' 
-                          : ''
-                      }
-                      className="w-full px-6 py-3 rounded-full bg-white border border-slate-800 focus:border-brand-blue focus:outline-none text-slate-200 transition-colors shadow-sm cursor-pointer"
-                    >
-                      <option value="" disabled className="text-slate-500 bg-slate-900">Select a Problem Statement...</option>
-                      {problemStatements.map((ps) => (
-                        <option key={ps.psNumber} value={ps.psNumber} className="bg-slate-900 text-slate-200">
-                          [{ps.psNumber}] {ps.statement.length > 80 ? `${ps.statement.substring(0, 80)}...` : ps.statement}
-                        </option>
-                      ))}
-                      <option value="custom" className="bg-slate-900 text-slate-200">Custom / Open Innovation Problem Statement</option>
-                    </select>
-                  </div>
-
+                  {/* Problem Statement Fields */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* PSID Dropdown */}
                     <div>
                       <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase text-left">
                         PSID (Problem Statement ID)
                       </label>
-                      <input
-                        type="text"
+                      <select
                         name="psid"
                         value={formData.psid}
-                        onChange={handleInputChange}
-                        readOnly={isPredefined}
-                        placeholder="e.g. SIH1234"
-                        className={`w-full px-6 py-3 rounded-full bg-white border ${
+                        onChange={(e) => {
+                          const selectedId = e.target.value;
+                          const psObj = problemStatements.find(ps => ps.psNumber === selectedId);
+                          setFormData(prev => ({
+                            ...prev,
+                            psid: selectedId,
+                            psTitle: psObj ? psObj.statement : prev.psTitle
+                          }));
+                        }}
+                        className={`w-full px-6 py-3 rounded-full bg-[#080809] border ${
                           errors.psid ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
-                        } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm ${
-                          isPredefined ? 'opacity-60 cursor-not-allowed' : ''
-                        }`}
-                      />
+                        } focus:outline-none text-slate-200 transition-colors shadow-sm cursor-pointer`}
+                      >
+                        <option value="" className="text-slate-500 bg-[#080809]">Select PSID...</option>
+                        {problemStatements.map((ps) => (
+                          <option key={ps.psNumber} value={ps.psNumber} className="bg-[#080809] text-slate-200">
+                            {ps.psNumber}
+                          </option>
+                        ))}
+                      </select>
                       {errors.psid && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
                           <AlertCircle size={10} /> {errors.psid}
@@ -726,6 +695,7 @@ export default function RegisterModal({ onClose }) {
                       )}
                     </div>
 
+                    {/* PS Title — auto-filled but editable */}
                     <div>
                       <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase text-left">
                         PS Title
@@ -735,13 +705,10 @@ export default function RegisterModal({ onClose }) {
                         name="psTitle"
                         value={formData.psTitle}
                         onChange={handleInputChange}
-                        readOnly={isPredefined}
                         placeholder="Problem Statement Title"
-                        className={`w-full px-6 py-3 rounded-full bg-white border ${
+                        className={`w-full px-6 py-3 rounded-full bg-[#080809] border ${
                           errors.psTitle ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
-                        } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm ${
-                          isPredefined ? 'opacity-60 cursor-not-allowed' : ''
-                        }`}
+                        } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
                       />
                       {errors.psTitle && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -750,6 +717,7 @@ export default function RegisterModal({ onClose }) {
                       )}
                     </div>
                   </div>
+
 
                   {/* File Upload Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
