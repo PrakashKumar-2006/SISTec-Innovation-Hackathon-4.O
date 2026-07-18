@@ -242,6 +242,7 @@ const PORT = process.env.PORT || 5000;
 
 // Enable Helmet for security headers
 app.use(helmet({
+  contentSecurityPolicy: false,
   crossOriginResourcePolicy: { policy: "cross-origin" } // Allows frontend to load images/files served statically
 }));
 
