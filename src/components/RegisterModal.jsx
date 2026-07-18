@@ -366,6 +366,19 @@ export default function RegisterModal({ onClose }) {
         return;
       }
 
+      if (data.alreadyRegistered) {
+        // Success Restoration: The user is already registered and paid
+        RegistrationSession.clear();
+        setRegistrationResult({
+          success: true,
+          registrationId: data.registrationId,
+          teamName: data.teamName,
+          message: 'Your payment was previously completed.'
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
       // Load Razorpay Script dynamically
       const isLoaded = await loadRazorpayScript();
       if (!isLoaded) {

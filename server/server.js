@@ -440,8 +440,12 @@ app.post('/api/register', registrationLimiter, upload.fields([
     });
 
     if (existingCompleted) {
-      return res.status(400).json({ 
-        error: 'This team leader (email or phone) is already registered for the hackathon.' 
+      return res.status(200).json({ 
+        success: true,
+        alreadyRegistered: true,
+        message: 'This team leader is already registered for the hackathon.',
+        registrationId: existingCompleted.registrationId,
+        teamName: existingCompleted.teamName
       });
     }
 
