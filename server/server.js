@@ -40,12 +40,31 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Helper to send registration confirmation email
+// Database-Backed Email Retry Queue Schema
+const emailQueueSchema = new mongoose.Schema({
+  registrationId: { type: String, required: true },
+  leaderEmail: { type: String, required: true },
+  leaderName: { type: String, required: true },
+  teamName: { type: String, required: true },
+  attempts: { type: Number, default: 0 },
+  status: { 
+    type: String, 
+    enum: ['pending', 'sent', 'failed'], 
+    default: 'pending' 
+  },
+  lastError: { type: String },
+  nextRetryAt: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now }
+});
+
+const EmailQueue = mongoose.model('EmailQueue', emailQueueSchema);
+
+// Helper to send registration confirmation email (returns boolean or throws)
 const sendConfirmationEmail = async (leaderEmail, leaderName, teamName, registrationId) => {
   // If email configuration is missing, print warning and skip to prevent backend errors
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     console.warn('WARNING: SMTP email configurations not set in .env. Skipping email dispatch.');
-    return;
+    return true; // Pretend sent since credentials aren't set yet (safe for dev)
   }
 
   const mailOptions = {
@@ -85,13 +104,66 @@ const sendConfirmationEmail = async (leaderEmail, leaderName, teamName, registra
     `
   };
 
+  const info = await transporter.sendMail(mailOptions);
+  console.log(`Confirmation email successfully sent to ${leaderEmail}. MessageId: ${info.messageId}`);
+  return true;
+};
+
+// Queue a new email job in the database
+const queueConfirmationEmail = async (leaderEmail, leaderName, teamName, registrationId) => {
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`Confirmation email successfully sent to ${leaderEmail}. MessageId: ${info.messageId}`);
+    const job = new EmailQueue({
+      registrationId,
+      leaderEmail,
+      leaderName,
+      teamName
+    });
+    await job.save();
+    console.log(`Queued email job in database for team "${teamName}" (${leaderEmail}).`);
+    // Run queue processor in the background
+    processEmailQueue();
   } catch (err) {
-    console.error(`ERROR: Failed to send confirmation email to ${leaderEmail}:`, err.message);
+    console.error('Failed to queue confirmation email job:', err.message);
   }
 };
+
+// Background Email Queue Processor
+const processEmailQueue = async () => {
+  try {
+    // Find pending jobs scheduled to run now or in the past
+    const jobs = await EmailQueue.find({
+      status: 'pending',
+      nextRetryAt: { $lte: new Date() }
+    });
+
+    for (const job of jobs) {
+      job.attempts += 1;
+      try {
+        await sendConfirmationEmail(job.leaderEmail, job.leaderName, job.teamName, job.registrationId);
+        job.status = 'sent';
+        job.lastError = undefined;
+      } catch (err) {
+        console.error(`Email attempt #${job.attempts} failed for ${job.leaderEmail}:`, err.message);
+        job.lastError = err.message;
+        
+        if (job.attempts >= 3) {
+          job.status = 'failed';
+        } else {
+          // Exponential backoff retry: attempts * 2 minutes
+          const backoffMinutes = job.attempts * 2;
+          job.nextRetryAt = new Date(Date.now() + backoffMinutes * 60 * 1000);
+          console.log(`Scheduled retry #${job.attempts + 1} in ${backoffMinutes} minutes for ${job.leaderEmail}.`);
+        }
+      }
+      await job.save();
+    }
+  } catch (queueErr) {
+    console.error('Error processing email queue:', queueErr.message);
+  }
+};
+
+// Start background cron-like interval polling the queue every 60 seconds
+setInterval(processEmailQueue, 60 * 1000);
 
 // Configure Cloudinary
 const isCloudinaryConfigured = 
@@ -242,8 +314,12 @@ const registrationSchema = new mongoose.Schema({
   paymentOrderId: { type: String, unique: true },
   paymentId: { type: String },
   amountPaid: { type: Number },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  expireAt: { type: Date }
 });
+
+// TTL index to automatically expire registrations when expireAt is reached
+registrationSchema.index({ expireAt: 1 }, { expireAfterSeconds: 0 });
 
 const Registration = mongoose.model('Registration', registrationSchema);
 
@@ -297,9 +373,20 @@ app.post('/api/register', registrationLimiter, upload.fields([
       }
     }
 
-    // Generate unique Registration ID: SIH4-XXXXX (e.g. SIH4-A82B3)
-    const randomHex = Math.random().toString(36).substring(2, 7).toUpperCase();
-    const registrationId = `SIH4-${randomHex}`;
+    const leaderEmailClean = leaderEmail.trim();
+    const leaderPhoneClean = leaderPhone.trim();
+
+    // 1. Prevent duplicate completed registrations
+    const existingCompleted = await Registration.findOne({
+      $or: [{ leaderEmail: leaderEmailClean }, { leaderPhone: leaderPhoneClean }],
+      paymentStatus: 'completed'
+    });
+
+    if (existingCompleted) {
+      return res.status(400).json({ 
+        error: 'This team leader (email or phone) is already registered for the hackathon.' 
+      });
+    }
 
     let ideaPptUrl = '';
     let consentLetterUrl = '';
@@ -321,6 +408,55 @@ app.post('/api/register', registrationLimiter, upload.fields([
       // Local fallback URLs
       ideaPptUrl = `http://localhost:${PORT}/uploads/${ideaPptFile.filename}`;
       consentLetterUrl = `http://localhost:${PORT}/uploads/${consentLetterFile.filename}`;
+    }
+
+    // 2. Order Locking / Reuse existing pending registration if it exists
+    const existingPending = await Registration.findOne({
+      leaderEmail: leaderEmailClean,
+      paymentStatus: 'pending'
+    });
+
+    if (existingPending) {
+      existingPending.teamName = teamName;
+      existingPending.leaderName = leaderName;
+      existingPending.leaderPhone = leaderPhoneClean;
+      existingPending.leaderGender = leaderGender;
+      existingPending.theme = theme;
+      existingPending.instituteName = instituteName;
+      existingPending.members = parsedMembers;
+      existingPending.psid = psid;
+      existingPending.psTitle = psTitle;
+      existingPending.ideaPpt = ideaPptUrl;
+      existingPending.consentLetter = consentLetterUrl;
+      existingPending.amountPaid = Number(process.env.REGISTRATION_FEE_INR || 150);
+      existingPending.expireAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // Reset expiry to 24h from now on edit
+
+      await existingPending.save();
+
+      // Clean up local files if uploaded to Cloudinary
+      if (isCloudinaryConfigured && ideaPptUrl.includes('cloudinary.com')) {
+        localFilePaths.forEach(filePath => {
+          try {
+            if (fs.existsSync(filePath)) {
+              fs.unlinkSync(filePath);
+              console.log(`Cleaned up temp local file: ${filePath}`);
+            }
+          } catch (unlinkErr) {
+            console.error(`Failed to delete temp file ${filePath}:`, unlinkErr);
+          }
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        orderId: existingPending.paymentOrderId,
+        amount: Number(process.env.REGISTRATION_FEE_INR || 150) * 100, // paise
+        keyId: process.env.RAZORPAY_KEY_ID || '',
+        teamName,
+        leaderName,
+        leaderEmail: leaderEmailClean,
+        leaderPhone: leaderPhoneClean
+      });
     }
 
     // Generate Razorpay Order
@@ -354,7 +490,8 @@ app.post('/api/register', registrationLimiter, upload.fields([
       consentLetter: consentLetterUrl,
       paymentStatus: 'pending',
       paymentOrderId: rpOrder.id,
-      amountPaid: amountInINR
+      amountPaid: amountInINR,
+      expireAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours expiry
     });
 
     await newRegistration.save();
@@ -411,6 +548,21 @@ app.post('/api/payment/verify', async (req, res) => {
 
     // 2. Check if signature matches
     if (expectedSignature === razorpay_signature) {
+      // 2.1 Check if order is already processed to ensure idempotency
+      const existingReg = await Registration.findOne({ paymentOrderId: razorpay_order_id });
+      if (!existingReg) {
+        return res.status(404).json({ error: 'Associated registration record not found.' });
+      }
+
+      if (existingReg.paymentStatus === 'completed') {
+        return res.status(200).json({
+          success: true,
+          message: 'Payment already verified and registration finalized.',
+          registrationId: existingReg.registrationId,
+          teamName: existingReg.teamName
+        });
+      }
+
       // 3. Generate a secure, unique Registration ID
       const randomHex = crypto.randomBytes(3).toString('hex').toUpperCase(); // 6 chars hex
       const registrationId = `SIH4-${randomHex}`;
@@ -421,7 +573,8 @@ app.post('/api/payment/verify', async (req, res) => {
         { 
           paymentStatus: 'completed',
           paymentId: razorpay_payment_id,
-          registrationId: registrationId
+          registrationId: registrationId,
+          $unset: { expireAt: "" }
         },
         { new: true }
       );
@@ -430,8 +583,8 @@ app.post('/api/payment/verify', async (req, res) => {
         return res.status(404).json({ error: 'Associated registration record not found.' });
       }
 
-      // 5. Send Email confirmation in background
-      sendConfirmationEmail(
+      // 5. Queue Email confirmation in background (Retry Queue)
+      queueConfirmationEmail(
         updatedReg.leaderEmail,
         updatedReg.leaderName,
         updatedReg.teamName,
@@ -485,11 +638,12 @@ app.post('/api/payment/webhook', async (req, res) => {
             reg.paymentStatus = 'completed';
             reg.paymentId = paymentId;
             reg.registrationId = `SIH4-${randomHex}`;
+            reg.expireAt = undefined; // Unsets the expireAt TTL index field in Mongoose/MongoDB
             const savedReg = await reg.save();
             console.log(`Webhook updated registration for order ${orderId} successfully.`);
             
-            // Send confirmation email asynchronously
-            sendConfirmationEmail(
+            // Queue confirmation email asynchronously (Retry Queue)
+            queueConfirmationEmail(
               savedReg.leaderEmail,
               savedReg.leaderName,
               savedReg.teamName,
@@ -524,6 +678,29 @@ app.get('/api/registrations', verifyAdminKey, async (req, res) => {
   try {
     const registrations = await Registration.find().sort({ createdAt: -1 });
     res.json(registrations);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Endpoint to manually resend confirmation email (Admin override)
+app.post('/api/registrations/:registrationId/resend-email', verifyAdminKey, async (req, res) => {
+  try {
+    const { registrationId } = req.params;
+    const reg = await Registration.findOne({ registrationId });
+    if (!reg) {
+      return res.status(404).json({ error: 'Registration not found.' });
+    }
+    
+    // Immediately queue the confirmation email
+    await queueConfirmationEmail(
+      reg.leaderEmail,
+      reg.leaderName,
+      reg.teamName,
+      reg.registrationId
+    );
+    
+    res.status(200).json({ success: true, message: 'Email dispatch queued successfully.' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
