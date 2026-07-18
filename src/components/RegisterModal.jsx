@@ -271,11 +271,22 @@ export default function RegisterModal({ onClose }) {
     if (!file) return;
     try {
       const url = URL.createObjectURL(file);
-      window.open(url, '_blank');
+      // Use a programmatic anchor click instead of window.open() to avoid
+      // Chrome showing the "about:blank - not secure" popup for blob URLs.
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      // Revoke the object URL after 5s to free memory once the browser has loaded it
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
     } catch (err) {
       console.error('Failed to create file preview:', err);
     }
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
