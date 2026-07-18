@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Send, CheckCircle2, AlertCircle, Upload, ArrowLeft, ArrowRight, Check, Eye } from 'lucide-react';
+import { X, Send, CheckCircle2, AlertCircle, Upload, ArrowLeft, ArrowRight, Check, Eye, CreditCard } from 'lucide-react';
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
@@ -282,6 +282,7 @@ export default function RegisterModal({ onClose }) {
     { num: 2, title: 'Team Member Details' },
     { num: 3, title: 'Solution' },
     { num: 4, title: 'Review Details' },
+    { num: 5, title: 'Payment' },
   ];
 
   return (
@@ -935,6 +936,47 @@ export default function RegisterModal({ onClose }) {
                 </div>
               )}
 
+              {/* Step 5: Payment */}
+              {step === 5 && (
+                <div className="animate-fade-in space-y-6 text-center py-6">
+                  <div className="max-w-md mx-auto bg-[#101012] border border-slate-800/80 rounded-2xl p-6 space-y-6">
+                    <div className="w-16 h-16 bg-brand-gold/10 border border-brand-gold/20 rounded-full flex items-center justify-center mx-auto text-brand-gold shadow-sm">
+                      <CreditCard size={28} />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <h4 className="text-xl font-bold font-display text-white">Registration Payment</h4>
+                      <p className="text-xs text-slate-400">
+                        Please complete the registration fee to submit your nomination for SIH 4.0.
+                      </p>
+                    </div>
+
+                    <div className="border-t border-b border-slate-800/60 py-4 space-y-3">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Team Name</span>
+                        <span className="text-white font-semibold">{formData.teamName}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Team Leader</span>
+                        <span className="text-white font-semibold">{formData.leaderName}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Category Theme</span>
+                        <span className="text-white font-semibold">{formData.theme}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Amount to Pay</span>
+                        <span className="text-brand-gold font-bold">₹150.00</span>
+                      </div>
+                    </div>
+
+                    <div className="text-xs text-slate-500 bg-[#161619]/40 rounded-xl p-3 leading-relaxed border border-slate-900">
+                      Payment is processed securely by Razorpay. Once payment is confirmed, your registration ID will be generated and confirmation sent to <span className="text-slate-300 font-semibold">{formData.leaderEmail}</span>.
+                    </div>
+                  </div>
+                </div>
+              )}
+
               </div>
 
               {/* Navigation Buttons */}
@@ -952,7 +994,7 @@ export default function RegisterModal({ onClose }) {
                   <div /> // placeholder for alignment
                 )}
 
-                {step < 4 ? (
+                {step < 5 ? (
                   <button
                     type="button"
                     onClick={handleNext}
@@ -971,11 +1013,11 @@ export default function RegisterModal({ onClose }) {
                     {isSubmitting ? (
                       <>
                         <div className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin"></div>
-                        <span>Registering...</span>
+                        <span>Processing Payment...</span>
                       </>
                     ) : (
                       <>
-                        <span>Submit Nomination</span>
+                        <span>Pay & Register</span>
                         <Send size={14} />
                       </>
                     )}
