@@ -33,6 +33,6 @@ dist-ssr/
 *.sw?
 
 # Environment secrets
-.env
-.env.production
-server/.env
+# .env
+# .env.production
+# server/.env
