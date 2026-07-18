@@ -292,6 +292,9 @@ if (!fs.existsSync(uploadsDir)) {
 // Serve uploads folder statically (for downloading receipts/files)
 app.use('/uploads', express.static(uploadsDir));
 
+const adminAuthRoutes = require("./routes/adminAuth");
+app.use('/api/admin', adminAuthRoutes);
+
 // Connect to MongoDB
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sih_registrations';
 // Mask credentials in connection log for security
