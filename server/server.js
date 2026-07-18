@@ -59,6 +59,37 @@ const emailQueueSchema = new mongoose.Schema({
 
 const EmailQueue = mongoose.model('EmailQueue', emailQueueSchema);
 
+// Payment Logs Audit Trail Schema
+const paymentLogSchema = new mongoose.Schema({
+  timestamp: { type: Date, default: Date.now },
+  registrationId: { type: String },
+  orderId: { type: String },
+  paymentId: { type: String },
+  eventType: { type: String, required: true }, // e.g., 'ORDER_CREATED', 'SIGNATURE_VERIFIED', etc.
+  payload: { type: mongoose.Schema.Types.Mixed },
+  ip: { type: String }
+});
+
+const PaymentLog = mongoose.model('PaymentLog', paymentLogSchema);
+
+// Reusable Helper to log payment/verification events to MongoDB
+const logPaymentEvent = async (eventType, { registrationId, orderId, paymentId, payload, ip } = {}) => {
+  try {
+    const logEntry = new PaymentLog({
+      eventType,
+      registrationId,
+      orderId,
+      paymentId,
+      payload,
+      ip
+    });
+    await logEntry.save();
+    console.log(`[PAYMENT_LOG] ${eventType} recorded successfully.`);
+  } catch (err) {
+    console.error('Failed to save payment audit log:', err.message);
+  }
+};
+
 // Helper to send registration confirmation email (returns boolean or throws)
 const sendConfirmationEmail = async (leaderEmail, leaderName, teamName, registrationId) => {
   // If email configuration is missing, print warning and skip to prevent backend errors
@@ -142,10 +173,20 @@ const processEmailQueue = async () => {
         await sendConfirmationEmail(job.leaderEmail, job.leaderName, job.teamName, job.registrationId);
         job.status = 'sent';
         job.lastError = undefined;
+
+        logPaymentEvent('EMAIL_SENT', {
+          registrationId: job.registrationId,
+          payload: { email: job.leaderEmail }
+        });
       } catch (err) {
         console.error(`Email attempt #${job.attempts} failed for ${job.leaderEmail}:`, err.message);
         job.lastError = err.message;
-        
+
+        logPaymentEvent('EMAIL_FAILED', {
+          registrationId: job.registrationId,
+          payload: { email: job.leaderEmail, error: err.message, attempt: job.attempts }
+        });
+
         if (job.attempts >= 3) {
           job.status = 'failed';
         } else {
@@ -315,7 +356,13 @@ const registrationSchema = new mongoose.Schema({
   paymentId: { type: String },
   amountPaid: { type: Number },
   createdAt: { type: Date, default: Date.now },
-  expireAt: { type: Date }
+  expireAt: { type: Date },
+  refundStatus: { type: String, enum: ['pending', 'processed', 'none'], default: 'none' },
+  refundId: { type: String },
+  refundAmount: { type: Number },
+  refundReason: { type: String },
+  refundDate: { type: Date },
+  refundProcessedBy: { type: String }
 });
 
 // TTL index to automatically expire registrations when expireAt is reached
@@ -433,6 +480,12 @@ app.post('/api/register', registrationLimiter, upload.fields([
 
       await existingPending.save();
 
+      logPaymentEvent('ORDER_REUSED', {
+        orderId: existingPending.paymentOrderId,
+        payload: { leaderEmail: leaderEmailClean },
+        ip: req.ip
+      });
+
       // Clean up local files if uploaded to Cloudinary
       if (isCloudinaryConfigured && ideaPptUrl.includes('cloudinary.com')) {
         localFilePaths.forEach(filePath => {
@@ -474,6 +527,12 @@ app.post('/api/register', registrationLimiter, upload.fields([
       console.error('Failed to create Razorpay order:', orderErr);
       return res.status(500).json({ error: 'Failed to initialize payment gateway order.' });
     }
+
+    logPaymentEvent('ORDER_CREATED', {
+      orderId: rpOrder.id,
+      payload: { amount: amountInPaise },
+      ip: req.ip
+    });
 
     const newRegistration = new Registration({
       teamName,
@@ -536,6 +595,10 @@ app.post('/api/payment/verify', async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      logPaymentEvent('VERIFICATION_FAILED', {
+        ip: req.ip,
+        payload: { error: 'Missing tokens' }
+      });
       return res.status(400).json({ error: 'Missing required payment verification tokens.' });
     }
 
@@ -548,6 +611,12 @@ app.post('/api/payment/verify', async (req, res) => {
 
     // 2. Check if signature matches
     if (expectedSignature === razorpay_signature) {
+      logPaymentEvent('SIGNATURE_VERIFIED', {
+        orderId: razorpay_order_id,
+        paymentId: razorpay_payment_id,
+        ip: req.ip
+      });
+
       // 2.1 Check if order is already processed to ensure idempotency
       const existingReg = await Registration.findOne({ paymentOrderId: razorpay_order_id });
       if (!existingReg) {
@@ -583,6 +652,13 @@ app.post('/api/payment/verify', async (req, res) => {
         return res.status(404).json({ error: 'Associated registration record not found.' });
       }
 
+      logPaymentEvent('REGISTRATION_COMPLETED', {
+        registrationId: updatedReg.registrationId,
+        orderId: razorpay_order_id,
+        paymentId: razorpay_payment_id,
+        ip: req.ip
+      });
+
       // 5. Queue Email confirmation in background (Retry Queue)
       queueConfirmationEmail(
         updatedReg.leaderEmail,
@@ -598,6 +674,11 @@ app.post('/api/payment/verify', async (req, res) => {
         teamName: updatedReg.teamName
       });
     } else {
+      logPaymentEvent('SIGNATURE_FAILED', {
+        orderId: razorpay_order_id,
+        paymentId: razorpay_payment_id,
+        ip: req.ip
+      });
       res.status(400).json({ error: 'Payment signature verification failed. Tampering detected.' });
     }
   } catch (err) {
@@ -609,6 +690,11 @@ app.post('/api/payment/verify', async (req, res) => {
 // Razorpay Webhook callback route (verifies webhook events using raw req.rawBody)
 app.post('/api/payment/webhook', async (req, res) => {
   try {
+    logPaymentEvent('WEBHOOK_RECEIVED', {
+      ip: req.ip,
+      payload: { event: req.body?.event }
+    });
+
     const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
     const signature = req.headers['x-razorpay-signature'];
 
@@ -623,6 +709,11 @@ app.post('/api/payment/webhook', async (req, res) => {
       .digest('hex');
 
     if (expectedSignature === signature) {
+      logPaymentEvent('WEBHOOK_VERIFIED', {
+        ip: req.ip,
+        payload: { event: req.body?.event }
+      });
+
       const eventData = req.body;
       
       // If payment is captured or order is paid
@@ -641,6 +732,13 @@ app.post('/api/payment/webhook', async (req, res) => {
             reg.expireAt = undefined; // Unsets the expireAt TTL index field in Mongoose/MongoDB
             const savedReg = await reg.save();
             console.log(`Webhook updated registration for order ${orderId} successfully.`);
+
+            logPaymentEvent('REGISTRATION_COMPLETED', {
+              registrationId: savedReg.registrationId,
+              orderId: orderId,
+              paymentId: paymentId,
+              ip: req.ip
+            });
             
             // Queue confirmation email asynchronously (Retry Queue)
             queueConfirmationEmail(
@@ -654,6 +752,7 @@ app.post('/api/payment/webhook', async (req, res) => {
       }
       res.status(200).send('OK');
     } else {
+      logPaymentEvent('WEBHOOK_SIGNATURE_FAILED', { ip: req.ip });
       res.status(400).send('Invalid webhook signature');
     }
   } catch (err) {
@@ -701,6 +800,100 @@ app.post('/api/registrations/:registrationId/resend-email', verifyAdminKey, asyn
     );
     
     res.status(200).json({ success: true, message: 'Email dispatch queued successfully.' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Endpoint to view payment audit log trail (Admin override)
+app.get('/api/registrations/logs', verifyAdminKey, async (req, res) => {
+  try {
+    const logs = await PaymentLog.find().sort({ timestamp: -1 }).limit(100);
+    res.json(logs);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Endpoint to manually verify/override registration payment status (Admin override)
+app.post('/api/registrations/:registrationId/verify-override', verifyAdminKey, async (req, res) => {
+  try {
+    const { registrationId } = req.params;
+    
+    // Find registration by registrationId or paymentOrderId (accepts either)
+    const reg = await Registration.findOne({
+      $or: [{ registrationId }, { paymentOrderId: registrationId }]
+    });
+
+    if (!reg) {
+      return res.status(404).json({ error: 'Registration not found.' });
+    }
+
+    if (reg.paymentStatus === 'completed') {
+      return res.status(400).json({ error: 'Registration is already completed.' });
+    }
+
+    const randomHex = crypto.randomBytes(3).toString('hex').toUpperCase();
+    const generatedId = reg.registrationId || `SIH4-${randomHex}`;
+
+    reg.paymentStatus = 'completed';
+    reg.paymentId = reg.paymentId || `manual_override_${Date.now()}`;
+    reg.registrationId = generatedId;
+    reg.expireAt = undefined; // unset expiry
+    await reg.save();
+
+    logPaymentEvent('MANUAL_VERIFY_OVERRIDE', {
+      registrationId: generatedId,
+      orderId: reg.paymentOrderId,
+      paymentId: reg.paymentId,
+      payload: { action: 'completed' }
+    });
+
+    // Queue confirmation email
+    queueConfirmationEmail(reg.leaderEmail, reg.leaderName, reg.teamName, generatedId);
+
+    res.status(200).json({
+      success: true,
+      message: 'Registration manually marked as completed.',
+      registrationId: generatedId
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Endpoint to manually register a refund (Admin override)
+app.post('/api/registrations/:registrationId/refund', verifyAdminKey, async (req, res) => {
+  try {
+    const { registrationId } = req.params;
+    const { refundId, refundAmount, refundReason, refundProcessedBy } = req.body;
+
+    const reg = await Registration.findOne({ registrationId });
+    if (!reg) {
+      return res.status(404).json({ error: 'Registration not found.' });
+    }
+
+    reg.paymentStatus = 'failed'; // Mark failed to deactivate
+    reg.refundStatus = 'processed';
+    reg.refundId = refundId || `manual_refund_${Date.now()}`;
+    reg.refundAmount = refundAmount || reg.amountPaid || 150;
+    reg.refundReason = refundReason || 'Requested by user / dispute';
+    reg.refundDate = new Date();
+    reg.refundProcessedBy = refundProcessedBy || 'Admin Override';
+    await reg.save();
+
+    logPaymentEvent('REFUND_PROCESSED', {
+      registrationId: reg.registrationId,
+      orderId: reg.paymentOrderId,
+      paymentId: reg.paymentId,
+      payload: { refundId: reg.refundId, refundAmount: reg.refundAmount }
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Registration successfully marked as refunded and deactivated.',
+      registrationId: reg.registrationId
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
