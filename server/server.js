@@ -1,6 +1,9 @@
 const dns = require('dns');
 try {
   dns.setServers(['8.8.8.8', '8.8.4.4']);
+  if (dns.setDefaultResultOrder) {
+    dns.setDefaultResultOrder('ipv4first');
+  }
 } catch (e) {
   console.warn('Could not set custom DNS:', e.message);
 }
