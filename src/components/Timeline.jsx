@@ -90,11 +90,10 @@ export default function Timeline() {
           </h2>
         </div>
 
-        {/* Alternating Animated Timeline Path */}
-        <div className="relative max-w-5xl mx-auto pt-6 pl-10 md:pl-0">
-          
+        {/* Desktop Alternating Animated Timeline Path (md:block only, hidden on mobile) */}
+        <div className="hidden md:block relative max-w-5xl mx-auto pt-6">
           {/* Vertical Center Line */}
-          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-brand-orange via-brand-pink to-brand-blue -translate-x-[1px] pointer-events-none"></div>
+          <div className="absolute left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-brand-orange via-brand-pink to-brand-blue -translate-x-[1px] pointer-events-none"></div>
 
           <div className="space-y-12">
             {events.map((ev, idx) => {
@@ -104,28 +103,27 @@ export default function Timeline() {
               return (
                 <div 
                   key={idx} 
-                  className={`flex flex-col md:flex-row relative items-start md:items-center justify-between group ${
+                  className={`flex flex-row relative items-center justify-between group ${
                     isEven ? 'md:flex-row-reverse' : ''
                   }`}
                 >
                   {/* Glowing index node on the line */}
-                  <div className={`absolute left-4 md:left-1/2 -translate-x-1/2 top-8 md:top-[calc(50%-16px)] w-8 h-8 rounded-full bg-brand-darker border border-white/10 ${ev.nodeColor} flex items-center justify-center z-20 transition-all duration-500 shadow-sm`}>
+                  <div className={`absolute left-1/2 -translate-x-1/2 top-[calc(50%-16px)] w-8 h-8 rounded-full bg-brand-darker border border-white/10 ${ev.nodeColor} flex items-center justify-center z-20 transition-all duration-500 shadow-sm`}>
                     <span className="text-[10px] font-bold font-mono text-brand-gray group-hover:text-white transition-colors">
                       {ev.num}
                     </span>
-                    {/* Pulsing ring outer glow */}
                     <span className="absolute inset-0 rounded-full border border-brand-gold/0 group-hover:border-brand-gold/30 group-hover:scale-125 transition-all duration-500 pointer-events-none"></span>
                   </div>
 
-                  {/* Horizontal Connection line indicator (desktop only) */}
+                  {/* Horizontal Connection line indicator */}
                   <div 
-                    className={`hidden md:block absolute top-1/2 h-[1px] bg-white/5 group-hover:bg-brand-gold/40 transition-all duration-500 pointer-events-none ${
+                    className={`absolute top-1/2 h-[1px] bg-white/5 group-hover:bg-brand-gold/40 transition-all duration-500 pointer-events-none ${
                       isEven ? 'left-[50%] right-[44%]' : 'left-[44%] right-[50%]'
                     }`}
                   ></div>
 
                   {/* Glassmorphic Event Details Card */}
-                  <div className={`w-full md:w-[44%] p-5 rounded-[2rem] bg-brand-card/35 backdrop-blur-md border border-white/5 ${ev.borderColor} bg-gradient-to-b ${ev.color} transition-all duration-500 hover:-translate-y-1.5 shadow-card-shadow ${ev.glow} relative overflow-hidden text-left`}>
+                  <div className={`w-[44%] p-5 rounded-[2rem] bg-brand-card/35 backdrop-blur-md border border-white/5 ${ev.borderColor} bg-gradient-to-b ${ev.color} transition-all duration-500 hover:-translate-y-1.5 shadow-card-shadow ${ev.glow} relative overflow-hidden text-left`}>
                     
                     {/* Background Watermark Icon */}
                     <div className="absolute right-0 bottom-0 text-[8rem] text-white/[0.005] pointer-events-none transform translate-x-4 translate-y-4 group-hover:scale-110 group-hover:text-white/[0.01] transition-all duration-500 flex items-center justify-center">
@@ -168,15 +166,80 @@ export default function Timeline() {
                     <div className={`w-0 h-[1.5px] bg-gradient-to-r ${ev.progressColor} group-hover:w-full transition-all duration-500 mt-5 relative z-10`}></div>
                   </div>
 
-                  {/* Empty Spacer Column (desktop only) */}
-                  <div className="hidden md:block md:w-[44%]"></div>
-
+                  {/* Empty Spacer Column */}
+                  <div className="md:w-[44%]"></div>
                 </div>
               );
             })}
           </div>
         </div>
 
+        {/* Mobile-Only ProcessFlow-Style Vertical Timeline (md:hidden) */}
+        <div className="md:hidden flex flex-col gap-10 max-w-xl mx-auto relative pl-2 text-left">
+          {/* Vertical Connecting Line */}
+          <div className="absolute left-6 top-3 bottom-3 w-[1.5px] bg-gradient-to-b from-brand-orange via-brand-pink to-brand-blue pointer-events-none"></div>
+
+          {events.map((ev, idx) => {
+            const IconComponent = ev.icon;
+            return (
+              <div 
+                key={idx}
+                className="flex gap-6 items-start relative group animate-fade-in"
+              >
+                {/* Left Timeline Step Node */}
+                <div className={`w-12 h-12 rounded-2xl bg-brand-darker border border-white/10 ${ev.nodeColor} flex items-center justify-center shrink-0 shadow-sm relative z-10 transition-all duration-500`}>
+                  <span className="text-sm font-bold font-mono text-brand-gold">
+                    {ev.num}
+                  </span>
+                </div>
+
+                {/* Right Detail Glassmorphic Card */}
+                <div className={`w-full p-5 rounded-[2rem] bg-brand-card/35 backdrop-blur-md border border-white/5 ${ev.borderColor} bg-gradient-to-b ${ev.color} transition-all duration-500 hover:-translate-y-1 shadow-card-shadow ${ev.glow} relative overflow-hidden text-left`}>
+                  
+                  {/* Background Watermark Icon */}
+                  <div className="absolute right-0 bottom-0 text-[8rem] text-white/[0.003] pointer-events-none transform translate-x-4 translate-y-4 group-hover:scale-110 group-hover:text-white/[0.008] transition-all duration-500 flex items-center justify-center">
+                    <IconComponent className="w-24 h-24" />
+                  </div>
+
+                  {/* Date and Icon */}
+                  <div className="flex items-center gap-3 mb-4 relative z-10">
+                    <div className="w-8 h-8 rounded-lg bg-brand-darker border border-white/5 flex items-center justify-center shadow-inner">
+                      <IconComponent className={`w-4 h-4 ${ev.iconColor}`} />
+                    </div>
+                    <span className="text-xs font-bold text-brand-gold font-mono">
+                      {ev.date}
+                    </span>
+                  </div>
+
+                  {/* Title & Desc */}
+                  <div className="space-y-2 relative z-10">
+                    <h3 className="text-lg font-bold text-white tracking-wide font-display group-hover:text-brand-gold transition-colors">
+                      {ev.title}
+                    </h3>
+                    <p className="text-xs text-brand-gray leading-relaxed font-normal">
+                      {ev.desc}
+                    </p>
+                  </div>
+
+                  {/* Highlights tags */}
+                  <div className="mt-5 pt-4 border-t border-white/5 flex flex-wrap gap-1.5 relative z-10">
+                    {ev.highlights.map((highlight, hIdx) => (
+                      <span 
+                        key={hIdx} 
+                        className="text-[9px] font-semibold text-brand-gray/90 bg-brand-darker/60 px-2 py-0.5 rounded border border-white/5"
+                      >
+                        {highlight}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Bottom Border Accent Line */}
+                  <div className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-brand-orange via-brand-pink to-brand-blue pointer-events-none"></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

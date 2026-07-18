@@ -453,7 +453,7 @@ export default function RegisterModal({ onClose }) {
   const isPredefined = problemStatements.some(ps => ps.psNumber === formData.psid && formData.psid !== '');
 
   return (
-    <div className="fixed inset-0 w-full h-full bg-[#080809] z-50 overflow-y-auto flex flex-col font-sans">
+    <div className="fixed inset-0 w-full h-full bg-[#080809] z-[100] overflow-y-auto flex flex-col font-sans">
       {/* Secure Header */}
       <div className="w-full bg-[#0D0D0F]/85 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-20">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -481,7 +481,7 @@ export default function RegisterModal({ onClose }) {
 
       {/* Main Page Container */}
       <div className="flex-grow flex items-center justify-center p-4 sm:p-8">
-        <div className="relative w-full max-w-4xl bg-[#0F0F11] border border-slate-800/80 rounded-3xl p-6 sm:p-8 shadow-2xl z-10">
+        <div className="relative w-full max-w-4xl bg-transparent sm:bg-[#0F0F11] border-none sm:border sm:border-slate-800/80 rounded-3xl p-4 sm:p-8 shadow-none sm:shadow-2xl z-10">
 
         {!registrationResult ? (
           <>
@@ -529,8 +529,8 @@ export default function RegisterModal({ onClose }) {
               </div>
             )}
 
-            {/* Horizontal Steps Progress Indicator */}
-            <div className="relative flex justify-between items-center max-w-2xl mx-auto mb-10 px-4">
+            {/* Horizontal Steps Progress Indicator (Desktop) */}
+            <div className="hidden md:flex relative justify-between items-center max-w-2xl mx-auto mb-10 px-4">
               {/* Progress Line */}
               <div className="absolute top-5 left-10 right-10 h-[2px] bg-slate-800 -z-10">
                 <div 
@@ -571,8 +571,24 @@ export default function RegisterModal({ onClose }) {
               })}
             </div>
 
+            {/* Mobile Progress Indicator */}
+            <div className="flex md:hidden flex-col items-center max-w-xs mx-auto mb-8 px-4 space-y-2 text-center">
+              <span className="text-[10px] font-bold tracking-widest text-brand-gold uppercase">
+                Step {step} of 5
+              </span>
+              <h4 className="text-base font-extrabold text-white">
+                {stepLabels[step - 1].title}
+              </h4>
+              <div className="w-full h-1.5 bg-slate-800/80 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-brand-gold transition-all duration-500 ease-out shadow-[0_0_8px_#D8AB55]"
+                  style={{ width: `${(step / 5) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+
             {/* Steps Container */}
-            <div className="bg-[#161619] rounded-3xl p-6 sm:p-8 border border-slate-800/80 min-h-[500px] flex flex-col justify-between shadow-lg">
+            <div className="bg-transparent sm:bg-[#161619] rounded-3xl p-0 sm:p-8 border-none sm:border sm:border-slate-800/80 min-h-[450px] sm:min-h-[500px] flex flex-col justify-between shadow-none sm:shadow-lg">
               <div className="flex-grow">
               
               {/* Error Alert */}
@@ -585,10 +601,10 @@ export default function RegisterModal({ onClose }) {
 
               {/* Step 1: Team Details */}
               {step === 1 && (
-                <div className="animate-fade-in space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="animate-fade-in space-y-5 text-left">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase">
+                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
                         Leader Name
                       </label>
                       <input
@@ -597,9 +613,9 @@ export default function RegisterModal({ onClose }) {
                         value={formData.leaderName}
                         onChange={handleInputChange}
                         placeholder="Leader Name"
-                        className={`w-full px-6 py-3 rounded-full bg-white border ${
-                          errors.leaderName ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
-                        } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
+                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                          errors.leaderName ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                        } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
                       />
                       {errors.leaderName && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -609,7 +625,7 @@ export default function RegisterModal({ onClose }) {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase">
+                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
                         Team Name
                       </label>
                       <input
@@ -618,9 +634,9 @@ export default function RegisterModal({ onClose }) {
                         value={formData.teamName}
                         onChange={handleInputChange}
                         placeholder="Team Name"
-                        className={`w-full px-6 py-3 rounded-full bg-white border ${
-                          errors.teamName ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
-                        } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
+                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                          errors.teamName ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                        } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
                       />
                       {errors.teamName && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -630,24 +646,24 @@ export default function RegisterModal({ onClose }) {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase">
+                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
                         Choose Theme
                       </label>
                       <select
                         name="theme"
                         value={formData.theme}
                         onChange={handleInputChange}
-                        className={`w-full px-6 py-3 rounded-full bg-white border ${
-                          errors.theme ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
-                        } focus:outline-none text-slate-200 transition-colors shadow-sm cursor-pointer`}
+                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                          errors.theme ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                        } focus:outline-none text-sm text-white transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner cursor-pointer`}
                       >
-                        <option value="" disabled className="text-slate-500 bg-slate-900">Select Theme</option>
-                        <option value="AI & Open Innovation">AI & Open Innovation</option>
-                        <option value="AgriTech">AgriTech</option>
-                        <option value="EduTech">EduTech</option>
-                        <option value="Healthcare & Biotech">Healthcare & Biotech</option>
-                        <option value="Fintech & Web3">Fintech & Web3</option>
-                        <option value="Smart Automation">Smart Automation</option>
+                        <option value="" disabled className="text-slate-500 bg-[#080809]">Select Theme</option>
+                        <option value="AI & Open Innovation" className="bg-[#121214] text-white">AI & Open Innovation</option>
+                        <option value="AgriTech" className="bg-[#121214] text-white">AgriTech</option>
+                        <option value="EduTech" className="bg-[#121214] text-white">EduTech</option>
+                        <option value="Healthcare & Biotech" className="bg-[#121214] text-white">Healthcare & Biotech</option>
+                        <option value="Fintech & Web3" className="bg-[#121214] text-white">Fintech & Web3</option>
+                        <option value="Smart Automation" className="bg-[#121214] text-white">Smart Automation</option>
                       </select>
                       {errors.theme && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -657,21 +673,21 @@ export default function RegisterModal({ onClose }) {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase">
+                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
                         Leader Gender
                       </label>
                       <select
                         name="leaderGender"
                         value={formData.leaderGender}
                         onChange={handleInputChange}
-                        className={`w-full px-6 py-3 rounded-full bg-white border ${
-                          errors.leaderGender ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
-                        } focus:outline-none text-slate-200 transition-colors shadow-sm cursor-pointer`}
+                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                          errors.leaderGender ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                        } focus:outline-none text-sm text-white transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner cursor-pointer`}
                       >
-                        <option value="" disabled className="text-slate-500 bg-slate-900">Select Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
+                        <option value="" disabled className="text-slate-500 bg-[#080809]">Select Gender</option>
+                        <option value="Male" className="bg-[#121214] text-white">Male</option>
+                        <option value="Female" className="bg-[#121214] text-white">Female</option>
+                        <option value="Other" className="bg-[#121214] text-white">Other</option>
                       </select>
                       {errors.leaderGender && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -681,7 +697,7 @@ export default function RegisterModal({ onClose }) {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase">
+                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
                         Leader Phone
                       </label>
                       <input
@@ -690,9 +706,9 @@ export default function RegisterModal({ onClose }) {
                         value={formData.leaderPhone}
                         onChange={handleInputChange}
                         placeholder="Leader phone"
-                        className={`w-full px-6 py-3 rounded-full bg-white border ${
-                          errors.leaderPhone ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
-                        } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
+                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                          errors.leaderPhone ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                        } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
                       />
                       {errors.leaderPhone && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -702,7 +718,7 @@ export default function RegisterModal({ onClose }) {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase">
+                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
                         Leader Email
                       </label>
                       <input
@@ -711,9 +727,9 @@ export default function RegisterModal({ onClose }) {
                         value={formData.leaderEmail}
                         onChange={handleInputChange}
                         placeholder="Leader Email"
-                        className={`w-full px-6 py-3 rounded-full bg-white border ${
-                          errors.leaderEmail ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
-                        } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
+                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                          errors.leaderEmail ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                        } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
                       />
                       {errors.leaderEmail && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -723,8 +739,8 @@ export default function RegisterModal({ onClose }) {
                     </div>
                   </div>
 
-                  <div className="pt-2">
-                    <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase">
+                  <div className="pt-1">
+                    <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
                       Institute Name
                     </label>
                     <input
@@ -733,9 +749,9 @@ export default function RegisterModal({ onClose }) {
                       value={formData.instituteName}
                       onChange={handleInputChange}
                       placeholder="Institute Name"
-                      className={`w-full px-6 py-3 rounded-full bg-white border ${
-                        errors.instituteName ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
-                      } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
+                      className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                        errors.instituteName ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                      } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
                     />
                     {errors.instituteName && (
                       <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -748,11 +764,11 @@ export default function RegisterModal({ onClose }) {
 
               {/* Step 2: Team Member Details */}
               {step === 2 && (
-                <div className="space-y-8 max-h-[50vh] overflow-y-auto pr-2">
+                <div className="space-y-6 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar text-left">
                   {[1, 2, 3, 4].map((num) => (
-                    <div key={num} className="p-5 border border-slate-800 rounded-2xl bg-[#080809]/40 space-y-4">
-                      <h4 className="text-sm font-bold text-brand-gold font-display flex items-center gap-1.5 border-b border-slate-800/50 pb-2">
-                        <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] font-mono">
+                    <div key={num} className="p-5 border border-white/5 rounded-2xl bg-[#080809]/40 space-y-4">
+                      <h4 className="text-sm font-bold text-brand-gold font-display flex items-center gap-1.5 border-b border-white/5 pb-2">
+                        <span className="w-5 h-5 rounded-full bg-brand-gold/10 text-brand-gold border border-brand-gold/20 flex items-center justify-center text-[10px] font-mono">
                           0{num}
                         </span>
                         Member {num} Details
@@ -766,9 +782,9 @@ export default function RegisterModal({ onClose }) {
                             value={formData[`member${num}Name`]}
                             onChange={handleInputChange}
                             placeholder={`Member ${num} Name`}
-                            className={`w-full px-5 py-2.5 rounded-full bg-white border ${
-                              errors[`member${num}Name`] ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
-                            } focus:outline-none text-sm text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
+                            className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                              errors[`member${num}Name`] ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                            } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
                           />
                           {errors[`member${num}Name`] && (
                             <p className="text-[10px] text-red-500 mt-1">
@@ -782,14 +798,14 @@ export default function RegisterModal({ onClose }) {
                             name={`member${num}Gender`}
                             value={formData[`member${num}Gender`]}
                             onChange={handleInputChange}
-                            className={`w-full px-5 py-2.5 rounded-full bg-white border ${
-                              errors[`member${num}Gender`] ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
-                            } focus:outline-none text-sm text-slate-200 transition-colors shadow-sm cursor-pointer`}
+                            className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                              errors[`member${num}Gender`] ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                            } focus:outline-none text-sm text-white transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner cursor-pointer`}
                           >
-                            <option value="" disabled className="text-slate-500 bg-slate-900">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
+                            <option value="" disabled className="text-slate-500 bg-[#080809]">Select Gender</option>
+                            <option value="Male" className="bg-[#121214] text-white">Male</option>
+                            <option value="Female" className="bg-[#121214] text-white">Female</option>
+                            <option value="Other" className="bg-[#121214] text-white">Other</option>
                           </select>
                           {errors[`member${num}Gender`] && (
                             <p className="text-[10px] text-red-500 mt-1">
@@ -805,9 +821,9 @@ export default function RegisterModal({ onClose }) {
                             value={formData[`member${num}Email`]}
                             onChange={handleInputChange}
                             placeholder={`Member ${num} Email`}
-                            className={`w-full px-5 py-2.5 rounded-full bg-white border ${
-                              errors[`member${num}Email`] ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
-                            } focus:outline-none text-sm text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
+                            className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                              errors[`member${num}Email`] ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                            } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
                           />
                           {errors[`member${num}Email`] && (
                             <p className="text-[10px] text-red-500 mt-1">
@@ -823,9 +839,9 @@ export default function RegisterModal({ onClose }) {
                             value={formData[`member${num}Phone`]}
                             onChange={handleInputChange}
                             placeholder={`Member ${num} Phone`}
-                            className={`w-full px-5 py-2.5 rounded-full bg-white border ${
-                              errors[`member${num}Phone`] ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
-                            } focus:outline-none text-sm text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
+                            className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                              errors[`member${num}Phone`] ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                            } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
                           />
                           {errors[`member${num}Phone`] && (
                             <p className="text-[10px] text-red-500 mt-1">
@@ -841,12 +857,12 @@ export default function RegisterModal({ onClose }) {
 
               {/* Step 3: Solution */}
               {step === 3 && (
-                <div className="space-y-6">
+                <div className="space-y-6 text-left">
                   {/* Problem Statement Fields */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* PSID Dropdown */}
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase text-left">
+                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase text-left">
                         PSID (Problem Statement ID)
                       </label>
                       <select
@@ -861,13 +877,13 @@ export default function RegisterModal({ onClose }) {
                             psTitle: psObj ? psObj.statement : prev.psTitle
                           }));
                         }}
-                        className={`w-full px-6 py-3 rounded-full bg-[#080809] border ${
-                          errors.psid ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
-                        } focus:outline-none text-slate-200 transition-colors shadow-sm cursor-pointer`}
+                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                          errors.psid ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                        } focus:outline-none text-sm text-white transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner cursor-pointer`}
                       >
                         <option value="" className="text-slate-500 bg-[#080809]">Select PSID...</option>
                         {problemStatements.map((ps) => (
-                          <option key={ps.psNumber} value={ps.psNumber} className="bg-[#080809] text-slate-200">
+                          <option key={ps.psNumber} value={ps.psNumber} className="bg-[#080809] text-white">
                             {ps.psNumber}
                           </option>
                         ))}
@@ -881,7 +897,7 @@ export default function RegisterModal({ onClose }) {
 
                     {/* PS Title — auto-filled but editable */}
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase text-left">
+                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase text-left">
                         PS Title
                       </label>
                       <input
@@ -890,9 +906,9 @@ export default function RegisterModal({ onClose }) {
                         value={formData.psTitle}
                         onChange={handleInputChange}
                         placeholder="Problem Statement Title"
-                        className={`w-full px-6 py-3 rounded-full bg-[#080809] border ${
-                          errors.psTitle ? 'border-red-500' : 'border-slate-800 focus:border-brand-blue'
-                        } focus:outline-none text-slate-200 placeholder-slate-500 transition-colors shadow-sm`}
+                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                          errors.psTitle ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                        } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
                       />
                       {errors.psTitle && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
