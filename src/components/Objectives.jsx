@@ -1,7 +1,7 @@
 import React from 'react';
 import { Target, Zap, Briefcase, GraduationCap, Quote } from 'lucide-react';
 
-export default function Objectives() {
+export default function Objectives({ isStandalone = false }) {
   const objectiveList = [
     {
       index: '01',
@@ -50,7 +50,7 @@ export default function Objectives() {
   ];
 
   return (
-    <section id="objectives" className="relative py-24 bg-brand-dark overflow-hidden">
+    <section id="objectives" className={`relative ${isStandalone ? 'pt-32 pb-16 sm:pt-40 sm:pb-24' : 'py-12 sm:py-16'} bg-brand-dark overflow-hidden`}>
       {/* Decorative blur backgrounds */}
       <div className="absolute top-1/2 left-0 w-80 h-80 bg-brand-blue/5 rounded-full blur-[100px] pointer-events-none"></div>
       <div className="absolute top-1/4 right-0 w-80 h-80 bg-brand-orange/5 rounded-full blur-[100px] pointer-events-none"></div>

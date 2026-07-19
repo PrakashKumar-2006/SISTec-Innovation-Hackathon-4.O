@@ -86,7 +86,7 @@ export default function Developers() {
   ];
 
   return (
-    <section id="developers" className="relative py-24 bg-brand-darker overflow-hidden tech-grid-dense">
+    <section id="developers" className="relative py-12 sm:py-16 bg-brand-darker overflow-hidden tech-grid-dense">
       {/* Background glow accents */}
       <div className="absolute top-1/4 left-10 w-96 h-96 bg-brand-blue/5 rounded-full blur-[120px] -z-10"></div>
       <div className="absolute bottom-1/4 right-10 w-96 h-96 bg-brand-pink/5 rounded-full blur-[120px] -z-10"></div>

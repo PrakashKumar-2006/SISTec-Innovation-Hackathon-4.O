@@ -1,7 +1,7 @@
 import React from 'react';
 import { CalendarCheck, Rocket, Flag, Award, ClipboardList } from 'lucide-react';
 
-export default function Timeline() {
+export default function Timeline({ isStandalone = false }) {
   const events = [
     {
       num: '01',
@@ -76,7 +76,7 @@ export default function Timeline() {
   ];
 
   return (
-    <section id="timeline" className="relative py-28 sm:py-36 bg-brand-darker overflow-hidden tech-grid-dense border-t border-white/5">
+    <section id="timeline" className={`relative ${isStandalone ? 'pt-32 pb-16 sm:pt-40 sm:pb-24' : 'py-12 sm:py-16'} bg-brand-darker overflow-hidden tech-grid-dense border-t border-white/5`}>
       {/* Background glow effects */}
       <div className="absolute top-1/3 left-0 w-96 h-96 bg-brand-blue/5 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-1/3 right-0 w-96 h-96 bg-brand-pink/5 rounded-full blur-[120px] pointer-events-none"></div>

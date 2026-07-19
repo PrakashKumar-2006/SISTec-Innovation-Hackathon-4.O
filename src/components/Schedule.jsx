@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, Coffee, Utensils, Lightbulb, Users, Trophy, Sparkles, CheckCircle, ArrowRight } from 'lucide-react';
 
-export default function Schedule() {
+export default function Schedule({ isStandalone = false }) {
   const [activeDay, setActiveDay] = useState(1);
   const [activeNode, setActiveNode] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -29,7 +29,7 @@ export default function Schedule() {
       color: 'from-pink-500/10 to-transparent',
       borderColor: 'border-pink-500/30',
       activeGlow: 'shadow-[0_0_25px_rgba(236,72,153,0.15)]',
-      highlights: ['24-Hour Coding Kickoff', 'Mentor Allocation', 'Initial Idea Pitching']
+      highlights: ['Judges Interaction', 'Feedback Collection', 'Improvement Phase Starts']
     },
     {
       time: '01:00 PM',

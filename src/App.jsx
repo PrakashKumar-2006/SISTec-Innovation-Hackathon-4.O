@@ -48,12 +48,12 @@ export default function App() {
     <div className="relative min-h-screen bg-brand-darker text-brand-navy font-sans overflow-x-hidden">
       {/* Ambient Top Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-brand-blue/10 via-brand-purple/5 to-transparent rounded-full blur-[160px] pointer-events-none -z-10"></div>
-      
+
       {/* Header Navigation */}
       {!['sih-2023', 'sih-2024'].includes(currentView) && (
-        <Navbar 
-          onRegisterClick={() => setShowRegister(true)} 
-          currentView={currentView} 
+        <Navbar
+          onRegisterClick={() => setShowRegister(true)}
+          currentView={currentView}
           onViewChange={handleViewChange}
         />
       )}
@@ -74,13 +74,13 @@ export default function App() {
             <Developers />
           </>
         ) : currentView === 'about-sih' ? (
-          <About />
+          <About isStandalone={true} />
         ) : currentView === 'photo-gallery' ? (
           <PhotoGallery />
         ) : currentView === 'timeline' ? (
-          <Timeline />
+          <Timeline isStandalone={true} />
         ) : currentView === 'schedule' ? (
-          <Schedule />
+          <Schedule isStandalone={true} />
         ) : currentView === 'problem-statements' ? (
           <ProblemStatements />
         ) : currentView === 'instructions' ? (

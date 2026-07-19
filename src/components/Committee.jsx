@@ -317,7 +317,7 @@ export default function Committee() {
   ];
 
   return (
-    <section id="committee" className="relative py-28 sm:py-36 bg-brand-darker overflow-hidden tech-grid-dense border-t border-white/5">
+    <section id="committee" className="relative py-12 sm:py-16 bg-brand-darker overflow-hidden tech-grid-dense border-t border-white/5">
       {/* Subtle ambient visual glows */}
       <div className="absolute top-1/3 left-0 w-96 h-96 bg-brand-blue/5 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-1/3 right-0 w-96 h-96 bg-brand-pink/5 rounded-full blur-[120px] pointer-events-none"></div>

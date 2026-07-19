@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Sprout, GraduationCap, Car, ShieldCheck, HeartPulse, Cpu, Search, Sparkles } from 'lucide-react';
 
-export default function Themes({ onViewChange }) {
+export default function Themes({ onViewChange, isStandalone = false }) {
   const [searchTerm, setSearchTerm] = useState('');
 
   const themes = [
@@ -74,7 +74,7 @@ export default function Themes({ onViewChange }) {
   );
 
   return (
-    <section id="themes" className="relative py-28 sm:py-36 bg-brand-darker overflow-hidden tech-grid-dense border-t border-white/5">
+    <section id="themes" className={`relative ${isStandalone ? 'pt-32 pb-16 sm:pt-40 sm:pb-24' : 'py-12 sm:py-16'} bg-brand-darker overflow-hidden tech-grid-dense border-t border-white/5`}>
       {/* Background visual glowing blur circles */}
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-blue/5 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute top-0 left-0 w-96 h-96 bg-brand-gold/5 rounded-full blur-[120px] pointer-events-none"></div>

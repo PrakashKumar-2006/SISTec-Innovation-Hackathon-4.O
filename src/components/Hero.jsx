@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Rocket } from 'lucide-react';
 
 export default function Hero({ onRegisterClick }) {
   // Countdown Timer Logic
@@ -40,82 +41,155 @@ export default function Hero({ onRegisterClick }) {
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
 
   return (
-    <section id="home" className="w-full bg-brand-darker overflow-hidden pt-[84px] sm:pt-[100px] lg:pt-[108px]">
+    <section id="home" className="relative min-h-[95vh] lg:min-h-screen bg-brand-darker overflow-hidden pt-[90px] sm:pt-[110px] lg:pt-[120px] flex items-center py-12 lg:py-0">
+      {/* Background Visual Grid & Glowing effects */}
+      <div className="absolute inset-0 tech-grid opacity-[0.03] pointer-events-none"></div>
+      <div className="absolute top-1/4 left-10 w-[500px] h-[500px] bg-brand-gold/5 rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse-slow"></div>
+      <div className="absolute bottom-10 right-10 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[160px] pointer-events-none -z-10"></div>
 
-      {/* Edge-to-Edge Full-Bleed Banner Container */}
-      <div className="relative w-full">
-
-        {/* Main Banner Image stretching 100% screen width */}
-        <img
-          src="/sih4.png"
-          alt="SISTec Innovation Hackathon SIH 4.0 Banner"
-          className="w-full h-auto block"
-        />
-
-
-
-        {/* Countdown Timer Overlay positioned below 'LET THE INNOVATION BEGINS' (Desktop Only) */}
-        <div className="hidden md:flex absolute left-[8.5%] top-[77%] w-[40.5%] justify-between gap-[0.8vw]">
-          {[
-            { label: 'Days', value: timeLeft.days, border: 'border-brand-orange/60', shadow: 'shadow-[0_0_20px_rgba(249,115,22,0.35)]', numClass: 'text-brand-orange drop-shadow-[0_0_8px_rgba(249,115,22,0.6)]' },
-            { label: 'Hours', value: timeLeft.hours, border: 'border-brand-pink/60', shadow: 'shadow-[0_0_20px_rgba(236,72,153,0.35)]', numClass: 'text-brand-pink drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]' },
-            { label: 'Minutes', value: timeLeft.minutes, border: 'border-brand-blue/60', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.35)]', numClass: 'text-brand-blue drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]' },
-            { label: 'Seconds', value: timeLeft.seconds, border: 'border-brand-gold/60', shadow: 'shadow-[0_0_20px_rgba(216,171,85,0.35)]', numClass: 'text-gold-metallic drop-shadow-[0_0_8px_rgba(216,171,85,0.6)]' }
-          ].map((time, idx) => (
-            <div
-              key={idx}
-              className={`flex flex-col items-center justify-center w-[22%] py-[0.8vw] rounded-[1vw] bg-black/90 backdrop-blur-[12px] border-2 ${time.border} ${time.shadow} transition-all duration-300 relative overflow-hidden group`}
-            >
-              {/* Top color accent strip */}
-              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-brand-orange via-brand-pink to-brand-blue"></div>
-
-              {/* Large Glowing Number */}
-              <span className={`text-[2.2vw] leading-none font-black font-display ${time.numClass}`}>
-                {formatNumber(time.value)}
-              </span>
-
-              {/* Tag Label */}
-              <span className="text-[0.65vw] font-bold text-white mt-[0.3vw] tracking-widest font-sans uppercase opacity-90 group-hover:opacity-100 group-hover:text-brand-gold transition-all duration-300">
-                {time.label}
-              </span>
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 w-full relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          
+          {/* ── LEFT COLUMN: Text and branding (Enlarged) ── */}
+          <div className="lg:col-span-7 flex flex-col items-start text-left space-y-8 sm:space-y-10">
+            
+            {/* Top Dot Accent & CSE Dept Title */}
+            <div className="space-y-3">
+              {/* Dot Grid representation */}
+              <div className="flex flex-wrap gap-2 w-44 opacity-40">
+                {Array.from({ length: 24 }).map((_, i) => (
+                  <div key={i} className="w-1 h-1 rounded-full bg-brand-gold"></div>
+                ))}
+              </div>
+              
+              <p className="text-xs sm:text-sm font-extrabold tracking-[0.25em] text-brand-gold font-sans uppercase">
+                Department of Computer Science & Engineering
+              </p>
             </div>
-          ))}
-        </div>
 
-        {/* Mobile-Only Below-Banner Container (Side-by-Side Countdown & Register Button) */}
-        <div className="md:hidden bg-brand-dark/95 border-b border-white/5 px-[4vw] py-[3.5vw] flex items-center justify-between gap-[3vw] w-full">
-          {/* Left Side: Countdown Timer */}
-          <div className="flex gap-[1.5vw] shrink-0">
-            {[
-              { label: 'Days', value: timeLeft.days, border: 'border-brand-orange/60', numClass: 'text-brand-orange' },
-              { label: 'Hrs', value: timeLeft.hours, border: 'border-brand-pink/60', numClass: 'text-brand-pink' },
-              { label: 'Min', value: timeLeft.minutes, border: 'border-brand-blue/60', numClass: 'text-brand-blue' },
-              { label: 'Sec', value: timeLeft.seconds, border: 'border-brand-gold/60', numClass: 'text-gold-metallic' }
-            ].map((time, idx) => (
-              <div
-                key={idx}
-                className={`flex flex-col items-center justify-center w-[12.5vw] h-[12.5vw] max-w-[54px] max-h-[54px] min-w-[42px] min-h-[42px] rounded-xl bg-black/85 backdrop-blur-[6px] border ${time.border} relative overflow-hidden`}
-              >
-                <div className="absolute top-0 left-0 w-full h-[1.5px] bg-gradient-to-r from-brand-orange via-brand-pink to-brand-blue"></div>
-                <span className={`text-[4.5vw] sm:text-base leading-none font-black font-display ${time.numClass}`}>
-                  {formatNumber(time.value)}
-                </span>
-                <span className="text-[2vw] sm:text-[9px] font-bold text-white/90 mt-[0.5vw] uppercase tracking-wider">
-                  {time.label}
+            {/* Logo + Title Section (matching the screenshot block but larger) */}
+            <div className="flex flex-col sm:flex-row items-center sm:items-stretch gap-8 w-full">
+              {/* Brain logo (unboxed with custom shape glow) */}
+              <div className="shrink-0 flex items-center justify-center hover:scale-105 transition-all duration-300">
+                <img 
+                  src="/sih_logo.png" 
+                  alt="SISTec Innovation Hackathon Logo" 
+                  className="w-32 h-32 sm:w-44 sm:h-44 object-contain filter drop-shadow-[0_0_20px_rgba(216,171,85,0.5)] drop-shadow-[0_0_35px_rgba(236,72,153,0.3)]"
+                />
+              </div>
+
+              {/* Vertical line divider (Desktop only) */}
+              <div className="hidden sm:block w-[2px] bg-gradient-to-b from-brand-gold/80 via-brand-gold/20 to-transparent"></div>
+
+              {/* Title texts */}
+              <div className="flex flex-col justify-center text-center sm:text-left space-y-2 sm:space-y-3">
+                <h1 className="text-6xl sm:text-8xl lg:text-9xl font-extrabold tracking-tighter text-white leading-none font-display">
+                  SIH <span className="text-gold-metallic">4.0</span>
+                </h1>
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-black tracking-wide text-white leading-none font-sans uppercase whitespace-nowrap">
+                  SISTec Innovation <span className="text-brand-gold">Hackathon</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Let the Innovation Begins rocket badge */}
+            <div className="relative p-[1.5px] rounded-2xl bg-gradient-to-r from-brand-gold/50 via-brand-orange/30 to-transparent shadow-lg">
+              <div className="bg-brand-card/90 backdrop-blur-md px-6 py-3 rounded-2xl flex items-center gap-3.5">
+                <Rocket className="text-brand-gold animate-bounce" size={20} />
+                <span className="text-xs sm:text-sm lg:text-base font-extrabold tracking-[0.25em] text-white font-mono uppercase">
+                  LET THE INNOVATION BEGINS
                 </span>
               </div>
-            ))}
+            </div>
+
+            {/* Countdown Timer Grid (Enlarged cards and numbers) */}
+            <div className="w-full max-w-2xl">
+              <div className="grid grid-cols-4 gap-4 sm:gap-5">
+                {[
+                  { label: 'Days', value: timeLeft.days, border: 'border-brand-orange/30 hover:border-brand-orange/60', shadow: 'hover:shadow-[0_0_25px_rgba(249,115,22,0.25)]', numClass: 'text-brand-orange drop-shadow-[0_0_10px_rgba(249,115,22,0.45)]' },
+                  { label: 'Hours', value: timeLeft.hours, border: 'border-brand-pink/30 hover:border-brand-pink/60', shadow: 'hover:shadow-[0_0_25px_rgba(236,72,153,0.25)]', numClass: 'text-brand-pink drop-shadow-[0_0_10px_rgba(236,72,153,0.45)]' },
+                  { label: 'Minutes', value: timeLeft.minutes, border: 'border-brand-blue/30 hover:border-brand-blue/60', shadow: 'hover:shadow-[0_0_25px_rgba(59,130,246,0.25)]', numClass: 'text-brand-blue drop-shadow-[0_0_10px_rgba(59,130,246,0.45)]' },
+                  { label: 'Seconds', value: timeLeft.seconds, border: 'border-brand-gold/30 hover:border-brand-gold/60', shadow: 'hover:shadow-[0_0_25px_rgba(216,171,85,0.25)]', numClass: 'text-gold-metallic drop-shadow-[0_0_10px_rgba(216,171,85,0.45)]' }
+                ].map((time, idx) => (
+                  <div
+                    key={idx}
+                    className={`flex flex-col items-center justify-center p-4 sm:p-6 lg:p-7 rounded-[1.5rem] bg-brand-card/45 backdrop-blur-md border ${time.border} ${time.shadow} transition-all duration-300 relative overflow-hidden group`}
+                  >
+                    {/* Top indicator stripe */}
+                    <div className="absolute top-0 left-0 w-full h-[2.5px] bg-gradient-to-r from-brand-orange via-brand-pink to-brand-blue opacity-85"></div>
+                    <span className={`text-3xl sm:text-5xl lg:text-6xl font-black font-display tracking-tight leading-none ${time.numClass}`}>
+                      {formatNumber(time.value)}
+                    </span>
+                    <span className="text-[10px] sm:text-xs font-bold text-white/50 mt-2 sm:mt-3 tracking-widest font-sans uppercase">
+                      {time.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Actions: register now button */}
+            <div className="w-full sm:w-auto pt-3">
+              <button
+                onClick={onRegisterClick}
+                className="w-full sm:w-auto px-10 py-5 rounded-2xl bg-btn-gradient text-sm sm:text-base font-extrabold tracking-widest text-white shadow-xl shadow-brand-pink/15 active:scale-95 hover:shadow-brand-pink/30 hover:translate-y-[-3px] transition-all duration-300 cursor-pointer border-none uppercase"
+              >
+                Register Now
+              </button>
+            </div>
+
           </div>
 
-          {/* Right Side: Register Button */}
-          <div className="flex-grow max-w-[130px] sm:max-w-[150px]">
-            <button
-              onClick={onRegisterClick}
-              className="w-full py-[3vw] sm:py-3.5 rounded-xl bg-btn-gradient text-[3vw] sm:text-xs font-bold tracking-wide text-white shadow-lg active:scale-95 transition-all duration-300"
-            >
-              Register Now
-            </button>
+          {/* ── RIGHT COLUMN: Student Collage Graphic (Enlarged & Slanted) ── */}
+          <div className="lg:col-span-5 relative w-full flex flex-col justify-center items-center">
+            
+            {/* Top Right Quote bubble (Enlarged, unboxed layout to match the banner graphic) */}
+            <div className="absolute top-[-35px] right-2 sm:right-6 lg:top-[-50px] lg:right-10 z-20 animate-float flex items-start gap-3 select-none">
+              {/* Left quotes */}
+              <span className="text-brand-gold text-4xl sm:text-5xl font-serif leading-none -mt-2">“</span>
+              
+              {/* Text lines */}
+              <div className="flex flex-col text-left">
+                <span className="text-[11px] sm:text-xs lg:text-sm font-black tracking-widest text-white uppercase leading-none">
+                  IDEAS TODAY,
+                </span>
+                <span className="text-[11px] sm:text-xs lg:text-sm font-black tracking-widest text-white uppercase mt-1 relative pb-1.5 leading-none">
+                  IMPACT TOMORROW
+                  {/* Subtle golden underline to match the banner */}
+                  <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-gradient-to-r from-brand-gold to-transparent"></span>
+                </span>
+              </div>
+
+              {/* Right quotes */}
+              <span className="text-brand-gold text-4xl sm:text-5xl font-serif leading-none self-end -mb-2">”</span>
+            </div>
+
+            {/* Futuristic Slanted Student Photo Container */}
+            <div className="relative w-full max-w-lg lg:max-w-none aspect-[4/3] sm:aspect-square lg:aspect-[1/1] overflow-hidden lg:overflow-visible group mt-8 lg:mt-0">
+              
+              {/* Decorative backglow */}
+              <div className="absolute -top-12 -left-12 w-64 h-64 bg-brand-gold/10 rounded-full blur-[100px] -z-10 animate-pulse-slow"></div>
+              <div className="absolute -bottom-12 -right-12 w-64 h-64 bg-brand-blue/10 rounded-full blur-[100px] -z-10"></div>
+
+              {/* Slanted Underlay Border/Shadow Card */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-brand-gold via-brand-orange to-brand-blue clip-path-hero-slant rounded-3xl p-[2.5px] opacity-90 group-hover:scale-[1.01] transition-transform duration-500 shadow-[0_25px_60px_rgba(0,0,0,0.7)]">
+                {/* Slanted Image Wrapper */}
+                <div className="relative w-full h-full bg-brand-darker clip-path-hero-slant rounded-[22px] overflow-hidden">
+                  <img 
+                    src="/hackathon_students.png" 
+                    alt="Students Collaborating at Hackathon" 
+                    className="absolute inset-0 w-full h-full object-cover opacity-95 scale-105 group-hover:scale-110 transition-transform duration-700 ease-out"
+                  />
+                  {/* Subtle vignette overlay on image */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-darker/60 via-transparent to-transparent pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-brand-blue/15 mix-blend-overlay pointer-events-none"></div>
+                </div>
+              </div>
+
+            </div>
+
           </div>
+
         </div>
       </div>
     </section>
