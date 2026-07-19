@@ -26,8 +26,8 @@ export default function Contact({ onViewChange }) {
       <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[150px] pointer-events-none -z-10"></div>
 
       <div className="max-w-7xl mx-auto">
-        
-        
+
+
         {/* Header Section */}
         <div className="text-center space-y-3 mb-16">
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-brand-gray to-brand-gold bg-clip-text text-transparent uppercase font-display">
@@ -85,10 +85,10 @@ export default function Contact({ onViewChange }) {
             <div className="relative w-full flex items-center justify-center">
               {/* Outer decorative glowing elements */}
               <div className="absolute inset-0 bg-brand-gold/5 rounded-full filter blur-2xl animate-pulse"></div>
-              
-              <img 
-                src={contactImg} 
-                alt="Contact Support" 
+
+              <img
+                src={contactImg}
+                alt="Contact Support"
                 className="w-full h-auto max-h-[480px] lg:max-h-[520px] object-contain rounded-3xl relative z-10 select-none hover:scale-105 transition-transform duration-500"
               />
             </div>

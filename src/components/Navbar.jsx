@@ -124,12 +124,9 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
       ></div>
 
       <div className="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
-        <nav className={`w-full transition-all duration-500 border-b ${
-          scrolled
-            ? 'bg-brand-card/95 backdrop-blur-xl border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.3)] py-2.5 sm:py-3.5'
-            : currentView === 'problem-statements'
-              ? 'bg-transparent border-transparent py-4 sm:py-5'
-              : 'bg-brand-card/75 backdrop-blur-lg border-white/5 py-4 sm:py-5'
+        <nav className={`w-full transition-all duration-500 border-b ${scrolled
+          ? 'bg-brand-card/95 backdrop-blur-xl border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.3)] py-4 sm:py-5'
+          : 'bg-brand-card/95 backdrop-blur-lg border-white/5 py-4 sm:py-5'
           }`}>
           <div className="max-w-[1280px] mx-auto px-4 sm:px-8">
             <div className="flex items-center justify-between">
@@ -172,8 +169,8 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                           }
                         }}
                         className={`inline-block text-sm font-semibold px-3.5 py-2 rounded-xl active:scale-95 transition-all duration-200 relative ${(item.name === 'Problem Statements' && currentView === 'problem-statements') || (item.name === 'Home' && currentView === 'landing') || (item.name === 'Contact Us' && currentView === 'contact-us')
-                            ? 'text-brand-gold bg-brand-gold/10 border border-brand-gold/20'
-                            : 'text-brand-navy/80 hover:text-brand-gold hover:bg-white/5'
+                          ? 'text-brand-gold bg-brand-gold/10 border border-brand-gold/20'
+                          : 'text-brand-navy/80 hover:text-brand-gold hover:bg-white/5'
                           }`}
                       >
                         {item.name}
@@ -367,8 +364,8 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                         }
                       }}
                       className={`py-2.5 px-3 text-sm font-semibold rounded-lg active:scale-[0.97] transition-all text-left block ${(item.name === 'Problem Statements' && currentView === 'problem-statements') || (item.name === 'Home' && currentView === 'landing') || (item.name === 'Contact Us' && currentView === 'contact-us')
-                          ? 'text-brand-gold bg-brand-gold/10'
-                          : 'text-brand-navy/80 hover:text-brand-gold hover:bg-white/5'
+                        ? 'text-brand-gold bg-brand-gold/10'
+                        : 'text-brand-navy/80 hover:text-brand-gold hover:bg-white/5'
                         }`}
                     >
                       {item.name}
