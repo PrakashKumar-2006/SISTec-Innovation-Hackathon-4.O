@@ -88,55 +88,62 @@ export default function Prizes() {
         {/* Prizes Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 lg:gap-12 items-end max-w-5xl mx-auto mb-16">
           {/* Re-ordering for UI display: 2nd, 1st, 3rd to show 1st in center elevated */}
-          {[prizes[0], prizes[1], prizes[2]].map((prize, idx) => (
-            <div
-              key={idx}
-              className={`relative rounded-3xl bg-brand-card/45 backdrop-blur-md border ${prize.borderColor} p-6 flex flex-col justify-between transition-all duration-500 hover:-translate-y-2 ${prize.glow} ${
-                prize.featured 
-                  ? 'md:scale-105 md:z-10 min-h-[390px] bg-gradient-to-b ' + prize.gradient
-                  : 'min-h-[350px] bg-gradient-to-b ' + prize.gradient
-              } group overflow-hidden`}
-            >
-              {/* Large background number for editorial touch */}
-              <span className="absolute -right-2 -bottom-4 text-[6.5rem] font-black font-display text-white/[0.02] select-none leading-none group-hover:text-white/[0.04] transition-colors duration-500">
-                {prize.place}
-              </span>
+          {[prizes[0], prizes[1], prizes[2]].map((prize, idx) => {
+            const orderClasses = [
+              'order-2 md:order-1', // 2nd Prize on left (desktop), middle (mobile)
+              'order-1 md:order-2', // 1st Prize in center (desktop), top (mobile)
+              'order-3 md:order-3'  // 3rd Prize on right (desktop), bottom (mobile)
+            ];
+            return (
+              <div
+                key={idx}
+                className={`relative rounded-3xl bg-brand-card/45 backdrop-blur-md border ${prize.borderColor} p-6 flex flex-col justify-between transition-all duration-500 hover:-translate-y-2 ${prize.glow} ${orderClasses[idx]} ${
+                  prize.featured 
+                    ? 'md:scale-105 md:z-10 min-h-[390px] bg-gradient-to-b ' + prize.gradient
+                    : 'min-h-[350px] bg-gradient-to-b ' + prize.gradient
+                } group overflow-hidden`}
+              >
+                {/* Large background number for editorial touch */}
+                <span className="absolute -right-2 -bottom-4 text-[6.5rem] font-black font-display text-white/[0.02] select-none leading-none group-hover:text-white/[0.04] transition-colors duration-500">
+                  {prize.place}
+                </span>
 
-              <div className="space-y-4 pt-2 relative z-10">
-                {/* Header Badge */}
-                <div className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full border text-[10px] sm:text-xs font-bold uppercase tracking-wider ${prize.badgeBg}`}>
-                  {prize.badge}
+                <div className="space-y-4 pt-2 relative z-10">
+                  {/* Header Badge */}
+                  <div className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full border text-[10px] sm:text-xs font-bold uppercase tracking-wider ${prize.badgeBg}`}>
+                    {prize.badge}
+                  </div>
+
+                  <div className="space-y-1">
+                    <h3 className="text-[10px] sm:text-xs font-bold tracking-widest text-brand-gray font-sans uppercase">
+                      {prize.title}
+                    </h3>
+                    <p className={`text-3xl sm:text-4xl font-black font-display bg-gradient-to-b ${prize.textGradient} bg-clip-text text-transparent leading-none`}>
+                      {prize.amount}
+                    </p>
+                    <p className="text-xs text-brand-navy font-bold tracking-wide mt-0.5">
+                      {prize.description}
+                    </p>
+                  </div>
+
+                  {/* List of Perks */}
+                  <ul className="space-y-2 pt-1.5">
+                    {prize.perks.map((perk, pIdx) => (
+                      <li key={pIdx} className="flex items-center gap-2 text-left text-xs text-brand-gray font-medium">
+                        <span className="w-1.2 h-1.2 rounded-full bg-brand-gold shrink-0"></span>
+                        <span>{perk}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                <div className="space-y-1">
-                  <h3 className="text-[10px] sm:text-xs font-bold tracking-widest text-brand-gray font-sans uppercase">
-                    {prize.title}
-                  </h3>
-                  <p className={`text-3xl sm:text-4xl font-black font-display bg-gradient-to-b ${prize.textGradient} bg-clip-text text-transparent leading-none`}>
-                    {prize.amount}
-                  </p>
-                  <p className="text-xs text-brand-navy font-bold tracking-wide mt-0.5">
-                    {prize.description}
-                  </p>
+                {/* Bottom footer text of card */}
+                <div className="pt-3 border-t border-white/5 mt-4 text-[10px] sm:text-xs text-brand-gray/80 font-medium italic relative z-10">
+                  "{prize.subtitle}"
                 </div>
-
-                {/* List of Perks */}
-                <ul className="space-y-2 pt-1.5">
-                  {prize.perks.map((perk, pIdx) => (
-                    <li key={pIdx} className="flex items-center gap-2 text-left text-xs text-brand-gray font-medium">
-                      <span className="w-1.2 h-1.2 rounded-full bg-brand-gold shrink-0"></span>
-                      <span>{perk}</span>
-                    </li>
-                  ))}
-                </ul>
               </div>
-
-              {/* Bottom footer text of card */}
-              <div className="pt-3 border-t border-white/5 mt-4 text-[10px] sm:text-xs text-brand-gray/80 font-medium italic relative z-10">
-                "{prize.subtitle}"
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Venue and Date Panel */}
