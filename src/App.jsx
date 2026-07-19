@@ -24,6 +24,7 @@ import SIH2023Winners from './components/SIH2023Winners';
 import SIH2024Winners from './components/SIH2024Winners';
 import SIH2025Finalists from './components/SIH2025Finalists';
 import PhotoGallery from './components/PhotoGallery';
+import NotificationToast from './components/NotificationToast';
 
 export default function App() {
   const [showRegister, setShowRegister] = useState(false);
@@ -111,6 +112,12 @@ export default function App() {
       {showRegister && (
         <RegisterModal onClose={() => setShowRegister(false)} />
       )}
+
+      {/* Dynamic Popups / Notifications */}
+      <NotificationToast
+        onRegisterClick={() => setShowRegister(true)}
+        onViewChange={handleViewChange}
+      />
     </div>
   );
 }

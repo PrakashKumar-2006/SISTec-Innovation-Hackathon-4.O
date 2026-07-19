@@ -294,3 +294,89 @@
     box-shadow: 0 0 22px rgba(216, 171, 85, 0.45), 0 0 10px rgba(216, 171, 85, 0.2);
   }
 }
+
+/* Toast slide-in animation */
+@keyframes toast-slide-in {
+  0% {
+    transform: translateX(120%) scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: toast-slide-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Bobbing/floating animation for bubble */
+@keyframes float-bob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float-bob {
+  animation: float-bob 3s ease-in-out infinite;
+}
+
+/* Toast slide-in from left animation */
+@keyframes toast-slide-in-left {
+  0% {
+    transform: translateX(-120%) scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-left {
+  animation: toast-slide-in-left 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Staggered bobbing for left and right elements */
+@keyframes bob-left {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes bob-right {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.animate-float-left {
+  animation: bob-left 3.5s ease-in-out infinite;
+}
+.animate-float-right {
+  animation: bob-right 4s ease-in-out infinite;
+}
+
+/* Staggered Floating/Bobbing animations for stacked notification elements */
+@keyframes float-1 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(0.4deg); }
+}
+@keyframes float-2 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-13px) rotate(-0.4deg); }
+}
+@keyframes float-bubble {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-7px) scale(1.03); }
+}
+
+.animate-float-1 {
+  animation: float-1 4.2s ease-in-out infinite;
+}
+.animate-float-2 {
+  animation: float-2 5.2s ease-in-out infinite;
+}
+.animate-float-bubble {
+  animation: float-bubble 3.5s ease-in-out infinite;
+}
