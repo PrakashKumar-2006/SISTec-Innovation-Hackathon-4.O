@@ -35,7 +35,7 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="relative py-24 bg-brand-dark overflow-hidden">
+    <section id="about" className="relative py-28 sm:py-36 bg-brand-dark overflow-hidden">
       {/* Decorative Glow Backgrounds */}
       <div className="absolute top-1/4 left-0 w-96 h-96 bg-brand-gold/5 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-brand-orange/5 rounded-full blur-[120px] pointer-events-none"></div>
@@ -59,14 +59,42 @@ export default function About() {
               </span>
             </h2>
             
-            <div className="space-y-4">
-              <p className="text-brand-gray leading-relaxed text-base sm:text-lg font-normal">
-                SISTec Innovation Hackathon is a nationwide initiative to provide a platform for students to solve some of the pressing problems we face in our daily life, and thus inculcate a culture of product innovation and a problem-solving mindset.
-              </p>
-              
-              <p className="text-brand-gray leading-relaxed text-base sm:text-lg font-normal">
-                The event encourages out-of-the-box thinking among young minds, especially engineering students from across India, empowering them to transform wild ideas into viable tech prototypes.
-              </p>
+            <div className="space-y-5">
+              <div className="flex gap-4 p-4.5 rounded-2xl bg-brand-card/20 border border-white/5 hover:border-brand-gold/15 transition-all duration-300">
+                <div className="p-3 rounded-xl bg-brand-gold/10 text-brand-gold shrink-0 h-fit border border-brand-gold/20">
+                  <Sparkles size={20} />
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-base sm:text-lg font-bold text-white font-display">Product Innovation Platform</h4>
+                  <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
+                    SISTec Innovation Hackathon is a nationwide initiative to provide a platform for students to solve pressing real-world problems.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4 p-4.5 rounded-2xl bg-brand-card/20 border border-white/5 hover:border-brand-gold/15 transition-all duration-300">
+                <div className="p-3 rounded-xl bg-brand-gold/10 text-brand-gold shrink-0 h-fit border border-brand-gold/20">
+                  <Trophy size={20} />
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-base sm:text-lg font-bold text-white font-display">Problem-Solving Culture</h4>
+                  <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
+                    Inculcates a culture of product innovation, out-of-the-box thinking, and a coding/building mindset.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4 p-4.5 rounded-2xl bg-brand-card/20 border border-white/5 hover:border-brand-gold/15 transition-all duration-300">
+                <div className="p-3 rounded-xl bg-brand-gold/10 text-brand-gold shrink-0 h-fit border border-brand-gold/20">
+                  <Users size={20} />
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-base sm:text-lg font-bold text-white font-display">Idea to Viable Prototypes</h4>
+                  <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
+                    Empowers young engineering minds from across India to transform wild ideas into viable working technology prototypes.
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Checklist of highlights */}

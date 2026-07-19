@@ -230,19 +230,25 @@ export default function Committee() {
     );
   };
 
-  const renderMemberCard = (member, idx, badgeColorClass, bannerGradientClass, borderGlowClass, imageBorderColorClass, hoverBgClass) => (
+  const renderMemberCard = (member, idx, badgeColorClass, bannerGradientClass, borderGlowClass, imageBorderColorClass, hoverBgClass, isChief = false, isMobileCompact = false) => (
     <div 
       key={idx} 
-      className={`relative overflow-hidden rounded-[2rem] bg-brand-card/45 backdrop-blur-sm border border-white/5 flex flex-col transition-all duration-500 hover:-translate-y-1.5 h-[340px] w-full max-w-[310px] mx-auto group/member shadow-card-shadow hover:border-white/12 ${borderGlowClass}`}
+      className={`relative overflow-hidden ${
+        isMobileCompact ? 'rounded-2xl h-[260px]' : isChief ? 'rounded-[2.2rem] h-[450px] max-w-[340px]' : 'rounded-[2rem] h-[360px] max-w-[310px]'
+      } bg-brand-card/45 backdrop-blur-sm border border-white/5 flex flex-col transition-all duration-500 hover:-translate-y-1.5 w-full mx-auto group/member shadow-card-shadow hover:border-white/12 ${borderGlowClass}`}
     >
       {/* 1. Colored Header Banner */}
-      <div className={`h-28 w-full bg-gradient-to-r ${bannerGradientClass} relative overflow-hidden shrink-0`}>
+      <div className={`${
+        isMobileCompact ? 'h-16' : isChief ? 'h-32' : 'h-28'
+      } w-full bg-gradient-to-r ${bannerGradientClass} relative overflow-hidden shrink-0`}>
         {/* Subtle decorative grid layer in header */}
         <div className="absolute inset-0 bg-tech-grid opacity-10"></div>
       </div>
 
       {/* 2. Overlapping Circular Profile Image */}
-      <div className={`w-32 h-32 sm:w-36 sm:h-36 rounded-full overflow-hidden border-4 ${imageBorderColorClass} mx-auto -mt-16 sm:-mt-18 relative z-10 shadow-lg bg-brand-darker shrink-0`}>
+      <div className={`${
+        isMobileCompact ? 'w-20 h-20 -mt-10 border-2' : isChief ? 'w-36 h-36 sm:w-44 sm:h-44 -mt-18 sm:-mt-22 border-4' : 'w-32 h-32 sm:w-36 sm:h-36 -mt-16 sm:-mt-18 border-4'
+      } rounded-full overflow-hidden ${imageBorderColorClass} mx-auto relative z-10 shadow-lg bg-brand-darker shrink-0`}>
         <img 
           src={member.image} 
           alt={member.name} 
@@ -251,26 +257,67 @@ export default function Committee() {
       </div>
 
       {/* 3. Card Body Details */}
-      <div className="px-5 pb-6 pt-3 flex flex-col justify-between flex-grow text-center">
-        <div className="space-y-1.5">
-          <h4 className="text-base sm:text-lg font-bold text-white tracking-wide font-display group-hover/member:text-brand-gold transition-colors duration-300 line-clamp-2 px-1">
+      <div className={`${isMobileCompact ? 'px-3 pb-4 pt-1.5' : 'px-5 pb-6 pt-3'} flex flex-col justify-between flex-grow text-center`}>
+        <div className="space-y-1">
+          <h4 className={`${
+            isMobileCompact ? 'text-[11px] font-extrabold line-clamp-1' : isChief ? 'text-lg sm:text-2xl font-black' : 'text-base sm:text-lg font-bold'
+          } text-white tracking-wide font-display group-hover/member:text-brand-gold transition-colors duration-300 px-1`}>
             {member.name}
           </h4>
-          <p className="text-xs text-brand-gray/80 font-normal leading-normal px-2">
+          <p className={`${isMobileCompact ? 'text-[9px]' : 'text-xs'} text-brand-gray/80 font-semibold leading-normal px-2 line-clamp-2`}>
             {member.role}
           </p>
         </div>
 
         {/* 4. Social Links & Badging */}
-        <div className="space-y-3">
+        <div className="space-y-2">
           {renderSocials(member.socials, hoverBgClass)}
         </div>
       </div>
     </div>
   );
 
+  const cardThemes = [
+    {
+      banner: 'from-emerald-500/30 via-teal-500/10 to-transparent',
+      borderGlow: 'hover:shadow-[0_0_25px_rgba(16,185,129,0.15)] hover:border-emerald-500/30',
+      imageBorder: 'border-emerald-500/60 group-hover/member:border-emerald-500',
+      socialHover: 'hover:bg-emerald-500 hover:shadow-[0_0_10px_rgba(16,185,129,0.4)]'
+    },
+    {
+      banner: 'from-purple-500/30 via-pink-500/10 to-transparent',
+      borderGlow: 'hover:shadow-[0_0_25px_rgba(139,92,246,0.15)] hover:border-purple-500/30',
+      imageBorder: 'border-purple-500/60 group-hover/member:border-purple-500',
+      socialHover: 'hover:bg-purple-500 hover:shadow-[0_0_10px_rgba(139,92,246,0.4)]'
+    },
+    {
+      banner: 'from-blue-500/30 via-cyan-500/10 to-transparent',
+      borderGlow: 'hover:shadow-[0_0_25px_rgba(59,130,246,0.15)] hover:border-blue-500/30',
+      imageBorder: 'border-blue-500/60 group-hover/member:border-blue-500',
+      socialHover: 'hover:bg-blue-500 hover:shadow-[0_0_10px_rgba(59,130,246,0.4)]'
+    },
+    {
+      banner: 'from-pink-500/30 via-rose-500/10 to-transparent',
+      borderGlow: 'hover:shadow-[0_0_25px_rgba(244,63,94,0.15)] hover:border-pink-500/30',
+      imageBorder: 'border-pink-500/60 group-hover/member:border-pink-500',
+      socialHover: 'hover:bg-pink-500 hover:shadow-[0_0_10px_rgba(244,63,94,0.4)]'
+    },
+    {
+      banner: 'from-amber-500/30 via-brand-orange/10 to-transparent',
+      borderGlow: 'hover:shadow-[0_0_25px_rgba(245,158,11,0.15)] hover:border-amber-500/30',
+      imageBorder: 'border-amber-500/60 group-hover/member:border-amber-500',
+      socialHover: 'hover:bg-amber-500 hover:shadow-[0_0_10px_rgba(245,158,11,0.4)]'
+    },
+    {
+      banner: 'from-cyan-500/30 via-teal-500/10 to-transparent',
+      borderGlow: 'hover:shadow-[0_0_25px_rgba(6,182,212,0.15)] hover:border-cyan-500/30',
+      imageBorder: 'border-cyan-500/60 group-hover/member:border-cyan-500',
+      socialHover: 'hover:bg-cyan-500 hover:shadow-[0_0_10px_rgba(6,182,212,0.4)]'
+    }
+  ];
+
   return (
-    <section id="committee" className="relative py-24 bg-brand-darker overflow-hidden tech-grid-dense">
+    <section id="committee" className="relative py-28 sm:py-36 bg-brand-darker overflow-hidden tech-grid-dense border-t border-white/5">
       {/* Subtle ambient visual glows */}
       <div className="absolute top-1/3 left-0 w-96 h-96 bg-brand-blue/5 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-1/3 right-0 w-96 h-96 bg-brand-pink/5 rounded-full blur-[120px] pointer-events-none"></div>
@@ -331,7 +378,8 @@ export default function Committee() {
                       'from-purple-500/30 via-pink-500/10 to-transparent', 
                       'hover:shadow-[0_0_25px_rgba(139,92,246,0.15)]',
                       'border-purple-500/60 group-hover/member:border-purple-500',
-                      'hover:bg-purple-500 hover:shadow-[0_0_10px_rgba(168,85,247,0.4)]'
+                      'hover:bg-purple-500 hover:shadow-[0_0_10px_rgba(168,85,247,0.4)]',
+                      true // isChief
                     )
                   )}
                 </div>
@@ -358,7 +406,8 @@ export default function Committee() {
                       'from-cyan-500/30 via-blue-500/10 to-transparent', 
                       'hover:shadow-[0_0_25px_rgba(6,182,212,0.15)]',
                       'border-cyan-500/60 group-hover/member:border-cyan-500',
-                      'hover:bg-cyan-500 hover:shadow-[0_0_10px_rgba(6,182,212,0.4)]'
+                      'hover:bg-cyan-500 hover:shadow-[0_0_10px_rgba(6,182,212,0.4)]',
+                      false // isChief
                     )
                   )}
                 </div>
@@ -378,8 +427,8 @@ export default function Committee() {
                 <div className="w-20 sm:w-32 md:w-40 h-[1px] bg-gradient-to-r from-brand-orange to-brand-amber"></div>
               </div>
               
-              {/* Slider Viewport Outer Container */}
-              <div className="relative px-12 sm:px-20 max-w-7xl mx-auto group">
+              {/* Desktop Slider View (hidden on mobile, visible on sm and up) */}
+              <div className="hidden sm:block relative px-12 sm:px-20 max-w-7xl mx-auto group animate-fade-in">
                 
                 {/* Viewport Mask */}
                 <div className="overflow-hidden py-4">
@@ -388,44 +437,6 @@ export default function Committee() {
                     style={{ transform: `translate3d(-${currentIndex * (100 / visibleCards)}%, 0, 0)` }}
                   >
                     {coordinators.map((member, idx) => {
-                      const cardThemes = [
-                        {
-                          banner: 'from-emerald-500/30 via-teal-500/10 to-transparent',
-                          borderGlow: 'hover:shadow-[0_0_25px_rgba(16,185,129,0.15)] hover:border-emerald-500/30',
-                          imageBorder: 'border-emerald-500/60 group-hover/member:border-emerald-500',
-                          socialHover: 'hover:bg-emerald-500 hover:shadow-[0_0_10px_rgba(16,185,129,0.4)]'
-                        },
-                        {
-                          banner: 'from-purple-500/30 via-pink-500/10 to-transparent',
-                          borderGlow: 'hover:shadow-[0_0_25px_rgba(139,92,246,0.15)] hover:border-purple-500/30',
-                          imageBorder: 'border-purple-500/60 group-hover/member:border-purple-500',
-                          socialHover: 'hover:bg-purple-500 hover:shadow-[0_0_10px_rgba(139,92,246,0.4)]'
-                        },
-                        {
-                          banner: 'from-blue-500/30 via-cyan-500/10 to-transparent',
-                          borderGlow: 'hover:shadow-[0_0_25px_rgba(59,130,246,0.15)] hover:border-blue-500/30',
-                          imageBorder: 'border-blue-500/60 group-hover/member:border-blue-500',
-                          socialHover: 'hover:bg-blue-500 hover:shadow-[0_0_10px_rgba(59,130,246,0.4)]'
-                        },
-                        {
-                          banner: 'from-pink-500/30 via-rose-500/10 to-transparent',
-                          borderGlow: 'hover:shadow-[0_0_25px_rgba(244,63,94,0.15)] hover:border-pink-500/30',
-                          imageBorder: 'border-pink-500/60 group-hover/member:border-pink-500',
-                          socialHover: 'hover:bg-pink-500 hover:shadow-[0_0_10px_rgba(244,63,94,0.4)]'
-                        },
-                        {
-                          banner: 'from-amber-500/30 via-brand-orange/10 to-transparent',
-                          borderGlow: 'hover:shadow-[0_0_25px_rgba(245,158,11,0.15)] hover:border-amber-500/30',
-                          imageBorder: 'border-amber-500/60 group-hover/member:border-amber-500',
-                          socialHover: 'hover:bg-amber-500 hover:shadow-[0_0_10px_rgba(245,158,11,0.4)]'
-                        },
-                        {
-                          banner: 'from-cyan-500/30 via-teal-500/10 to-transparent',
-                          borderGlow: 'hover:shadow-[0_0_25px_rgba(6,182,212,0.15)] hover:border-cyan-500/30',
-                          imageBorder: 'border-cyan-500/60 group-hover/member:border-cyan-500',
-                          socialHover: 'hover:bg-cyan-500 hover:shadow-[0_0_10px_rgba(6,182,212,0.4)]'
-                        }
-                      ];
                       const theme = cardThemes[idx % cardThemes.length];
                       return (
                         <div 
@@ -466,6 +477,29 @@ export default function Committee() {
                   <ChevronRight size={24} className="stroke-[3]" />
                 </button>
               </div>
+
+              {/* Mobile Grid View (shown on mobile, hidden on sm and up) */}
+              <div className="sm:hidden grid grid-cols-2 gap-3 px-1 animate-fade-in">
+                {coordinators.map((member, idx) => {
+                  const theme = cardThemes[idx % cardThemes.length];
+                  return (
+                    <div key={idx} className="w-full">
+                      {renderMemberCard(
+                        member, 
+                        idx, 
+                        '', 
+                        theme.banner, 
+                        theme.borderGlow,
+                        theme.imageBorder,
+                        theme.socialHover,
+                        false, // isChief
+                        true  // isMobileCompact
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
             </div>
           )}
         </div>

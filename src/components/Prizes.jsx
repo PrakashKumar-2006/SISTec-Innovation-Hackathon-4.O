@@ -68,7 +68,7 @@ export default function Prizes() {
   ];
 
   return (
-    <section id="prizes" className="relative py-24 bg-brand-darker overflow-hidden tech-grid-dense">
+    <section id="prizes" className="relative py-28 sm:py-36 bg-brand-darker overflow-hidden tech-grid-dense border-t border-white/5">
       {/* Visual glowing effects in the background */}
       <div className="absolute top-1/4 right-0 w-96 h-96 bg-brand-gold/5 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-brand-blue/5 rounded-full blur-[120px] pointer-events-none"></div>

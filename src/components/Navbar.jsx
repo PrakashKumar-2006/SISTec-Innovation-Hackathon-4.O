@@ -227,11 +227,17 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
               </button>
             </div>
 
-            {/* Mobile Menu Toggle */}
-            <div className="lg:hidden">
+            {/* Mobile Menu Actions */}
+            <div className="lg:hidden flex items-center gap-2">
+              <button
+                onClick={onRegisterClick}
+                className="px-3.5 py-1.5 rounded-xl bg-btn-gradient text-xs font-bold text-white shadow-md active:scale-95 transition-all border-none cursor-pointer"
+              >
+                Register
+              </button>
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="p-2 rounded-xl text-brand-navy hover:text-brand-blue hover:bg-brand-dark/50 transition-all"
+                className="p-2 rounded-xl text-brand-navy hover:text-brand-blue hover:bg-brand-dark/50 transition-all border-none bg-transparent"
               >
                 {isOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
