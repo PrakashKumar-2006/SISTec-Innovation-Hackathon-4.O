@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, Sparkles, ClipboardList, CheckCircle, Info, Download, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Sparkles, ClipboardList, Info, Download, ArrowRight } from 'lucide-react';
 
 export default function Instructions({ onViewChange }) {
   const [visible, setVisible] = useState(false);
@@ -15,88 +15,132 @@ export default function Instructions({ onViewChange }) {
       title: "Team Formation Rules",
       desc: "Each team must consist of 2 to 6 student members. Having at least one female member is highly recommended. All members must belong to the same institution (inter-college teams are not permitted).",
       icon: "👥",
-      badge: "Mandatory"
+      badge: "Mandatory",
+      themeColor: "from-cyan-500/20 to-blue-600/5",
+      borderColor: "group-hover:border-cyan-500/60 border-cyan-500/20",
+      glowColor: "group-hover:shadow-[0_15px_30px_rgba(6,182,212,0.2)]",
+      badgeStyle: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+      iconBg: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20"
     },
     {
       id: 2,
       title: "Problem Statement Selection",
       desc: "Select a problem statement from the listed categories (AgriTech, HealthTech, EduTech, Smart Devices, etc.) or choose 'Open Innovation' if you are developing a custom idea outside the listed tracks.",
       icon: "🎯",
-      badge: "Flexible"
+      badge: "Flexible",
+      themeColor: "from-amber-500/20 to-orange-600/5",
+      borderColor: "group-hover:border-amber-500/60 border-amber-500/20",
+      glowColor: "group-hover:shadow-[0_15px_30px_rgba(245,158,11,0.2)]",
+      badgeStyle: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+      iconBg: "bg-amber-500/10 text-amber-400 border-amber-500/20"
     },
     {
       id: 3,
       title: "PPT Presentation Template",
       desc: "All ideas must be submitted using the official SIH 4.O PPT template. Make sure to cover the problem statement, solution description, technology stack, and novelty of your idea.",
       icon: "📊",
-      badge: "Format"
+      badge: "Format",
+      themeColor: "from-purple-500/20 to-indigo-600/5",
+      borderColor: "group-hover:border-purple-500/60 border-purple-500/20",
+      glowColor: "group-hover:shadow-[0_15px_30px_rgba(168,85,247,0.2)]",
+      badgeStyle: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+      iconBg: "bg-purple-500/10 text-purple-400 border-purple-500/20"
     },
     {
       id: 4,
       title: "HOD Consent Letter",
       desc: "A signed consent letter from your College Principal, Director, or HOD is mandatory. Submissions without a valid, officially stamped consent letter will be disqualified.",
       icon: "📝",
-      badge: "Required"
+      badge: "Required",
+      themeColor: "from-rose-500/20 to-red-600/5",
+      borderColor: "group-hover:border-rose-500/60 border-rose-500/20",
+      glowColor: "group-hover:shadow-[0_15px_30px_rgba(244,63,94,0.2)]",
+      badgeStyle: "bg-rose-500/10 text-rose-400 border-rose-500/20",
+      iconBg: "bg-rose-500/10 text-rose-400 border-rose-500/20"
     },
     {
       id: 5,
       title: "Registration & Payments",
       desc: "Fill in the registration form completely through the team leader. Provide accurate student details, contact numbers, and emails. ID verification will be conducted at the venue.",
       icon: "💳",
-      badge: "Process"
+      badge: "Process",
+      themeColor: "from-emerald-500/20 to-teal-600/5",
+      borderColor: "group-hover:border-emerald-500/60 border-emerald-500/20",
+      glowColor: "group-hover:shadow-[0_15px_30px_rgba(16,185,129,0.2)]",
+      badgeStyle: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+      iconBg: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
     },
     {
       id: 6,
       title: "Grand Finale Guidelines",
       desc: "Shortlisted teams must report to the SISTec-R Bhopal campus for the 36-hour non-stop hackathon. Teams are required to bring their own laptops, development boards, and hardware modules.",
       icon: "⚡",
-      badge: "Finale"
+      badge: "Finale",
+      themeColor: "from-fuchsia-500/20 to-pink-600/5",
+      borderColor: "group-hover:border-fuchsia-500/60 border-fuchsia-500/20",
+      glowColor: "group-hover:shadow-[0_15px_30px_rgba(217,70,239,0.2)]",
+      badgeStyle: "bg-fuchsia-500/10 text-fuchsia-400 border-fuchsia-500/20",
+      iconBg: "bg-fuchsia-500/10 text-fuchsia-400 border-fuchsia-500/20"
     }
   ];
 
   return (
-    <section className="relative min-h-screen bg-brand-darker pt-28 pb-20 px-3 sm:px-6 lg:px-8 text-white select-none">
+    <section className="relative min-h-screen bg-brand-darker pt-28 pb-20 px-3 sm:px-6 lg:px-8 text-white select-none overflow-hidden">
       
-      {/* Background ambient glows */}
-      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-brand-orange/4 rounded-full blur-[150px] pointer-events-none -z-10" />
-      <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-brand-purple/4 rounded-full blur-[150px] pointer-events-none -z-10" />
+      {/* Dynamic Animated background glows */}
+      <div className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[150px] pointer-events-none -z-10 animate-[pulse_10s_ease-in-out_infinite]" />
+      <div className="absolute top-1/2 left-1/3 w-[500px] h-[500px] bg-brand-gold/5 rounded-full blur-[140px] pointer-events-none -z-10 animate-[pulse_12s_ease-in-out_infinite_1s]" />
+      <div className="absolute -bottom-40 -right-40 w-[650px] h-[650px] bg-brand-purple/4 rounded-full blur-[160px] pointer-events-none -z-10 animate-[pulse_15s_ease-in-out_infinite_2s]" />
 
-      {/* Embedded CSS Animations for the SVG Checklist */}
+      {/* Grid Pattern Overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.007)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(255,255,255,0.007)_1.5px,transparent_1.5px)] bg-[size:30px_30px] opacity-35 pointer-events-none -z-10" />
+
+      {/* Embedded CSS Animations */}
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes draw-check {
           0% { stroke-dashoffset: 50; opacity: 0; }
+          40% { opacity: 1; }
           100% { stroke-dashoffset: 0; opacity: 1; }
         }
         @keyframes line-slide {
           0% { stroke-dashoffset: 200; opacity: 0; }
+          30% { opacity: 0.8; }
           100% { stroke-dashoffset: 0; opacity: 0.8; }
         }
         @keyframes float-clipboard {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-8px) rotate(1deg); }
+          50% { transform: translateY(-10px) rotate(1.5deg); }
+        }
+        @keyframes pulse-ring {
+          0% { transform: scale(0.9); opacity: 0.6; }
+          100% { transform: scale(1.3); opacity: 0; }
         }
         .svg-check-1 {
           stroke-dasharray: 50;
           stroke-dashoffset: 50;
-          animation: draw-check 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards infinite;
+          animation: draw-check 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
         .svg-check-2 {
           stroke-dasharray: 50;
           stroke-dashoffset: 50;
-          animation: draw-check 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s forwards infinite;
+          animation: draw-check 2s cubic-bezier(0.4, 0, 0.2, 1) 0.6s infinite;
         }
         .svg-check-3 {
           stroke-dasharray: 50;
           stroke-dashoffset: 50;
-          animation: draw-check 1.5s cubic-bezier(0.4, 0, 0.2, 1) 1s forwards infinite;
+          animation: draw-check 2s cubic-bezier(0.4, 0, 0.2, 1) 1.2s infinite;
         }
         .svg-list-line {
           stroke-dasharray: 200;
           stroke-dashoffset: 200;
-          animation: line-slide 3s linear infinite;
+          animation: line-slide 2.5s ease-out infinite;
         }
         .svg-clipboard-group {
-          animation: float-clipboard 6s ease-in-out infinite;
+          animation: float-clipboard 5s ease-in-out infinite;
+          transform-origin: center;
+        }
+        .pulse-ring-effect {
+          animation: pulse-ring 2.5s cubic-bezier(0.215, 0.610, 0.355, 1) infinite;
           transform-origin: center;
         }
       `}} />
@@ -104,10 +148,10 @@ export default function Instructions({ onViewChange }) {
       <div className="max-w-6xl mx-auto relative z-10 flex flex-col items-center">
         
         {/* Back Navigation & Page Header */}
-        <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10 text-left border-b border-white/5 pb-6">
+        <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10 text-left border-b border-white/10 pb-6">
           <div className="space-y-1.5">
-            <span className="inline-flex items-center gap-1 text-[10px] font-black text-brand-gold uppercase tracking-widest bg-brand-gold/10 px-3 py-1 rounded-full border border-brand-gold/20">
-              <ClipboardList size={11} />
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-black text-brand-gold uppercase tracking-widest bg-brand-gold/15 px-3 py-1 rounded-full border border-brand-gold/25 shadow-sm">
+              <ClipboardList size={11} className="text-brand-gold" />
               Official Guidelines
             </span>
             <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-none mt-1">
@@ -134,48 +178,67 @@ export default function Instructions({ onViewChange }) {
             <div className="w-56 h-56 sm:w-64 sm:h-64 relative">
               <svg
                 viewBox="0 0 200 200"
-                className="w-full h-full drop-shadow-[0_0_35px_rgba(216,171,85,0.18)]"
+                className="w-full h-full drop-shadow-[0_0_35px_rgba(6,182,212,0.18)]"
               >
                 {/* Orbiting glowing dust particles */}
-                <circle cx="100" cy="100" r="88" fill="none" stroke="#D8AB55" strokeWidth="0.5" strokeDasharray="3 9" className="opacity-20 animate-[spin_50s_linear_infinite]" />
-                <circle cx="100" cy="100" r="75" fill="none" stroke="#06B6D4" strokeWidth="0.5" strokeDasharray="6 18" className="opacity-15 animate-[spin_30s_linear_infinite_reverse]" />
+                <circle cx="100" cy="100" r="88" fill="none" stroke="#D8AB55" strokeWidth="0.5" strokeDasharray="3 9" className="opacity-25 animate-[spin_55s_linear_infinite]" />
+                <circle cx="100" cy="100" r="76" fill="none" stroke="#06B6D4" strokeWidth="0.5" strokeDasharray="6 18" className="opacity-20 animate-[spin_35s_linear_infinite_reverse]" />
 
                 {/* Main Floating Clipboard Group */}
                 <g className="svg-clipboard-group">
                   
                   {/* Clipboard Board backing shadow */}
-                  <rect x="52" y="32" width="96" height="136" rx="12" fill="#0D0D11" stroke="url(#goldGradient)" strokeWidth="2.5" />
+                  <rect x="52" y="32" width="96" height="136" rx="12" fill="#0D0D11" stroke="url(#clipboardBorder)" strokeWidth="2.5" />
                   
                   {/* Clipboard Clip */}
-                  <path d="M85 32 L115 32 A 4 4 0 0 1 119 36 L119 44 A 4 4 0 0 1 115 48 L85 48 A 4 4 0 0 1 81 44 L81 36 A 4 4 0 0 1 85 32 Z" fill="#D8AB55" className="opacity-90" />
+                  <path d="M85 32 L115 32 A 4 4 0 0 1 119 36 L119 44 A 4 4 0 0 1 115 48 L85 48 A 4 4 0 0 1 81 44 L81 36 A 4 4 0 0 1 85 32 Z" fill="url(#clipGradient)" className="opacity-95" />
                   
                   {/* Checklist Items: Line 1 (Check & Text) */}
-                  <circle cx="70" cy="70" r="8" fill="#E65C00" className="opacity-10" />
-                  <path d="M66 70 L69 73 L74 67" fill="none" stroke="#D8AB55" strokeWidth="2.2" strokeLinecap="round" className="svg-check-1" />
-                  <line x1="86" y1="70" x2="132" y2="70" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" className="svg-list-line opacity-75" />
+                  <circle cx="70" cy="70" r="8" fill="#10B981" className="opacity-15" />
+                  <circle cx="70" cy="70" r="10" fill="none" stroke="#10B981" strokeWidth="1" className="pulse-ring-effect" />
+                  <path d="M66 70 L69 73 L74 67" fill="none" stroke="#10B981" strokeWidth="2.2" strokeLinecap="round" className="svg-check-1" />
+                  <line x1="86" y1="70" x2="132" y2="70" stroke="url(#lineGradientBlue)" strokeWidth="2.5" strokeLinecap="round" className="svg-list-line" />
 
                   {/* Checklist Items: Line 2 (Check & Text) */}
-                  <circle cx="70" cy="98" r="8" fill="#E65C00" className="opacity-10" />
-                  <path d="M66 98 L69 101 L74 95" fill="none" stroke="#D8AB55" strokeWidth="2.2" strokeLinecap="round" className="svg-check-2" />
-                  <line x1="86" y1="98" x2="124" y2="98" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" className="svg-list-line opacity-75" />
+                  <circle cx="70" cy="98" r="8" fill="#06B6D4" className="opacity-15" />
+                  <circle cx="70" cy="98" r="10" fill="none" stroke="#06B6D4" strokeWidth="1" className="pulse-ring-effect" style={{ animationDelay: '0.6s' }} />
+                  <path d="M66 98 L69 101 L74 95" fill="none" stroke="#06B6D4" strokeWidth="2.2" strokeLinecap="round" className="svg-check-2" />
+                  <line x1="86" y1="98" x2="124" y2="98" stroke="url(#lineGradientCyan)" strokeWidth="2.5" strokeLinecap="round" className="svg-list-line" />
 
                   {/* Checklist Items: Line 3 (Check & Text) */}
-                  <circle cx="70" cy="126" r="8" fill="#E65C00" className="opacity-10" />
-                  <path d="M66 126 L69 129 L74 123" fill="none" stroke="#D8AB55" strokeWidth="2.2" strokeLinecap="round" className="svg-check-3" />
-                  <line x1="86" y1="126" x2="136" y2="126" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" className="svg-list-line opacity-75" />
+                  <circle cx="70" cy="126" r="8" fill="#F59E0B" className="opacity-15" />
+                  <circle cx="70" cy="126" r="10" fill="none" stroke="#F59E0B" strokeWidth="1" className="pulse-ring-effect" style={{ animationDelay: '1.2s' }} />
+                  <path d="M66 126 L69 129 L74 123" fill="none" stroke="#F59E0B" strokeWidth="2.2" strokeLinecap="round" className="svg-check-3" />
+                  <line x1="86" y1="126" x2="136" y2="126" stroke="url(#lineGradientGold)" strokeWidth="2.5" strokeLinecap="round" className="svg-list-line" />
                   
                 </g>
 
                 {/* Floating sparkles outside */}
-                <path d="M30 45 L32 49 L36 50 L32 51 L30 55 L28 51 L24 50 L28 49 Z" fill="#D8AB55" className="animate-pulse" />
-                <path d="M170 120 L171.5 123.5 L175 124.5 L171.5 125.5 L170 129 L168.5 125.5 L165 124.5 L168.5 123.5 Z" fill="#D8AB55" className="animate-pulse" />
+                <path d="M30 45 L32 49 L36 50 L32 51 L30 55 L28 51 L24 50 L28 49 Z" fill="#06B6D4" className="animate-pulse" />
+                <path d="M170 120 L171.5 123.5 L175 124.5 L171.5 125.5 L170 129 L168.5 125.5 L165 124.5 L168.5 123.5 Z" fill="#D8AB55" className="animate-pulse" style={{ animationDelay: '0.5s' }} />
                 
-                {/* Gradients */}
+                {/* Gradients definitions */}
                 <defs>
-                  <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#FFFFFF" />
-                    <stop offset="50%" stopColor="#D8AB55" />
+                  <linearGradient id="clipboardBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#06B6D4" />
+                    <stop offset="50%" stopColor="#8B5CF6" />
+                    <stop offset="100%" stopColor="#D8AB55" />
+                  </linearGradient>
+                  <linearGradient id="clipGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#D8AB55" />
                     <stop offset="100%" stopColor="#A27B2B" />
+                  </linearGradient>
+                  <linearGradient id="lineGradientBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#FFFFFF" />
+                    <stop offset="100%" stopColor="#10B981" />
+                  </linearGradient>
+                  <linearGradient id="lineGradientCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#FFFFFF" />
+                    <stop offset="100%" stopColor="#06B6D4" />
+                  </linearGradient>
+                  <linearGradient id="lineGradientGold" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#FFFFFF" />
+                    <stop offset="100%" stopColor="#D8AB55" />
                   </linearGradient>
                 </defs>
               </svg>
@@ -187,7 +250,7 @@ export default function Instructions({ onViewChange }) {
             <h2 className="text-xl sm:text-2xl font-black text-white leading-snug">
               Important Submission Deliverables
             </h2>
-            <p className="text-slate-400 text-xs sm:text-sm leading-relaxed font-medium">
+            <p className="text-slate-400 text-xs sm:text-sm leading-relaxed font-semibold">
               SISTec Innovation Hackathon 4.O requires teams to submit their ideas in a structured presentation format. Make sure you download the official templates below to guide your submission and prevent disqualification.
             </p>
 
@@ -195,9 +258,9 @@ export default function Instructions({ onViewChange }) {
               <a 
                 href="#process" 
                 onClick={(e) => { e.preventDefault(); onViewChange('landing', '#process'); }}
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-brand-card hover:bg-brand-card/85 text-xs font-bold text-brand-gold border border-white/10 hover:border-brand-gold/40 shadow-md active:scale-95 transition-all"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-brand-card hover:bg-brand-card/80 text-xs font-bold text-brand-gold border border-white/10 hover:border-brand-gold/40 shadow-lg hover:shadow-[0_0_15px_rgba(216,171,85,0.15)] active:scale-95 transition-all"
               >
-                <Download size={14} />
+                <Download size={14} className="text-brand-gold" />
                 Download Idea PPT Template
               </a>
               
@@ -214,36 +277,36 @@ export default function Instructions({ onViewChange }) {
 
         </div>
 
-        {/* ── Guidelines Grid (Structured Cards) ── */}
+        {/* ── Guidelines Grid (Rainbow Gradient Cards) ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mt-6">
           {guidelines.map((rule) => (
             <div
               key={rule.id}
-              className="bg-brand-card/45 backdrop-blur-md border border-white/10 rounded-2xl p-5 sm:p-6 shadow-xl hover:border-brand-gold/30 hover:shadow-[0_12px_25px_rgba(216,171,85,0.08)] transition-all duration-300 text-left relative flex flex-col justify-between group"
+              className={`bg-gradient-to-br ${rule.themeColor} backdrop-blur-md border ${rule.borderColor} ${rule.glowColor} rounded-2xl p-5 sm:p-6 shadow-xl hover:-translate-y-2 hover:scale-[1.02] transition-all duration-300 text-left relative flex flex-col justify-between group`}
             >
-              <div className="space-y-3.5">
+              <div className="space-y-4">
                 {/* Icon header with ID tag */}
                 <div className="flex items-center justify-between">
-                  <div className="w-11 h-11 rounded-xl bg-brand-gold/10 text-xl flex items-center justify-center border border-brand-gold/20 shadow-inner group-hover:scale-105 transition-transform">
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl border shadow-inner group-hover:scale-110 transition-transform ${rule.iconBg}`}>
                     {rule.icon}
                   </div>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-[#06B6D4] bg-[#06B6D4]/10 border border-[#06B6D4]/20 px-2.5 py-0.5 rounded-full">
+                  <span className={`inline-block px-2.5 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-widest ${rule.badgeStyle}`}>
                     {rule.badge}
                   </span>
                 </div>
 
-                <div className="space-y-1.5">
-                  <h3 className="text-white text-base font-extrabold group-hover:text-brand-gold transition-colors">
+                <div className="space-y-2">
+                  <h3 className="text-white text-base font-extrabold group-hover:text-white transition-colors">
                     {rule.title}
                   </h3>
-                  <p className="text-slate-300 text-xs leading-relaxed font-medium">
+                  <p className="text-slate-300 text-xs leading-relaxed font-semibold">
                     {rule.desc}
                   </p>
                 </div>
               </div>
 
               {/* ID counter decoration inside */}
-              <div className="absolute bottom-4 right-4 text-xs font-mono font-bold text-slate-500/20 select-none">
+              <div className="absolute bottom-4 right-4 text-xs font-mono font-bold text-slate-500/10 select-none group-hover:text-white/10 transition-colors">
                 0{rule.id}
               </div>
             </div>
@@ -251,7 +314,7 @@ export default function Instructions({ onViewChange }) {
         </div>
 
         {/* ── Call to Action ── */}
-        <div className="bg-gradient-to-r from-brand-gold/10 to-amber-500/5 border border-brand-gold/30 rounded-2xl p-5 sm:p-6 w-full text-center mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="bg-gradient-to-r from-brand-gold/15 to-amber-500/5 border border-brand-gold/30 rounded-2xl p-5 sm:p-6 w-full text-center mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3 text-left">
             <div className="w-10 h-10 rounded-full bg-brand-gold/10 text-brand-gold flex items-center justify-center shrink-0 border border-brand-gold/20">
               <Info size={16} />

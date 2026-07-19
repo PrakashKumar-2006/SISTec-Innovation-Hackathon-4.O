@@ -16,12 +16,12 @@ export default function Prizes({ isStandalone = false }) {
         'Silver Medals for Team',
         'Excellence Certificates'
       ],
-      gradient: 'from-blue-500/10 to-transparent',
-      textGradient: 'from-white via-slate-200 to-slate-400',
-      borderColor: 'border-slate-500/30',
-      badgeBg: 'bg-slate-500/10 text-slate-300 border-slate-500/30',
-      glow: 'shadow-[0_0_30px_rgba(148,163,184,0.1)] hover:border-slate-400/50',
-      icon: <Trophy className="w-8 h-8 text-slate-300 animate-pulse" />
+      themeColor: 'from-cyan-500/20 to-blue-600/5',
+      borderColor: 'border-cyan-500/20 group-hover:border-cyan-500/60',
+      glow: 'shadow-[0_0_30px_rgba(6,182,212,0.15)] group-hover:shadow-[0_15px_35px_rgba(6,182,212,0.25)]',
+      badgeBg: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+      textGradient: 'from-white via-cyan-100 to-cyan-300',
+      icon: <Trophy className="w-8 h-8 text-cyan-400 animate-pulse" />
     },
     {
       place: '01',
@@ -38,11 +38,11 @@ export default function Prizes({ isStandalone = false }) {
         'Excellence Certificates',
         'Incubation Opportunity'
       ],
-      gradient: 'from-brand-gold/15 to-transparent',
+      themeColor: 'from-amber-500/25 to-orange-600/5',
+      borderColor: 'border-amber-500/30 group-hover:border-amber-500/70',
+      glow: 'shadow-[0_0_50px_rgba(245,158,11,0.25)] group-hover:shadow-[0_20px_45px_rgba(245,158,11,0.35)]',
+      badgeBg: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
       textGradient: 'from-[#FFE8B6] via-[#D8AB55] to-[#A27B2B]',
-      borderColor: 'border-brand-gold/50',
-      badgeBg: 'bg-brand-gold/15 text-brand-gold border-brand-gold/30',
-      glow: 'shadow-[0_0_50px_rgba(216,171,85,0.2)] hover:border-brand-gold',
       icon: <Trophy className="w-10 h-10 text-brand-gold animate-bounce" />
     },
     {
@@ -58,11 +58,11 @@ export default function Prizes({ isStandalone = false }) {
         'Bronze Medals for Team',
         'Excellence Certificates'
       ],
-      gradient: 'from-orange-500/10 to-transparent',
-      textGradient: 'from-[#FED7AA] via-[#F97316] to-[#C2410C]',
-      borderColor: 'border-orange-500/30',
+      themeColor: 'from-orange-500/20 to-rose-600/5',
+      borderColor: 'border-orange-500/20 group-hover:border-orange-500/60',
+      glow: 'shadow-[0_0_30px_rgba(249,115,22,0.15)] group-hover:shadow-[0_15px_35px_rgba(249,115,22,0.25)]',
       badgeBg: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
-      glow: 'shadow-[0_0_30px_rgba(249,115,22,0.1)] hover:border-orange-400/50',
+      textGradient: 'from-[#FED7AA] via-[#F97316] to-[#C2410C]',
       icon: <Trophy className="w-8 h-8 text-orange-400 animate-pulse" />
     }
   ];
@@ -87,20 +87,19 @@ export default function Prizes({ isStandalone = false }) {
 
         {/* Prizes Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 lg:gap-12 items-end max-w-5xl mx-auto mb-16">
-          {/* Re-ordering for UI display: 2nd, 1st, 3rd to show 1st in center elevated */}
           {[prizes[0], prizes[1], prizes[2]].map((prize, idx) => {
             const orderClasses = [
-              'order-2 md:order-1', // 2nd Prize on left (desktop), middle (mobile)
-              'order-1 md:order-2', // 1st Prize in center (desktop), top (mobile)
-              'order-3 md:order-3'  // 3rd Prize on right (desktop), bottom (mobile)
+              'order-2 md:order-1',
+              'order-1 md:order-2',
+              'order-3 md:order-3'
             ];
             return (
               <div
                 key={idx}
-                className={`relative rounded-3xl bg-brand-card/45 backdrop-blur-md border ${prize.borderColor} p-6 flex flex-col justify-between transition-all duration-500 hover:-translate-y-2 ${prize.glow} ${orderClasses[idx]} ${
+                className={`relative rounded-3xl bg-gradient-to-br ${prize.themeColor} backdrop-blur-md border ${prize.borderColor} p-6 flex flex-col justify-between transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] ${prize.glow} ${orderClasses[idx]} ${
                   prize.featured 
-                    ? 'md:scale-105 md:z-10 min-h-[390px] bg-gradient-to-b ' + prize.gradient
-                    : 'min-h-[350px] bg-gradient-to-b ' + prize.gradient
+                    ? 'md:scale-105 md:z-10 min-h-[390px]'
+                    : 'min-h-[350px]'
                 } group overflow-hidden`}
               >
                 {/* Large background number for editorial touch */}
