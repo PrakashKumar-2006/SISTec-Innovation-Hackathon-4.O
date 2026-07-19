@@ -132,7 +132,7 @@ export default function Hero({ onRegisterClick }) {
             <div className="w-full sm:w-auto pt-3">
               <button
                 onClick={onRegisterClick}
-                className="w-full sm:w-auto px-10 py-5 rounded-2xl bg-btn-gradient text-sm sm:text-base font-extrabold tracking-widest text-white shadow-xl shadow-brand-pink/15 active:scale-95 hover:shadow-brand-pink/30 hover:translate-y-[-3px] transition-all duration-300 cursor-pointer border-none uppercase"
+                className="w-full sm:w-auto px-10 py-5 rounded-2xl bg-btn-gradient text-sm sm:text-base font-extrabold tracking-widest text-white shadow-xl shadow-brand-pink/15 active:scale-95 hover:shadow-brand-pink/30 hover:translate-y-[-3px] transition-all duration-300 cursor-pointer border-none uppercase btn-premium-animate"
               >
                 Register Now
               </button>

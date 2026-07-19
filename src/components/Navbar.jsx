@@ -9,29 +9,11 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
+      // Trigger navbar display after scrolling 100px
+      if (window.scrollY > 100) {
         setScrolled(true);
       } else {
         setScrolled(false);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-
-      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalScroll > 0) {
-        setScrollProgress((window.scrollY / totalScroll) * 100);
       }
     };
     window.addEventListener('scroll', handleScroll);
@@ -118,23 +100,20 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
 
   return (
     <>
-      {/* Scroll Progress Bar */}
-      <div
-        className="fixed top-0 left-0 h-[3px] bg-btn-gradient z-[100] transition-all duration-75 pointer-events-none"
-        style={{ width: `${scrollProgress}%` }}
-      ></div>
-
       <div className="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
         <nav className={`w-full transition-all duration-500 border-b ${scrolled
-          ? 'bg-brand-card/95 backdrop-blur-xl border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.3)] py-4 sm:py-5'
-          : 'bg-brand-card/95 backdrop-blur-lg border-white/5 py-4 sm:py-5'
+          ? 'bg-brand-card/95 backdrop-blur-xl border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.3)] py-3 sm:py-4'
+          : 'bg-transparent border-transparent py-5 sm:py-6'
           }`}>
           <div className="max-w-[1280px] mx-auto px-4 sm:px-8">
             <div className="flex items-center justify-between">
 
               {/* Logo */}
               <div
-                onClick={() => onViewChange && onViewChange('landing', '#home')}
+                onClick={() => {
+                  setIsOpen(false);
+                  onViewChange && onViewChange('landing', '#home');
+                }}
                 className="flex items-center group/logo cursor-pointer"
               >
                 <img
@@ -252,7 +231,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
               <div className="hidden lg:block">
                 <button
                   onClick={onRegisterClick}
-                  className="px-6 py-2.5 rounded-xl bg-btn-gradient text-sm font-bold tracking-wide text-white shadow-[0_8px_20px_rgba(216,171,85,0.15)] hover:shadow-[0_12px_24px_rgba(216,171,85,0.4)] hover:-translate-y-0.5 active:translate-y-0 hover:scale-[1.03] active:scale-95 transition-all duration-300 cursor-pointer border-none"
+                  className="px-6 py-2.5 rounded-xl bg-btn-gradient text-sm font-bold tracking-wide text-white shadow-[0_8px_20px_rgba(216,171,85,0.15)] hover:shadow-[0_12px_24px_rgba(216,171,85,0.4)] hover:-translate-y-0.5 active:translate-y-0 hover:scale-[1.03] active:scale-95 transition-all duration-300 cursor-pointer border-none btn-premium-animate"
                 >
                   Register Now
                 </button>
@@ -262,7 +241,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
               <div className="lg:hidden flex items-center gap-2">
                 <button
                   onClick={onRegisterClick}
-                  className="px-3.5 py-1.5 rounded-xl bg-btn-gradient text-xs font-bold text-white shadow-md active:scale-95 transition-all border-none cursor-pointer hover:shadow-[0_0_15px_rgba(216,171,85,0.3)]"
+                  className="px-3.5 py-1.5 rounded-xl bg-btn-gradient text-xs font-bold text-white shadow-md active:scale-95 transition-all border-none cursor-pointer hover:shadow-[0_0_15px_rgba(216,171,85,0.3)] btn-premium-animate"
                 >
                   Register
                 </button>
@@ -273,10 +252,11 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                   {isOpen ? <X size={22} className="text-brand-gold" /> : <Menu size={22} />}
                 </button>
               </div>
+
             </div>
           </div>
 
-          {/* Mobile Drawer */}
+          {/* Mobile Drawer (absolute overlay for full-width layout) */}
           {isOpen && (
             <div className="lg:hidden absolute top-full left-0 w-full bg-[#0D0D0F] border-b border-white/5 p-5 flex flex-col gap-3.5 shadow-[0_20px_40px_rgba(0,0,0,0.6)] animate-fade-in max-h-[calc(100vh-80px)] overflow-y-auto z-50">
               {navItems.map((item, idx) => (
@@ -285,7 +265,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                     <>
                       <button
                         onClick={() => toggleDropdown(idx)}
-                        className="flex items-center justify-between text-left py-2.5 px-3 text-sm font-semibold text-brand-navy/80 hover:text-brand-gold rounded-lg hover:bg-white/5 active:scale-[0.97] transition-all bg-transparent border-none cursor-pointer"
+                        className="flex items-center justify-between text-left py-2 px-3 text-sm font-semibold text-brand-navy/80 hover:text-brand-gold rounded-lg hover:bg-white/5 active:scale-[0.97] transition-all bg-transparent border-none cursor-pointer"
                       >
                         {item.name}
                         <ChevronDown size={16} className={`transition-transform duration-200 ${activeDropdown === idx ? 'rotate-180 text-brand-gold' : 'text-brand-navy/40'}`} />
@@ -380,7 +360,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                           onViewChange && onViewChange('landing', item.href);
                         }
                       }}
-                      className={`py-2.5 px-3 text-sm font-semibold rounded-lg active:scale-[0.97] transition-all text-left block ${(item.name === 'Problem Statements' && currentView === 'problem-statements') || (item.name === 'Home' && currentView === 'landing') || (item.name === 'Contact Us' && currentView === 'contact-us')
+                      className={`py-2 px-3 text-sm font-semibold rounded-lg active:scale-[0.97] transition-all text-left block ${(item.name === 'Problem Statements' && currentView === 'problem-statements') || (item.name === 'Home' && currentView === 'landing') || (item.name === 'Contact Us' && currentView === 'contact-us')
                         ? 'text-brand-gold bg-brand-gold/10'
                         : 'text-brand-navy/80 hover:text-brand-gold hover:bg-white/5'
                         }`}
@@ -395,7 +375,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                   setIsOpen(false);
                   onRegisterClick();
                 }}
-                className="w-full mt-2 py-2.5 rounded-xl bg-btn-gradient text-sm font-bold tracking-wide text-white text-center hover:opacity-90 active:scale-98 transition-all border-none cursor-pointer shadow-[0_4px_10px_rgba(216,171,85,0.2)]"
+                className="w-full mt-2 py-2.5 rounded-xl bg-btn-gradient text-sm font-bold tracking-wide text-white text-center hover:opacity-90 active:scale-98 transition-all border-none cursor-pointer shadow-[0_4px_10px_rgba(216,171,85,0.2)] btn-premium-animate"
               >
                 Register Now
               </button>

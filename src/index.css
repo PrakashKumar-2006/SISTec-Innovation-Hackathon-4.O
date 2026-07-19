@@ -245,3 +245,52 @@
     clip-path: none;
   }
 }
+
+/* Premium CTA Button Shimmer & Glow Animation */
+.btn-premium-animate {
+  position: relative;
+  overflow: hidden;
+  animation: pulse-glow-btn 3s infinite ease-in-out;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.btn-premium-animate::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  animation: shimmer-sweep-btn 4s infinite ease-in-out;
+}
+
+.btn-premium-animate:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 25px rgba(216, 171, 85, 0.6), 0 0 10px rgba(216, 171, 85, 0.3);
+}
+
+.btn-premium-animate:hover::after {
+  animation: shimmer-sweep-btn 1.5s infinite linear;
+}
+
+@keyframes shimmer-sweep-btn {
+  0% { left: -150%; }
+  35% { left: 180%; }
+  100% { left: 180%; }
+}
+
+@keyframes pulse-glow-btn {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(216, 171, 85, 0.25), 0 0 4px rgba(216, 171, 85, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(216, 171, 85, 0.45), 0 0 10px rgba(216, 171, 85, 0.2);
+  }
+}
