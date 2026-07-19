@@ -18,8 +18,12 @@ require('dotenv').config();
 const cloudinary = require('cloudinary').v2;
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
 const Razorpay = require('razorpay');
 const nodemailer = require('nodemailer');
+const { authMiddleware } = require("./middleware/auth");
+const { maintenanceMiddleware } = require("./middleware/maintenance");
 
 const app = express();
 
@@ -248,8 +252,28 @@ app.use(helmet({
   contentSecurityPolicy: false,
   crossOriginResourcePolicy: { policy: "cross-origin" }, // Allows frontend to load images/files served statically
   crossOriginOpenerPolicy: false, // Allows Razorpay popups to communicate with the main window
-  crossOriginEmbedderPolicy: false
+  crossOriginEmbedderPolicy: false,
+  dnsPrefetchControl: { allow: false },
+  frameguard: { action: 'deny' }, // Prevent clickjacking
+  hidePoweredBy: true,
+  hsts: { maxAge: 31536000, includeSubDomains: true, preload: true }, // Strict Transport Security
+  ieNoOpen: true,
+  noSniff: true,
+  xssFilter: true
 }));
+
+// Prevent NoSQL injections
+app.use(mongoSanitize());
+
+// Prevent XSS attacks
+app.use(xss());
+
+// Strict rate limit for authentication endpoints (5 requests per 15 mins)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { success: false, message: 'Too many login attempts. Please try again after 15 minutes.' }
+});
 
 // Configure CORS origin whitelist
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
@@ -297,12 +321,27 @@ const adminTeamsRoutes = require("./routes/adminTeams");
 const adminProblemsRoutes = require("./routes/adminProblems");
 const adminChangeRequestsRoutes = require("./routes/adminChangeRequests");
 const adminAnalyticsRoutes = require("./routes/adminAnalytics");
+const adminContactsRoutes = require("./routes/adminContacts");
+const adminResultsRoutes = require("./routes/adminResults");
+const adminUsersRoutes = require("./routes/adminUsers");
+const adminSettingsRoutes = require("./routes/adminSettings");
+
+// Apply strict rate limiting specifically to the admin login endpoint
+app.use('/api/admin/login', authLimiter);
 
 app.use('/api/admin', adminAuthRoutes);
+
+// Apply auth & maintenance middleware to all other admin routes
+app.use('/api/admin', authMiddleware, maintenanceMiddleware);
+
 app.use('/api/admin/teams', adminTeamsRoutes);
 app.use('/api/admin/problems', adminProblemsRoutes);
 app.use('/api/admin/change-requests', adminChangeRequestsRoutes);
 app.use('/api/admin/analytics', adminAnalyticsRoutes);
+app.use('/api/admin/contacts', adminContactsRoutes);
+app.use('/api/admin/results', adminResultsRoutes);
+app.use('/api/admin/users', adminUsersRoutes);
+app.use('/api/admin/settings', adminSettingsRoutes);
 
 // Connect to MongoDB
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sih_registrations';
@@ -965,11 +1004,22 @@ app.delete('/api/registrations/pending-cleanup', verifyAdminKey, async (req, res
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({ error: 'File is too large. Maximum limit is 20MB.' });
+      return res.status(400).json({ success: false, message: 'File is too large. Maximum limit is 20MB.' });
     }
-    return res.status(400).json({ error: `Upload error: ${err.message}` });
+    return res.status(400).json({ success: false, message: `Upload error: ${err.message}` });
   }
-  res.status(500).json({ error: err.message || 'Internal server error.' });
+
+  // Handle mongoose validation errors
+  if (err.name === 'ValidationError') {
+    const messages = Object.values(err.errors).map(val => val.message);
+    return res.status(400).json({ success: false, message: 'Validation Error', errors: messages });
+  }
+
+  res.status(err.status || 500).json({ 
+    success: false, 
+    message: err.message || 'Internal server error.',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+  });
 });
 
 // Serve static frontend files in production

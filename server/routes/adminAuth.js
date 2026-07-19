@@ -1,6 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/Admin');
+const AdminAuditLog = require('../models/AdminAuditLog');
 const { authMiddleware } = require('../middleware/auth');
 
 const router = express.Router();
@@ -23,6 +24,25 @@ router.post('/login', async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
+
+    if (admin.status === 'Suspended' || admin.status === 'Inactive') {
+      return res.status(403).json({ success: false, message: `Account is ${admin.status.toLowerCase()}. Please contact a Super Admin.` });
+    }
+
+    // Update last login
+    admin.lastLogin = {
+      timestamp: new Date(),
+      ipAddress: req.ip || req.connection.remoteAddress
+    };
+    await admin.save();
+
+    // Create Audit Log
+    await AdminAuditLog.create({
+      adminId: admin._id,
+      action: 'Login',
+      ipAddress: req.ip || req.connection.remoteAddress,
+      details: { email: admin.email }
+    });
 
     const token = jwt.sign(
       { id: admin._id, email: admin.email, role: admin.role },

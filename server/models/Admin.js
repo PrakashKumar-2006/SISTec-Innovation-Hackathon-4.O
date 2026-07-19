@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const adminSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    default: 'Administrator'
+  },
   email: {
     type: String,
     required: true,
@@ -15,9 +19,18 @@ const adminSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['Super Admin', 'Admin', 'Moderator', 'Viewer'],
+    enum: ['Super Admin', 'Admin', 'Moderator', 'Reviewer', 'Viewer'],
     default: 'Viewer',
   },
+  status: {
+    type: String,
+    enum: ['Active', 'Inactive', 'Suspended'],
+    default: 'Active',
+  },
+  lastLogin: {
+    timestamp: { type: Date },
+    ipAddress: { type: String }
+  }
 }, { timestamps: true });
 
 adminSchema.pre('save', async function (next) {
