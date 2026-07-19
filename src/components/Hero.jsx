@@ -99,8 +99,8 @@ export default function Hero({ onRegisterClick }) {
               { label: 'Min', value: timeLeft.minutes, border: 'border-brand-blue/60', numClass: 'text-brand-blue' },
               { label: 'Sec', value: timeLeft.seconds, border: 'border-brand-gold/60', numClass: 'text-gold-metallic' }
             ].map((time, idx) => (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className={`flex flex-col items-center justify-center w-[12.5vw] h-[12.5vw] max-w-[54px] max-h-[54px] min-w-[42px] min-h-[42px] rounded-xl bg-black/85 backdrop-blur-[6px] border ${time.border} relative overflow-hidden`}
               >
                 <div className="absolute top-0 left-0 w-full h-[1.5px] bg-gradient-to-r from-brand-orange via-brand-pink to-brand-blue"></div>

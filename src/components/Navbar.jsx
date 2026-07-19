@@ -118,28 +118,30 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
   return (
     <>
       {/* Scroll Progress Bar */}
-      <div 
-        className="fixed top-0 left-0 h-[3px] bg-btn-gradient z-[100] transition-all duration-75 pointer-events-none" 
+      <div
+        className="fixed top-0 left-0 h-[3px] bg-btn-gradient z-[100] transition-all duration-75 pointer-events-none"
         style={{ width: `${scrollProgress}%` }}
       ></div>
 
       <div className="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
         <nav className={`w-full transition-all duration-500 border-b ${
-          scrolled 
-            ? 'bg-brand-card/95 backdrop-blur-xl border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.3)] py-2.5 sm:py-3.5' 
-            : 'bg-brand-card/75 backdrop-blur-lg border-white/5 py-4 sm:py-5'
-        }`}>
+          scrolled
+            ? 'bg-brand-card/95 backdrop-blur-xl border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.3)] py-2.5 sm:py-3.5'
+            : currentView === 'problem-statements'
+              ? 'bg-transparent border-transparent py-4 sm:py-5'
+              : 'bg-brand-card/75 backdrop-blur-lg border-white/5 py-4 sm:py-5'
+          }`}>
           <div className="max-w-[1280px] mx-auto px-4 sm:px-8">
             <div className="flex items-center justify-between">
-              
+
               {/* Logo */}
-              <div 
+              <div
                 onClick={() => onViewChange && onViewChange('landing', '#home')}
                 className="flex items-center group/logo cursor-pointer"
               >
-                <img 
-                  src="/logo.png" 
-                  alt="SISTec Logo" 
+                <img
+                  src="/logo.png"
+                  alt="SISTec Logo"
                   className="h-10 sm:h-12 w-auto object-contain bg-white/90 px-3 py-1 rounded-xl border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.05)] transition-all duration-300 group-hover/logo:scale-105 group-hover/logo:shadow-[0_0_20px_rgba(216,171,85,0.2)]"
                 />
               </div>
@@ -169,11 +171,10 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                             onViewChange && onViewChange('landing', item.href);
                           }
                         }}
-                        className={`inline-block text-sm font-semibold px-3.5 py-2 rounded-xl active:scale-95 transition-all duration-200 relative ${
-                          (item.name === 'Problem Statements' && currentView === 'problem-statements') || (item.name === 'Home' && currentView === 'landing') || (item.name === 'Contact Us' && currentView === 'contact-us')
+                        className={`inline-block text-sm font-semibold px-3.5 py-2 rounded-xl active:scale-95 transition-all duration-200 relative ${(item.name === 'Problem Statements' && currentView === 'problem-statements') || (item.name === 'Home' && currentView === 'landing') || (item.name === 'Contact Us' && currentView === 'contact-us')
                             ? 'text-brand-gold bg-brand-gold/10 border border-brand-gold/20'
                             : 'text-brand-navy/80 hover:text-brand-gold hover:bg-white/5'
-                        }`}
+                          }`}
                       >
                         {item.name}
                       </a>
@@ -269,126 +270,125 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
             </div>
           </div>
 
-        {/* Mobile Drawer */}
-        {isOpen && (
-          <div className="lg:hidden absolute top-full left-0 w-full bg-[#0D0D0F] border-b border-white/5 p-5 flex flex-col gap-3.5 shadow-[0_20px_40px_rgba(0,0,0,0.6)] animate-fade-in max-h-[calc(100vh-80px)] overflow-y-auto z-50">
-            {navItems.map((item, idx) => (
-              <div key={idx} className="flex flex-col">
-                {item.dropdown ? (
-                  <>
-                    <button
-                      onClick={() => toggleDropdown(idx)}
-                      className="flex items-center justify-between text-left py-2.5 px-3 text-sm font-semibold text-brand-navy/80 hover:text-brand-gold rounded-lg hover:bg-white/5 active:scale-[0.97] transition-all bg-transparent border-none cursor-pointer"
+          {/* Mobile Drawer */}
+          {isOpen && (
+            <div className="lg:hidden absolute top-full left-0 w-full bg-[#0D0D0F] border-b border-white/5 p-5 flex flex-col gap-3.5 shadow-[0_20px_40px_rgba(0,0,0,0.6)] animate-fade-in max-h-[calc(100vh-80px)] overflow-y-auto z-50">
+              {navItems.map((item, idx) => (
+                <div key={idx} className="flex flex-col">
+                  {item.dropdown ? (
+                    <>
+                      <button
+                        onClick={() => toggleDropdown(idx)}
+                        className="flex items-center justify-between text-left py-2.5 px-3 text-sm font-semibold text-brand-navy/80 hover:text-brand-gold rounded-lg hover:bg-white/5 active:scale-[0.97] transition-all bg-transparent border-none cursor-pointer"
+                      >
+                        {item.name}
+                        <ChevronDown size={16} className={`transition-transform duration-200 ${activeDropdown === idx ? 'rotate-180 text-brand-gold' : 'text-brand-navy/40'}`} />
+                      </button>
+                      {activeDropdown === idx && (
+                        <div className="pl-4 pr-2 py-2 flex flex-col gap-1.5 mt-1 bg-black/30 border border-white/5 rounded-xl ml-2 space-y-0.5">
+                          {item.dropdown.map((sub, sIdx) => {
+                            const hasSubItems = !!sub.subItems;
+                            return (
+                              <div key={sIdx} className="flex flex-col">
+                                {hasSubItems ? (
+                                  <>
+                                    <button
+                                      onClick={() => toggleMobileSubDropdown(sIdx)}
+                                      className="flex items-center justify-between w-full py-2 px-3 text-xs font-semibold text-brand-navy/75 hover:text-brand-gold rounded-lg hover:bg-white/5 transition-all text-left bg-transparent border-none cursor-pointer"
+                                    >
+                                      <div className="flex items-center gap-2">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-brand-gold/60 shrink-0"></span>
+                                        <span>{sub.name}</span>
+                                      </div>
+                                      <ChevronDown size={14} className={`transition-transform duration-200 ${activeMobileSubDropdown === sIdx ? 'rotate-180 text-brand-gold' : 'text-brand-navy/40'}`} />
+                                    </button>
+                                    {activeMobileSubDropdown === sIdx && (
+                                      <div className="pl-5 pr-2 py-1.5 flex flex-col gap-1 mt-1 bg-black/40 border border-white/5 rounded-xl ml-4 space-y-0.5">
+                                        {sub.subItems.map((nested, nIdx) => (
+                                          <a
+                                            key={nIdx}
+                                            href="#timeline"
+                                            onClick={(e) => {
+                                              e.preventDefault();
+                                              setIsOpen(false);
+                                              if (nested.view) {
+                                                onViewChange && onViewChange(nested.view);
+                                              } else if (nested.name === 'SIH 2023') {
+                                                onViewChange && onViewChange('sih-2023');
+                                              } else {
+                                                onViewChange && onViewChange('landing', '#timeline');
+                                              }
+                                            }}
+                                            className="py-1.5 px-3 text-[11px] font-medium text-brand-navy/60 hover:text-brand-gold hover:bg-white/5 rounded-md transition-all text-left flex items-center gap-1.5 block"
+                                          >
+                                            <span className="w-1 h-1 rounded-full bg-brand-navy/40 shrink-0"></span>
+                                            {nested.name}
+                                          </a>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </>
+                                ) : (
+                                  <a
+                                    href={sub.href}
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      setIsOpen(false);
+                                      if (sub.name === 'Instructions') {
+                                        onViewChange && onViewChange('instructions');
+                                      } else {
+                                        onViewChange && onViewChange('landing', sub.href);
+                                      }
+                                    }}
+                                    className="py-2 px-3 text-xs font-medium text-brand-navy/70 hover:text-brand-gold hover:bg-white/5 rounded-lg active:scale-[0.97] transition-all text-left flex items-center gap-2 block"
+                                  >
+                                    <span className="w-1.5 h-1.5 rounded-full bg-brand-gold/40 shrink-0"></span>
+                                    {sub.name}
+                                  </a>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <a
+                      href={item.href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsOpen(false);
+                        if (item.name === 'Problem Statements') {
+                          onViewChange && onViewChange('problem-statements');
+                        } else if (item.name === 'Contact Us') {
+                          onViewChange && onViewChange('contact-us');
+                        } else {
+                          onViewChange && onViewChange('landing', item.href);
+                        }
+                      }}
+                      className={`py-2.5 px-3 text-sm font-semibold rounded-lg active:scale-[0.97] transition-all text-left block ${(item.name === 'Problem Statements' && currentView === 'problem-statements') || (item.name === 'Home' && currentView === 'landing') || (item.name === 'Contact Us' && currentView === 'contact-us')
+                          ? 'text-brand-gold bg-brand-gold/10'
+                          : 'text-brand-navy/80 hover:text-brand-gold hover:bg-white/5'
+                        }`}
                     >
                       {item.name}
-                      <ChevronDown size={16} className={`transition-transform duration-200 ${activeDropdown === idx ? 'rotate-180 text-brand-gold' : 'text-brand-navy/40'}`} />
-                    </button>
-                    {activeDropdown === idx && (
-                      <div className="pl-4 pr-2 py-2 flex flex-col gap-1.5 mt-1 bg-black/30 border border-white/5 rounded-xl ml-2 space-y-0.5">
-                        {item.dropdown.map((sub, sIdx) => {
-                          const hasSubItems = !!sub.subItems;
-                          return (
-                            <div key={sIdx} className="flex flex-col">
-                              {hasSubItems ? (
-                                <>
-                                  <button
-                                    onClick={() => toggleMobileSubDropdown(sIdx)}
-                                    className="flex items-center justify-between w-full py-2 px-3 text-xs font-semibold text-brand-navy/75 hover:text-brand-gold rounded-lg hover:bg-white/5 transition-all text-left bg-transparent border-none cursor-pointer"
-                                  >
-                                    <div className="flex items-center gap-2">
-                                      <span className="w-1.5 h-1.5 rounded-full bg-brand-gold/60 shrink-0"></span>
-                                      <span>{sub.name}</span>
-                                    </div>
-                                    <ChevronDown size={14} className={`transition-transform duration-200 ${activeMobileSubDropdown === sIdx ? 'rotate-180 text-brand-gold' : 'text-brand-navy/40'}`} />
-                                  </button>
-                                  {activeMobileSubDropdown === sIdx && (
-                                    <div className="pl-5 pr-2 py-1.5 flex flex-col gap-1 mt-1 bg-black/40 border border-white/5 rounded-xl ml-4 space-y-0.5">
-                                      {sub.subItems.map((nested, nIdx) => (
-                                        <a
-                                          key={nIdx}
-                                          href="#timeline"
-                                          onClick={(e) => {
-                                            e.preventDefault();
-                                            setIsOpen(false);
-                                            if (nested.view) {
-                                              onViewChange && onViewChange(nested.view);
-                                            } else if (nested.name === 'SIH 2023') {
-                                              onViewChange && onViewChange('sih-2023');
-                                            } else {
-                                              onViewChange && onViewChange('landing', '#timeline');
-                                            }
-                                          }}
-                                          className="py-1.5 px-3 text-[11px] font-medium text-brand-navy/60 hover:text-brand-gold hover:bg-white/5 rounded-md transition-all text-left flex items-center gap-1.5 block"
-                                        >
-                                          <span className="w-1 h-1 rounded-full bg-brand-navy/40 shrink-0"></span>
-                                          {nested.name}
-                                        </a>
-                                      ))}
-                                    </div>
-                                  )}
-                                </>
-                              ) : (
-                                <a
-                                  href={sub.href}
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    setIsOpen(false);
-                                    if (sub.name === 'Instructions') {
-                                      onViewChange && onViewChange('instructions');
-                                    } else {
-                                      onViewChange && onViewChange('landing', sub.href);
-                                    }
-                                  }}
-                                  className="py-2 px-3 text-xs font-medium text-brand-navy/70 hover:text-brand-gold hover:bg-white/5 rounded-lg active:scale-[0.97] transition-all text-left flex items-center gap-2 block"
-                                >
-                                  <span className="w-1.5 h-1.5 rounded-full bg-brand-gold/40 shrink-0"></span>
-                                  {sub.name}
-                                </a>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <a
-                    href={item.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsOpen(false);
-                      if (item.name === 'Problem Statements') {
-                        onViewChange && onViewChange('problem-statements');
-                      } else if (item.name === 'Contact Us') {
-                        onViewChange && onViewChange('contact-us');
-                      } else {
-                        onViewChange && onViewChange('landing', item.href);
-                      }
-                    }}
-                    className={`py-2.5 px-3 text-sm font-semibold rounded-lg active:scale-[0.97] transition-all text-left block ${
-                      (item.name === 'Problem Statements' && currentView === 'problem-statements') || (item.name === 'Home' && currentView === 'landing') || (item.name === 'Contact Us' && currentView === 'contact-us')
-                        ? 'text-brand-gold bg-brand-gold/10'
-                        : 'text-brand-navy/80 hover:text-brand-gold hover:bg-white/5'
-                    }`}
-                  >
-                    {item.name}
-                  </a>
-                )}
-              </div>
-            ))}
-            <button
-              onClick={() => {
-                setIsOpen(false);
-                onRegisterClick();
-              }}
-              className="w-full mt-2 py-2.5 rounded-xl bg-btn-gradient text-sm font-bold tracking-wide text-white text-center hover:opacity-90 active:scale-98 transition-all border-none cursor-pointer shadow-[0_4px_10px_rgba(216,171,85,0.2)]"
-            >
-              Register Now
-            </button>
-          </div>
-        )}
-      </nav>
-    </div>
+                    </a>
+                  )}
+                </div>
+              ))}
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  onRegisterClick();
+                }}
+                className="w-full mt-2 py-2.5 rounded-xl bg-btn-gradient text-sm font-bold tracking-wide text-white text-center hover:opacity-90 active:scale-98 transition-all border-none cursor-pointer shadow-[0_4px_10px_rgba(216,171,85,0.2)]"
+              >
+                Register Now
+              </button>
+            </div>
+          )}
+        </nav>
+      </div>
     </>
   );
 }
