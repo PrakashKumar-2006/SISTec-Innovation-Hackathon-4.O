@@ -27,15 +27,6 @@ export default function Contact({ onViewChange }) {
 
       <div className="max-w-7xl mx-auto">
         
-        {/* Header toolbar */}
-        <div className="flex justify-end mb-10">
-          <button
-            onClick={() => onViewChange && onViewChange('landing', '#home')}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-card border border-white/10 hover:border-brand-gold/50 text-xs font-bold text-brand-gold hover:text-white transition-all duration-300 cursor-pointer shadow-md active:scale-95 shrink-0"
-          >
-            <ArrowLeft size={14} /> Back to Home
-          </button>
-        </div>
         
         {/* Header Section */}
         <div className="text-center space-y-3 mb-16">

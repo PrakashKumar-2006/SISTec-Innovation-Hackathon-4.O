@@ -24,30 +24,8 @@ import SIH2023Winners from './components/SIH2023Winners';
 import SIH2024Winners from './components/SIH2024Winners';
 import SIH2025Finalists from './components/SIH2025Finalists';
 
-// Check localStorage for a valid (non-expired) registration draft session.
-// Must mirror the constants in RegistrationSession inside RegisterModal.jsx.
-const DRAFT_STORAGE_KEY = 'sih4_registration_draft';
-const DRAFT_TTL_MS = 48 * 60 * 60 * 1000; // 48 hours
-
-function hasActiveDraftSession() {
-  try {
-    const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
-    if (!raw) return false;
-    const parsed = JSON.parse(raw);
-    if (!parsed?.timestamp || !parsed?.formData) return false;
-    if (Date.now() - parsed.timestamp > DRAFT_TTL_MS) {
-      localStorage.removeItem(DRAFT_STORAGE_KEY);
-      return false;
-    }
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 export default function App() {
-  // Auto-reopen modal if the user has an in-progress registration session
-  const [showRegister, setShowRegister] = useState(() => hasActiveDraftSession());
+  const [showRegister, setShowRegister] = useState(false);
   const [currentView, setCurrentView] = useState('landing'); // 'landing' or 'problem-statements'
 
   // Function to switch view and scroll to hash if landing
