@@ -130,13 +130,13 @@ export default function Themes({ onViewChange }) {
                       </h3>
                     </div>
                     {/* Category Label */}
-                    <span className="text-[7px] sm:text-[9px] font-bold tracking-widest font-mono uppercase bg-white/5 text-brand-gold/90 px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full border border-white/5 shrink-0 self-start sm:self-auto">
+                    <span className="text-[8px] sm:text-[9px] font-bold tracking-widest font-mono uppercase bg-white/5 text-brand-gold/90 px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full border border-white/5 shrink-0 self-start sm:self-auto">
                       {theme.category}
                     </span>
                   </div>
 
                   <div className="text-left pt-1">
-                    <p className="text-[10px] sm:text-sm text-slate-300 leading-relaxed font-medium">
+                    <p className="text-[11px] sm:text-sm text-slate-200 leading-relaxed font-medium">
                       {theme.description}
                     </p>
                   </div>
@@ -144,11 +144,11 @@ export default function Themes({ onViewChange }) {
 
                 {/* Sub tags list inside card */}
                 <div className="mt-6 sm:mt-8 relative z-10 pt-3 sm:pt-4 border-t border-white/5 text-left">
-                  <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-3 sm:mb-4">
+                  <div className="flex flex-wrap gap-x-1 gap-y-1.5 mb-3 sm:mb-4">
                     {theme.tags.map((tag, tIdx) => (
                       <span 
                         key={tIdx} 
-                        className="text-[7px] sm:text-[9px] font-semibold text-slate-300 bg-brand-darker/60 px-1.5 py-0.5 rounded border border-white/5"
+                        className="text-[9px] sm:text-[9px] font-semibold text-slate-200 bg-brand-darker/60 px-1.5 py-0.5 rounded border border-white/5"
                       >
                         #{tag}
                       </span>
@@ -158,7 +158,7 @@ export default function Themes({ onViewChange }) {
                   {/* Explore Problem Statements link */}
                   <button 
                     onClick={() => onViewChange && onViewChange('problem-statements')}
-                    className="inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold text-brand-gold/80 hover:text-brand-gold bg-transparent border-none transition-colors duration-300 group-hover:translate-x-1 cursor-pointer"
+                    className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-brand-gold/80 hover:text-brand-gold bg-transparent border-none transition-colors duration-300 group-hover:translate-x-1 cursor-pointer"
                   >
                     Explore PS
                     <span className="text-xs font-light">→</span>

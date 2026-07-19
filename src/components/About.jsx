@@ -60,8 +60,8 @@ export default function About() {
             </h2>
             
             <div className="space-y-5">
-              <div className="flex gap-4 p-4.5 rounded-2xl bg-brand-card/20 border border-white/5 hover:border-brand-gold/15 transition-all duration-300">
-                <div className="p-3 rounded-xl bg-brand-gold/10 text-brand-gold shrink-0 h-fit border border-brand-gold/20">
+              <div className="flex items-start gap-4 p-4.5 rounded-2xl bg-brand-card/20 border border-white/5 hover:border-brand-gold/15 transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-brand-gold/10 text-brand-gold shrink-0 border border-brand-gold/20 flex items-center justify-center mt-0.5">
                   <Sparkles size={20} />
                 </div>
                 <div className="space-y-1">
@@ -72,8 +72,8 @@ export default function About() {
                 </div>
               </div>
 
-              <div className="flex gap-4 p-4.5 rounded-2xl bg-brand-card/20 border border-white/5 hover:border-brand-gold/15 transition-all duration-300">
-                <div className="p-3 rounded-xl bg-brand-gold/10 text-brand-gold shrink-0 h-fit border border-brand-gold/20">
+              <div className="flex items-start gap-4 p-4.5 rounded-2xl bg-brand-card/20 border border-white/5 hover:border-brand-gold/15 transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-brand-gold/10 text-brand-gold shrink-0 border border-brand-gold/20 flex items-center justify-center mt-0.5">
                   <Trophy size={20} />
                 </div>
                 <div className="space-y-1">
@@ -84,8 +84,8 @@ export default function About() {
                 </div>
               </div>
 
-              <div className="flex gap-4 p-4.5 rounded-2xl bg-brand-card/20 border border-white/5 hover:border-brand-gold/15 transition-all duration-300">
-                <div className="p-3 rounded-xl bg-brand-gold/10 text-brand-gold shrink-0 h-fit border border-brand-gold/20">
+              <div className="flex items-start gap-4 p-4.5 rounded-2xl bg-brand-card/20 border border-white/5 hover:border-brand-gold/15 transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-brand-gold/10 text-brand-gold shrink-0 border border-brand-gold/20 flex items-center justify-center mt-0.5">
                   <Users size={20} />
                 </div>
                 <div className="space-y-1">
