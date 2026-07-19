@@ -74,18 +74,18 @@ const finalistsData = [
 ];
 
 const themeColors = {
-  'HealthTech':                        'text-emerald-400 bg-emerald-400/10 border-emerald-400/20',
-  'AgriTech':                          'text-lime-400 bg-lime-400/10 border-lime-400/20',
-  'EduTech':                           'text-sky-400 bg-sky-400/10 border-sky-400/20',
-  'Enterprise Information Management': 'text-purple-400 bg-purple-400/10 border-purple-400/20',
+  'HealthTech':                        'text-brand-gold bg-brand-gold/10 border-brand-gold/20',
+  'AgriTech':                          'text-brand-gold bg-brand-gold/10 border-brand-gold/20',
+  'EduTech':                           'text-brand-gold bg-brand-gold/10 border-brand-gold/20',
+  'Enterprise Information Management': 'text-brand-gold bg-brand-gold/10 border-brand-gold/20',
   'Student Innovation':                'text-brand-gold bg-brand-gold/10 border-brand-gold/20',
-  'Smart Device':                      'text-cyan-400 bg-cyan-400/10 border-cyan-400/20',
-  'Urban Mobility':                    'text-orange-400 bg-orange-400/10 border-orange-400/20',
-  'Urban Development':                 'text-pink-400 bg-pink-400/10 border-pink-400/20',
-  'Human-Computer Interaction':        'text-violet-400 bg-violet-400/10 border-violet-400/20',
+  'Smart Device':                      'text-brand-gold bg-brand-gold/10 border-brand-gold/20',
+  'Urban Mobility':                    'text-brand-gold bg-brand-gold/10 border-brand-gold/20',
+  'Urban Development':                 'text-brand-gold bg-brand-gold/10 border-brand-gold/20',
+  'Human-Computer Interaction':        'text-brand-gold bg-brand-gold/10 border-brand-gold/20',
 };
 
-const getThemeStyle = (theme) => themeColors[theme] || 'text-brand-gray bg-white/5 border-white/10';
+const getThemeStyle = (theme) => themeColors[theme] || 'text-brand-gold bg-brand-gold/10 border-brand-gold/20';
 
 const ITEMS_PER_PAGE = 15;
 
@@ -149,10 +149,10 @@ export default function SIH2025Finalists({ onViewChange }) {
         {/* ── Stats Bar ── */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
           {[
-            { label: 'Total Teams',    value: finalistsData.length,       color: 'text-brand-gold'  },
-            { label: 'Themes Covered', value: allThemes.length - 1,       color: 'text-sky-400'     },
-            { label: 'Institutions',   value: uniqueInstitutions.length,  color: 'text-emerald-400' },
-            { label: 'PS Codes',       value: uniquePsCodes.length,       color: 'text-purple-400'  },
+            {label: 'Total Teams',    value: finalistsData.length,       color: 'text-brand-gold'  },
+            {label: 'Themes Covered', value: allThemes.length - 1,       color: 'text-brand-gold'  },
+            {label: 'Institutions',   value: uniqueInstitutions.length,  color: 'text-brand-gold'  },
+            {label: 'PS Codes',       value: uniquePsCodes.length,       color: 'text-brand-gold'  },
           ].map((s, i) => (
             <div key={i} className="rounded-2xl bg-brand-card/30 border border-white/5 p-4 text-center shadow-md">
               <div className={`text-xl font-extrabold ${s.color}`}>{s.value}</div>
@@ -257,7 +257,7 @@ export default function SIH2025Finalists({ onViewChange }) {
                         <span className="text-sm font-bold text-brand-gold/90 leading-snug block">{item.team}</span>
                       </td>
                       <td className="px-5 py-5">
-                        <span className={`inline-block px-2.5 py-1.5 rounded-lg border text-xs font-bold uppercase tracking-wider ${getThemeStyle(item.theme)}`}>
+                        <span className="text-xs font-bold text-brand-gold uppercase tracking-wider block">
                           {item.theme}
                         </span>
                       </td>
@@ -298,7 +298,7 @@ export default function SIH2025Finalists({ onViewChange }) {
                   <p className="text-base font-extrabold text-brand-gold">{item.team}</p>
                   <p className="text-sm text-brand-gray/60 mt-0.5">Leader: {item.leader}</p>
                 </div>
-                <span className={`inline-block self-start px-2.5 py-1.5 rounded-lg border text-xs font-bold uppercase tracking-wider ${getThemeStyle(item.theme)}`}>
+                <span className="text-xs font-bold text-brand-gold uppercase tracking-wider block">
                   {item.theme}
                 </span>
                 <p className="text-sm text-brand-gray/60 font-semibold">{item.college}</p>
