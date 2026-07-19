@@ -139,6 +139,8 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                         e.preventDefault();
                         if (item.name === 'Problem Statements') {
                           onViewChange && onViewChange('problem-statements');
+                        } else if (item.name === 'Contact Us') {
+                          onViewChange && onViewChange('contact-us');
                         } else {
                           onViewChange && onViewChange('landing', item.href);
                         }
@@ -322,6 +324,8 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                       setIsOpen(false);
                       if (item.name === 'Problem Statements') {
                         onViewChange && onViewChange('problem-statements');
+                      } else if (item.name === 'Contact Us') {
+                        onViewChange && onViewChange('contact-us');
                       } else {
                         onViewChange && onViewChange('landing', item.href);
                       }

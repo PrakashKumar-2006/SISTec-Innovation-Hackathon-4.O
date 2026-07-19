@@ -77,7 +77,7 @@ export default function Footer({ onViewChange }) {
               <li><a href="#about" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#about'); }} className="hover:text-brand-blue transition-colors">About SIH</a></li>
               <li><a href="#timeline" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#timeline'); }} className="hover:text-brand-blue transition-colors">SIH 2025</a></li>
               <li><a href="#timeline" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#timeline'); }} className="hover:text-brand-blue transition-colors">SIH 2024</a></li>
-              <li><a href="#contact" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#contact'); }} className="hover:text-brand-blue transition-colors">Contact</a></li>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('contact-us'); }} className="hover:text-brand-blue transition-colors">Contact</a></li>
             </ul>
           </div>
 

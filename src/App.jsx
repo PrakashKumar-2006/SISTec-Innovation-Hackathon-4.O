@@ -12,6 +12,7 @@ import Committee from './components/Committee';
 import FAQs from './components/FAQs';
 import Developers from './components/Developers';
 import Footer from './components/Footer';
+import Contact from './components/Contact';
 import RegisterModal from './components/RegisterModal';
 import ProblemStatements from './components/ProblemStatements';
 import Instructions from './components/Instructions';
@@ -97,6 +98,8 @@ export default function App() {
           <ProblemStatements />
         ) : currentView === 'instructions' ? (
           <Instructions />
+        ) : currentView === 'contact-us' ? (
+          <Contact onViewChange={handleViewChange} />
         ) : currentView === 'sih-2023' ? (
           <SIH2023View onViewChange={handleViewChange} />
         ) : currentView === 'sih-2024' ? (
