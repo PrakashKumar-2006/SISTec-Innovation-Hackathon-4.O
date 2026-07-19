@@ -63,7 +63,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
       name: 'Result',
       dropdown: [
         { name: 'Grand Finale Teams', href: '#prizes' },
-        { name: 'Winner Of SIH 2025', href: '#prizes' }
+        { name: 'Winner Of SIH 2026', href: '#prizes' }
       ]
     },
     {
@@ -184,6 +184,8 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                       onViewChange && onViewChange('schedule');
                                     } else if (sub.name === 'Photo Gallery') {
                                       onViewChange && onViewChange('photo-gallery');
+                                    } else if (sub.name === 'Winner Of SIH 2026') {
+                                      onViewChange && onViewChange('sih-2026-winners');
                                     } else {
                                       onViewChange && onViewChange('landing', sub.href);
                                     }
@@ -330,6 +332,8 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                         onViewChange && onViewChange('schedule');
                                       } else if (sub.name === 'Photo Gallery') {
                                         onViewChange && onViewChange('photo-gallery');
+                                      } else if (sub.name === 'Winner Of SIH 2026') {
+                                        onViewChange && onViewChange('sih-2026-winners');
                                       } else {
                                         onViewChange && onViewChange('landing', sub.href);
                                       }

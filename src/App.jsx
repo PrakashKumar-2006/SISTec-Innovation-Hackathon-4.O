@@ -25,6 +25,7 @@ import SIH2024Winners from './components/SIH2024Winners';
 import SIH2025Finalists from './components/SIH2025Finalists';
 import PhotoGallery from './components/PhotoGallery';
 import NotificationToast from './components/NotificationToast';
+import SIH2026Winners from './components/SIH2026Winners';
 
 export default function App() {
   const [showRegister, setShowRegister] = useState(false);
@@ -102,6 +103,8 @@ export default function App() {
           <SIH2024Winners onViewChange={handleViewChange} />
         ) : currentView === 'sih-2025-finalists' ? (
           <SIH2025Finalists onViewChange={handleViewChange} />
+        ) : currentView === 'sih-2026-winners' ? (
+          <SIH2026Winners onViewChange={handleViewChange} />
         ) : null}
       </main>
 
