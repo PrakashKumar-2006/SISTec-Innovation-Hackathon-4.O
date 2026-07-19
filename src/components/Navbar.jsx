@@ -188,6 +188,11 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                       onViewChange && onViewChange('sih-2026-winners');
                                     } else if (sub.name === 'Grand Finale Teams') {
                                       onViewChange && onViewChange('sih-2026-finalists');
+                                    } else if (sub.name === 'Idea Template') {
+                                      const link = document.createElement('a');
+                                      link.href = '/Idea-Sumission Format SIH 4.0.pptx';
+                                      link.download = 'Idea-Submission-Format-SIH-4.0.pptx';
+                                      link.click();
                                     } else {
                                       onViewChange && onViewChange('landing', sub.href);
                                     }
@@ -338,6 +343,11 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                         onViewChange && onViewChange('sih-2026-winners');
                                       } else if (sub.name === 'Grand Finale Teams') {
                                         onViewChange && onViewChange('sih-2026-finalists');
+                                      } else if (sub.name === 'Idea Template') {
+                                        const link = document.createElement('a');
+                                        link.href = '/Idea-Sumission Format SIH 4.0.pptx';
+                                        link.download = 'Idea-Submission-Format-SIH-4.0.pptx';
+                                        link.click();
                                       } else {
                                         onViewChange && onViewChange('landing', sub.href);
                                       }

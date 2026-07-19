@@ -23,6 +23,13 @@ try {
     fs.copyFileSync(studentsHero, path.join(destDir, 'hackathon_students.png'));
     console.log('Students hero image copied successfully!');
   }
+
+  // 3. Copy Idea Submission Format PPTX template
+  const ideaTemplate = './Idea-Sumission Format SIH 4.0.pptx';
+  if (fs.existsSync(ideaTemplate)) {
+    fs.copyFileSync(ideaTemplate, path.join(destDir, 'Idea-Sumission Format SIH 4.0.pptx'));
+    console.log('Idea template PPTX copied successfully!');
+  }
 } catch (err) {
   console.error('Failed to copy assets:', err);
 }

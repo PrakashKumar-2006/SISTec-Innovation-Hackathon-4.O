@@ -102,10 +102,10 @@ export default function Instructions({ onViewChange }) {
           40% { opacity: 1; }
           100% { stroke-dashoffset: 0; opacity: 1; }
         }
-        @keyframes line-slide {
-          0% { stroke-dashoffset: 200; opacity: 0; }
+        @keyframes line-scale {
+          0% { transform: scaleX(0); opacity: 0; }
           30% { opacity: 0.8; }
-          100% { stroke-dashoffset: 0; opacity: 0.8; }
+          100% { transform: scaleX(1); opacity: 0.8; }
         }
         @keyframes float-clipboard {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -130,10 +130,14 @@ export default function Instructions({ onViewChange }) {
           stroke-dashoffset: 50;
           animation: draw-check 2s cubic-bezier(0.4, 0, 0.2, 1) 1.2s infinite;
         }
-        .svg-list-line {
-          stroke-dasharray: 200;
-          stroke-dashoffset: 200;
-          animation: line-slide 2.5s ease-out infinite;
+        .svg-list-line-1 {
+          animation: line-scale 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+        .svg-list-line-2 {
+          animation: line-scale 2s cubic-bezier(0.4, 0, 0.2, 1) 0.6s infinite;
+        }
+        .svg-list-line-3 {
+          animation: line-scale 2s cubic-bezier(0.4, 0, 0.2, 1) 1.2s infinite;
         }
         .svg-clipboard-group {
           animation: float-clipboard 5s ease-in-out infinite;
@@ -193,23 +197,23 @@ export default function Instructions({ onViewChange }) {
                   {/* Clipboard Clip */}
                   <path d="M85 32 L115 32 A 4 4 0 0 1 119 36 L119 44 A 4 4 0 0 1 115 48 L85 48 A 4 4 0 0 1 81 44 L81 36 A 4 4 0 0 1 85 32 Z" fill="url(#clipGradient)" className="opacity-95" />
                   
-                  {/* Checklist Items: Line 1 (Check & Text) */}
+                  {/* Checklist Items: Line 1 (Check & Rect Text Line) */}
                   <circle cx="70" cy="70" r="8" fill="#10B981" className="opacity-15" />
                   <circle cx="70" cy="70" r="10" fill="none" stroke="#10B981" strokeWidth="1" className="pulse-ring-effect" />
                   <path d="M66 70 L69 73 L74 67" fill="none" stroke="#10B981" strokeWidth="2.2" strokeLinecap="round" className="svg-check-1" />
-                  <line x1="86" y1="70" x2="132" y2="70" stroke="url(#lineGradientBlue)" strokeWidth="2.5" strokeLinecap="round" className="svg-list-line" />
+                  <rect x="86" y="68.5" width="46" height="3" rx="1.5" fill="url(#lineGradientBlue)" className="svg-list-line-1" style={{ transformOrigin: '86px 70px' }} />
 
-                  {/* Checklist Items: Line 2 (Check & Text) */}
+                  {/* Checklist Items: Line 2 (Check & Rect Text Line) */}
                   <circle cx="70" cy="98" r="8" fill="#06B6D4" className="opacity-15" />
                   <circle cx="70" cy="98" r="10" fill="none" stroke="#06B6D4" strokeWidth="1" className="pulse-ring-effect" style={{ animationDelay: '0.6s' }} />
                   <path d="M66 98 L69 101 L74 95" fill="none" stroke="#06B6D4" strokeWidth="2.2" strokeLinecap="round" className="svg-check-2" />
-                  <line x1="86" y1="98" x2="124" y2="98" stroke="url(#lineGradientCyan)" strokeWidth="2.5" strokeLinecap="round" className="svg-list-line" />
+                  <rect x="86" y="96.5" width="38" height="3" rx="1.5" fill="url(#lineGradientCyan)" className="svg-list-line-2" style={{ transformOrigin: '86px 98px' }} />
 
-                  {/* Checklist Items: Line 3 (Check & Text) */}
+                  {/* Checklist Items: Line 3 (Check & Rect Text Line) */}
                   <circle cx="70" cy="126" r="8" fill="#F59E0B" className="opacity-15" />
                   <circle cx="70" cy="126" r="10" fill="none" stroke="#F59E0B" strokeWidth="1" className="pulse-ring-effect" style={{ animationDelay: '1.2s' }} />
                   <path d="M66 126 L69 129 L74 123" fill="none" stroke="#F59E0B" strokeWidth="2.2" strokeLinecap="round" className="svg-check-3" />
-                  <line x1="86" y1="126" x2="136" y2="126" stroke="url(#lineGradientGold)" strokeWidth="2.5" strokeLinecap="round" className="svg-list-line" />
+                  <rect x="86" y="124.5" width="50" height="3" rx="1.5" fill="url(#lineGradientGold)" className="svg-list-line-3" style={{ transformOrigin: '86px 126px' }} />
                   
                 </g>
 
@@ -256,8 +260,8 @@ export default function Instructions({ onViewChange }) {
 
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <a 
-                href="#process" 
-                onClick={(e) => { e.preventDefault(); onViewChange('landing', '#process'); }}
+                href="/Idea-Sumission Format SIH 4.0.pptx" 
+                download="Idea-Submission-Format-SIH-4.0.pptx"
                 className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-brand-card hover:bg-brand-card/80 text-xs font-bold text-brand-gold border border-white/10 hover:border-brand-gold/40 shadow-lg hover:shadow-[0_0_15px_rgba(216,171,85,0.15)] active:scale-95 transition-all"
               >
                 <Download size={14} className="text-brand-gold" />
