@@ -46,10 +46,11 @@ export default function About({ isStandalone = false }) {
           {/* Left Column: Rich Text & Event Highlights */}
           <div className="lg:col-span-6 space-y-8 text-left">
             
-            {/* CSE Department glowing pill badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-brand-gold/10 border border-brand-gold/25 text-brand-gold text-xs font-mono font-bold tracking-wider uppercase shadow-inner animate-pulse-slow">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
-              Department of Computer Science & Engineering
+            {/* Top Dot Accent & CSE Dept Title (unboxed to match hero banner) */}
+            <div className="space-y-3">
+              <p className="text-xs sm:text-sm font-extrabold tracking-[0.25em] text-brand-gold font-sans uppercase">
+                Department of Computer Science & Engineering
+              </p>
             </div>
             
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.1] font-display">

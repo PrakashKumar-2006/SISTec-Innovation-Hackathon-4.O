@@ -122,8 +122,8 @@ export default function SIH2023Winners({ onViewChange }) {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-brand-darker via-brand-darker/20 to-transparent"></div>
                       <div className="absolute bottom-6 left-6 right-6 sm:bottom-12 sm:left-12 sm:right-12 text-left space-y-2">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-brand-gold/30 bg-brand-gold/10 text-[9px] sm:text-xs font-bold text-brand-gold tracking-widest uppercase mb-1">
-                          <Sparkles size={10} /> Hackathon Event Highlight
+                        <span className="text-[10px] sm:text-xs font-extrabold text-brand-gold tracking-[0.2em] uppercase mb-1 flex items-center gap-1.5">
+                          <Sparkles size={12} className="animate-pulse" /> Hackathon Event Highlight
                         </span>
                         <h3 className="text-xl sm:text-3xl font-extrabold text-white tracking-wide">{slide.title}</h3>
                         <p className="text-[10px] sm:text-sm text-brand-gray/80 max-w-xl leading-relaxed">{slide.desc}</p>

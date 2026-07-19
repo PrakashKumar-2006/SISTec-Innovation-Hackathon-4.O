@@ -35,10 +35,10 @@ export default function ProblemStatements() {
         
         {/* Header Section */}
         <div className="max-w-3xl text-left mb-12 animate-fade-in">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-brand-orange/30 bg-brand-orange/10 text-xs font-bold text-brand-orange tracking-widest uppercase mb-4 animate-pulse">
-            <Sparkles size={12} />
+          <p className="text-xs sm:text-sm font-extrabold tracking-[0.25em] text-brand-orange font-sans uppercase mb-4 flex items-center gap-2">
+            <Sparkles size={14} className="animate-pulse" />
             Problem Statements Portal
-          </span>
+          </p>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white font-display">
             SIH 4.0 <span className="text-gold-metallic">National Challenges</span>
           </h1>

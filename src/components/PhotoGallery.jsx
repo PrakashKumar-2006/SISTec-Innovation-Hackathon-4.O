@@ -103,10 +103,10 @@ export default function PhotoGallery() {
             transform: headerVisible ? 'translateY(0)' : 'translateY(28px)',
           }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-brand-pink/30 bg-brand-pink/8 mb-5">
-            <Film size={13} className="text-brand-pink" />
-            <span className="text-[11px] font-bold tracking-[0.2em] text-brand-pink uppercase">Official Film</span>
-          </div>
+          <p className="text-xs sm:text-sm font-extrabold tracking-[0.25em] text-brand-pink font-sans uppercase mb-5 flex items-center justify-center gap-2">
+            <Film size={14} className="text-brand-pink animate-pulse" />
+            Official Film
+          </p>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-4">
             <span className="text-white">SIH 3.0 </span>
