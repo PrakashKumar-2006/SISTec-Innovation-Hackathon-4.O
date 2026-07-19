@@ -234,12 +234,12 @@ export default function Committee() {
     <div 
       key={idx} 
       className={`relative overflow-hidden ${
-        isMobileCompact ? 'rounded-2xl h-[260px]' : isChief ? 'rounded-[2.2rem] h-[450px] max-w-[340px]' : 'rounded-[2rem] h-[360px] max-w-[310px]'
-      } bg-brand-card/45 backdrop-blur-sm border border-white/5 flex flex-col transition-all duration-500 hover:-translate-y-1.5 w-full mx-auto group/member shadow-card-shadow hover:border-white/12 ${borderGlowClass}`}
+        isMobileCompact ? 'rounded-2xl h-[260px]' : 'rounded-[2rem] h-[340px] w-full max-w-[310px]'
+      } bg-brand-card/45 backdrop-blur-sm border border-white/5 flex flex-col transition-all duration-500 hover:-translate-y-1.5 mx-auto group/member shadow-card-shadow hover:border-white/12 ${borderGlowClass}`}
     >
       {/* 1. Colored Header Banner */}
       <div className={`${
-        isMobileCompact ? 'h-16' : isChief ? 'h-32' : 'h-28'
+        isMobileCompact ? 'h-16' : 'h-28'
       } w-full bg-gradient-to-r ${bannerGradientClass} relative overflow-hidden shrink-0`}>
         {/* Subtle decorative grid layer in header */}
         <div className="absolute inset-0 bg-tech-grid opacity-10"></div>
@@ -247,7 +247,7 @@ export default function Committee() {
 
       {/* 2. Overlapping Circular Profile Image */}
       <div className={`${
-        isMobileCompact ? 'w-20 h-20 -mt-10 border-2' : isChief ? 'w-36 h-36 sm:w-44 sm:h-44 -mt-18 sm:-mt-22 border-4' : 'w-32 h-32 sm:w-36 sm:h-36 -mt-16 sm:-mt-18 border-4'
+        isMobileCompact ? 'w-20 h-20 -mt-10 border-2' : 'w-32 h-32 sm:w-36 sm:h-36 -mt-16 sm:-mt-18 border-4'
       } rounded-full overflow-hidden ${imageBorderColorClass} mx-auto relative z-10 shadow-lg bg-brand-darker shrink-0`}>
         <img 
           src={member.image} 
@@ -258,19 +258,19 @@ export default function Committee() {
 
       {/* 3. Card Body Details */}
       <div className={`${isMobileCompact ? 'px-3 pb-4 pt-1.5' : 'px-5 pb-6 pt-3'} flex flex-col justify-between flex-grow text-center`}>
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <h4 className={`${
-            isMobileCompact ? 'text-[11px] font-extrabold line-clamp-1' : isChief ? 'text-lg sm:text-2xl font-black' : 'text-base sm:text-lg font-bold'
+            isMobileCompact ? 'text-[11px] font-extrabold line-clamp-1' : 'text-base sm:text-lg font-bold'
           } text-white tracking-wide font-display group-hover/member:text-brand-gold transition-colors duration-300 px-1`}>
             {member.name}
           </h4>
-          <p className={`${isMobileCompact ? 'text-[9px]' : 'text-xs'} text-brand-gray/80 font-semibold leading-normal px-2 line-clamp-2`}>
+          <p className={`${isMobileCompact ? 'text-[9px]' : 'text-xs'} text-brand-gray/80 font-normal leading-normal px-2 line-clamp-2`}>
             {member.role}
           </p>
         </div>
 
         {/* 4. Social Links & Badging */}
-        <div className="space-y-2">
+        <div className={isMobileCompact ? 'space-y-2' : 'space-y-3'}>
           {renderSocials(member.socials, hoverBgClass)}
         </div>
       </div>
