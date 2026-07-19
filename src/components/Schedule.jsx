@@ -9,32 +9,32 @@ export default function Schedule() {
   const day1Schedule = [
     {
       time: '10:00 AM - 11:30 AM',
-      title: 'Inauguration Ceremony',
-      desc: 'Official inauguration of the hackathon by chief guests, keynote speakers, and department heads.',
+      title: 'Inauguration',
+      desc: 'Inauguration of Hackathon by guests.',
       category: 'Morning Session',
       icon: Users,
       iconColor: 'text-brand-orange',
       color: 'from-orange-500/10 to-transparent',
       borderColor: 'border-orange-500/30',
       activeGlow: 'shadow-[0_0_25px_rgba(249,115,22,0.15)]',
-      highlights: ['Keynote Addresses', 'Chief Guests Welcome', 'Rules & Guidelines Briefing']
+      highlights: ['Chief Guests Welcome', 'Keynote Addresses', 'Rules & Guidelines Briefing']
     },
     {
       time: '11:30 AM',
-      title: 'Coding Commences & First Judgement',
-      desc: 'Hackathon starts! Teams begin coding. First round judgement by judges to evaluate initial architectural ideas.',
+      title: 'First Round Of Judgement',
+      desc: 'Start First Round Judgement by various Judges. You can start making corrections/Updation.',
       category: 'Morning Session',
       icon: Lightbulb,
       iconColor: 'text-brand-pink',
       color: 'from-pink-500/10 to-transparent',
       borderColor: 'border-pink-500/30',
       activeGlow: 'shadow-[0_0_25px_rgba(236,72,153,0.15)]',
-      highlights: ['36-Hour Coding Kickoff', 'Mentor Allocation', 'Initial Idea Pitching']
+      highlights: ['24-Hour Coding Kickoff', 'Mentor Allocation', 'Initial Idea Pitching']
     },
     {
-      time: '01:30 PM',
-      title: 'Lunch Break & Networking',
-      desc: 'Refuel during lunch, fostering connections and providing an opportunity for participants to recharge.',
+      time: '01:00 PM',
+      title: 'Lunch',
+      desc: 'Refuel during lunch, fostering camaraderie and providing an opportunity for participants to recharge for the upcoming coding tasks.',
       category: 'Afternoon Session',
       icon: Utensils,
       iconColor: 'text-brand-blue',
@@ -45,8 +45,8 @@ export default function Schedule() {
     },
     {
       time: '05:00 PM',
-      title: 'Tea & Refreshments',
-      desc: 'Recharge with a brief high-tea break, creating a dynamic environment for the continuation of coding.',
+      title: 'Tea Break',
+      desc: 'Recharge with tea, providing a boost of energy and creating a dynamic environment for the continuation of coding.',
       category: 'Afternoon Session',
       icon: Coffee,
       iconColor: 'text-brand-orange',
@@ -57,8 +57,8 @@ export default function Schedule() {
     },
     {
       time: '05:30 PM',
-      title: 'Second Round of Judgement',
-      desc: 'Start the second round of evaluations based on the suggestions and corrections given by the judges.',
+      title: 'Second Round Of Judgement',
+      desc: 'Start the Second Round of Judgement based on Suggestion correction given by the judges in the first round.',
       category: 'Evening Session',
       icon: Clock,
       iconColor: 'text-brand-pink',
@@ -68,9 +68,9 @@ export default function Schedule() {
       highlights: ['Prototype Progress Check', 'Code Base Inspection', 'Mentor Feedback Sync']
     },
     {
-      time: '11:30 PM',
-      title: 'Late Night Dinner',
-      desc: 'Conclude the Day 1 milestones with a hearty late-night meal, providing a relaxed setting for teams.',
+      time: '08:00 PM',
+      title: 'Dinner',
+      desc: 'Conclude the day with a hearty evening meal, providing a relaxed setting for participants to unwind and reflect on their achievements.',
       category: 'Night Session',
       icon: Utensils,
       iconColor: 'text-brand-blue',
@@ -83,52 +83,52 @@ export default function Schedule() {
 
   const day2Schedule = [
     {
-      time: '08:00 AM',
-      title: 'Healthy Breakfast',
-      desc: 'Morning refuel to boost energy levels for the final coding sprint.',
+      time: '03:30 AM',
+      title: 'Third Round Of Judgement',
+      desc: 'Third Round of Judgement based on Suggestion correction given by the judges in first round and second round.',
+      category: 'Late Night Session',
+      icon: Clock,
+      iconColor: 'text-brand-pink',
+      color: 'from-pink-500/10 to-transparent',
+      borderColor: 'border-pink-500/30',
+      activeGlow: 'shadow-[0_0_25px_rgba(236,72,153,0.15)]',
+      highlights: ['Final Prototype Polish', 'Deployment & Hosting Check', 'Pitch deck Review']
+    },
+    {
+      time: '05:00 AM',
+      title: 'Yoga Session',
+      desc: 'Refresh with a morning yoga session, promoting physical and mental well-being to enhance focus and creativity.',
+      category: 'Morning Session',
+      icon: Sparkles,
+      iconColor: 'text-brand-blue',
+      color: 'from-blue-500/10 to-transparent',
+      borderColor: 'border-blue-500/30',
+      activeGlow: 'shadow-[0_0_25px_rgba(59,130,246,0.15)]',
+      highlights: ['Mental Wellness Stretch', 'Breathing Exercises', 'Morning Sunrise Recharge']
+    },
+    {
+      time: '09:00 AM',
+      title: 'Breakfast Served',
+      desc: 'Begin the day with a wholesome breakfast, setting the tone for the final round of evaluations and activities.',
       category: 'Morning Session',
       icon: Coffee,
       iconColor: 'text-brand-orange',
       color: 'from-orange-500/10 to-transparent',
       borderColor: 'border-orange-500/30',
       activeGlow: 'shadow-[0_0_25px_rgba(249,115,22,0.15)]',
-      highlights: ['Breakfast Buffet', 'Energy Drink Stations', 'Day 2 Overview Brief']
+      highlights: ['Breakfast Buffet', 'Energy Drink Stations', 'Day 2 Setup Review']
     },
     {
-      time: '09:00 AM - 12:00 PM',
-      title: 'Final Coding Sprint',
-      desc: 'Closing in on final integrations, UI polish, testing, and deployment preparation.',
-      category: 'Morning Session',
-      icon: Clock,
-      iconColor: 'text-brand-pink',
-      color: 'from-pink-500/10 to-transparent',
-      borderColor: 'border-pink-500/30',
-      activeGlow: 'shadow-[0_0_25px_rgba(236,72,153,0.15)]',
-      highlights: ['Deployment & Hosting', 'Final UI/UX Refinement', 'Slide Deck Preparation']
-    },
-    {
-      time: '12:00 PM - 02:30 PM',
-      title: 'Grand Finale Evaluation',
-      desc: 'Final round of project pitches and live prototype demonstrations to the expert judging panel.',
-      category: 'Afternoon Session',
-      icon: Sparkles,
+      time: '10:00 AM',
+      title: 'Valedictory Function & Prize Distribution',
+      desc: 'Celebrate the conclusion of the event with a valedictory function, recognizing outstanding contributions and distributing prizes to deserving participants.',
+      category: 'Closing Session',
+      icon: Trophy,
       iconColor: 'text-brand-blue',
       color: 'from-blue-500/10 to-transparent',
       borderColor: 'border-blue-500/30',
       activeGlow: 'shadow-[0_0_25px_rgba(59,130,246,0.15)]',
-      highlights: ['3-Min Live Pitching', 'Prototype Demonstrations', 'Jury Q&A Sessions']
-    },
-    {
-      time: '03:00 PM',
-      title: 'Valedictory & Prizes',
-      desc: 'Announcement of the winners, runner-ups, and track-specific prizes, followed by the trophy ceremony.',
-      category: 'Afternoon Session',
-      icon: Trophy,
-      iconColor: 'text-brand-orange',
-      color: 'from-orange-500/10 to-transparent',
-      borderColor: 'border-orange-500/30',
-      activeGlow: 'shadow-[0_0_25px_rgba(249,115,22,0.15)]',
-      highlights: ['Winner Trophy Ceremony', 'Incubation Opportunity Awards', 'Participation Certs']
+      highlights: ['Winner Trophy Ceremony', 'Chief Guest Address', 'Certificate Distribution']
     }
   ];
 

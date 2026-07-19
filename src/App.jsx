@@ -23,6 +23,7 @@ import SIH2024Finalists from './components/SIH2024Finalists';
 import SIH2023Winners from './components/SIH2023Winners';
 import SIH2024Winners from './components/SIH2024Winners';
 import SIH2025Finalists from './components/SIH2025Finalists';
+import PhotoGallery from './components/PhotoGallery';
 
 export default function App() {
   const [showRegister, setShowRegister] = useState(false);
@@ -72,6 +73,14 @@ export default function App() {
             <FAQs />
             <Developers />
           </>
+        ) : currentView === 'about-sih' ? (
+          <About />
+        ) : currentView === 'photo-gallery' ? (
+          <PhotoGallery />
+        ) : currentView === 'timeline' ? (
+          <Timeline />
+        ) : currentView === 'schedule' ? (
+          <Schedule />
         ) : currentView === 'problem-statements' ? (
           <ProblemStatements />
         ) : currentView === 'instructions' ? (

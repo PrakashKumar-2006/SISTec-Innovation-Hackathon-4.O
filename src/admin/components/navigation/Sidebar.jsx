@@ -18,10 +18,10 @@ const ADMIN_NAVIGATION = [
   { name: 'Teams', path: '/admin/teams', icon: Users, roles: ['Super Admin', 'Admin', 'Moderator'] },
   { name: 'Problem Statements', path: '/admin/problems', icon: FileText, roles: ['Super Admin', 'Admin', 'Moderator', 'Viewer'] },
   { name: 'Change Requests', path: '/admin/requests', icon: MessageSquare, roles: ['Super Admin', 'Admin', 'Moderator', 'Viewer'] },
-  { name: 'Contacts', path: '/admin/contacts', icon: Contact, roles: ['Super Admin', 'Admin', 'Moderator'] },
-  { name: 'Results', path: '/admin/results', icon: Trophy, roles: ['Super Admin', 'Admin'] },
+  { name: 'Contacts', path: '/admin/contacts', icon: Contact, roles: ['Super Admin', 'Admin', 'Moderator', 'Viewer'] },
+  { name: 'Results', path: '/admin/results', icon: Trophy, roles: ['Super Admin', 'Admin', 'Moderator', 'Viewer'] },
   { name: 'Users', path: '/admin/users', icon: Users, roles: ['Super Admin'] },
-  { name: 'Settings', path: '/admin/settings', icon: Settings, roles: ['Super Admin', 'Admin'] },
+  { name: 'Settings', path: '/admin/settings', icon: Settings, roles: ['Super Admin'] },
 ];
 
 export function Sidebar({ className, onItemClick }) {

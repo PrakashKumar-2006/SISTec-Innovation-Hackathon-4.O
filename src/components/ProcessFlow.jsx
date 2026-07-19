@@ -42,7 +42,7 @@ export default function ProcessFlow() {
     {
       num: '04',
       title: 'Grand Finale',
-      desc: '36-hour coding battle at SISTec campus, followed by judging rounds and awards.',
+      desc: '24-hour coding battle at SISTec campus, followed by judging rounds and awards.',
       icon: Award,
       iconColor: 'text-amber-400',
       color: 'from-amber-500/10 to-transparent',

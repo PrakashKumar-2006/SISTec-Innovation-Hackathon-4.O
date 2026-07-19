@@ -8,7 +8,7 @@ export default function About() {
   const stats = [
     { 
       label: 'Coding Duration', 
-      value: '36 Hours', 
+      value: '24 Hours', 
       description: 'Non-stop hacking & creation',
       icon: <Sparkles className="w-5 h-5 text-brand-orange" />
     },

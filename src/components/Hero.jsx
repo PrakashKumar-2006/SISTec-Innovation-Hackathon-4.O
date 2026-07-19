@@ -52,14 +52,7 @@ export default function Hero({ onRegisterClick }) {
           className="w-full h-auto block"
         />
 
-        {/* Interactive Hotspot Overlay Button (Desktop Only) */}
-        <div className="hidden md:flex absolute inset-0 w-full h-full pointer-events-none items-center">
-          <button
-            onClick={onRegisterClick}
-            className="absolute left-[27.5%] top-[61%] w-[26%] h-[9%] rounded-full cursor-pointer pointer-events-auto opacity-0 hover:opacity-10 bg-white/20 transition-opacity"
-            title="Register Now"
-          />
-        </div>
+
 
         {/* Countdown Timer Overlay positioned below 'LET THE INNOVATION BEGINS' (Desktop Only) */}
         <div className="hidden md:flex absolute left-[8.5%] top-[77%] w-[40.5%] justify-between gap-[0.8vw]">

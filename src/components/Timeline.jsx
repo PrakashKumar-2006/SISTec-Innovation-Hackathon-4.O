@@ -57,7 +57,7 @@ export default function Timeline() {
       glow: 'group-hover:shadow-[0_0_20px_rgba(236,72,153,0.15)]',
       progressColor: 'from-pink-500 to-pink-300',
       nodeColor: 'group-hover:border-pink-400 group-hover:bg-pink-400/20',
-      highlights: ['Mentorship Kick', '36h Continuous Build', 'Round 1 Eval']
+      highlights: ['Mentorship Kick', '24h Continuous Build', 'Round 1 Eval']
     },
     {
       num: '05',
