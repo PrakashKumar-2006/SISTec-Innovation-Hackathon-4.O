@@ -36,4 +36,7 @@ dist-ssr/
 .env
 .env.production
 .env.local
-server/.env
+
+# Large video files — ignore only at root to avoid duplicates (public versions are tracked)
+/*.mp4
+/*.webm

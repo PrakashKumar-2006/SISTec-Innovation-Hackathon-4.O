@@ -75,6 +75,7 @@ export default function Footer({ onViewChange }) {
             <ul className="space-y-3 text-xs sm:text-sm text-brand-gray font-normal">
               <li><a href="#home" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#home'); }} className="hover:text-brand-blue transition-colors">Home</a></li>
               <li><a href="#about" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('about-sih'); }} className="hover:text-brand-blue transition-colors">About SIH</a></li>
+              <li><a href="#gallery" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('photo-gallery'); }} className="hover:text-brand-blue transition-colors">Photo Gallery</a></li>
               <li><a href="#timeline" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#timeline'); }} className="hover:text-brand-blue transition-colors">SIH 2025</a></li>
               <li><a href="#timeline" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#timeline'); }} className="hover:text-brand-blue transition-colors">SIH 2024</a></li>
               <li><a href="#" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('contact-us'); }} className="hover:text-brand-blue transition-colors">Contact</a></li>

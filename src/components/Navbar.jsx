@@ -63,7 +63,8 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
       dropdown: [
         { name: 'About SIH', href: '#about' },
         { name: 'Timeline', href: '#timeline' },
-        { name: 'Program Schedule', href: '#schedule' }
+        { name: 'Program Schedule', href: '#schedule' },
+        { name: 'Photo Gallery', href: '#gallery' }
       ]
     },
     {
@@ -205,6 +206,8 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                       onViewChange && onViewChange('timeline');
                                     } else if (sub.name === 'Program Schedule') {
                                       onViewChange && onViewChange('schedule');
+                                    } else if (sub.name === 'Photo Gallery') {
+                                      onViewChange && onViewChange('photo-gallery');
                                     } else {
                                       onViewChange && onViewChange('landing', sub.href);
                                     }
@@ -348,6 +351,8 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                         onViewChange && onViewChange('timeline');
                                       } else if (sub.name === 'Program Schedule') {
                                         onViewChange && onViewChange('schedule');
+                                      } else if (sub.name === 'Photo Gallery') {
+                                        onViewChange && onViewChange('photo-gallery');
                                       } else {
                                         onViewChange && onViewChange('landing', sub.href);
                                       }
