@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, Sparkles, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react';
+import { Trophy, Sparkles, ChevronLeft, ChevronRight, ArrowLeft, Medal } from 'lucide-react';
 
 const winnersData = [
   {
@@ -10,8 +10,7 @@ const winnersData = [
     college: 'SISTec, Ratibad Bhopal',
     theme: 'Health-Tech',
     problem: 'The current healthcare system has problems with scheduling doctor appointments. Patients struggle to find available slots, while doctors have a hard time managing their schedules and patient records. Admins also find it difficult to oversee everything. We need a new website that can fix these issues by automating scheduling, notifications, and management for everyone involved, making it easier for patients to book appointments, helping doctors manage their schedules, and giving admins better oversight.',
-    prize: '₹25,000',
-    color: 'from-amber-400 via-yellow-500 to-amber-600'
+    prize: '₹25,000'
   },
   {
     position: 1,
@@ -21,8 +20,7 @@ const winnersData = [
     college: 'SISTec, Ratibad Bhopal',
     theme: 'Security',
     problem: 'Create a home automation hardware with real time Integration with firebase and a custom build websites.',
-    prize: '₹25,000',
-    color: 'from-amber-400 via-yellow-500 to-amber-600'
+    prize: '₹25,000'
   },
   {
     position: 2,
@@ -32,8 +30,7 @@ const winnersData = [
     college: 'Technocrats Institute of Technology, Bhopal',
     theme: 'Edu-Tech',
     problem: 'Inclusive technology-driven system that aims to enhance education in rural areas, focusing on improving the quality of teaching and learning and designed to teach in local languages, foster agricultural literacy, provides a supportive environment for both teachers and students in rural communities.',
-    prize: '₹20,000',
-    color: 'from-slate-300 via-slate-400 to-slate-500'
+    prize: '₹20,000'
   },
   {
     position: 3,
@@ -43,13 +40,35 @@ const winnersData = [
     college: 'Sage University, Bhopal',
     theme: 'Agri-Tech',
     problem: 'Farmer AI Platform to optimize crop yields based on specific nutritional demands, market trends, and sustainable agricultural methods',
-    prize: '₹15,000',
-    color: 'from-amber-600 via-orange-700 to-amber-800'
+    prize: '₹15,000'
   }
 ];
 
+// Helper component for expandable problem statements in the table
+function ProblemCell({ text }) {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = text.length > 120;
+  
+  return (
+    <div className="max-w-md text-xs leading-relaxed text-slate-300">
+      <span>
+        {expanded || !isLong ? text : `${text.slice(0, 110)}...`}
+      </span>
+      {isLong && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="text-brand-gold hover:text-yellow-400 font-black ml-1.5 focus:outline-none cursor-pointer underline text-[10px] uppercase tracking-widest whitespace-nowrap bg-transparent border-none"
+        >
+          {expanded ? 'Read Less' : 'Read More'}
+        </button>
+      )}
+    </div>
+  );
+}
+
 export default function SIH2024Winners({ onViewChange }) {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [slideDirection, setSlideDirection] = useState('next'); // 'next' or 'prev'
 
   const slides = [
     {
@@ -65,24 +84,26 @@ export default function SIH2024Winners({ onViewChange }) {
     }
   ];
 
-  // Auto slide interval
+  // Auto slide logic
   useEffect(() => {
     const timer = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % slides.length);
+      handleNext();
     }, 6000);
     return () => clearInterval(timer);
-  }, [slides.length]);
+  }, [activeSlide]);
 
   const handlePrev = () => {
+    setSlideDirection('prev');
     setActiveSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
   const handleNext = () => {
+    setSlideDirection('next');
     setActiveSlide((prev) => (prev + 1) % slides.length);
   };
 
   return (
-    <section className="relative min-h-screen bg-brand-darker pt-32 pb-24 px-4 sm:px-6 lg:px-8 text-white select-none">
+    <section className="relative min-h-screen bg-brand-darker pt-24 sm:pt-28 pb-20 px-3 sm:px-6 lg:px-8 text-white select-none">
       {/* Ambient background glows */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-gold/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
       <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[150px] pointer-events-none -z-10"></div>
@@ -90,91 +111,122 @@ export default function SIH2024Winners({ onViewChange }) {
       <div className="max-w-7xl mx-auto">
         
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10 text-left">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 text-left">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2.5">
-              <Trophy className="text-brand-gold" size={24} />
+              <Trophy className="text-brand-gold animate-pulse" size={24} />
               <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-brand-gray to-brand-gold bg-clip-text text-transparent">
                 Winners of SIH 2024
               </h2>
             </div>
             <p className="text-brand-gray text-xs sm:text-sm font-normal">
-              Here are the winners of SISTec Innovation Hackathon 2.0 (SIH 2024).
+              SISTec Innovation Hackathon 2.0 (SIH 2024) podium finishers and highlights.
             </p>
           </div>
+          
           <button
-            onClick={() => onViewChange && onViewChange('landing', '#home')}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-card border border-white/10 hover:border-brand-gold/50 text-xs font-bold text-brand-gold hover:text-white transition-all duration-300 cursor-pointer shadow-md active:scale-95 shrink-0"
+            onClick={() => onViewChange && onViewChange('landing')}
+            className="flex items-center gap-2 px-5 py-2 rounded-full bg-brand-card border border-white/10 hover:border-brand-gold/50 text-xs font-bold text-brand-gold hover:text-white transition-all duration-300 cursor-pointer shadow-md active:scale-95 shrink-0"
           >
             <ArrowLeft size={14} /> Back to Home
           </button>
         </div>
 
-        {/* Premium Slideshow Carousel */}
-        <div className="w-full max-w-5xl mx-auto mb-16 relative rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.6)] bg-brand-card aspect-[4/3] xs:aspect-[16/9] sm:aspect-[21/9]">
+        {/* ── Slide-Transition Carousel (Adjusted Padding & Layout) ── */}
+        <div className="w-full max-w-5xl mx-auto mb-12 relative rounded-3xl overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-brand-card h-[340px] sm:h-[400px] md:h-[440px]">
           
-          {/* Slide Renderer */}
-          <div className="w-full h-full relative">
+          <div className="w-full h-full relative overflow-hidden">
             {slides.map((slide, sIdx) => {
               const isActive = sIdx === activeSlide;
+              
+              // Calculate slide translate styles for horizontal slide animation
+              let transformStyle = 'translate-x-full'; // default next incoming slide position
+              if (isActive) {
+                transformStyle = 'translate-x-0';
+              } else if (
+                sIdx === (activeSlide - 1 + slides.length) % slides.length
+              ) {
+                transformStyle = '-translate-x-full';
+              }
+
               return (
                 <div
                   key={sIdx}
-                  className={`absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out ${
-                    isActive ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-95 z-0 pointer-events-none'
-                  }`}
+                  className="absolute inset-0 w-full h-full transition-transform duration-700 ease-in-out"
+                  style={{
+                    transform: isActive 
+                      ? 'translateX(0%)' 
+                      : sIdx === (activeSlide - 1 + slides.length) % slides.length
+                      ? 'translateX(-100%)'
+                      : 'translateX(100%)'
+                  }}
                 >
                   {slide.type === 'image' ? (
                     <div className="w-full h-full relative">
                       <img 
                         src={slide.url} 
                         alt={slide.title} 
-                        className="w-full h-full object-cover opacity-35"
+                        className="w-full h-full object-cover opacity-85" 
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-brand-darker via-brand-darker/20 to-transparent"></div>
-                      <div className="absolute bottom-6 left-6 right-6 sm:bottom-12 sm:left-12 sm:right-12 text-left space-y-2">
-                        <span className="text-[10px] sm:text-xs font-extrabold text-brand-gold tracking-[0.2em] uppercase mb-1 flex items-center gap-1.5">
-                          <Sparkles size={12} className="animate-pulse" /> Hackathon Event Highlight
+                      {/* Dark overlay at bottom for text readability */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent"></div>
+                      
+                      <div className="absolute bottom-6 left-6 right-6 sm:bottom-10 sm:left-10 sm:right-10 text-left space-y-2">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-gold/20 border border-brand-gold/30 text-brand-gold text-[9px] font-black uppercase tracking-widest">
+                          <Sparkles size={10} className="animate-pulse" /> Event Highlight
                         </span>
                         <h3 className="text-xl sm:text-3xl font-extrabold text-white tracking-wide">{slide.title}</h3>
-                        <p className="text-[10px] sm:text-sm text-brand-gray/80 max-w-xl leading-relaxed">{slide.desc}</p>
+                        <p className="text-[11px] sm:text-sm text-slate-300 max-w-2xl leading-relaxed">{slide.desc}</p>
                       </div>
                     </div>
                   ) : (
-                    <div className="w-full h-full bg-brand-dark/30 flex flex-col justify-center items-center p-6 text-center relative overflow-hidden">
-                      {/* Decorative elements */}
-                      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,178,36,0.06),transparent_60%)] pointer-events-none"></div>
+                    <div className="w-full h-full bg-[#0D0D11]/90 flex flex-col justify-center items-center px-4 py-6 sm:p-8 text-center relative overflow-hidden">
+                      {/* Sunburst background effect */}
+                      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(216,171,85,0.05),transparent_60%)] pointer-events-none"></div>
                       
-                      <div className="relative z-10 max-w-4xl mx-auto space-y-6">
-                        <div className="flex flex-col items-center gap-1">
-                          <Trophy className="text-brand-gold animate-bounce" size={40} />
-                          <h3 className="text-xl sm:text-3xl font-extrabold text-white tracking-wide">{slide.title}</h3>
-                          <p className="text-[10px] sm:text-xs text-brand-gray/80">{slide.desc}</p>
+                      <div className="relative z-10 w-full max-w-3xl mx-auto space-y-4 sm:space-y-6">
+                        <div className="flex flex-col items-center gap-1.5">
+                          <Trophy className="text-brand-gold animate-bounce" size={36} />
+                          <h3 className="text-xl sm:text-2xl font-black text-white tracking-wide">{slide.title}</h3>
+                          <p className="text-[11px] sm:text-xs text-slate-400 font-semibold">{slide.desc}</p>
                         </div>
-
-                        {/* Top 3 summary cards (Podium) */}
-                        <div className="grid grid-cols-3 gap-3 max-w-3xl mx-auto pt-4 items-end">
+ 
+                        {/* Interactive 3D Podium Block Visualizer inside Carousel */}
+                        <div className="grid grid-cols-3 gap-3.5 sm:gap-6 items-end w-full max-w-lg mx-auto pt-2 select-none">
+                          
                           {/* 2nd Place */}
-                          <div className="p-3 sm:p-4 rounded-2xl bg-brand-card/60 border border-white/5 flex flex-col items-center justify-between shadow-lg">
-                            <span className="text-[10px] font-bold text-slate-300">2ND PLACE</span>
-                            <span className="text-xs sm:text-sm font-extrabold text-white block truncate w-full mt-1">Ayush Kumar</span>
-                            <span className="text-[10px] sm:text-xs font-bold text-slate-400 mt-0.5">₹20,000</span>
+                          <div className="flex flex-col items-center gap-1.5 sm:gap-2">
+                            <span className="text-[9px] font-black text-slate-400 tracking-wider">2ND PLACE</span>
+                            <h4 className="text-white text-[11px] sm:text-xs font-black truncate w-full">Ayush Kumar</h4>
+                            <span className="text-[10px] font-extrabold text-slate-400">₹20,000</span>
+                            <div className="w-full h-14 sm:h-20 bg-gradient-to-t from-slate-400/20 to-slate-400/5 border-t border-[#94A3B8]/30 rounded-t-xl flex items-center justify-center shadow-inner">
+                              <span className="text-slate-400 font-black text-lg">2</span>
+                            </div>
                           </div>
 
-                          {/* 1st Place (Joint Champions) */}
-                          <div className="p-4 sm:p-5 rounded-2xl bg-brand-card border border-brand-gold/20 flex flex-col items-center justify-between shadow-2xl relative">
-                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-gold text-[8px] text-brand-dark font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Joint Champions</div>
-                            <span className="text-[10px] font-bold text-brand-gold">1ST PLACE</span>
-                            <span className="text-[11px] sm:text-xs font-extrabold text-white block truncate w-full mt-1">Harsh & Ankit</span>
-                            <span className="text-xs sm:text-sm font-extrabold text-brand-gold mt-0.5">₹25,000 Each</span>
+                          {/* 1st Place */}
+                          <div className="flex flex-col items-center gap-1.5 sm:gap-2 relative">
+                            <div className="absolute -top-5 bg-brand-gold text-[7px] text-[#0D0D11] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                              Joint
+                            </div>
+                            <span className="text-[9px] font-black text-brand-gold tracking-wider">1ST PLACE</span>
+                            <h4 className="text-white text-[11px] sm:text-xs font-black truncate w-full">Harsh & Ankit</h4>
+                            <span className="text-[10px] font-extrabold text-brand-gold">₹25,000 Each</span>
+                            <div className="w-full h-20 sm:h-28 bg-gradient-to-t from-brand-gold/20 to-brand-gold/5 border-t border-brand-gold/40 rounded-t-xl flex items-center justify-center shadow-inner">
+                              <span className="text-brand-gold font-black text-2xl">1</span>
+                            </div>
                           </div>
 
                           {/* 3rd Place */}
-                          <div className="p-3 sm:p-4 rounded-2xl bg-brand-card/60 border border-white/5 flex flex-col items-center justify-between shadow-lg">
-                            <span className="text-[10px] font-bold text-amber-600">3RD PLACE</span>
-                            <span className="text-xs sm:text-sm font-extrabold text-white block truncate w-full mt-1">Amit Patel</span>
-                            <span className="text-[10px] sm:text-xs font-bold text-amber-600 mt-0.5">₹15,000</span>
+                          <div className="flex flex-col items-center gap-1.5 sm:gap-2">
+                            <span className="text-[9px] font-black text-[#B45309] tracking-wider">3RD PLACE</span>
+                            <h4 className="text-white text-[11px] sm:text-xs font-black truncate w-full">Amit Patel</h4>
+                            <span className="text-[10px] font-extrabold text-[#B45309]">₹15,000</span>
+                            <div className="w-full h-10 sm:h-14 bg-gradient-to-t from-amber-700/20 to-amber-700/5 border-t border-[#B45309]/30 rounded-t-xl flex items-center justify-center shadow-inner">
+                              <span className="text-[#B45309] font-black text-lg">3</span>
+                            </div>
                           </div>
+
                         </div>
                       </div>
                     </div>
@@ -187,15 +239,15 @@ export default function SIH2024Winners({ onViewChange }) {
           {/* Navigation Arrows */}
           <button
             onClick={handlePrev}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-brand-dark/60 hover:bg-brand-card border border-white/10 hover:border-brand-gold/30 text-white transition-all cursor-pointer"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/50 hover:bg-brand-card border border-white/10 hover:border-brand-gold hover:text-brand-gold text-white flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={18} />
           </button>
           <button
             onClick={handleNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-brand-dark/60 hover:bg-brand-card border border-white/10 hover:border-brand-gold/30 text-white transition-all cursor-pointer"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/50 hover:bg-brand-card border border-white/10 hover:border-brand-gold hover:text-brand-gold text-white flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={18} />
           </button>
 
           {/* Dots Indicator */}
@@ -204,16 +256,16 @@ export default function SIH2024Winners({ onViewChange }) {
               <button
                 key={sIdx}
                 onClick={() => setActiveSlide(sIdx)}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  sIdx === activeSlide ? 'bg-brand-gold w-6' : 'bg-white/30 hover:bg-white/60'
+                className={`h-2 rounded-full transition-all cursor-pointer ${
+                  sIdx === activeSlide ? 'bg-brand-gold w-6 shadow-[0_0_6px_rgba(216,171,85,0.4)]' : 'bg-white/30 hover:bg-white/60 w-2'
                 }`}
               />
             ))}
           </div>
         </div>
 
-        {/* Podium Finishers Title */}
-        <div className="text-left mb-8 max-w-xl">
+        {/* Podium Finishers Details Title */}
+        <div className="text-left mb-6 max-w-xl">
           <h3 className="text-lg sm:text-xl font-extrabold text-white pl-1 border-l-4 border-brand-gold">
             Podium Details
           </h3>
@@ -223,71 +275,53 @@ export default function SIH2024Winners({ onViewChange }) {
         </div>
 
         {/* Desktop View Table */}
-        <div className="hidden md:block rounded-[2rem] bg-brand-card/15 backdrop-blur-md border border-white/5 overflow-hidden shadow-card-shadow mb-10 text-left">
+        <div className="hidden md:block rounded-2xl bg-brand-card/15 backdrop-blur-md border border-white/5 overflow-hidden shadow-2xl mb-10 text-left">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[1000px]">
               <thead>
                 <tr className="border-b border-white/5 bg-brand-darker/60">
-                  <th className="px-6 py-4.5 text-[11px] font-bold uppercase tracking-wider w-24">
-                    <span className="text-gold-metallic">Position</span>
-                  </th>
-                  <th className="px-6 py-4.5 text-[11px] font-bold uppercase tracking-wider w-24">
-                    <span className="text-gold-metallic">PS Code</span>
-                  </th>
-                  <th className="px-6 py-4.5 text-[11px] font-bold uppercase tracking-wider w-40">
-                    <span className="text-gold-metallic">Leader Name</span>
-                  </th>
-                  <th className="px-6 py-4.5 text-[11px] font-bold uppercase tracking-wider w-40">
-                    <span className="text-gold-metallic">Team Name</span>
-                  </th>
-                  <th className="px-6 py-4.5 text-[11px] font-bold uppercase tracking-wider w-36">
-                    <span className="text-gold-metallic">Theme</span>
-                  </th>
-                  <th className="px-6 py-4.5 text-[11px] font-bold uppercase tracking-wider w-[420px] max-w-md">
-                    <span className="text-gold-metallic">Problem Statement Title</span>
-                  </th>
-                  <th className="px-6 py-4.5 text-[11px] font-bold uppercase tracking-wider w-64">
-                    <span className="text-gold-metallic">Institute Name</span>
-                  </th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-24 text-slate-400">Position</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-24 text-slate-400">PS Code</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-40 text-slate-400">Leader Name</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-40 text-slate-400">Team Name</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-36 text-slate-400">Theme</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-[420px] max-w-md text-slate-400">Problem Statement Title</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-64 text-slate-400">Institute Name</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-32 text-slate-400">Prize Money</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {winnersData.map((item, idx) => (
-                  <tr 
-                    key={idx}
-                    className="group border-b border-white/5 bg-brand-card/5 hover:bg-brand-card/25 hover:shadow-[inset_4px_0_0_0_#FFB224] transition-all duration-300"
-                  >
-                    <td className="px-6 py-5">
-                      <div className="flex items-center gap-2">
-                        <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono font-extrabold bg-gradient-to-r ${item.color} text-brand-dark`}>
-                          {item.position}
-                        </span>
-                        <span className="text-[10px] font-bold text-brand-gold uppercase tracking-wider whitespace-nowrap">{item.prize}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-5">
-                      <span className="font-mono text-xs font-bold text-brand-blue bg-brand-blue/10 border border-brand-blue/20 px-2.5 py-1 rounded-lg whitespace-nowrap">
-                        {item.psCode}
+                {winnersData.map((winner, index) => (
+                  <tr key={index} className="hover:bg-white/5 transition-colors duration-200">
+                    <td className="px-5 py-4">
+                      <span className={`inline-block px-2.5 py-0.5 rounded-full border text-[10px] font-black uppercase ${
+                        winner.position === 1 ? 'border-brand-gold/40 bg-brand-gold/10 text-brand-gold' :
+                        winner.position === 2 ? 'border-slate-400/40 bg-slate-400/10 text-slate-300' :
+                        'border-amber-700/40 bg-amber-700/10 text-[#B45309]'
+                      }`}>
+                        {winner.position === 1 ? '1st Place' : winner.position === 2 ? '2nd Place' : '3rd Place'}
                       </span>
                     </td>
-                    <td className="px-6 py-5">
-                      <span className="text-xs font-bold text-white leading-snug block">{item.leader}</span>
+                    <td className="px-5 py-4 font-mono text-xs text-brand-gray font-bold">
+                      {winner.psCode}
                     </td>
-                    <td className="px-6 py-5">
-                      <span className="text-xs font-bold text-white/90 leading-snug block">{item.team}</span>
+                    <td className="px-5 py-4 font-sans text-xs text-slate-300 font-bold">
+                      {winner.leader}
                     </td>
-                    <td className="px-6 py-5">
-                      <span className="inline-block px-2.5 py-1 rounded-lg border border-white/10 bg-white/5 text-[9px] font-bold uppercase tracking-wider text-brand-gray/80">
-                        {item.theme}
-                      </span>
+                    <td className="px-5 py-4 font-sans text-xs text-white font-extrabold">
+                      {winner.team}
                     </td>
-                    <td className="px-6 py-5 w-[420px] max-w-md">
-                      <span className="text-xs text-brand-gray/95 block leading-relaxed whitespace-normal break-words text-justify">
-                        {item.problem}
-                      </span>
+                    <td className="px-5 py-4 font-sans text-xs text-slate-400 font-semibold">
+                      {winner.theme}
                     </td>
-                    <td className="px-6 py-5">
-                      <span className="text-xs font-semibold text-brand-gray/80 leading-normal block">{item.college}</span>
+                    <td className="px-5 py-4 font-sans text-xs text-slate-300 max-w-md whitespace-normal leading-relaxed">
+                      <ProblemCell text={winner.problem} />
+                    </td>
+                    <td className="px-5 py-4 font-sans text-xs text-slate-300 max-w-xs truncate font-semibold" title={winner.college}>
+                      {winner.college}
+                    </td>
+                    <td className="px-5 py-4 font-sans text-xs text-brand-gold font-black">
+                      {winner.prize}
                     </td>
                   </tr>
                 ))}
@@ -296,56 +330,54 @@ export default function SIH2024Winners({ onViewChange }) {
           </div>
         </div>
 
-        {/* Mobile Cards Stack View (md:hidden) */}
-        <div className="md:hidden flex flex-col gap-4 w-full text-left">
-          {winnersData.map((item, idx) => (
-            <div 
-              key={idx}
-              className="p-5 rounded-2xl bg-brand-card/45 backdrop-blur-md border border-white/10 bg-gradient-to-b from-brand-gold/5 to-transparent flex flex-col justify-between relative overflow-hidden shadow-card-shadow text-left"
-            >
-              {/* Decorative glowing top line */}
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-brand-orange via-brand-gold to-brand-blue"></div>
-
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono font-extrabold bg-gradient-to-r ${item.color} text-brand-dark`}>
-                    {item.position}
-                  </span>
-                  <span className="text-[10px] font-bold text-brand-gold tracking-wider">{item.prize}</span>
-                </div>
-                <span className="font-mono text-[10px] font-bold text-brand-blue bg-brand-blue/10 border border-brand-blue/20 px-2.5 py-1 rounded-lg whitespace-nowrap">
-                  {item.psCode}
-                </span>
-              </div>
+        {/* Mobile View List */}
+        <div className="grid grid-cols-1 gap-4 md:hidden">
+          {winnersData.map((winner, index) => (
+            <div key={index} className="rounded-2xl bg-brand-card/45 border border-white/10 p-5 space-y-4 text-left relative">
               
-              <h4 className="text-xs font-bold text-white leading-snug mb-0.5">
-                Leader: {item.leader}
-              </h4>
-              <p className="text-xs font-bold text-brand-gold mb-1">
-                Team: {item.team}
-              </p>
-              <p className="text-[10px] text-brand-gray/60 mb-3 font-semibold">
-                {item.college}
-              </p>
-
-              <div className="space-y-1.5 pt-3 border-t border-white/5 text-[11px] text-brand-gray mb-3">
-                <div className="flex justify-between items-center gap-2">
-                  <span className="text-[9px] uppercase font-bold text-white/40">Theme</span>
-                  <span className="font-medium text-white/80 text-right truncate max-w-[70%]">{item.theme}</span>
-                </div>
+              <div className="flex justify-between items-center">
+                <span className={`inline-block px-2.5 py-0.5 rounded-full border text-[9px] font-black uppercase ${
+                  winner.position === 1 ? 'border-brand-gold/40 bg-brand-gold/10 text-brand-gold' :
+                  winner.position === 2 ? 'border-slate-400/40 bg-slate-400/10 text-slate-300' :
+                  'border-amber-700/40 bg-amber-700/10 text-[#B45309]'
+                }`}>
+                  {winner.position === 1 ? '1st Place' : winner.position === 2 ? '2nd Place' : '3rd Place'}
+                </span>
+                
+                <span className="font-mono text-xs text-brand-gold font-black">{winner.prize}</span>
               </div>
 
-              <div className="space-y-1.5 pt-3 border-t border-white/5 text-[11px]">
-                <span className="text-[9px] uppercase font-bold text-white/40 block">Problem Statement Title</span>
-                <p className="text-xs text-brand-gray leading-relaxed font-normal bg-brand-dark/45 p-3 rounded-xl border border-white/5 break-words text-justify">
-                  {item.problem}
+              <div className="space-y-1">
+                <span className="font-mono text-[9px] text-slate-500 font-bold bg-white/5 border border-white/10 px-2 py-0.5 rounded uppercase">
+                  {winner.psCode}
+                </span>
+                <h4 className="text-white text-base font-extrabold pt-1">{winner.team}</h4>
+                <p className="text-slate-400 text-xs font-bold">
+                  Leader: <span className="text-slate-300">{winner.leader}</span>
                 </p>
               </div>
+
+              <div className="border-t border-white/5 pt-3.5 space-y-2.5">
+                <div>
+                  <span className="text-[9px] font-black uppercase tracking-wider text-slate-500">Institution</span>
+                  <p className="text-slate-300 text-xs font-semibold leading-relaxed mt-0.5">{winner.college}</p>
+                </div>
+                <div>
+                  <span className="text-[9px] font-black uppercase tracking-wider text-slate-500">Theme</span>
+                  <p className="text-slate-300 text-xs font-semibold mt-0.5">{winner.theme}</p>
+                </div>
+                <div>
+                  <span className="text-[9px] font-black uppercase tracking-wider text-slate-500">Problem Statement</span>
+                  <p className="text-slate-400 text-xs leading-relaxed mt-1">{winner.problem}</p>
+                </div>
+              </div>
+
             </div>
           ))}
         </div>
 
       </div>
+
     </section>
   );
 }

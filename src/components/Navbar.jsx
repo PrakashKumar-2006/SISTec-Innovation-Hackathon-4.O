@@ -74,7 +74,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
           subItems: [
             { name: 'SIH 2025' },
             { name: 'Grand Finale Teams', view: 'sih-2025-finalists' },
-            { name: 'Winner Of SIH 2025' }
+            { name: 'Winner Of SIH 2025', view: 'sih-2025-winners' }
           ]
         },
         {
