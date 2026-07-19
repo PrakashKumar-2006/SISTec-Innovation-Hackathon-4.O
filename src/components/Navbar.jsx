@@ -186,6 +186,8 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                       onViewChange && onViewChange('photo-gallery');
                                     } else if (sub.name === 'Winner Of SIH 2026') {
                                       onViewChange && onViewChange('sih-2026-winners');
+                                    } else if (sub.name === 'Grand Finale Teams') {
+                                      onViewChange && onViewChange('sih-2026-finalists');
                                     } else {
                                       onViewChange && onViewChange('landing', sub.href);
                                     }
@@ -334,6 +336,8 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                         onViewChange && onViewChange('photo-gallery');
                                       } else if (sub.name === 'Winner Of SIH 2026') {
                                         onViewChange && onViewChange('sih-2026-winners');
+                                      } else if (sub.name === 'Grand Finale Teams') {
+                                        onViewChange && onViewChange('sih-2026-finalists');
                                       } else {
                                         onViewChange && onViewChange('landing', sub.href);
                                       }
