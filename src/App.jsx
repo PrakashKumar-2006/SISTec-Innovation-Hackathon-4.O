@@ -72,6 +72,12 @@ export default function App() {
             <FAQs />
             <Developers />
           </>
+        ) : currentView === 'about-sih' ? (
+          <About />
+        ) : currentView === 'timeline' ? (
+          <Timeline />
+        ) : currentView === 'schedule' ? (
+          <Schedule />
         ) : currentView === 'problem-statements' ? (
           <ProblemStatements />
         ) : currentView === 'instructions' ? (

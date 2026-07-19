@@ -74,7 +74,7 @@ export default function Footer({ onViewChange }) {
             </h4>
             <ul className="space-y-3 text-xs sm:text-sm text-brand-gray font-normal">
               <li><a href="#home" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#home'); }} className="hover:text-brand-blue transition-colors">Home</a></li>
-              <li><a href="#about" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#about'); }} className="hover:text-brand-blue transition-colors">About SIH</a></li>
+              <li><a href="#about" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('about-sih'); }} className="hover:text-brand-blue transition-colors">About SIH</a></li>
               <li><a href="#timeline" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#timeline'); }} className="hover:text-brand-blue transition-colors">SIH 2025</a></li>
               <li><a href="#timeline" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#timeline'); }} className="hover:text-brand-blue transition-colors">SIH 2024</a></li>
               <li><a href="#" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('contact-us'); }} className="hover:text-brand-blue transition-colors">Contact</a></li>
@@ -87,7 +87,7 @@ export default function Footer({ onViewChange }) {
               Participants
             </h4>
             <ul className="space-y-3 text-xs sm:text-sm text-brand-gray font-normal">
-              <li><a href="#objectives" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#objectives'); }} className="hover:text-brand-blue transition-colors">Instructions</a></li>
+              <li><a href="#objectives" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('instructions'); }} className="hover:text-brand-blue transition-colors">Instructions</a></li>
               <li><a href="#process" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#process'); }} className="hover:text-brand-blue transition-colors">How to Apply</a></li>
               <li><a href="#process" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#process'); }} className="hover:text-brand-blue transition-colors">Idea Template</a></li>
               <li><a href="#faqs" onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#faqs'); }} className="hover:text-brand-blue transition-colors">FAQs</a></li>

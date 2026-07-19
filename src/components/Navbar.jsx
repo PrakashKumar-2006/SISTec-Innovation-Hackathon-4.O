@@ -199,6 +199,12 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                     e.preventDefault();
                                     if (sub.name === 'Instructions') {
                                       onViewChange && onViewChange('instructions');
+                                    } else if (sub.name === 'About SIH') {
+                                      onViewChange && onViewChange('about-sih');
+                                    } else if (sub.name === 'Timeline') {
+                                      onViewChange && onViewChange('timeline');
+                                    } else if (sub.name === 'Program Schedule') {
+                                      onViewChange && onViewChange('schedule');
                                     } else {
                                       onViewChange && onViewChange('landing', sub.href);
                                     }
@@ -336,6 +342,12 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                       setIsOpen(false);
                                       if (sub.name === 'Instructions') {
                                         onViewChange && onViewChange('instructions');
+                                      } else if (sub.name === 'About SIH') {
+                                        onViewChange && onViewChange('about-sih');
+                                      } else if (sub.name === 'Timeline') {
+                                        onViewChange && onViewChange('timeline');
+                                      } else if (sub.name === 'Program Schedule') {
+                                        onViewChange && onViewChange('schedule');
                                       } else {
                                         onViewChange && onViewChange('landing', sub.href);
                                       }
