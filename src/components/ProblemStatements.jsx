@@ -34,7 +34,7 @@ export default function ProblemStatements() {
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 relative z-10">
         
         {/* Header Section */}
-        <div className="max-w-3xl text-left mb-12">
+        <div className="max-w-3xl text-left mb-12 animate-fade-in">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-brand-orange/30 bg-brand-orange/10 text-xs font-bold text-brand-orange tracking-widest uppercase mb-4 animate-pulse">
             <Sparkles size={12} />
             Problem Statements Portal
@@ -48,7 +48,10 @@ export default function ProblemStatements() {
         </div>
 
         {/* Uniform Filters Dashboard */}
-        <div className="p-6 rounded-[2rem] bg-brand-card/30 backdrop-blur-md border border-white/5 shadow-card-shadow mb-10">
+        <div 
+          style={{ animationDelay: '100ms' }}
+          className="p-6 rounded-[2rem] bg-brand-card/30 backdrop-blur-md border border-white/5 shadow-card-shadow mb-10 animate-fade-in opacity-0"
+        >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Search Input Box */}
@@ -112,8 +115,9 @@ export default function ProblemStatements() {
           </div>
         </div>
 
-        {/* Clean Organised Table */}
-        <div className="rounded-[2rem] bg-brand-card/15 backdrop-blur-md border border-white/5 overflow-hidden shadow-card-shadow">
+
+        {/* Desktop Table View */}
+        <div className="hidden md:block rounded-[2rem] bg-brand-card/15 backdrop-blur-md border border-white/5 overflow-hidden shadow-card-shadow">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[1000px]">
               <thead>
@@ -146,7 +150,8 @@ export default function ProblemStatements() {
                   filteredStatements.map((item, idx) => (
                     <tr 
                       key={idx}
-                      className="hover:bg-white/[0.02] transition-colors duration-200 group"
+                      style={{ animationDelay: `${idx * 40}ms` }}
+                      className="hover:bg-white/[0.02] transition-colors duration-200 group animate-fade-in opacity-0"
                     >
                       {/* S.No */}
                       <td className="px-6 py-5 text-sm font-bold text-white/90 font-mono">
@@ -159,8 +164,10 @@ export default function ProblemStatements() {
                       </td>
 
                       {/* Problem Statement */}
-                      <td className="px-6 py-5 text-xs text-brand-gray/90 leading-relaxed font-normal max-w-md">
-                        {item.statement}
+                      <td className="px-6 py-5 text-xs text-white font-medium leading-relaxed max-w-md">
+                        <span className="block border-l-2 border-brand-gold pl-3">
+                          {item.statement}
+                        </span>
                       </td>
 
                       {/* PS Number */}
@@ -204,6 +211,73 @@ export default function ProblemStatements() {
           </div>
         </div>
 
+        {/* Mobile Card View */}
+        <div className="md:hidden flex flex-col gap-4">
+          {filteredStatements.length > 0 ? (
+            filteredStatements.map((item, idx) => (
+              <div 
+                key={idx}
+                style={{ animationDelay: `${idx * 40}ms` }}
+                className="p-5 rounded-2xl bg-brand-card/30 backdrop-blur-md border border-white/5 flex flex-col gap-3 relative overflow-hidden shadow-card-shadow text-left animate-fade-in opacity-0 hover:border-brand-gold/20 hover:-translate-y-1 transition-all duration-300"
+              >
+                {/* Accent top line */}
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-brand-orange via-brand-pink to-brand-blue"></div>
+                
+                {/* Header: S.No & PS Number badge */}
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono font-bold text-white/30">#{item.sNo}</span>
+                  <span className="px-2.5 py-1 rounded-lg bg-brand-dark border border-white/5 font-mono text-[10px] font-bold text-brand-blue tracking-wide">
+                    {item.psNumber}
+                  </span>
+                </div>
+
+                {/* Sponsoring Org */}
+                <div className="space-y-1">
+                  <span className="text-[9px] font-bold tracking-widest text-brand-gray uppercase">Sponsoring Org</span>
+                  <h3 className="text-sm font-extrabold text-white leading-snug">{item.org}</h3>
+                </div>
+
+                {/* Problem Statement Preview */}
+                <div className="space-y-1.5 pt-1.5 border-t border-white/5">
+                  <span className="text-[9px] font-bold tracking-widest text-brand-gold uppercase flex items-center gap-1">
+                    <Sparkles size={10} className="text-brand-gold shrink-0" /> Problem Statement
+                  </span>
+                  <div className="pl-3 border-l-2 border-brand-gold bg-white/[0.02] p-2.5 rounded-r-xl">
+                    <p className="text-xs text-white font-medium leading-relaxed break-words text-justify line-clamp-3">
+                      {item.statement}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Categories / Info Row */}
+                <div className="flex flex-wrap items-center gap-2 pt-2.5 border-t border-white/5">
+                  <span className="px-2.5 py-0.5 rounded-full border border-white/10 bg-white/5 text-brand-gray text-[9px] font-bold uppercase">
+                    {item.category}
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full border border-brand-pink/20 bg-brand-pink/10 text-brand-pink text-[9px] font-bold uppercase">
+                    {item.domain}
+                  </span>
+                </div>
+
+                {/* Action button */}
+                <button
+                  onClick={() => setActiveModalItem(item)}
+                  className="w-full mt-2 py-2.5 rounded-xl bg-brand-card hover:bg-brand-card/85 text-xs font-bold text-brand-gold hover:text-white border border-white/10 transition-all text-center cursor-pointer active:scale-[0.98]"
+                >
+                  View Details & Tech Stack
+                </button>
+              </div>
+            ))
+          ) : (
+            <div className="py-14 text-center rounded-2xl bg-brand-card/25 border border-dashed border-white/5">
+              <div className="flex flex-col items-center gap-3 text-brand-gray">
+                <AlertCircle size={28} className="text-brand-orange animate-bounce" />
+                <p className="font-mono text-xs">No matching problem statements found.</p>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Detailed Modal Overlay */}
         {activeModalItem && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -243,8 +317,10 @@ export default function ProblemStatements() {
                 </div>
 
                 <div className="space-y-2">
-                  <h4 className="text-[10px] font-bold tracking-widest text-brand-gray uppercase">Problem Statement Summary</h4>
-                  <p className="text-xs sm:text-sm text-brand-gray leading-relaxed font-normal bg-brand-dark/45 p-4 rounded-2xl border border-white/5">
+                  <h4 className="text-[10px] font-bold tracking-widest text-brand-gold uppercase flex items-center gap-1">
+                    <Sparkles size={10} className="text-brand-gold shrink-0" /> Problem Statement Summary
+                  </h4>
+                  <p className="text-xs sm:text-sm text-white font-medium leading-relaxed bg-brand-dark/45 p-4 rounded-2xl border-l-4 border-brand-gold border-y border-r border-white/5">
                     {activeModalItem.statement}
                   </p>
                 </div>
