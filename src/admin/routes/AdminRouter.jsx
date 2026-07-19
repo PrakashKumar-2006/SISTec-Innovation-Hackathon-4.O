@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import { AuthProvider } from '../contexts/AuthContext';
@@ -10,16 +10,23 @@ import { Toaster } from '../components/ui/toaster';
 
 import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
-import ComingSoon from '../components/feedback/ComingSoon';
 import NotFound from '../pages/errors/NotFound';
 
-import TeamsList from '../pages/teams/TeamsList';
-import TeamDetails from '../pages/teams/TeamDetails';
+const TeamsList = lazy(() => import('../pages/teams/TeamsList'));
+const TeamDetails = lazy(() => import('../pages/teams/TeamDetails'));
+const ProblemsList = lazy(() => import('../pages/problems/ProblemsList'));
+const ProblemDetails = lazy(() => import('../pages/problems/ProblemDetails'));
+const ChangeRequestsList = lazy(() => import('../pages/requests/ChangeRequestsList'));
+const ContactsList = lazy(() => import('../pages/contacts/ContactsList'));
+const ResultsList = lazy(() => import('../pages/results/ResultsList'));
+const AdminUsersList = lazy(() => import('../pages/users/AdminUsersList'));
+const Settings = lazy(() => import('../pages/settings/Settings'));
 
-import ProblemsList from '../pages/problems/ProblemsList';
-import ProblemDetails from '../pages/problems/ProblemDetails';
-
-import ChangeRequestsList from '../pages/requests/ChangeRequestsList';
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-[50vh]">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+  </div>
+);
 
 export default function AdminRouter() {
   return (
@@ -44,62 +51,63 @@ export default function AdminRouter() {
           
           <Route path="teams" element={
             <RoleGuard allowedRoles={['Super Admin', 'Admin', 'Moderator', 'Viewer']}>
-              <TeamsList />
+              <Suspense fallback={<PageLoader />}><TeamsList /></Suspense>
             </RoleGuard>
           } />
           
           <Route path="teams/:id" element={
             <RoleGuard allowedRoles={['Super Admin', 'Admin', 'Moderator', 'Viewer']}>
-              <TeamDetails />
+              <Suspense fallback={<PageLoader />}><TeamDetails /></Suspense>
             </RoleGuard>
           } />
           
           <Route path="problems" element={
             <RoleGuard allowedRoles={['Super Admin', 'Admin', 'Moderator', 'Viewer']}>
-              <ProblemsList />
+              <Suspense fallback={<PageLoader />}><ProblemsList /></Suspense>
             </RoleGuard>
           } />
           
           <Route path="problems/:id" element={
             <RoleGuard allowedRoles={['Super Admin', 'Admin', 'Moderator', 'Viewer']}>
-              <ProblemDetails />
+              <Suspense fallback={<PageLoader />}><ProblemDetails /></Suspense>
             </RoleGuard>
           } />
           
           <Route path="requests" element={
-            <RoleGuard allowedRoles={['Super Admin', 'Admin', 'Moderator', 'Viewer']}>
-              <ChangeRequestsList />
+            <RoleGuard allowedRoles={['Super Admin', 'Admin', 'Moderator']}>
+              <Suspense fallback={<PageLoader />}><ChangeRequestsList /></Suspense>
             </RoleGuard>
           } />
           
           <Route path="contacts" element={
-            <RoleGuard allowedRoles={['Super Admin', 'Admin', 'Moderator']}>
-              <ComingSoon moduleName="Contacts Management" />
-            </RoleGuard>
-          } />
-          
-          <Route path="results" element={
-            <RoleGuard allowedRoles={['Super Admin', 'Admin']}>
-              <ComingSoon moduleName="Hackathon Results" />
+            <RoleGuard allowedRoles={['Super Admin', 'Admin', 'Moderator', 'Viewer']}>
+              <Suspense fallback={<PageLoader />}><ContactsList /></Suspense>
             </RoleGuard>
           } />
           
           <Route path="users" element={
             <RoleGuard allowedRoles={['Super Admin']}>
-              <ComingSoon moduleName="User Management" />
+              <Suspense fallback={<PageLoader />}><AdminUsersList /></Suspense>
             </RoleGuard>
           } />
           
+          <Route 
+            path="results" 
+            element={
+              <RoleGuard allowedRoles={['Super Admin', 'Admin', 'Moderator', 'Viewer']}>
+                <Suspense fallback={<PageLoader />}><ResultsList /></Suspense>
+              </RoleGuard>
+            } 
+          />
+
           <Route path="settings" element={
-            <RoleGuard allowedRoles={['Super Admin', 'Admin']}>
-              <ComingSoon moduleName="System Settings" />
+            <RoleGuard allowedRoles={['Super Admin']}>
+              <Suspense fallback={<PageLoader />}><Settings /></Suspense>
             </RoleGuard>
           } />
 
-          {/* Default redirect for root admin path */}
           <Route path="" element={<Navigate to="dashboard" replace />} />
           
-          {/* 404 Catch-all for admin routes */}
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
