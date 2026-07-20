@@ -22,7 +22,7 @@ import SIH2023Finalists from './components/SIH2023Finalists';
 import SIH2024Finalists from './components/SIH2024Finalists';
 import SIH2023Winners from './components/SIH2023Winners';
 import SIH2024Winners from './components/SIH2024Winners';
-import SIH2025Finalists from './components/SIH2025Finalists';
+import ShortlistedTeams from './components/ShortlistedTeams';
 import PhotoGallery from './components/PhotoGallery';
 import NotificationToast from './components/NotificationToast';
 import SIH2026Winners from './components/SIH2026Winners';
@@ -103,6 +103,8 @@ export default function App() {
           <SIH2023Winners onViewChange={handleViewChange} />
         ) : currentView === 'sih-2024-winners' ? (
           <SIH2024Winners onViewChange={handleViewChange} />
+        ) : currentView === 'shortlisted-teams' ? (
+          <ShortlistedTeams onViewChange={handleViewChange} />
         ) : currentView === 'sih-2025-finalists' ? (
           <SIH2025Finalists onViewChange={handleViewChange} />
         ) : currentView === 'sih-2026-winners' ? (

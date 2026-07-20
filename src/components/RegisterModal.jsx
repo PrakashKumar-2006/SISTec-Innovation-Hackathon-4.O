@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Send, CheckCircle2, AlertCircle, Upload, ArrowLeft, ArrowRight, Check, Eye, CreditCard, RotateCcw } from 'lucide-react';
-import { problemStatements } from '../data/problemStatements';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
 // ---------------------------------------------------------------------------
 // RegistrationSession — localStorage auto-save & recovery utility
@@ -80,15 +81,12 @@ const defaultFormData = {
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
-    // If Razorpay is already loaded (e.g. user clicked Pay a second time), resolve immediately
     if (window.Razorpay) {
       resolve(true);
       return;
     }
-    // Also avoid appending a duplicate script tag if one is already in the DOM
     const existing = document.querySelector('script[src*="checkout.razorpay.com"]');
     if (existing) {
-      // Script is in DOM but window.Razorpay isn't ready yet — wait for its load event
       existing.addEventListener('load', () => resolve(true));
       existing.addEventListener('error', () => resolve(false));
       return;
@@ -102,14 +100,24 @@ const loadRazorpayScript = () => {
 };
 
 export default function RegisterModal({ onClose }) {
-  // ---------------------------------------------------------------------------
+  const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+  // Fetch Problem Statements from Backend
+  const { data: problemStatements = [], isLoading: isLoadingPS } = useQuery({
+    queryKey: ['publicProblemStatements'],
+    queryFn: async () => {
+      const response = await axios.get(`${backendUrl}/api/public/problem-statements`);
+      return response.data.data;
+    }
+  });
+
+  const uniqueDomains = [...new Set(problemStatements.map(item => item.domain))];
+
   // Lazy initializers — restore from saved session if available
-  // ---------------------------------------------------------------------------
   const [step, setStep] = useState(() => RegistrationSession.load()?.step ?? 1);
   const [formData, setFormData] = useState(() => {
     const saved = RegistrationSession.load();
     if (!saved) return defaultFormData;
-    // Re-hydrate: file metadata placeholders become null (File cannot be stored)
     const hydrated = { ...defaultFormData };
     for (const [key, val] of Object.entries(saved.formData)) {
       hydrated[key] = (val && val.__fileMeta) ? null : val;
@@ -117,7 +125,6 @@ export default function RegisterModal({ onClose }) {
     return hydrated;
   });
 
-  // Track whether we recovered a session and which files need re-uploading
   const [recoveredSession, setRecoveredSession] = useState(() => {
     const saved = RegistrationSession.load();
     if (!saved) return false;
@@ -131,7 +138,6 @@ export default function RegisterModal({ onClose }) {
     if (saved.formData?.consentLetter?.__fileMeta) files.push({ field: 'consentLetter', name: saved.formData.consentLetter.name });
     return files;
   });
-  // Store file metadata separately so we can show the "re-upload" hint even after clearing recovery banner
   const [fileMetaHints, setFileMetaHints] = useState(() => {
     const saved = RegistrationSession.load();
     if (!saved) return {};
@@ -145,14 +151,10 @@ export default function RegisterModal({ onClose }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [registrationResult, setRegistrationResult] = useState(null);
 
-  // Debounce timer ref for auto-save
   const autoSaveTimerRef = useRef(null);
 
-  // ---------------------------------------------------------------------------
-  // Auto-save effect — fires 400ms after any change to step or formData
-  // ---------------------------------------------------------------------------
   useEffect(() => {
-    if (registrationResult) return; // Don't save after successful registration
+    if (registrationResult) return;
     if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
     autoSaveTimerRef.current = setTimeout(() => {
       RegistrationSession.save(step, formData);
@@ -168,7 +170,6 @@ export default function RegisterModal({ onClose }) {
       ...prev,
       [name]: value,
     }));
-    // Clear error for this field
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
     }
@@ -177,13 +178,12 @@ export default function RegisterModal({ onClose }) {
   const handleFileChange = (e, fieldName) => {
     const file = e.target.files[0];
     if (file) {
-      const maxSizeBytes = 20 * 1024 * 1024; // 20MB
+      const maxSizeBytes = 20 * 1024 * 1024;
       if (file.size > maxSizeBytes) {
         setErrors((prev) => ({ 
           ...prev, 
           [fieldName]: `File is too large. Maximum limit is 20MB (Your file: ${(file.size / (1024 * 1024)).toFixed(1)}MB).` 
         }));
-        // Reset file input element value so they can re-select
         e.target.value = '';
         setFormData((prev) => ({
           ...prev,
@@ -196,7 +196,6 @@ export default function RegisterModal({ onClose }) {
         ...prev,
         [fieldName]: file,
       }));
-      // Once user selects a real file, remove the recovery hint for this field
       setFileMetaHints((prev) => { const next = { ...prev }; delete next[fieldName]; return next; });
       if (errors[fieldName]) {
         setErrors((prev) => ({ ...prev, [fieldName]: null }));
@@ -230,7 +229,6 @@ export default function RegisterModal({ onClose }) {
     }
 
     if (currentStep === 2) {
-      // Validate members if they have entered partial information
       const validateMember = (index) => {
         const name = formData[`member${index}Name`]?.trim();
         const email = formData[`member${index}Email`]?.trim();
@@ -284,8 +282,6 @@ export default function RegisterModal({ onClose }) {
     if (!file) return;
     try {
       const url = URL.createObjectURL(file);
-      // Use a programmatic anchor click instead of window.open() to avoid
-      // Chrome showing the "about:blank - not secure" popup for blob URLs.
       const a = document.createElement('a');
       a.href = url;
       a.target = '_blank';
@@ -293,7 +289,6 @@ export default function RegisterModal({ onClose }) {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      // Revoke the object URL after 5s to free memory once the browser has loaded it
       setTimeout(() => URL.revokeObjectURL(url), 5000);
     } catch (err) {
       console.error('Failed to create file preview:', err);
@@ -312,7 +307,6 @@ export default function RegisterModal({ onClose }) {
 
     try {
       const submitData = new FormData();
-      // Step 1 fields
       submitData.append('teamName', formData.teamName);
       submitData.append('leaderName', formData.leaderName);
       submitData.append('leaderEmail', formData.leaderEmail);
@@ -321,7 +315,6 @@ export default function RegisterModal({ onClose }) {
       submitData.append('theme', formData.theme);
       submitData.append('instituteName', formData.instituteName);
 
-      // Step 2 fields: create members array
       const members = [];
       for (let i = 1; i <= 4; i++) {
         const name = formData[`member${i}Name`]?.trim();
@@ -336,18 +329,11 @@ export default function RegisterModal({ onClose }) {
       }
       submitData.append('members', JSON.stringify(members));
 
-      // Step 3 fields
       submitData.append('psid', formData.psid);
       submitData.append('psTitle', formData.psTitle);
       submitData.append('ideaPpt', formData.ideaPpt);
       submitData.append('consentLetter', formData.consentLetter);
 
-      // Send details to Backend API to create Razorpay Order
-      const backendUrl = import.meta.env.VITE_API_URL !== undefined 
-        ? import.meta.env.VITE_API_URL 
-        : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-          ? 'http://localhost:5000'
-          : '';
       const response = await fetch(`${backendUrl}/api/register`, {
         method: 'POST',
         body: submitData,
@@ -357,7 +343,7 @@ export default function RegisterModal({ onClose }) {
       try {
         data = await response.json();
       } catch (parseErr) {
-        data = { error: `Server error (${response.status}). Please check your file size (Max 10MB).` };
+        data = { error: `Server error (${response.status}).` };
       }
 
       if (!response.ok) {
@@ -367,7 +353,6 @@ export default function RegisterModal({ onClose }) {
       }
 
       if (data.alreadyRegistered) {
-        // Success Restoration: The user is already registered and paid
         RegistrationSession.clear();
         setRegistrationResult({
           success: true,
@@ -379,7 +364,6 @@ export default function RegisterModal({ onClose }) {
         return;
       }
 
-      // Load Razorpay Script dynamically
       const isLoaded = await loadRazorpayScript();
       if (!isLoaded) {
         setErrors({ submit: 'Failed to load Razorpay checkout overlay. Check your internet connection.' });
@@ -387,7 +371,6 @@ export default function RegisterModal({ onClose }) {
         return;
       }
 
-      // Configure checkout options
       const options = {
         key: data.keyId,
         amount: data.amount,
@@ -410,7 +393,6 @@ export default function RegisterModal({ onClose }) {
 
             const verifyData = await verifyRes.json();
             if (verifyRes.ok) {
-              // Clear saved draft — registration completed successfully
               RegistrationSession.clear();
               setRegistrationResult(verifyData);
             } else {
@@ -428,7 +410,7 @@ export default function RegisterModal({ onClose }) {
           email: data.leaderEmail,
           contact: data.leaderPhone,
         },
-        theme: { color: '#D8AB55' }, // Match gold branding
+        theme: { color: '#D8AB55' },
         modal: {
           ondismiss: function () {
             setIsSubmitting(false);
@@ -438,7 +420,6 @@ export default function RegisterModal({ onClose }) {
 
       const rzp = new window.Razorpay(options);
 
-      // Surface payment failure errors to the user
       rzp.on('payment.failed', function (response) {
         const reason = response?.error?.description || response?.error?.reason || 'Payment failed.';
         const code = response?.error?.code ? ` (${response.error.code})` : '';
@@ -463,11 +444,8 @@ export default function RegisterModal({ onClose }) {
     { num: 5, title: 'Payment' },
   ];
 
-  const isPredefined = problemStatements.some(ps => ps.psNumber === formData.psid && formData.psid !== '');
-
   return (
     <div className="fixed inset-0 w-full h-full bg-[#080809] z-[100] overflow-y-auto flex flex-col font-sans">
-      {/* Secure Header */}
       <div className="w-full bg-[#0D0D0F]/85 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-20">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -479,8 +457,6 @@ export default function RegisterModal({ onClose }) {
           <button
             onClick={() => {
               if (window.confirm("Are you sure you want to exit? Your progress will be saved and restored when you return.")) {
-                // User chose to exit but we keep the draft — they can resume later.
-                // If they want to truly discard, they can clear via browser DevTools or session expiry.
                 onClose();
               }
             }}
@@ -492,20 +468,17 @@ export default function RegisterModal({ onClose }) {
         </div>
       </div>
 
-      {/* Main Page Container */}
       <div className="flex-grow flex items-center justify-center p-4 sm:p-8">
         <div className="relative w-full max-w-4xl bg-transparent sm:bg-[#0F0F11] border-none sm:border sm:border-slate-800/80 rounded-3xl p-4 sm:p-8 shadow-none sm:shadow-2xl z-10">
 
         {!registrationResult ? (
           <>
-            {/* Form Title */}
             <div className="text-center space-y-2 mb-6">
               <h3 className="text-3xl font-bold font-display text-gold-metallic tracking-tight">
                 SIH 4.0 Registration Form
               </h3>
             </div>
 
-            {/* Session Recovery Banner */}
             {recoveredSession && (
               <div className="mb-6 p-4 rounded-2xl bg-amber-950/30 border border-amber-700/50 flex items-start gap-3 animate-fade-in">
                 <div className="mt-0.5 text-amber-400 shrink-0">
@@ -542,9 +515,7 @@ export default function RegisterModal({ onClose }) {
               </div>
             )}
 
-            {/* Horizontal Steps Progress Indicator (Desktop) */}
             <div className="hidden md:flex relative justify-between items-center max-w-2xl mx-auto mb-10 px-4">
-              {/* Progress Line */}
               <div className="absolute top-5 left-10 right-10 h-[2px] bg-slate-800 -z-10">
                 <div 
                   className="h-full bg-brand-gold transition-all duration-500 ease-out shadow-[0_0_8px_#D8AB55]"
@@ -584,7 +555,6 @@ export default function RegisterModal({ onClose }) {
               })}
             </div>
 
-            {/* Mobile Progress Indicator */}
             <div className="flex md:hidden flex-col items-center max-w-xs mx-auto mb-8 px-4 space-y-2 text-center">
               <span className="text-[10px] font-bold tracking-widest text-brand-gold uppercase">
                 Step {step} of 5
@@ -600,11 +570,9 @@ export default function RegisterModal({ onClose }) {
               </div>
             </div>
 
-            {/* Steps Container */}
             <div className="bg-transparent sm:bg-[#161619] rounded-3xl p-0 sm:p-8 border-none sm:border sm:border-slate-800/80 min-h-[450px] sm:min-h-[500px] flex flex-col justify-between shadow-none sm:shadow-lg">
               <div className="flex-grow">
               
-              {/* Error Alert */}
               {errors.submit && (
                 <div className="mb-6 p-4 rounded-xl bg-red-950/20 border border-red-900/50 text-red-400 text-sm flex items-center gap-2">
                   <AlertCircle size={18} />
@@ -612,7 +580,6 @@ export default function RegisterModal({ onClose }) {
                 </div>
               )}
 
-              {/* Step 1: Team Details */}
               {step === 1 && (
                 <div className="animate-fade-in space-y-5 text-left">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -670,13 +637,16 @@ export default function RegisterModal({ onClose }) {
                           errors.theme ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
                         } focus:outline-none text-sm text-white transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner cursor-pointer`}
                       >
-                        <option value="" disabled className="text-slate-500 bg-[#080809]">Select Theme</option>
-                        <option value="AI & Open Innovation" className="bg-[#121214] text-white">AI & Open Innovation</option>
-                        <option value="AgriTech" className="bg-[#121214] text-white">AgriTech</option>
-                        <option value="EduTech" className="bg-[#121214] text-white">EduTech</option>
-                        <option value="Healthcare & Biotech" className="bg-[#121214] text-white">Healthcare & Biotech</option>
-                        <option value="Fintech & Web3" className="bg-[#121214] text-white">Fintech & Web3</option>
-                        <option value="Smart Automation" className="bg-[#121214] text-white">Smart Automation</option>
+                        {isLoadingPS ? (
+                          <option value="" disabled className="text-slate-500 bg-[#080809]">Loading Themes...</option>
+                        ) : (
+                          <option value="" disabled className="text-slate-500 bg-[#080809]">Select Theme</option>
+                        )}
+                        {!isLoadingPS && uniqueDomains.map((domain) => (
+                          <option key={domain} value={domain} className="bg-[#121214] text-white">
+                            {domain}
+                          </option>
+                        ))}
                       </select>
                       {errors.theme && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -775,7 +745,6 @@ export default function RegisterModal({ onClose }) {
                 </div>
               )}
 
-              {/* Step 2: Team Member Details */}
               {step === 2 && (
                 <div className="space-y-6 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar text-left">
                   {[1, 2, 3, 4].map((num) => (
@@ -868,12 +837,9 @@ export default function RegisterModal({ onClose }) {
                 </div>
               )}
 
-              {/* Step 3: Solution */}
               {step === 3 && (
                 <div className="space-y-6 text-left">
-                  {/* Problem Statement Fields */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* PSID Dropdown */}
                     <div>
                       <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase text-left">
                         PSID (Problem Statement ID)
@@ -887,19 +853,24 @@ export default function RegisterModal({ onClose }) {
                           setFormData(prev => ({
                             ...prev,
                             psid: selectedId,
-                            psTitle: psObj ? psObj.statement : prev.psTitle
+                            psTitle: psObj ? psObj.title : prev.psTitle
                           }));
                         }}
                         className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
                           errors.psid ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
                         } focus:outline-none text-sm text-white transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner cursor-pointer`}
                       >
-                        <option value="" className="text-slate-500 bg-[#080809]">Select PSID...</option>
-                        {problemStatements.map((ps) => (
-                          <option key={ps.psNumber} value={ps.psNumber} className="bg-[#080809] text-white">
-                            {ps.psNumber}
-                          </option>
-                        ))}
+                      {isLoadingPS ? (
+                        <option value="">Loading Problem Statements...</option>
+                      ) : (
+                        <option value="">Select a Problem Statement...</option>
+                      )}
+                      
+                      {!isLoadingPS && problemStatements.map((ps) => (
+                        <option key={ps.psNumber} value={ps.psNumber} className="bg-brand-dark text-white">
+                          {ps.psNumber} — {ps.domain} — {ps.title}
+                        </option>
+                      ))}
                       </select>
                       {errors.psid && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">

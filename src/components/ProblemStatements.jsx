@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { createPortal } from 'react-dom';
+import axios from 'axios';
 import { Search, X, Building2, Cpu, Sparkles, AlertCircle, Filter, Tag } from 'lucide-react';
-import { problemStatements } from '../data/problemStatements';
+import ClickRipple from './ClickRipple';
+
+// Configuration
+const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const getDomainTheme = (domain) => {
   const d = domain.toLowerCase();
@@ -73,6 +79,15 @@ export default function ProblemStatements() {
   const [selectedDomain, setSelectedDomain] = useState('All');
   const [activeModalItem, setActiveModalItem] = useState(null);
 
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['publicProblemStatements'],
+    queryFn: async () => {
+      const response = await axios.get(`${backendUrl}/api/public/problem-statements`);
+      return response.data.data;
+    }
+  });
+
+  const problemStatements = data || [];
   // Unique domains for select options
   const uniqueDomains = ['All', ...new Set(problemStatements.map(item => item.domain))];
 
@@ -80,7 +95,7 @@ export default function ProblemStatements() {
   const filteredStatements = problemStatements.filter(item => {
     const matchesSearch = 
       item.org.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.statement.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.psNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.domain.toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -112,11 +127,27 @@ export default function ProblemStatements() {
           </p>
         </div>
 
-        {/* Uniform Filters Dashboard */}
-        <div 
-          style={{ animationDelay: '100ms' }}
-          className="p-6 rounded-[2rem] bg-brand-card/30 backdrop-blur-md border border-white/5 shadow-card-shadow mb-10 animate-fade-in opacity-0"
-        >
+        {/* Loading / Error States */}
+        {isLoading && (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-gold"></div>
+          </div>
+        )}
+
+        {isError && (
+          <div className="text-center py-20">
+            <p className="text-red-400">Failed to load problem statements. Please try again later.</p>
+          </div>
+        )}
+
+        {/* Filters and Grid */}
+        {!isLoading && !isError && (
+          <>
+            {/* Uniform Filters Dashboard */}
+            <div 
+              style={{ animationDelay: '100ms' }}
+              className="p-6 rounded-[2rem] bg-brand-card/30 backdrop-blur-md border border-white/5 shadow-card-shadow mb-10 animate-fade-in opacity-0"
+            >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Search Input Box */}
@@ -220,7 +251,7 @@ export default function ProblemStatements() {
                     >
                       {/* S.No */}
                       <td className="px-6 py-5 text-sm font-bold text-white/90 font-mono">
-                        {item.sNo}
+                        {idx + 1}
                       </td>
 
                       {/* Sponsoring Organization */}
@@ -231,7 +262,7 @@ export default function ProblemStatements() {
                       {/* Problem Statement */}
                       <td className="px-6 py-5 text-xs text-white font-medium leading-relaxed max-w-md">
                         <span className="block border-l-2 border-brand-gold pl-3">
-                          {item.statement}
+                          {item.title || item.statement}
                         </span>
                       </td>
 
@@ -344,7 +375,7 @@ export default function ProblemStatements() {
         </div>
 
         {/* Detailed Modal Overlay */}
-        {activeModalItem && (
+        {activeModalItem && createPortal(
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             <div 
               className="absolute inset-0 bg-brand-darker/80 backdrop-blur-md"
@@ -386,7 +417,7 @@ export default function ProblemStatements() {
                     <Sparkles size={10} className="text-brand-gold shrink-0" /> Problem Statement Summary
                   </h4>
                   <p className="text-xs sm:text-sm text-white font-medium leading-relaxed bg-brand-dark/45 p-4 rounded-2xl border-l-4 border-brand-gold border-y border-r border-white/5">
-                    {activeModalItem.statement}
+                    {activeModalItem.title || activeModalItem.statement}
                   </p>
                 </div>
 
@@ -416,8 +447,9 @@ export default function ProblemStatements() {
 
             </div>
           </div>
+        , document.body)}
+        </>
         )}
-
       </div>
     </section>
   );

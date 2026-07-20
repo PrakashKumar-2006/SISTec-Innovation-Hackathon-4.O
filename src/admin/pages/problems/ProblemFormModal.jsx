@@ -121,7 +121,7 @@ export default function ProblemFormModal({ isOpen, onClose, onSubmit, initialDat
             </div>
 
             <div className="space-y-2 md:col-span-2">
-              <Label>Title <span className="text-destructive">*</span></Label>
+              <Label>Problem Statement / Title <span className="text-destructive">*</span></Label>
               <Input 
                 {...register('title')} 
                 placeholder="Problem statement title..." 

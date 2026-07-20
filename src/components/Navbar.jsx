@@ -62,8 +62,14 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
     {
       name: 'Result',
       dropdown: [
+<<<<<<< HEAD
         { name: 'Grand Finale Teams', href: '#prizes' },
         { name: 'Winner of SIH 2026', href: '#prizes' }
+=======
+        { name: 'Shortlisted Teams', view: 'shortlisted-teams' },
+        { name: 'Grand Finale Teams', view: 'sih-2026-finalists' },
+        { name: 'Winner Of SIH 2026', view: 'sih-2026-winners' }
+>>>>>>> e496a97fbd83403df13d47bb62cf2b9609503430
       ]
     },
     {
@@ -174,7 +180,9 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                   href={sub.href}
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    if (sub.name === 'Instructions') {
+                                    if (sub.view) {
+                                      onViewChange && onViewChange(sub.view);
+                                    } else if (sub.name === 'Instructions') {
                                       onViewChange && onViewChange('instructions');
                                     } else if (sub.name === 'About SIH') {
                                       onViewChange && onViewChange('about-sih');
@@ -329,7 +337,9 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                     onClick={(e) => {
                                       e.preventDefault();
                                       setIsOpen(false);
-                                      if (sub.name === 'Instructions') {
+                                      if (sub.view) {
+                                        onViewChange && onViewChange(sub.view);
+                                      } else if (sub.name === 'Instructions') {
                                         onViewChange && onViewChange('instructions');
                                       } else if (sub.name === 'About SIH') {
                                         onViewChange && onViewChange('about-sih');

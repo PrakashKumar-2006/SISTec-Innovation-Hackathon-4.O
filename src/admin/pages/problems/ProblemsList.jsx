@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { problemsService } from '../../services/problems.service';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../hooks/use-toast';
-import { Plus, Search, Eye, Edit, Trash2, Archive, RefreshCw } from 'lucide-react';
+import { Plus, Search, Eye, Edit, Trash2, Archive, RefreshCw, Upload, Download, FileSpreadsheet } from 'lucide-react';
 import { DataTable } from '../../components/table/DataTable';
 import { PageHeader } from '../../components/navigation/PageHeader';
 import { Button } from '../../components/ui/button';
@@ -60,6 +60,61 @@ export default function ProblemsList() {
       toast({ title: 'Failed to create', description: err.response?.data?.message || err.message, variant: 'destructive' });
     }
   });
+
+  const importMutation = useMutation({
+    mutationFn: problemsService.importProblems,
+    onSuccess: (data) => {
+      toast({ title: 'Import successful', description: `Inserted: ${data.data.data.inserted}, Updated: ${data.data.data.updated}`, variant: 'success' });
+      queryClient.invalidateQueries(['problems']);
+    },
+    onError: (err) => {
+      toast({ title: 'Import failed', description: err.response?.data?.message || err.message, variant: 'destructive' });
+    }
+  });
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // Check file type
+    if (!file.name.match(/\.(xlsx|xls)$/)) {
+      toast({ title: 'Invalid file', description: 'Please upload a valid Excel file', variant: 'destructive' });
+      return;
+    }
+    
+    importMutation.mutate(file);
+    event.target.value = ''; // Reset input
+  };
+
+  const handleExport = async () => {
+    try {
+      const blob = await problemsService.exportProblems();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'problem_statements.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      toast({ title: 'Export failed', description: 'Failed to download excel file', variant: 'destructive' });
+    }
+  };
+
+  const handleDownloadTemplate = async () => {
+    try {
+      const blob = await problemsService.downloadTemplate();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'problem_statements_template.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      toast({ title: 'Template download failed', description: 'Failed to download template', variant: 'destructive' });
+    }
+  };
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => problemsService.updateProblem(id, data),
@@ -209,18 +264,50 @@ export default function ProblemsList() {
   }
 
   return (
-    <div className="space-y-6 pb-12">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <PageHeader 
-          title="Problem Statements" 
-          description="Manage hackathon problem statements, categories, and domains." 
-        />
-        {canEdit && (
-          <Button onClick={handleOpenCreateModal} className="bg-brand-gold text-brand-dark hover:bg-brand-teal font-medium rounded-full shadow-cyan-glow">
-            <Plus className="h-4 w-4 mr-2" /> Add Problem Statement
-          </Button>
-        )}
-      </div>
+    <div className="space-y-6">
+      <PageHeader 
+        title="Problem Statements" 
+        description="Manage hackathon problem statements, categories, and domains."
+        action={
+          canEdit && (
+            <div className="flex gap-2">
+              <input 
+                type="file" 
+                id="excel-upload" 
+                className="hidden" 
+                accept=".xlsx, .xls"
+                onChange={handleFileUpload}
+              />
+              <Button 
+                variant="outline" 
+                onClick={handleDownloadTemplate}
+              >
+                <FileSpreadsheet className="h-4 w-4 mr-2" />
+                Template
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => document.getElementById('excel-upload').click()}
+                disabled={importMutation.isLoading}
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                {importMutation.isLoading ? 'Importing...' : 'Import'}
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={handleExport}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+              <Button onClick={() => { setEditingProblem(null); setIsModalOpen(true); }}>
+                <Plus className="h-4 w-4 mr-2" />
+                Add Problem Statement
+              </Button>
+            </div>
+          )
+        }
+      />
 
       {/* Filters and Search */}
       <div className="bg-brand-card rounded-2xl p-4 border border-brand-purple/20 shadow-card-shadow flex flex-col md:flex-row gap-4 items-center justify-between">

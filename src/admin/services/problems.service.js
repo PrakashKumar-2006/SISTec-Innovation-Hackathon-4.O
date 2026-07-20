@@ -24,5 +24,28 @@ export const problemsService = {
   // Toggle problem statement status (Active/Inactive)
   updateProblemStatus: async (id, status) => {
     return api.patch(`/problems/${id}/status`, { status });
+  },
+
+  // Export problem statements to Excel
+  exportProblems: async () => {
+    const response = await api.get('/problems/export/excel', { responseType: 'blob' });
+    return response.data;
+  },
+
+  // Download template for import
+  downloadTemplate: async () => {
+    const response = await api.get('/problems/export/template', { responseType: 'blob' });
+    return response.data;
+  },
+
+  // Import problem statements from Excel
+  importProblems: async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post('/problems/import', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
   }
 };
