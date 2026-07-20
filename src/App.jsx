@@ -125,6 +125,7 @@ export default function App() {
       <NotificationToast
         onRegisterClick={() => setShowRegister(true)}
         onViewChange={handleViewChange}
+        isRegisterOpen={showRegister}
       />
     </div>
   );

@@ -2,11 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { CalendarCheck, Rocket, Flag, Award, ClipboardList } from 'lucide-react';
 
 export default function Timeline({ isStandalone = false }) {
-  const [animate, setAnimate] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const [currentFocus, setCurrentFocus] = useState(-1);
 
   useEffect(() => {
-    setAnimate(true);
+    // Phase 1: Slow, elegant entrance sequence with path drawing & step activation
+    const timers = [
+      setTimeout(() => { setActiveStep(1); setCurrentFocus(0); }, 300),   // Draw Step 1, highlight Step 1
+      setTimeout(() => { setActiveStep(2); setCurrentFocus(1); }, 2500),  // Draw Step 2, highlight Step 2
+      setTimeout(() => { setActiveStep(3); setCurrentFocus(2); }, 4700),  // Draw Step 3, highlight Step 3
+      setTimeout(() => { setActiveStep(4); setCurrentFocus(3); }, 6900),  // Draw Step 4, highlight Step 4
+      setTimeout(() => { setActiveStep(5); setCurrentFocus(4); }, 9110),  // Draw Step 5, highlight Step 5
+      setTimeout(() => { setActiveStep(6); }, 11300)                     // All steps loaded
+    ];
+    return () => timers.forEach(clearTimeout);
   }, []);
+
+  // Phase 2: Shifting active glow loop once all cards are loaded (Slowed down to 4.5s)
+  useEffect(() => {
+    if (activeStep < 6) return;
+
+    const interval = setInterval(() => {
+      setCurrentFocus((prev) => (prev + 1) % 5);
+    }, 4500); // Switch highlighted step every 4.5 seconds (relaxed pace)
+
+    return () => clearInterval(interval);
+  }, [activeStep]);
 
   const events = [
     {
@@ -16,9 +37,10 @@ export default function Timeline({ isStandalone = false }) {
       desc: 'Unveiling challenges to ignite innovative solutions in diverse domains.',
       icon: ClipboardList,
       iconColor: 'text-brand-gold',
-      color: 'from-amber-500/15 to-orange-600/5',
-      borderColor: 'border-amber-500/30 group-hover:border-amber-500/60',
-      glow: 'shadow-[0_0_25px_rgba(245,158,11,0.12)] hover:shadow-[0_0_35px_rgba(245,158,11,0.25)]',
+      color: 'from-amber-500/10 to-orange-600/5',
+      borderColor: 'border-amber-500/20 group-hover:border-amber-500/50',
+      activeColor: 'from-amber-500/25 to-orange-500/10 border-amber-400/80 shadow-[0_0_35px_rgba(245,158,11,0.28)]',
+      glow: 'shadow-[0_0_15px_rgba(245,158,11,0.06)]',
       progressColor: 'from-brand-gold to-yellow-300',
       highlights: ['12+ Domains', 'Curated Statements', 'Open Track Active'],
       themeColor: '#D8AB55',
@@ -34,9 +56,10 @@ export default function Timeline({ isStandalone = false }) {
       desc: 'Participants sign up for the engaging hackathon and complete profile verification.',
       icon: CalendarCheck,
       iconColor: 'text-purple-400',
-      color: 'from-purple-500/15 to-indigo-600/5',
-      borderColor: 'border-purple-500/30 group-hover:border-purple-500/60',
-      glow: 'shadow-[0_0_25px_rgba(139,92,246,0.12)] hover:shadow-[0_0_35px_rgba(139,92,246,0.25)]',
+      color: 'from-purple-500/10 to-indigo-600/5',
+      borderColor: 'border-purple-500/20 group-hover:border-purple-500/50',
+      activeColor: 'from-purple-500/25 to-indigo-500/10 border-purple-400/80 shadow-[0_0_35px_rgba(139,92,246,0.28)]',
+      glow: 'shadow-[0_0_15px_rgba(139,92,246,0.06)]',
       progressColor: 'from-purple-500 to-purple-300',
       highlights: ['Online Register', '2-4 Members/Team', 'Verification Check'],
       themeColor: '#8B5CF6',
@@ -52,9 +75,10 @@ export default function Timeline({ isStandalone = false }) {
       desc: 'Expert panel evaluates proposals and determines qualified entries for the grand hackathon.',
       icon: Flag,
       iconColor: 'text-cyan-400',
-      color: 'from-cyan-500/15 to-blue-600/5',
-      borderColor: 'border-cyan-500/30 group-hover:border-cyan-500/60',
-      glow: 'shadow-[0_0_25px_rgba(6,182,212,0.12)] hover:shadow-[0_0_35px_rgba(6,182,212,0.25)]',
+      color: 'from-cyan-500/10 to-blue-600/5',
+      borderColor: 'border-cyan-500/20 group-hover:border-cyan-500/50',
+      activeColor: 'from-cyan-500/25 to-blue-500/10 border-cyan-400/80 shadow-[0_0_35px_rgba(6,182,212,0.28)]',
+      glow: 'shadow-[0_0_15px_rgba(6,182,212,0.06)]',
       progressColor: 'from-cyan-500 to-cyan-300',
       highlights: ['Proposal Review', 'Shortlist Release', 'Email Invites Sent'],
       themeColor: '#06B6D4',
@@ -70,9 +94,10 @@ export default function Timeline({ isStandalone = false }) {
       desc: 'Grand opening ceremony, fostering collaboration, mentorship kickoff, and round 1 evaluation.',
       icon: Rocket,
       iconColor: 'text-pink-400',
-      color: 'from-rose-500/15 to-red-600/5',
-      borderColor: 'border-rose-500/30 group-hover:border-rose-500/60',
-      glow: 'shadow-[0_0_25px_rgba(244,63,94,0.12)] hover:shadow-[0_0_35px_rgba(244,63,94,0.25)]',
+      color: 'from-rose-500/10 to-red-600/5',
+      borderColor: 'border-rose-500/20 group-hover:border-rose-500/50',
+      activeColor: 'from-rose-500/25 to-red-500/10 border-rose-400/80 shadow-[0_0_35px_rgba(244,63,94,0.28)]',
+      glow: 'shadow-[0_0_15px_rgba(244,63,94,0.06)]',
       progressColor: 'from-pink-500 to-pink-300',
       highlights: ['Mentorship Kick', '24h Continuous Build', 'Round 1 Eval'],
       themeColor: '#EC4899',
@@ -88,9 +113,10 @@ export default function Timeline({ isStandalone = false }) {
       desc: 'Recognizing outstanding student accomplishments, project presentations, and winner announcements.',
       icon: Award,
       iconColor: 'text-brand-gold',
-      color: 'from-amber-500/15 to-orange-600/5',
-      borderColor: 'border-amber-500/30 group-hover:border-amber-500/60',
-      glow: 'shadow-[0_0_25px_rgba(245,158,11,0.12)] hover:shadow-[0_0_35px_rgba(245,158,11,0.25)]',
+      color: 'from-amber-500/10 to-orange-600/5',
+      borderColor: 'border-amber-500/20 group-hover:border-amber-500/50',
+      activeColor: 'from-amber-500/25 to-orange-500/10 border-amber-400/80 shadow-[0_0_35px_rgba(245,158,11,0.28)]',
+      glow: 'shadow-[0_0_15px_rgba(245,158,11,0.06)]',
       progressColor: 'from-brand-gold to-yellow-300',
       highlights: ['Jury Pitching', 'Cash Reward Distribution', 'Incubation Support'],
       themeColor: '#D8AB55',
@@ -110,7 +136,7 @@ export default function Timeline({ isStandalone = false }) {
       {/* Grid Pattern Overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.007)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(255,255,255,0.007)_1.5px,transparent_1.5px)] bg-[size:30px_30px] opacity-35 pointer-events-none -z-10" />
 
-      {/* CSS Animation for Flowing Dashed Lines and Floating Cards */}
+      {/* CSS Animations for draw path and step sequence */}
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes dash-flow {
           0% { stroke-dashoffset: 24; }
@@ -129,6 +155,24 @@ export default function Timeline({ isStandalone = false }) {
         .timeline-card-float-3 { animation: card-float 5s ease-in-out infinite 2s; }
         .timeline-card-float-4 { animation: card-float 5s ease-in-out infinite 3s; }
         .timeline-card-float-5 { animation: card-float 5s ease-in-out infinite 4s; }
+
+        @keyframes draw-path {
+          from { stroke-dashoffset: 120; }
+          to { stroke-dashoffset: 0; }
+        }
+        .animate-draw-path {
+          stroke-dasharray: 120;
+          animation: draw-path 2.0s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes node-pop {
+          0% { transform: scale(0.6); opacity: 0; }
+          70% { transform: scale(1.15); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-node-pop {
+          animation: node-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
       `}} />
 
       <div className="max-w-[1300px] mx-auto px-4 sm:px-6 relative z-10">
@@ -140,13 +184,23 @@ export default function Timeline({ isStandalone = false }) {
           </h2>
         </div>
 
-        {/* ── Desktop Snaking central timeline (md:block only, hidden on mobile) ── */}
+        {/* ── Desktop Snaking central timeline ── */}
         <div className="hidden md:block max-w-5xl mx-auto relative">
           
           {events.map((ev, idx) => {
             const IconComponent = ev.icon;
-            const isLeftNode = ev.isLeftNode; // Original Mockup Curve coordinates (41.6% and 58.3%)
+            const isLeftNode = ev.isLeftNode; // Original Mockup Curve coordinates
+            const pathD = isLeftNode 
+              ? "M 50 0 C 50 20, 41.6 20, 41.6 50 C 41.6 80, 50 80, 50 100" 
+              : "M 50 0 C 50 20, 58.3 20, 58.3 50 C 58.3 80, 50 80, 50 100";
             
+            const isPathActive = activeStep > idx;
+            const isNodeActive = activeStep > idx;
+            const isCardActive = activeStep > idx;
+            
+            // Check if this specific step is currently focused/highlighted
+            const isFocused = currentFocus === idx;
+
             return (
               <div 
                 key={idx}
@@ -156,37 +210,56 @@ export default function Timeline({ isStandalone = false }) {
                 <div className="absolute inset-0 w-full h-full pointer-events-none z-10">
                   <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none">
                     
-                    {/* Centered Mockup Curve Path */}
+                    {/* Background Static Path (Dark grey/uncompleted) */}
                     <path 
-                      d={isLeftNode ? "M 50 0 C 50 20, 41.6 20, 41.6 50 C 41.6 80, 50 80, 50 100" : "M 50 0 C 50 20, 58.3 20, 58.3 50 C 58.3 80, 50 80, 50 100"} 
-                      stroke="#D8AB55" 
+                      d={pathD} 
+                      stroke="rgba(255,255,255,0.06)" 
                       strokeWidth="2.5" 
-                      className="opacity-70"
                       vectorEffect="non-scaling-stroke"
                     />
+
+                    {/* Active Drawing S-Curve Path - Draw speed slowed to 2.0s */}
+                    {isPathActive && (
+                      <path 
+                        d={pathD} 
+                        stroke={isFocused ? "#FFFFFF" : ev.themeColor} 
+                        strokeWidth={isFocused ? "3.2" : "2.8"} 
+                        className={`transition-all duration-500 ${activeStep === idx + 1 ? 'animate-draw-path' : ''}`}
+                        style={{
+                          strokeDasharray: '120',
+                          strokeDashoffset: activeStep > idx + 1 ? '0' : '120',
+                          filter: isFocused ? `drop-shadow(0 0 6px ${ev.themeColor})` : 'none'
+                        }}
+                        vectorEffect="non-scaling-stroke"
+                      />
+                    )}
 
                     {/* Horizontal Connector Pin-Line between Node and Card */}
-                    <line 
-                      x1={isLeftNode ? "41.6" : "58.3"} 
-                      y1="50" 
-                      x2="50" 
-                      y2="50" 
-                      stroke={ev.themeColor} 
-                      strokeWidth="2" 
-                      strokeDasharray="4 4"
-                      className="animate-dash-flow opacity-80"
-                      vectorEffect="non-scaling-stroke"
-                    />
+                    {isNodeActive && (
+                      <line 
+                        x1={isLeftNode ? "41.6" : "58.3"} 
+                        y1="50" 
+                        x2="50" 
+                        y2="50" 
+                        stroke={ev.themeColor} 
+                        strokeWidth={isFocused ? "2.5" : "2"} 
+                        strokeDasharray="4 4"
+                        className="animate-dash-flow opacity-80"
+                        vectorEffect="non-scaling-stroke"
+                      />
+                    )}
 
                     {/* Connector dot on card border edge */}
-                    <circle 
-                      cx="50" 
-                      cy="50" 
-                      r="4" 
-                      fill={ev.themeColor} 
-                      className="animate-pulse"
-                      style={{ filter: `drop-shadow(0 0 8px ${ev.themeColor})` }}
-                    />
+                    {isNodeActive && (
+                      <circle 
+                        cx="50" 
+                        cy="50" 
+                        r={isFocused ? "5.5" : "4"} 
+                        fill={ev.themeColor} 
+                        className="transition-all duration-300"
+                        style={{ filter: `drop-shadow(0 0 8px ${ev.themeColor})` }}
+                      />
+                    )}
                     
                   </svg>
                 </div>
@@ -197,18 +270,21 @@ export default function Timeline({ isStandalone = false }) {
                   {/* Left Column (Col 1 to 6) */}
                   <div className="col-span-6 flex justify-end pr-8">
                     {!isLeftNode && (
-                      /* Card on Left side (Step 2, 4) - Styled matching guidelines page colors and loop float animation */
+                      /* Card on Left side (Step 2, 4) - Highlighted with activeColor and extra scale if focused */
                       <div 
-                        style={{ transitionDelay: `${idx * 150}ms` }}
-                        className={`w-full max-w-[460px] transform transition-all duration-1000 cubic-bezier(0.16, 1, 0.3, 1) ${
-                          animate ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-16 opacity-0 scale-95'
-                        } ${ev.floatClass} relative group bg-gradient-to-br ${ev.color} backdrop-blur-md border ${ev.borderColor} ${ev.glow} rounded-2xl p-6 shadow-2xl hover:scale-[1.03] hover:rotate-[0.5deg] transition-all duration-500 text-left`}
+                        className={`w-full max-w-[460px] transform transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) ${
+                          isCardActive 
+                            ? `opacity-100 translate-y-0 ${isFocused ? 'scale-[1.05] z-30' : 'scale-100 opacity-90 z-20'} ${ev.floatClass}` 
+                            : 'opacity-0 translate-y-12 scale-95 pointer-events-none'
+                        } relative group bg-gradient-to-br ${
+                          isFocused ? ev.activeColor : `${ev.color} border ${ev.borderColor} ${ev.glow}`
+                        } backdrop-blur-md rounded-2xl p-6 shadow-2xl hover:scale-[1.06] hover:rotate-[0.5deg] transition-all duration-500 text-left`}
                       >
                         <div className="flex items-center gap-3 mb-3.5">
-                          <div className="w-8 h-8 rounded-lg bg-brand-darker border border-white/5 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
-                            <IconComponent className={`w-4 h-4 ${ev.iconColor}`} />
+                          <div className={`w-8 h-8 rounded-lg bg-brand-darker border ${isFocused ? 'border-brand-gold/45' : 'border-white/5'} flex items-center justify-center shadow-inner transition-colors`}>
+                            <IconComponent className={`w-4 h-4 ${ev.iconColor} ${isFocused ? 'animate-pulse' : ''}`} />
                           </div>
-                          <span className="text-xs font-black text-brand-gold font-mono tracking-wider">{ev.date}</span>
+                          <span className={`text-xs font-black font-mono tracking-wider transition-colors ${isFocused ? 'text-white' : 'text-brand-gold'}`}>{ev.date}</span>
                         </div>
                         <div className="space-y-2">
                           <h3 className="text-lg sm:text-xl font-extrabold text-white tracking-wide font-display group-hover:text-brand-gold transition-colors">{ev.title}</h3>
@@ -229,18 +305,21 @@ export default function Timeline({ isStandalone = false }) {
                   {/* Right Column (Col 7 to 12) */}
                   <div className="col-span-5 flex justify-start pl-8">
                     {isLeftNode && (
-                      /* Card on Right side (Step 1, 3, 5) - Styled matching guidelines page colors and loop float animation */
+                      /* Card on Right side (Step 1, 3, 5) - Highlighted with activeColor and extra scale if focused */
                       <div 
-                        style={{ transitionDelay: `${idx * 150}ms` }}
-                        className={`w-full max-w-[460px] transform transition-all duration-1000 cubic-bezier(0.16, 1, 0.3, 1) ${
-                          animate ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-16 opacity-0 scale-95'
-                        } ${ev.floatClass} relative group bg-gradient-to-br ${ev.color} backdrop-blur-md border ${ev.borderColor} ${ev.glow} rounded-2xl p-6 shadow-2xl hover:scale-[1.03] hover:rotate-[0.5deg] transition-all duration-500 text-left`}
+                        className={`w-full max-w-[460px] transform transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) ${
+                          isCardActive 
+                            ? `opacity-100 translate-y-0 ${isFocused ? 'scale-[1.05] z-30' : 'scale-100 opacity-90 z-20'} ${ev.floatClass}` 
+                            : 'opacity-0 translate-y-12 scale-95 pointer-events-none'
+                        } relative group bg-gradient-to-br ${
+                          isFocused ? ev.activeColor : `${ev.color} border ${ev.borderColor} ${ev.glow}`
+                        } backdrop-blur-md rounded-2xl p-6 shadow-2xl hover:scale-[1.06] hover:rotate-[0.5deg] transition-all duration-500 text-left`}
                       >
                         <div className="flex items-center gap-3 mb-3.5">
-                          <div className="w-8 h-8 rounded-lg bg-brand-darker border border-white/5 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
-                            <IconComponent className={`w-4 h-4 ${ev.iconColor}`} />
+                          <div className={`w-8 h-8 rounded-lg bg-brand-darker border ${isFocused ? 'border-brand-gold/45' : 'border-white/5'} flex items-center justify-center shadow-inner transition-colors`}>
+                            <IconComponent className={`w-4 h-4 ${ev.iconColor} ${isFocused ? 'animate-pulse' : ''}`} />
                           </div>
-                          <span className="text-xs font-black text-brand-gold font-mono tracking-wider">{ev.date}</span>
+                          <span className={`text-xs font-black font-mono tracking-wider transition-colors ${isFocused ? 'text-white' : 'text-brand-gold'}`}>{ev.date}</span>
                         </div>
                         <div className="space-y-2">
                           <h3 className="text-lg sm:text-xl font-extrabold text-white tracking-wide font-display group-hover:text-brand-gold transition-colors">{ev.title}</h3>
@@ -257,18 +336,41 @@ export default function Timeline({ isStandalone = false }) {
 
                 </div>
 
-                {/* Absolute Floating Nodes matching original mockup positions */}
+                {/* Absolute Floating Nodes with active pulsing sonar ring */}
                 <div 
                   className={`absolute top-1/2 -translate-y-1/2 ${
                     isLeftNode ? 'left-[41.6%]' : 'left-[58.3%]'
                   } -translate-x-1/2 z-30`}
+                  style={{ transform: 'translate(-50%, -50%)' }}
                 >
-                  <div 
-                    className={`w-16 h-16 rounded-full bg-[#0D0D11] border-2 ${ev.nodeBorder} flex flex-col items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300`}
-                    style={{ boxShadow: `0 0 15px ${ev.nodeGlow}` }}
-                  >
-                    <span className="text-[8px] font-black text-slate-400 tracking-widest leading-none">STEP</span>
-                    <span className="text-base font-black text-white mt-0.5 leading-none">{ev.num}</span>
+                  <div className="relative flex items-center justify-center w-24 h-24">
+                    {/* Sonar Ring for the active focused step */}
+                    {isNodeActive && isFocused && (
+                      <div 
+                        className="absolute w-24 h-24 rounded-full border-2 opacity-50 animate-[ping_1.8s_ease-out_infinite]"
+                        style={{ borderColor: ev.themeColor }}
+                      />
+                    )}
+
+                    {isNodeActive ? (
+                      <div 
+                        className={`w-16 h-16 rounded-full bg-[#0D0D11] border-2 ${ev.nodeBorder} flex flex-col items-center justify-center shadow-lg transition-all duration-500 animate-node-pop ${
+                          isFocused ? 'scale-110' : 'scale-100 opacity-90'
+                        }`}
+                        style={{ 
+                          boxShadow: isFocused ? `0 0 20px ${ev.nodeGlow}` : 'none'
+                        }}
+                      >
+                        <span className="text-[8px] font-black text-slate-400 tracking-widest leading-none">STEP</span>
+                        <span className="text-base font-black text-white mt-0.5 leading-none">{ev.num}</span>
+                      </div>
+                    ) : (
+                      /* Greyed out / disabled uncompleted step node */
+                      <div className="w-16 h-16 rounded-full bg-[#13131a]/60 border-2 border-slate-800/80 flex flex-col items-center justify-center text-slate-600">
+                        <span className="text-[8px] font-bold tracking-widest leading-none">STEP</span>
+                        <span className="text-base font-bold mt-0.5 leading-none">{ev.num}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -278,30 +380,68 @@ export default function Timeline({ isStandalone = false }) {
         </div>
 
         {/* ── Mobile Vertical Timeline (md:hidden) ── */}
-        <div className="md:hidden flex flex-col gap-10 max-w-xl mx-auto relative pl-6 text-left animate-fade-in">
-          {/* Vertical Connecting Line on Left */}
-          <div className="absolute left-6 top-3 bottom-3 w-[1.5px] bg-gradient-to-b from-brand-orange via-brand-pink to-brand-blue pointer-events-none"></div>
+        <div className="md:hidden flex flex-col gap-10 max-w-xl mx-auto relative pl-6 text-left">
+          
+          {/* Background vertical line (uncompleted) */}
+          <div className="absolute left-6 top-3 bottom-3 w-[1.5px] bg-slate-800/80 pointer-events-none" />
+
+          {/* Glowing active drawing vertical line */}
+          <div 
+            className="absolute left-6 top-3 w-[2px] bg-gradient-to-b from-brand-orange via-brand-pink to-brand-blue pointer-events-none transition-all duration-1000 ease-out"
+            style={{
+              height: `${Math.min(100, Math.max(0, (activeStep - 1) * 25))}%`,
+              maxHeight: '96%'
+            }}
+          />
 
           {events.map((ev, idx) => {
             const IconComponent = ev.icon;
+            const isStepActive = activeStep > idx;
+            const isFocused = currentFocus === idx;
+
             return (
               <div key={idx} className="flex gap-6 items-start relative group">
                 
                 {/* Left Timeline Step Node */}
-                <div 
-                  className={`w-12 h-12 rounded-full bg-[#0d0d11] border-2 ${ev.nodeBorder} flex flex-col items-center justify-center shrink-0 z-10`}
-                  style={{ boxShadow: `0 0 10px ${ev.nodeGlow}` }}
-                >
-                  <span className="text-[6px] font-black text-slate-400 tracking-widest leading-none">STEP</span>
-                  <span className="text-xs font-black text-white leading-none mt-0.5">{ev.num}</span>
+                <div className="relative shrink-0 z-10">
+                  {isStepActive && isFocused && (
+                    <div 
+                      className="absolute inset-0 rounded-full border-2 opacity-50 animate-[ping_1.8s_ease-out_infinite]"
+                      style={{ borderColor: ev.themeColor }}
+                    />
+                  )}
+                  {isStepActive ? (
+                    <div 
+                      className={`w-12 h-12 rounded-full bg-[#0d0d11] border-2 ${ev.nodeBorder} flex flex-col items-center justify-center animate-node-pop ${
+                        isFocused ? 'scale-105 shadow-lg' : 'scale-100 opacity-90'
+                      }`}
+                      style={{ boxShadow: isFocused ? `0 0 12px ${ev.nodeGlow}` : 'none' }}
+                    >
+                      <span className="text-[6px] font-black text-slate-400 tracking-widest leading-none">STEP</span>
+                      <span className="text-xs font-black text-white leading-none mt-0.5">{ev.num}</span>
+                    </div>
+                  ) : (
+                    /* Disabled state node */
+                    <div className="w-12 h-12 rounded-full bg-[#13131a] border-2 border-slate-800/80 flex flex-col items-center justify-center text-slate-600">
+                      <span className="text-[6px] font-bold tracking-widest leading-none">STEP</span>
+                      <span className="text-xs font-bold leading-none mt-0.5">{ev.num}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Right Detail Card */}
-                <div className={`w-full p-5 rounded-2xl bg-gradient-to-br ${ev.color} backdrop-blur-md border ${ev.borderColor} shadow-card-shadow ${ev.glow} relative overflow-hidden text-left`}>
-                  
+                <div 
+                  className={`w-full p-5 rounded-2xl bg-gradient-to-br ${
+                    isFocused ? ev.activeColor : `${ev.color} border ${ev.borderColor} ${ev.glow}`
+                  } backdrop-blur-md shadow-card-shadow relative overflow-hidden text-left transition-all duration-700 ${
+                    isStepActive 
+                      ? `opacity-100 translate-y-0 ${isFocused ? 'scale-[1.02]' : 'scale-100 opacity-95'}` 
+                      : 'opacity-0 translate-y-8 scale-95 pointer-events-none'
+                  }`}
+                >
                   {/* Date and Icon */}
                   <div className="flex items-center gap-3 mb-4 relative z-10">
-                    <div className="w-8 h-8 rounded-lg bg-brand-darker border border-white/5 flex items-center justify-center shadow-inner">
+                    <div className={`w-8 h-8 rounded-lg bg-brand-darker border ${isFocused ? 'border-brand-gold/45' : 'border-white/5'} flex items-center justify-center shadow-inner transition-colors`}>
                       <IconComponent className={`w-4 h-4 ${ev.iconColor}`} />
                     </div>
                     <span className="text-xs font-bold text-brand-gold font-mono">{ev.date}</span>
@@ -315,13 +455,13 @@ export default function Timeline({ isStandalone = false }) {
 
                   {/* Highlights tags */}
                   <div className="mt-5 pt-4 border-t border-white/5 flex flex-wrap gap-1.5 relative z-10">
-                    {ev.highlights.map((highlight, hIdx) => (
+                    {ev.highlights.map((highlight) => (
                       <span key={highlight} className="text-[9px] font-semibold text-brand-gray/90 bg-brand-darker/60 px-2 py-0.5 rounded border border-white/5">{highlight}</span>
                     ))}
                   </div>
 
                   {/* Bottom Border Accent Line */}
-                  <div className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-brand-orange via-brand-pink to-brand-blue pointer-events-none"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-brand-orange via-brand-pink to-brand-blue pointer-events-none" />
                 </div>
               </div>
             );

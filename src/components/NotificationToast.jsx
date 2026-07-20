@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Minus, Sparkles, Lightbulb, Bell, Megaphone, ArrowRight } from 'lucide-react';
 
-export default function NotificationToast({ onRegisterClick, onViewChange }) {
+export default function NotificationToast({ onRegisterClick, onViewChange, isRegisterOpen }) {
   const [showReg, setShowReg] = useState(false);
   const [showPs, setShowPs] = useState(false);
   
@@ -26,7 +26,7 @@ export default function NotificationToast({ onRegisterClick, onViewChange }) {
   if (!showReg && !showPs) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-[999] flex flex-col items-end gap-4 max-w-sm w-[90%] pointer-events-none">
+    <div className={`fixed bottom-6 right-6 z-[999] flex flex-col items-end gap-4 max-w-sm w-[90%] pointer-events-none ${isRegisterOpen ? 'hidden' : ''}`}>
       
       {/* ── Card 1: Registrations Open (Obsidian + Gold Glow Theme) ── */}
       {showReg && !regMinimized && (
