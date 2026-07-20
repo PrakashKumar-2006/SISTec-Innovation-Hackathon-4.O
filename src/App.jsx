@@ -24,6 +24,10 @@ import SIH2023Winners from './components/SIH2023Winners';
 import SIH2024Winners from './components/SIH2024Winners';
 import ShortlistedTeams from './components/ShortlistedTeams';
 import PhotoGallery from './components/PhotoGallery';
+import NotificationToast from './components/NotificationToast';
+import SIH2026Winners from './components/SIH2026Winners';
+import SIH2026Finalists from './components/SIH2026Finalists';
+import SIH2025Winners from './components/SIH2025Winners';
 
 export default function App() {
   const [showRegister, setShowRegister] = useState(false);
@@ -48,12 +52,12 @@ export default function App() {
     <div className="relative min-h-screen bg-brand-darker text-brand-navy font-sans overflow-x-hidden">
       {/* Ambient Top Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-brand-blue/10 via-brand-purple/5 to-transparent rounded-full blur-[160px] pointer-events-none -z-10"></div>
-      
+
       {/* Header Navigation */}
       {!['sih-2023', 'sih-2024'].includes(currentView) && (
-        <Navbar 
-          onRegisterClick={() => setShowRegister(true)} 
-          currentView={currentView} 
+        <Navbar
+          onRegisterClick={() => setShowRegister(true)}
+          currentView={currentView}
           onViewChange={handleViewChange}
         />
       )}
@@ -74,17 +78,17 @@ export default function App() {
             <Developers />
           </>
         ) : currentView === 'about-sih' ? (
-          <About />
+          <About isStandalone={true} />
         ) : currentView === 'photo-gallery' ? (
           <PhotoGallery />
         ) : currentView === 'timeline' ? (
-          <Timeline />
+          <Timeline isStandalone={true} />
         ) : currentView === 'schedule' ? (
-          <Schedule />
+          <Schedule isStandalone={true} />
         ) : currentView === 'problem-statements' ? (
           <ProblemStatements />
         ) : currentView === 'instructions' ? (
-          <Instructions />
+          <Instructions onViewChange={handleViewChange} />
         ) : currentView === 'contact-us' ? (
           <Contact onViewChange={handleViewChange} />
         ) : currentView === 'sih-2023' ? (
@@ -101,6 +105,14 @@ export default function App() {
           <SIH2024Winners onViewChange={handleViewChange} />
         ) : currentView === 'shortlisted-teams' ? (
           <ShortlistedTeams onViewChange={handleViewChange} />
+        ) : currentView === 'sih-2025-finalists' ? (
+          <SIH2025Finalists onViewChange={handleViewChange} />
+        ) : currentView === 'sih-2026-winners' ? (
+          <SIH2026Winners onViewChange={handleViewChange} />
+        ) : currentView === 'sih-2026-finalists' ? (
+          <SIH2026Finalists onViewChange={handleViewChange} onRegisterClick={() => setShowRegister(true)} />
+        ) : currentView === 'sih-2025-winners' ? (
+          <SIH2025Winners onViewChange={handleViewChange} />
         ) : null}
       </main>
 
@@ -111,6 +123,12 @@ export default function App() {
       {showRegister && (
         <RegisterModal onClose={() => setShowRegister(false)} />
       )}
+
+      {/* Dynamic Popups / Notifications */}
+      <NotificationToast
+        onRegisterClick={() => setShowRegister(true)}
+        onViewChange={handleViewChange}
+      />
     </div>
   );
 }

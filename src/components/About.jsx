@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Play, Sparkles, Trophy, Users, CheckCircle2, Award } from 'lucide-react';
 
-export default function About() {
+export default function About({ isStandalone = false }) {
   const [isPlaying, setIsPlaying] = useState(false);
 
   // Stats data with descriptions and icons
@@ -35,7 +35,7 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="relative py-28 sm:py-36 bg-brand-dark overflow-hidden">
+    <section id="about" className={`relative ${isStandalone ? 'pt-32 pb-16 sm:pt-40 sm:pb-24' : 'py-12 sm:py-16'} bg-brand-dark overflow-hidden`}>
       {/* Decorative Glow Backgrounds */}
       <div className="absolute top-1/4 left-0 w-96 h-96 bg-brand-gold/5 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-brand-orange/5 rounded-full blur-[120px] pointer-events-none"></div>
@@ -46,10 +46,11 @@ export default function About() {
           {/* Left Column: Rich Text & Event Highlights */}
           <div className="lg:col-span-6 space-y-8 text-left">
             
-            {/* CSE Department glowing pill badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-brand-gold/10 border border-brand-gold/25 text-brand-gold text-xs font-mono font-bold tracking-wider uppercase shadow-inner animate-pulse-slow">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
-              Department of Computer Science & Engineering
+            {/* Top Dot Accent & CSE Dept Title (unboxed to match hero banner) */}
+            <div className="space-y-3">
+              <p className="text-xs sm:text-sm font-extrabold tracking-[0.25em] text-brand-gold font-sans uppercase">
+                Department of Computer Science & Engineering
+              </p>
             </div>
             
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.1] font-display">

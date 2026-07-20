@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle2, Award, ClipboardEdit, Sparkles, ArrowRight } from 'lucide-react';
 
-export default function ProcessFlow() {
+export default function ProcessFlow({ isStandalone = false }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -62,7 +62,7 @@ export default function ProcessFlow() {
   }, [isHovered, steps.length]);
 
   return (
-    <section id="process" className="relative py-24 bg-brand-dark overflow-hidden">
+    <section id="process" className={`relative ${isStandalone ? 'pt-32 pb-16 sm:pt-40 sm:pb-24' : 'py-12 sm:py-16'} bg-brand-dark overflow-hidden`}>
       {/* Custom Styles for moving timeline light beam */}
       <style>{`
         @keyframes timeline-beam {

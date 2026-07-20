@@ -1,12 +1,4 @@
-const dns = require('dns');
-try {
-  dns.setServers(['8.8.8.8', '8.8.4.4']);
-  if (dns.setDefaultResultOrder) {
-    dns.setDefaultResultOrder('ipv4first');
-  }
-} catch (e) {
-  console.warn('Could not set custom DNS:', e.message);
-}
+// Custom DNS override removed as it caused IPv6 routing issues (ENETUNREACH) with nodemailer
 
 const express = require('express');
 const mongoose = require('mongoose');

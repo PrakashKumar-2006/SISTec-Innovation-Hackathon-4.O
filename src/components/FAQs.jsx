@@ -48,7 +48,7 @@ export default function FAQs() {
   };
 
   return (
-    <section id="faqs" className="relative py-24 bg-brand-dark overflow-hidden">
+    <section id="faqs" className="relative py-12 sm:py-16 bg-brand-dark overflow-hidden">
       <div className="absolute top-1/2 left-0 w-80 h-80 bg-brand-blue/5 rounded-full blur-[100px]"></div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-8 relative z-10">
