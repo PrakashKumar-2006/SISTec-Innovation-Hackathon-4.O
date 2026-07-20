@@ -1,17 +1,17 @@
 import React from 'react';
-import { Trophy, Calendar, MapPin, Sparkles } from 'lucide-react';
+import { Trophy, Calendar, MapPin } from 'lucide-react';
 
 export default function Prizes({ isStandalone = false }) {
   const prizes = [
     {
       place: '02',
       title: '2ND PRIZE',
-      amount: '₹30,000',
+      amount: 'Runner Up',
       description: 'Runner Up Trophy & Certificates',
       subtitle: 'Claim the second spot in glory!',
       badge: 'Silver Medalist',
       perks: [
-        '₹30,000 Cash Reward',
+        'Exciting Cash Reward',
         'Official Runner-up Trophy',
         'Silver Medals for Team',
         'Excellence Certificates'
@@ -26,13 +26,13 @@ export default function Prizes({ isStandalone = false }) {
     {
       place: '01',
       title: '1ST PRIZE',
-      amount: '₹50,000',
+      amount: 'Champion',
       description: 'Grand Winner Trophy & Certificates',
       subtitle: 'Claim the ultimate victory prize!',
       badge: 'Grand Champion',
       featured: true,
       perks: [
-        '₹50,000 Cash Reward',
+        'Grand Cash Reward',
         'Official Champion Trophy',
         'Gold Medals for Team',
         'Excellence Certificates',
@@ -48,12 +48,12 @@ export default function Prizes({ isStandalone = false }) {
     {
       place: '03',
       title: '3RD PRIZE',
-      amount: '₹20,000',
+      amount: '2nd Runner Up',
       description: '2nd Runner Up Trophy & Certificates',
       subtitle: 'Secure your place on the podium!',
       badge: 'Bronze Medalist',
       perks: [
-        '₹20,000 Cash Reward',
+        'Exciting Cash Reward',
         '2nd Runner-up Trophy',
         'Bronze Medals for Team',
         'Excellence Certificates'
@@ -76,11 +76,11 @@ export default function Prizes({ isStandalone = false }) {
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 relative z-10 text-center">
         
         {/* Section Heading */}
-        <div className="max-w-2xl mx-auto mb-12">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white font-display">
-            Your Ideas, Your Victory,{' '}
-            <span className="text-gold-metallic block sm:inline">
-              Your Prizes! 🏆
+        <div className="max-w-4xl mx-auto mb-16">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white font-display leading-tight">
+            Total Cash Prizes Up to{' '}
+            <span className="bg-gradient-to-r from-brand-gold via-yellow-200 to-amber-500 bg-clip-text text-transparent whitespace-nowrap">
+              ₹1 Lakh! 🏆
             </span>
           </h2>
         </div>
@@ -117,7 +117,7 @@ export default function Prizes({ isStandalone = false }) {
                     <h3 className="text-[10px] sm:text-xs font-bold tracking-widest text-brand-gray font-sans uppercase">
                       {prize.title}
                     </h3>
-                    <p className={`text-3xl sm:text-4xl font-black font-display bg-gradient-to-b ${prize.textGradient} bg-clip-text text-transparent leading-none`}>
+                    <p className={`text-3xl sm:text-4xl font-black font-display bg-gradient-to-b ${prize.textGradient} bg-clip-text text-transparent leading-none py-1`}>
                       {prize.amount}
                     </p>
                     <p className="text-xs text-brand-navy font-bold tracking-wide mt-0.5">
@@ -129,7 +129,7 @@ export default function Prizes({ isStandalone = false }) {
                   <ul className="space-y-2 pt-1.5">
                     {prize.perks.map((perk, pIdx) => (
                       <li key={pIdx} className="flex items-center gap-2 text-left text-xs text-brand-gray font-medium">
-                        <span className="w-1.2 h-1.2 rounded-full bg-brand-gold shrink-0"></span>
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand-gold shrink-0"></span>
                         <span>{perk}</span>
                       </li>
                     ))}
