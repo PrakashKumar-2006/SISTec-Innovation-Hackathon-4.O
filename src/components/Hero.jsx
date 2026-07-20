@@ -51,7 +51,7 @@ export default function Hero({ onRegisterClick }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* ── LEFT COLUMN: Text and branding (Enlarged) ── */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left space-y-8 sm:space-y-10">
+          <div className="lg:col-span-6 flex flex-col items-start text-left space-y-8 sm:space-y-10">
             
             {/* Top Dot Accent & CSE Dept Title */}
             <div className="space-y-3">
@@ -78,8 +78,8 @@ export default function Hero({ onRegisterClick }) {
                 />
               </div>
 
-              {/* Vertical line divider (Desktop only) */}
-              <div className="hidden sm:block w-[2px] bg-gradient-to-b from-brand-gold/80 via-brand-gold/20 to-transparent"></div>
+              {/* Golden line divider (Horizontal fade on mobile, Vertical fade on desktop - more to less) */}
+              <div className="w-24 h-[2px] sm:w-[2px] sm:h-auto bg-gradient-to-r from-[#D8AB55] to-transparent sm:bg-gradient-to-b sm:from-[#D8AB55] sm:to-transparent my-1 sm:my-0 shrink-0"></div>
 
               {/* Title texts */}
               <div className="flex flex-col justify-center text-center sm:text-left space-y-2 sm:space-y-3">
@@ -141,7 +141,7 @@ export default function Hero({ onRegisterClick }) {
           </div>
 
           {/* ── RIGHT COLUMN: Student Collage Graphic (Enlarged & Slanted) ── */}
-          <div className="lg:col-span-5 relative w-full flex flex-col justify-center items-center">
+          <div className="lg:col-span-6 relative w-full flex flex-col justify-center items-center">
             
             {/* Top Right Quote bubble (Enlarged, unboxed layout to match the banner graphic) */}
             <div className="absolute top-[-35px] right-2 sm:right-6 lg:top-[-50px] lg:right-10 z-20 animate-float flex items-start gap-3 select-none">
@@ -165,7 +165,7 @@ export default function Hero({ onRegisterClick }) {
             </div>
 
             {/* Futuristic Slanted Student Photo Container */}
-            <div className="relative w-full max-w-lg lg:max-w-none aspect-[4/3] sm:aspect-square lg:aspect-[1/1] overflow-hidden lg:overflow-visible group mt-8 lg:mt-0">
+            <div className="relative w-full max-w-lg lg:max-w-none aspect-[4/3] sm:aspect-square lg:aspect-[4/3] overflow-hidden lg:overflow-visible group mt-8 lg:mt-0">
               
               {/* Decorative backglow */}
               <div className="absolute -top-12 -left-12 w-64 h-64 bg-brand-gold/10 rounded-full blur-[100px] -z-10 animate-pulse-slow"></div>
@@ -176,7 +176,7 @@ export default function Hero({ onRegisterClick }) {
                 {/* Slanted Image Wrapper */}
                 <div className="relative w-full h-full bg-brand-darker clip-path-hero-slant rounded-[22px] overflow-hidden">
                   <img 
-                    src="/hackathon_students.png" 
+                    src="/home_page_image.jpg" 
                     alt="Students Collaborating at Hackathon" 
                     className="absolute inset-0 w-full h-full object-cover opacity-95 scale-105 group-hover:scale-110 transition-transform duration-700 ease-out"
                   />
