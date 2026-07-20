@@ -102,33 +102,74 @@ const sendConfirmationEmail = async (leaderEmail, leaderName, teamName, registra
     to: leaderEmail,
     subject: `SIH 4.0 Registration Successful! - Team ${teamName}`,
     html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #fdfdfd;">
-        <div style="text-align: center; border-bottom: 2px solid #D8AB55; padding-bottom: 15px; margin-bottom: 20px;">
-          <h2 style="color: #161619; margin: 0;">Smart India Hackathon 4.0</h2>
-          <p style="color: #D8AB55; font-size: 14px; font-weight: bold; margin: 5px 0 0 0; letter-spacing: 1px;">SISTec Innovation Hackathon</p>
-        </div>
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 650px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); border: 1px solid #eaeaea;">
         
-        <div style="color: #333333; line-height: 1.6;">
-          <p>Dear <strong>${leaderName}</strong>,</p>
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 30px 20px; text-align: center; color: white;">
+          <h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: 1px;">SISTec Innovation Hackathon 4.0</h1>
+          <p style="margin: 8px 0 0 0; font-size: 16px; opacity: 0.9;">Smart India Hackathon 2026</p>
+        </div>
+
+        <!-- Body -->
+        <div style="padding: 40px 30px;">
+          <h2 style="color: #2a5298; margin-top: 0; display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 24px;">🎉</span> Registration Received!
+          </h2>
+          <p style="font-size: 16px; color: #444; line-height: 1.6;">
+            Hello <strong>${leaderName}</strong>,<br><br>
+            Thank you for registering for the <strong>Smart India Hackathon 4.0</strong>. We are thrilled to have you and your team on board for this exciting journey of innovation and problem-solving!
+          </p>
+
+          <!-- Team Details Card -->
+          <div style="margin: 35px 0; background-color: #f8faff; border: 1px solid #dce5f9; border-radius: 10px; padding: 25px;">
+            <h3 style="margin-top: 0; color: #1e3c72; border-bottom: 2px solid #dce5f9; padding-bottom: 10px; text-transform: uppercase; font-size: 14px; letter-spacing: 1px;">Team Details Card</h3>
+            
+            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+              <tr>
+                <td style="padding: 8px 0; color: #666; width: 40%;"><strong>Team Name:</strong></td>
+                <td style="padding: 8px 0; color: #333; font-weight: 600;">${teamName}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; color: #666;"><strong>Leader:</strong></td>
+                <td style="padding: 8px 0; color: #333; font-weight: 600;">${leaderName}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; color: #666;"><strong>Registration ID:</strong></td>
+                <td style="padding: 8px 0; color: #d8ab55; font-family: monospace; font-size: 16px; font-weight: bold;">${registrationId}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; color: #666;"><strong>Status:</strong></td>
+                <td style="padding: 8px 0; color: #28a745; font-weight: 600;">Successful ✅</td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- Important Dates -->
+          <div style="margin: 35px 0;">
+            <h3 style="color: #1e3c72; border-bottom: 2px solid #eee; padding-bottom: 10px; text-transform: uppercase; font-size: 14px; letter-spacing: 1px;">Important Dates</h3>
+            <ul style="list-style-type: none; padding: 0; color: #555;">
+              <li style="padding: 8px 0; border-bottom: 1px dashed #eee;">📅 <strong>Registration Closes:</strong> To be announced</li>
+              <li style="padding: 8px 0; border-bottom: 1px dashed #eee;">🎯 <strong>Shortlisting:</strong> To be announced</li>
+              <li style="padding: 8px 0;">🚀 <strong>Hackathon Day:</strong> To be announced</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background-color: #1a1a1a; color: #ffffff; padding: 30px; text-align: center;">
+          <h4 style="margin: 0 0 15px 0; color: #d8ab55; font-size: 16px;">Contact Us</h4>
+          <p style="margin: 5px 0; font-size: 14px; color: #ccc;">📧 <a href="mailto:sistecr.hodcs@sistec.ac.in" style="color: #ccc; text-decoration: none;">sistecr.hodcs@sistec.ac.in</a></p>
+          <p style="margin: 5px 0 15px 0; font-size: 14px; color: #ccc;">📞 +91 9303164688</p>
           
-          <p>Congratulations! Your team <strong>"${teamName}"</strong> has successfully registered for the <strong>Smart India Hackathon 4.0 (SIH 4.0)</strong> at Sagar Institute of Science & Technology (SISTec-R).</p>
-          
-          <div style="background-color: #f9f9f9; border-left: 4px solid #D8AB55; padding: 15px; margin: 20px 0; border-radius: 4px;">
-            <p style="margin: 0; font-size: 14px; color: #666666;">Your Unique Registration ID is:</p>
-            <h3 style="margin: 5px 0 0 0; color: #D8AB55; font-family: monospace; font-size: 22px; letter-spacing: 2px;">${registrationId}</h3>
+          <div style="margin: 20px 0; padding-top: 20px; border-top: 1px solid #333;">
+            <p style="margin: 0; font-size: 14px; color: #999;">
+              <a href="https://www.sistecr.ac.in/" style="color: #d8ab55; text-decoration: none; margin-right: 10px;">Website</a> | 
+              <a href="https://www.instagram.com/sistecratibad?igsh=cXd4ZHZmOHF0ZmRm" style="color: #d8ab55; text-decoration: none; margin: 0 10px;">Instagram</a> | 
+              <a href="https://www.linkedin.com/school/sagar-institute-of-science-technology-research-sistec-r/" style="color: #d8ab55; text-decoration: none; margin-left: 10px;">LinkedIn</a>
+            </p>
           </div>
           
-          <p>Please keep this Registration ID safe. You will need it to reference your nomination, check results, and upload future project milestone guidelines.</p>
-          
-          <p><strong>Next Steps:</strong></p>
-          <ul style="padding-left: 20px;">
-            <li>Abstract guidelines and submission templates will be sent to this email address shortly.</li>
-            <li>Ensure your team members are notified of the success.</li>
-          </ul>
-          
-          <p style="margin-top: 30px; font-size: 12px; color: #888888; text-align: center; border-top: 1px solid #eeeeee; padding-top: 15px;">
-            This is an automated notification. Please do not reply directly to this email. For any queries, contact the hackathon organization committee.
-          </p>
+          <p style="margin: 20px 0 0 0; font-size: 12px; color: #666;">&copy; 2026 SISTec Innovation Hackathon (SIH 4.0). All rights reserved.</p>
         </div>
       </div>
     `
