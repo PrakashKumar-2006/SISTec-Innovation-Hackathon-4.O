@@ -87,6 +87,8 @@ export default {
       fontFamily: {
         sans: ["Plus Jakarta Sans", "sans-serif"],
         display: ["Playfair Display", "serif"],
+        cinzel: ["Cinzel", "serif"],
+        outfit: ["Outfit", "sans-serif"]
       },
       backgroundImage: {
         'sih-gradient': 'linear-gradient(135deg, #FFFFFF 0%, #D8AB55 100%)', // White to Gold gradient
