@@ -6,25 +6,25 @@ export default function Timeline({ isStandalone = false }) {
   const [currentFocus, setCurrentFocus] = useState(-1);
 
   useEffect(() => {
-    // Phase 1: Entrance sequence with path drawing & step activation
+    // Phase 1: Slow, elegant entrance sequence with path drawing & step activation
     const timers = [
       setTimeout(() => { setActiveStep(1); setCurrentFocus(0); }, 300),   // Draw Step 1, highlight Step 1
-      setTimeout(() => { setActiveStep(2); setCurrentFocus(1); }, 1700),  // Draw Step 2, highlight Step 2
-      setTimeout(() => { setActiveStep(3); setCurrentFocus(2); }, 3100),  // Draw Step 3, highlight Step 3
-      setTimeout(() => { setActiveStep(4); setCurrentFocus(3); }, 4500),  // Draw Step 4, highlight Step 4
-      setTimeout(() => { setActiveStep(5); setCurrentFocus(4); }, 5900),  // Draw Step 5, highlight Step 5
-      setTimeout(() => { setActiveStep(6); }, 7300)                      // All steps loaded
+      setTimeout(() => { setActiveStep(2); setCurrentFocus(1); }, 2500),  // Draw Step 2, highlight Step 2
+      setTimeout(() => { setActiveStep(3); setCurrentFocus(2); }, 4700),  // Draw Step 3, highlight Step 3
+      setTimeout(() => { setActiveStep(4); setCurrentFocus(3); }, 6900),  // Draw Step 4, highlight Step 4
+      setTimeout(() => { setActiveStep(5); setCurrentFocus(4); }, 9110),  // Draw Step 5, highlight Step 5
+      setTimeout(() => { setActiveStep(6); }, 11300)                     // All steps loaded
     ];
     return () => timers.forEach(clearTimeout);
   }, []);
 
-  // Phase 2: Shifting active glow loop once all cards are loaded
+  // Phase 2: Shifting active glow loop once all cards are loaded (Slowed down to 4.5s)
   useEffect(() => {
     if (activeStep < 6) return;
 
     const interval = setInterval(() => {
       setCurrentFocus((prev) => (prev + 1) % 5);
-    }, 2500); // Switch highlighted step every 2.5 seconds
+    }, 4500); // Switch highlighted step every 4.5 seconds (relaxed pace)
 
     return () => clearInterval(interval);
   }, [activeStep]);
@@ -162,7 +162,7 @@ export default function Timeline({ isStandalone = false }) {
         }
         .animate-draw-path {
           stroke-dasharray: 120;
-          animation: draw-path 1.1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          animation: draw-path 2.0s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         @keyframes node-pop {
@@ -218,7 +218,7 @@ export default function Timeline({ isStandalone = false }) {
                       vectorEffect="non-scaling-stroke"
                     />
 
-                    {/* Active Drawing S-Curve Path */}
+                    {/* Active Drawing S-Curve Path - Draw speed slowed to 2.0s */}
                     {isPathActive && (
                       <path 
                         d={pathD} 
