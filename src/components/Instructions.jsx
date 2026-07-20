@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, Sparkles, ClipboardList, Info, Download, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Sparkles, ClipboardList, Info, Download, ArrowRight, MapPin, Layers } from 'lucide-react';
 
-export default function Instructions({ onViewChange }) {
+export default function Instructions({ onViewChange, onRegisterClick }) {
   const [visible, setVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     setVisible(true);
@@ -13,84 +15,154 @@ export default function Instructions({ onViewChange }) {
     {
       id: 1,
       title: "Team Formation Rules",
-      desc: "Each team must consist of 2 to 6 student members. Having at least one female member is highly recommended. All members must belong to the same institution (inter-college teams are not permitted).",
+      desc: "Form teams of 2 to 6 members from the same institution. Including at least one female member is highly recommended.",
       icon: "👥",
       badge: "Mandatory",
       themeColor: "from-cyan-500/20 to-blue-600/5",
-      borderColor: "group-hover:border-cyan-500/60 border-cyan-500/20",
-      glowColor: "group-hover:shadow-[0_15px_30px_rgba(6,182,212,0.2)]",
+      borderColor: "border-cyan-500/30",
+      glowColor: "rgba(6,182,212,0.25)",
       badgeStyle: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-      iconBg: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20"
+      iconBg: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+      activeTabClass: "bg-[#0C0C0F]/95 border-cyan-400 border-[2px] shadow-[0_0_25px_rgba(6,182,212,0.4)] text-cyan-300 scale-[1.03]",
+      activeCardClass: "from-cyan-500/10 via-[#0C0C0F]/95 to-blue-600/5 border-cyan-400 border-[2px] shadow-[0_0_35px_rgba(6,182,212,0.3)]",
+      buttonColor: "bg-cyan-600 hover:bg-cyan-500 text-white shadow-cyan-600/25",
+      sonarColor: "rgba(6, 182, 212, 0.7)",
+      bullets: [
+        "Minimum 2 and Maximum 6 members per team",
+        "All members must belong to the same college (No inter-college teams)",
+        "At least one female member is highly recommended"
+      ]
     },
     {
       id: 2,
       title: "Problem Statement Selection",
-      desc: "Select a problem statement from the listed categories (AgriTech, HealthTech, EduTech, Smart Devices, etc.) or choose 'Open Innovation' if you are developing a custom idea outside the listed tracks.",
+      desc: "Choose a track from the listed themes (AgriTech, HealthTech, etc.) or select 'Open Innovation' for custom projects.",
       icon: "🎯",
       badge: "Flexible",
       themeColor: "from-amber-500/20 to-orange-600/5",
-      borderColor: "group-hover:border-amber-500/60 border-amber-500/20",
-      glowColor: "group-hover:shadow-[0_15px_30px_rgba(245,158,11,0.2)]",
+      borderColor: "border-amber-500/30",
+      glowColor: "rgba(245,158,11,0.25)",
       badgeStyle: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-      iconBg: "bg-amber-500/10 text-amber-400 border-amber-500/20"
+      iconBg: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+      activeTabClass: "bg-[#0C0C0F]/95 border-amber-400 border-[2px] shadow-[0_0_25px_rgba(245,158,11,0.4)] text-amber-300 scale-[1.03]",
+      activeCardClass: "from-amber-500/10 via-[#0C0C0F]/95 to-orange-600/5 border-amber-400 border-[2px] shadow-[0_0_35px_rgba(245,158,11,0.3)]",
+      buttonColor: "bg-amber-600 hover:bg-amber-500 text-white shadow-amber-600/25",
+      sonarColor: "rgba(245, 158, 11, 0.7)",
+      bullets: [
+        "Choose from 12+ pre-defined tracks/categories",
+        "Select 'Open Innovation' for your own unique hardware/software idea",
+        "Hardware and Software projects are evaluated in separate categories"
+      ]
     },
     {
       id: 3,
       title: "PPT Presentation Template",
-      desc: "All ideas must be submitted using the official SIH 4.O PPT template. Make sure to cover the problem statement, solution description, technology stack, and novelty of your idea.",
+      desc: "Submit your idea using the official PPT template, detailing your problem statement, solution description, tech stack, and novelty.",
       icon: "📊",
       badge: "Format",
       themeColor: "from-purple-500/20 to-indigo-600/5",
-      borderColor: "group-hover:border-purple-500/60 border-purple-500/20",
-      glowColor: "group-hover:shadow-[0_15px_30px_rgba(168,85,247,0.2)]",
+      borderColor: "border-purple-500/30",
+      glowColor: "rgba(168,85,247,0.25)",
       badgeStyle: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-      iconBg: "bg-purple-500/10 text-purple-400 border-purple-500/20"
+      iconBg: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+      activeTabClass: "bg-[#0C0C0F]/95 border-purple-400 border-[2px] shadow-[0_0_25px_rgba(168,85,247,0.4)] text-purple-300 scale-[1.03]",
+      activeCardClass: "from-purple-500/10 via-[#0C0C0F]/95 to-indigo-600/5 border-purple-400 border-[2px] shadow-[0_0_35px_rgba(168,85,247,0.3)]",
+      buttonColor: "bg-purple-600 hover:bg-purple-500 text-white shadow-purple-600/25",
+      sonarColor: "rgba(168, 85, 247, 0.7)",
+      bullets: [
+        "Strictly follow the official presentation slide structure",
+        "Detail your problem, proposed solution, tech stack, and novelty",
+        "Do not modify the slide master layout coordinates"
+      ]
     },
     {
       id: 4,
       title: "HOD Consent Letter",
-      desc: "A signed consent letter from your College Principal, Director, or HOD is mandatory. Submissions without a valid, officially stamped consent letter will be disqualified.",
+      desc: "A signed, stamped consent letter from your College Principal or HOD is mandatory for validation and submission.",
       icon: "📝",
       badge: "Required",
       themeColor: "from-rose-500/20 to-red-600/5",
-      borderColor: "group-hover:border-rose-500/60 border-rose-500/20",
-      glowColor: "group-hover:shadow-[0_15px_30px_rgba(244,63,94,0.2)]",
+      borderColor: "border-rose-500/30",
+      glowColor: "rgba(244,63,94,0.25)",
       badgeStyle: "bg-rose-500/10 text-rose-400 border-rose-500/20",
-      iconBg: "bg-rose-500/10 text-rose-400 border-rose-500/20"
+      iconBg: "bg-rose-500/10 text-rose-400 border-rose-500/20",
+      activeTabClass: "bg-[#0C0C0F]/95 border-rose-400 border-[2px] shadow-[0_0_25px_rgba(244,63,94,0.4)] text-rose-300 scale-[1.03]",
+      activeCardClass: "from-rose-500/10 via-[#0C0C0F]/95 to-red-600/5 border-rose-400 border-[2px] shadow-[0_0_35px_rgba(244,63,94,0.3)]",
+      buttonColor: "bg-rose-600 hover:bg-rose-500 text-white shadow-rose-600/25",
+      sonarColor: "rgba(244, 63, 94, 0.7)",
+      bullets: [
+        "Signed and officially stamped HOD/Principal letter is mandatory",
+        "Upload in PDF format during the registration process",
+        "Submissions without a valid consent letter will be disqualified"
+      ]
     },
     {
       id: 5,
       title: "Registration & Payments",
-      desc: "Fill in the registration form completely through the team leader. Provide accurate student details, contact numbers, and emails. ID verification will be conducted at the venue.",
+      desc: "Complete the registration form via your team leader. Ensure accurate student details for on-venue ID verification.",
       icon: "💳",
       badge: "Process",
       themeColor: "from-emerald-500/20 to-teal-600/5",
-      borderColor: "group-hover:border-emerald-500/60 border-emerald-500/20",
-      glowColor: "group-hover:shadow-[0_15px_30px_rgba(16,185,129,0.2)]",
+      borderColor: "border-emerald-500/30",
+      glowColor: "rgba(16,185,129,0.25)",
       badgeStyle: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-      iconBg: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+      iconBg: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+      activeTabClass: "bg-[#0C0C0F]/95 border-emerald-400 border-[2px] shadow-[0_0_25px_rgba(16,185,129,0.4)] text-emerald-300 scale-[1.03]",
+      activeCardClass: "from-emerald-500/10 via-[#0C0C0F]/95 to-teal-600/5 border-emerald-400 border-[2px] shadow-[0_0_35px_rgba(16,185,129,0.3)]",
+      buttonColor: "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/25",
+      sonarColor: "rgba(16, 185, 129, 0.7)",
+      bullets: [
+        "Registration must be submitted completely by the Team Leader",
+        "Double-check all member details and contact numbers before submission",
+        "Physical ID verification is mandatory on-venue at the event"
+      ]
     },
     {
       id: 6,
       title: "Grand Finale Guidelines",
-      desc: "Shortlisted teams must report to the SISTec-R Bhopal campus for the 36-hour non-stop hackathon. Teams are required to bring their own laptops, development boards, and hardware modules.",
+      desc: "Report to SISTec-R campus for the 24-hour non-stop hackathon. Teams must bring their own laptops and hardware resources.",
       icon: "⚡",
       badge: "Finale",
       themeColor: "from-fuchsia-500/20 to-pink-600/5",
-      borderColor: "group-hover:border-fuchsia-500/60 border-fuchsia-500/20",
-      glowColor: "group-hover:shadow-[0_15px_30px_rgba(217,70,239,0.2)]",
+      borderColor: "border-fuchsia-500/30",
+      glowColor: "rgba(217,70,239,0.25)",
       badgeStyle: "bg-fuchsia-500/10 text-fuchsia-400 border-fuchsia-500/20",
-      iconBg: "bg-fuchsia-500/10 text-fuchsia-400 border-fuchsia-500/20"
+      iconBg: "bg-fuchsia-500/10 text-fuchsia-400 border-fuchsia-500/20",
+      activeTabClass: "bg-[#0C0C0F]/95 border-fuchsia-400 border-[2px] shadow-[0_0_25px_rgba(217,70,239,0.4)] text-fuchsia-300 scale-[1.03]",
+      activeCardClass: "from-fuchsia-500/10 via-[#0C0C0F]/95 to-pink-600/5 border-fuchsia-400 border-[2px] shadow-[0_0_35px_rgba(217,70,239,0.3)]",
+      buttonColor: "bg-fuchsia-600 hover:bg-fuchsia-500 text-white shadow-fuchsia-600/25",
+      sonarColor: "rgba(217, 70, 239, 0.7)",
+      bullets: [
+        "24-Hour continuous non-stop hacking event at SISTec-R campus",
+        "Bring your own laptops, adapters, and necessary hardware modules",
+        "Free meals, refreshments, high-speed Wi-Fi, and mentoring provided"
+      ]
     }
   ];
 
+  const activeGuideline = guidelines[activeTab];
+
+  useEffect(() => {
+    if (isHovered) return;
+
+    const interval = setInterval(() => {
+      setActiveTab((prev) => (prev + 1) % guidelines.length);
+    }, 4500); // 4.5 seconds cycle matching timeline
+
+    return () => clearInterval(interval);
+  }, [activeTab, isHovered, guidelines.length]);
+
   return (
-    <section className="relative min-h-screen bg-brand-darker pt-28 pb-20 px-3 sm:px-6 lg:px-8 text-white select-none overflow-hidden">
+    <section className="relative min-h-screen bg-brand-darker pt-24 sm:pt-28 pb-16 px-3 sm:px-6 lg:px-8 text-white select-none overflow-hidden animate-[fadeIn_0.5s_ease-out]">
       
-      {/* Dynamic Animated background glows */}
-      <div className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[150px] pointer-events-none -z-10 animate-[pulse_10s_ease-in-out_infinite]" />
-      <div className="absolute top-1/2 left-1/3 w-[500px] h-[500px] bg-brand-gold/5 rounded-full blur-[140px] pointer-events-none -z-10 animate-[pulse_12s_ease-in-out_infinite_1s]" />
-      <div className="absolute -bottom-40 -right-40 w-[650px] h-[650px] bg-brand-purple/4 rounded-full blur-[160px] pointer-events-none -z-10 animate-[pulse_15s_ease-in-out_infinite_2s]" />
+      {/* Dynamic Animated background glows synced with active tab color */}
+      <div 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] rounded-full blur-[100px] sm:blur-[160px] pointer-events-none -z-10 transition-all duration-[1000ms]" 
+        style={{ backgroundColor: activeGuideline.glowColor, opacity: 0.14 }}
+      />
+      
+      <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-brand-blue/5 rounded-full blur-[140px] pointer-events-none -z-10 animate-[pulse_12s_ease-in-out_infinite]" />
+      <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-brand-pink/3 rounded-full blur-[140px] pointer-events-none -z-10 animate-[pulse_14s_ease-in-out_infinite]" />
 
       {/* Grid Pattern Overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.007)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(255,255,255,0.007)_1.5px,transparent_1.5px)] bg-[size:30px_30px] opacity-35 pointer-events-none -z-10" />
@@ -112,8 +184,12 @@ export default function Instructions({ onViewChange }) {
           50% { transform: translateY(-10px) rotate(1.5deg); }
         }
         @keyframes pulse-ring {
-          0% { transform: scale(0.9); opacity: 0.6; }
-          100% { transform: scale(1.3); opacity: 0; }
+          0% { transform: scale(0.85); opacity: 0.8; }
+          100% { transform: scale(1.5); opacity: 0; }
+        }
+        @keyframes card-float-slow {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-6px); }
         }
         .svg-check-1 {
           stroke-dasharray: 50;
@@ -147,12 +223,35 @@ export default function Instructions({ onViewChange }) {
           animation: pulse-ring 2.5s cubic-bezier(0.215, 0.610, 0.355, 1) infinite;
           transform-origin: center;
         }
+
+        @keyframes card-fade-slide {
+          0% { opacity: 0; transform: translateY(12px) scale(0.99); }
+          100% { opacity: 1; transform: translateY(0px) scale(1); }
+        }
+        .animate-card-slide {
+          animation: card-fade-slide 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        
+        .animate-card-float-active {
+          animation: card-float-slow 6s ease-in-out infinite;
+        }
+        
+        @keyframes glow-breathe {
+          0%, 100% { opacity: 0.95; }
+          50% { opacity: 1; filter: brightness(1.12); }
+        }
+        .animate-glow-breathe {
+          animation: glow-breathe 4.5s ease-in-out infinite;
+        }
+        .pulse-sonar {
+          animation: pulse-ring 2s cubic-bezier(0.215, 0.610, 0.355, 1) infinite;
+        }
       `}} />
 
-      <div className="max-w-6xl mx-auto relative z-10 flex flex-col items-center">
+      <div className="max-w-6xl mx-auto relative z-10 flex flex-col items-center w-full">
         
         {/* Back Navigation & Page Header */}
-        <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10 text-left border-b border-white/10 pb-6">
+        <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 sm:mb-10 text-left border-b border-white/10 pb-6">
           <div className="space-y-1.5">
             <span className="inline-flex items-center gap-1.5 text-[10px] font-black text-brand-gold uppercase tracking-widest bg-brand-gold/15 px-3 py-1 rounded-full border border-brand-gold/25 shadow-sm">
               <ClipboardList size={11} className="text-brand-gold" />
@@ -165,21 +264,14 @@ export default function Instructions({ onViewChange }) {
               Carefully review the hackathon rules and registration requirements below.
             </p>
           </div>
-          
-          <button
-            onClick={() => onViewChange && onViewChange('landing')}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-card border border-white/10 hover:border-brand-gold/50 text-xs font-bold text-brand-gold hover:text-white transition-all duration-300 cursor-pointer shadow-md active:scale-95 shrink-0"
-          >
-            <ArrowLeft size={14} /> Back to Home
-          </button>
         </div>
 
         {/* ── Graphic and Intro Block ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-12 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-10 sm:mb-16 w-full">
           
           {/* Left Column: Animated SVG Checklist Graphic (5 cols) */}
           <div className="lg:col-span-5 flex justify-center items-center">
-            <div className="w-56 h-56 sm:w-64 sm:h-64 relative">
+            <div className="w-48 h-48 sm:w-64 sm:h-64 relative">
               <svg
                 viewBox="0 0 200 200"
                 className="w-full h-full drop-shadow-[0_0_35px_rgba(6,182,212,0.18)]"
@@ -262,7 +354,7 @@ export default function Instructions({ onViewChange }) {
               <a 
                 href="/Idea-Sumission Format SIH 4.0.pptx" 
                 download="Idea-Submission-Format-SIH-4.0.pptx"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-brand-card hover:bg-brand-card/80 text-xs font-bold text-brand-gold border border-white/10 hover:border-brand-gold/40 shadow-lg hover:shadow-[0_0_15px_rgba(216,171,85,0.15)] active:scale-95 transition-all"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-brand-card hover:bg-brand-card/80 text-xs font-bold text-brand-gold border border-white/10 hover:border-brand-gold/45 shadow-lg hover:shadow-[0_0_15px_rgba(216,171,85,0.15)] active:scale-95 transition-all w-full sm:w-auto"
               >
                 <Download size={14} className="text-brand-gold" />
                 Download Idea PPT Template
@@ -271,7 +363,7 @@ export default function Instructions({ onViewChange }) {
               <a 
                 href="#process" 
                 onClick={(e) => { e.preventDefault(); onViewChange('landing', '#process'); }}
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold text-white border border-white/10 hover:border-brand-gold/30 shadow-md active:scale-95 transition-all"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold text-white border border-white/10 hover:border-brand-gold/30 shadow-md active:scale-95 transition-all w-full sm:w-auto"
               >
                 <Download size={14} />
                 Download Consent Format
@@ -281,44 +373,277 @@ export default function Instructions({ onViewChange }) {
 
         </div>
 
-        {/* ── Guidelines Grid (Rainbow Gradient Cards) ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mt-6">
-          {guidelines.map((rule) => (
-            <div
-              key={rule.id}
-              className={`bg-gradient-to-br ${rule.themeColor} backdrop-blur-md border ${rule.borderColor} ${rule.glowColor} rounded-2xl p-5 sm:p-6 shadow-xl hover:-translate-y-2 hover:scale-[1.02] transition-all duration-300 text-left relative flex flex-col justify-between group`}
-            >
-              <div className="space-y-4">
-                {/* Icon header with ID tag */}
-                <div className="flex items-center justify-between">
-                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl border shadow-inner group-hover:scale-110 transition-transform ${rule.iconBg}`}>
-                    {rule.icon}
-                  </div>
-                  <span className={`inline-block px-2.5 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-widest ${rule.badgeStyle}`}>
-                    {rule.badge}
-                  </span>
-                </div>
+        {/* ── GUIDELINES REPRESENTATION (Desktop Console / Mobile Accordion) ── */}
+        <div 
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className="w-full mb-10 w-full"
+        >
+          {/* 1. DESKTOP VIEW: Split-Pane Console Workspace (hidden on mobile screens) */}
+          <div className="hidden lg:block w-full bg-[#07070a]/75 backdrop-blur-2xl border border-white/5 rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-noise-overlay opacity-[0.02] pointer-events-none" />
+            
+            <div className="grid grid-cols-12 gap-8 items-stretch relative z-10">
+              {/* Left Side: Step Tabs (Col 1 to 5) */}
+              <div className="col-span-5 flex flex-col gap-2.5 border-r border-white/10 pr-6">
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 font-sans flex items-center gap-1.5">
+                  <Layers size={12} className="text-slate-500" />
+                  Guideline Steps
+                </span>
+                
+                <div className="flex flex-col gap-2.5">
+                  {guidelines.map((rule, idx) => {
+                    const isActive = activeTab === idx;
+                    return (
+                      <button
+                        key={rule.id}
+                        onClick={() => setActiveTab(idx)}
+                        className={`flex items-center gap-4 px-5 py-4 rounded-2xl border transition-all duration-300 text-left cursor-pointer ${
+                          isActive
+                            ? rule.activeTabClass
+                            : 'bg-[#0E0E12]/50 border-white/5 text-slate-400 hover:text-white hover:bg-white/5 hover:border-white/10 hover:translate-x-1.5'
+                        }`}
+                      >
+                        {/* Icon with pulsing sonar ring matching timeline style */}
+                        <div className="relative shrink-0">
+                          {isActive && (
+                            <span 
+                              className="absolute -inset-1 rounded-xl pulse-sonar opacity-70"
+                              style={{ border: `1.5px solid ${rule.sonarColor}` }}
+                            />
+                          )}
+                          <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg border shadow-inner transition-colors duration-300 relative z-10 ${
+                            isActive ? 'bg-[#0C0C0F] border-white/10' : 'bg-[#13131A] border-white/5'
+                          }`}>
+                            {rule.icon}
+                          </div>
+                        </div>
 
-                <div className="space-y-2">
-                  <h3 className="text-white text-base font-extrabold group-hover:text-white transition-colors">
-                    {rule.title}
-                  </h3>
-                  <p className="text-slate-300 text-xs leading-relaxed font-semibold">
-                    {rule.desc}
-                  </p>
+                        <div className="leading-tight">
+                          <p className="text-[8px] font-black uppercase tracking-wider font-sans opacity-60">Rule 0{rule.id}</p>
+                          <h4 className="text-xs font-black tracking-wide font-sans">{rule.title}</h4>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* ID counter decoration inside */}
-              <div className="absolute bottom-4 right-4 text-xs font-mono font-bold text-slate-500/10 select-none group-hover:text-white/10 transition-colors">
-                0{rule.id}
+              {/* Right Side: Active Card details - Syncs glow perfectly with active tab */}
+              <div 
+                key={activeTab} 
+                className={`col-span-7 flex flex-col justify-between bg-gradient-to-br ${activeGuideline.activeCardClass} p-7 rounded-[1.5rem] border backdrop-blur-xl animate-card-slide animate-glow-breathe animate-card-float-active`}
+              >
+                <div className="space-y-5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-[9px] font-sans font-black text-slate-400 bg-[#0C0C0F] border border-white/10 px-2.5 py-1 rounded-md uppercase tracking-wider">
+                        STAGE 0{activeGuideline.id}
+                      </span>
+                      <span className={`px-3.5 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-widest ${activeGuideline.badgeStyle}`}>
+                        {activeGuideline.badge}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="text-white text-2xl font-black font-display tracking-wide">{activeGuideline.title}</h3>
+                    <p className="text-slate-300 text-sm leading-relaxed font-semibold">{activeGuideline.desc}</p>
+                  </div>
+
+                  <div className="space-y-3 pt-2">
+                    <p className="text-[9px] font-black text-brand-gold tracking-widest uppercase font-sans">Core Guidelines</p>
+                    <ul className="space-y-2">
+                      {activeGuideline.bullets.map((bullet, bIdx) => (
+                        <li key={bIdx} className="flex items-start gap-2.5 text-xs text-brand-gray font-semibold leading-relaxed">
+                          <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 bg-brand-gold" />
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="pt-8 border-t border-white/5 mt-8 flex justify-end">
+                  {activeGuideline.id === 3 ? (
+                    <a 
+                      href="/Idea-Sumission Format SIH 4.0.pptx" 
+                      download="Idea-Submission-Format-SIH-4.0.pptx"
+                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white font-bold text-xs uppercase tracking-wider transition-all active:scale-95 shadow-lg border-none ${activeGuideline.buttonColor}`}
+                    >
+                      <Download size={13} />
+                      Download PPT Template
+                    </a>
+                  ) : activeGuideline.id === 5 ? (
+                    <button 
+                      onClick={() => onRegisterClick && onRegisterClick()}
+                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white font-bold text-xs uppercase tracking-wider transition-all active:scale-95 shadow-lg border-none ${activeGuideline.buttonColor}`}
+                    >
+                      <ArrowRight size={13} />
+                      Open Registration Form
+                    </button>
+                  ) : activeGuideline.id === 6 ? (
+                    <a 
+                      href="https://www.google.com/maps/place/Sagar+Institute+of+Science,+Technology+%26+Research,+Ratibad/@23.1806836,77.2995781,18.42z/data=!4m6!3m5!1s0x397c5c3c7b0aa7e1:0xf4798e9656dfb029!8m2!3d23.1814693!4d77.3016453!16s%2Fm%2F0t_fqww?entry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3D"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white font-bold text-xs uppercase tracking-wider transition-all active:scale-95 shadow-lg border-none ${activeGuideline.buttonColor}`}
+                    >
+                      <MapPin size={13} />
+                      View Campus Location
+                    </a>
+                  ) : activeGuideline.id === 2 ? (
+                    <a 
+                      href="#themes"
+                      onClick={(e) => { e.preventDefault(); onViewChange('landing', '#themes'); }}
+                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white font-bold text-xs uppercase tracking-wider transition-all active:scale-95 shadow-lg border-none ${activeGuideline.buttonColor}`}
+                    >
+                      <Layers size={13} />
+                      Browse Themes
+                    </a>
+                  ) : (
+                    <div className="text-[10px] text-slate-500 font-bold font-sans uppercase tracking-widest">
+                      SISTec-R Innovation Guidelines Console
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* 2. MOBILE VIEW: Interactive Collapsible Accordions (hidden on desktop screens) */}
+          <div className="block lg:hidden w-full flex flex-col gap-3.5">
+            {guidelines.map((rule, idx) => {
+              const isOpen = activeTab === idx;
+              return (
+                <div 
+                  key={rule.id}
+                  className={`border rounded-2xl overflow-hidden backdrop-blur-xl transition-all duration-500 ${
+                    isOpen 
+                      ? `bg-gradient-to-br ${rule.activeCardClass}` 
+                      : 'bg-[#0E0E12]/50 border-white/5 shadow-md'
+                  }`}
+                >
+                  {/* Accordion Header Trigger */}
+                  <button 
+                    onClick={() => setActiveTab(idx)}
+                    className="w-full flex items-center justify-between p-4 cursor-pointer text-left focus:outline-none"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="relative shrink-0">
+                        {isOpen && (
+                          <span 
+                            className="absolute -inset-1 rounded-xl pulse-sonar opacity-65"
+                            style={{ border: `1.5px solid ${rule.sonarColor}` }}
+                          />
+                        )}
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-base border shadow-inner transition-colors duration-300 relative z-10 ${
+                          isOpen ? 'bg-[#0C0C0F] border-white/10' : 'bg-[#13131A] border-white/5'
+                        }`}>
+                          {rule.icon}
+                        </div>
+                      </div>
+
+                      <div className="leading-tight">
+                        <p className="text-[8px] font-black uppercase tracking-wider font-sans text-slate-500">Rule 0{rule.id}</p>
+                        <h4 className={`text-xs font-black tracking-wide font-sans transition-colors duration-300 ${isOpen ? 'text-white' : 'text-slate-300'}`}>
+                          {rule.title}
+                        </h4>
+                      </div>
+                    </div>
+
+                    {/* Chevron Indicator */}
+                    <svg 
+                      className={`w-4 h-4 text-slate-400 transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180 text-brand-gold' : ''}`}
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Accordion Collapsible Detail Drawer */}
+                  <div 
+                    className={`transition-all duration-500 ease-in-out overflow-hidden ${
+                      isOpen 
+                        ? 'max-h-[500px] border-t border-white/5 opacity-100' 
+                        : 'max-h-0 opacity-0 pointer-events-none'
+                    }`}
+                  >
+                    <div className="p-4 sm:p-5 space-y-4 text-left">
+                      <p className="text-slate-300 text-xs font-semibold leading-relaxed">
+                        {rule.desc}
+                      </p>
+
+                      {/* Bullet Checklist */}
+                      <div className="space-y-2">
+                        <p className="text-[8px] font-black text-brand-gold tracking-widest uppercase font-sans">Core Guidelines</p>
+                        <ul className="space-y-2">
+                          {rule.bullets.map((bullet, bIdx) => (
+                            <li key={bIdx} className="flex items-start gap-2.5 text-[11px] text-brand-gray font-semibold leading-relaxed">
+                              <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 bg-brand-gold" />
+                              <span>{bullet}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Action Button inside Accordion */}
+                      <div className="pt-4 border-t border-white/5 flex w-full">
+                        {rule.id === 3 ? (
+                          <a 
+                            href="/Idea-Sumission Format SIH 4.0.pptx" 
+                            download="Idea-Submission-Format-SIH-4.0.pptx"
+                            className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-white font-bold text-xs uppercase tracking-wider transition-all active:scale-95 shadow-md w-full border-none ${rule.buttonColor}`}
+                          >
+                            <Download size={13} />
+                            Download PPT Template
+                          </a>
+                        ) : rule.id === 5 ? (
+                          <button 
+                            onClick={() => onRegisterClick && onRegisterClick()}
+                            className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-white font-bold text-xs uppercase tracking-wider transition-all active:scale-95 shadow-md w-full border-none ${rule.buttonColor}`}
+                          >
+                            <ArrowRight size={13} />
+                            Open Registration Form
+                          </button>
+                        ) : rule.id === 6 ? (
+                          <a 
+                            href="https://www.google.com/maps/place/Sagar+Institute+of+Science,+Technology+%26+Research,+Ratibad/@23.1806836,77.2995781,18.42z/data=!4m6!3m5!1s0x397c5c3c7b0aa7e1:0xf4798e9656dfb029!8m2!3d23.1814693!4d77.3016453!16s%2Fm%2F0t_fqww?entry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3D"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-white font-bold text-xs uppercase tracking-wider transition-all active:scale-95 shadow-md w-full border-none ${rule.buttonColor}`}
+                          >
+                            <MapPin size={13} />
+                            View Campus Location
+                          </a>
+                        ) : rule.id === 2 ? (
+                          <a 
+                            href="#themes"
+                            onClick={(e) => { e.preventDefault(); onViewChange('landing', '#themes'); }}
+                            className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-white font-bold text-xs uppercase tracking-wider transition-all active:scale-95 shadow-md w-full border-none ${rule.buttonColor}`}
+                          >
+                            <Layers size={13} />
+                            Browse Themes
+                          </a>
+                        ) : (
+                          <div className="text-[9px] text-slate-500 font-bold font-sans uppercase tracking-widest w-full text-right">
+                            SISTec-R Innovation Guidelines Console
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* ── Call to Action ── */}
-        <div className="bg-gradient-to-r from-brand-gold/15 to-amber-500/5 border border-brand-gold/30 rounded-2xl p-5 sm:p-6 w-full text-center mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="bg-gradient-to-r from-brand-gold/15 to-amber-500/5 border border-brand-gold/30 rounded-2xl p-5 sm:p-6 w-full text-center flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3 text-left">
             <div className="w-10 h-10 rounded-full bg-brand-gold/10 text-brand-gold flex items-center justify-center shrink-0 border border-brand-gold/20">
               <Info size={16} />
@@ -332,7 +657,7 @@ export default function Instructions({ onViewChange }) {
           <button
             onClick={() => {
               onViewChange('landing');
-              // Trigger registration modal (which is managed by App.jsx state)
+              // Trigger registration modal
               setTimeout(() => {
                 const registerBtn = document.querySelector('.btn-premium-animate');
                 if (registerBtn) registerBtn.click();
