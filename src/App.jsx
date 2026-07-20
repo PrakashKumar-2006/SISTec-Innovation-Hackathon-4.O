@@ -26,7 +26,6 @@ import ShortlistedTeams from './components/ShortlistedTeams';
 import PhotoGallery from './components/PhotoGallery';
 import NotificationToast from './components/NotificationToast';
 import SIH2026Winners from './components/SIH2026Winners';
-import SIH2026Finalists from './components/SIH2026Finalists';
 import SIH2025Winners from './components/SIH2025Winners';
 
 export default function App() {
@@ -109,8 +108,6 @@ export default function App() {
           <SIH2025Finalists onViewChange={handleViewChange} />
         ) : currentView === 'sih-2026-winners' ? (
           <SIH2026Winners onViewChange={handleViewChange} />
-        ) : currentView === 'sih-2026-finalists' ? (
-          <SIH2026Finalists onViewChange={handleViewChange} onRegisterClick={() => setShowRegister(true)} />
         ) : currentView === 'sih-2025-winners' ? (
           <SIH2025Winners onViewChange={handleViewChange} />
         ) : null}

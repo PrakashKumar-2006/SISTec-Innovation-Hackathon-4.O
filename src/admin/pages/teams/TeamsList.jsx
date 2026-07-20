@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../../components/ui/select';
-import { Search, Eye } from 'lucide-react';
+import { Search, Eye, Download } from 'lucide-react';
 import StatusBadge from '../../components/common/StatusBadge';
 import { PageHeader } from '../../components/navigation/PageHeader';
 
@@ -21,19 +21,50 @@ export default function TeamsList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [paymentFilter, setPaymentFilter] = useState('all');
   const [registrationFilter, setRegistrationFilter] = useState('all');
+  const [selectionFilter, setSelectionFilter] = useState('all');
+  const [isExporting, setIsExporting] = useState(false);
 
   // React Query for fetching teams
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['teams', pagination.pageIndex, pagination.pageSize, searchTerm, paymentFilter, registrationFilter],
+    queryKey: ['teams', pagination.pageIndex, pagination.pageSize, searchTerm, paymentFilter, registrationFilter, selectionFilter],
     queryFn: () => teamsService.getTeams({
       page: pagination.pageIndex + 1,
       limit: pagination.pageSize,
       search: searchTerm,
       paymentStatus: paymentFilter,
-      registrationStatus: registrationFilter
+      registrationStatus: registrationFilter,
+      selectionStatus: selectionFilter
     }),
     keepPreviousData: true,
   });
+
+  const handleExportTemplate = async () => {
+    try {
+      setIsExporting(true);
+      const filters = {
+        search: searchTerm,
+        paymentStatus: paymentFilter,
+        registrationStatus: registrationFilter,
+        selectionStatus: selectionFilter
+      };
+      
+      const response = await teamsService.exportSelectionTemplate(filters);
+      // Access the actual blob data from the Axios response
+      const blob = new Blob([response.data]);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'Selection_Import_Template.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Template export failed:', error);
+      alert('Export failed. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const columns = [
     {
@@ -107,7 +138,7 @@ export default function TeamsList() {
           />
         </div>
 
-        <div className="flex gap-4 w-full sm:w-auto">
+        <div className="flex gap-2 w-full sm:w-auto flex-wrap">
           <Select 
             value={paymentFilter} 
             onValueChange={(val) => { setPaymentFilter(val); setPagination({ ...pagination, pageIndex: 0 }); }}
@@ -137,6 +168,31 @@ export default function TeamsList() {
               <SelectItem value="rejected">Rejected</SelectItem>
             </SelectContent>
           </Select>
+
+          <Select 
+            value={selectionFilter} 
+            onValueChange={(val) => { setSelectionFilter(val); setPagination({ ...pagination, pageIndex: 0 }); }}
+          >
+            <SelectTrigger className="w-[180px] bg-brand-dark border-brand-purple/30 text-brand-text">
+              <SelectValue placeholder="Selection Status" />
+            </SelectTrigger>
+            <SelectContent className="bg-brand-card border-brand-purple/20 text-brand-text">
+              <SelectItem value="all">All Teams</SelectItem>
+              <SelectItem value="Pending Evaluation">Pending Evaluation</SelectItem>
+              <SelectItem value="Shortlisted">Shortlisted</SelectItem>
+              <SelectItem value="Not Shortlisted">Not Shortlisted</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <button
+            onClick={handleExportTemplate}
+            disabled={isExporting}
+            className="flex items-center gap-2 px-4 py-2 bg-brand-purple/20 text-brand-gold border border-brand-purple hover:bg-brand-purple hover:text-white transition-all rounded-md shadow-sm disabled:opacity-50"
+            title="Export Selection Template matching current filters"
+          >
+            <Download className="w-4 h-4" />
+            {isExporting ? 'Exporting...' : 'Export Template'}
+          </button>
         </div>
       </div>
 
