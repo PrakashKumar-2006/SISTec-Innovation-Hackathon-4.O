@@ -73,16 +73,96 @@ export default function Prizes({ isStandalone = false }) {
       <div className="absolute top-1/4 right-0 w-96 h-96 bg-brand-gold/5 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-brand-blue/5 rounded-full blur-[120px] pointer-events-none"></div>
 
+      {/* Embedded CSS Animations for Trophy SVG */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes trophy-float-prize {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-8px) rotate(1deg); }
+        }
+        @keyframes star-pulse-prize {
+          0%, 100% { transform: scale(0.6); opacity: 0.3; }
+          50% { transform: scale(1.2); opacity: 1; }
+        }
+        @keyframes spin-orbit {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        .animate-trophy-float-prize {
+          animation: trophy-float-prize 4s ease-in-out infinite;
+          transform-origin: 100px 105px;
+        }
+        .animate-star-prize-1 { animation: star-pulse-prize 2s ease-in-out infinite; transform-origin: 40px 50px; }
+        .animate-star-prize-2 { animation: star-pulse-prize 2.5s ease-in-out infinite 0.5s; transform-origin: 160px 60px; }
+        .animate-star-prize-3 { animation: star-pulse-prize 1.8s ease-in-out infinite 1s; transform-origin: 50px 130px; }
+        .animate-star-prize-4 { animation: star-pulse-prize 2.2s ease-in-out infinite 1.5s; transform-origin: 150px 140px; }
+        .animate-spin-orbit {
+          animation: spin-orbit 15s linear infinite;
+          transform-origin: 100px 115px;
+        }
+      `}} />
+
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 relative z-10 text-center">
         
-        {/* Section Heading */}
-        <div className="max-w-4xl mx-auto mb-16">
+        {/* ── Section Heading with Inline Animated SVG Trophy ── */}
+        <div className="max-w-5xl mx-auto mb-16 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 flex-wrap">
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white font-display leading-tight">
             Total Cash Prizes Up to{' '}
             <span className="bg-gradient-to-r from-brand-gold via-yellow-200 to-amber-500 bg-clip-text text-transparent whitespace-nowrap">
-              ₹1 Lakh! 🏆
+              ₹1 Lakh!
             </span>
           </h2>
+          
+          {/* Animated SVG Trophy placed inline right next to '1 Lakh!' */}
+          <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 drop-shadow-[0_0_25px_rgba(216,171,85,0.3)] shrink-0 select-none pointer-events-none mt-2 md:mt-0">
+            <svg
+              viewBox="0 0 200 200"
+              className="w-full h-full overflow-visible"
+            >
+              {/* Glowing Background Aura */}
+              <circle cx="100" cy="105" r="45" fill="url(#auraGradient)" opacity="0.35" className="animate-pulse" />
+
+              {/* 3D Orbit Ring */}
+              <ellipse cx="100" cy="115" rx="72" ry="18" fill="none" stroke="url(#goldGradient)" strokeWidth="2.5" strokeDasharray="5 7" className="animate-spin-orbit opacity-75" />
+
+              {/* Floating Trophy Group */}
+              <g className="animate-trophy-float-prize">
+                {/* Trophy Base */}
+                <rect x="75" y="142" width="50" height="10" rx="3" fill="url(#goldGradient)" stroke="#FFE8B6" strokeWidth="0.5" />
+                <path d="M 85 142 L 90 122 L 110 122 L 115 142 Z" fill="url(#goldGradient)" stroke="#A27B2B" strokeWidth="0.5" />
+                
+                {/* Trophy Cup Bowl */}
+                <path d="M 65 65 L 135 65 C 135 110, 115 122, 100 122 C 85 122, 65 110, 65 65 Z" fill="url(#goldGradient)" stroke="#FFE8B6" strokeWidth="0.5" />
+                
+                {/* Left Handle */}
+                <path d="M 65 72 C 48 72, 48 94, 65 99" fill="none" stroke="url(#goldGradient)" strokeWidth="4.5" strokeLinecap="round" />
+                
+                {/* Right Handle */}
+                <path d="M 135 72 C 152 72, 152 94, 135 99" fill="none" stroke="url(#goldGradient)" strokeWidth="4.5" strokeLinecap="round" />
+                
+                {/* Glowing White Star Badge on Cup */}
+                <path d="M 100 81 L 103 88 L 110 89 L 105 94 L 106 101 L 100 97 L 94 101 L 95 94 L 90 89 L 97 88 Z" fill="#FFFFFF" className="opacity-95 drop-shadow-[0_0_8px_#FFF]" />
+              </g>
+
+              {/* Sparkling animated stars */}
+              <path d="M40 50 L42 54 L46 55 L42 56 L40 60 L38 56 L34 55 L38 54 Z" fill="#FFE8B6" className="animate-star-prize-1" />
+              <path d="M160 60 L162 64 L166 65 L162 66 L160 70 L158 66 L154 65 L158 64 Z" fill="#06B6D4" className="animate-star-prize-2" />
+              <path d="M50 130 L52 134 L56 135 L52 136 L50 140 L48 136 L44 135 L48 134 Z" fill="#F59E0B" className="animate-star-prize-3" />
+              <path d="M150 140 L152 144 L156 145 L152 146 L150 150 L148 146 L144 145 L148 144 Z" fill="#EC4899" className="animate-star-prize-4" />
+
+              {/* Definitions */}
+              <defs>
+                <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#FFE8B6" />
+                  <stop offset="50%" stopColor="#D8AB55" />
+                  <stop offset="100%" stopColor="#A27B2B" />
+                </linearGradient>
+                <radialGradient id="auraGradient" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#D8AB55" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#D8AB55" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+            </svg>
+          </div>
         </div>
 
         {/* Prizes Cards Grid */}
@@ -165,16 +245,21 @@ export default function Prizes({ isStandalone = false }) {
             <div className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1px] h-12 bg-white/10"></div>
 
             {/* Venue block */}
-            <div className="flex items-center gap-4 text-left group pl-0 md:pl-8">
+            <a 
+              href="https://www.google.com/maps/place/Sagar+Institute+of+Science,+Technology+%26+Research,+Ratibad/@23.1806836,77.2995781,18.42z/data=!4m6!3m5!1s0x397c5c3c7b0aa7e1:0xf4798e9656dfb029!8m2!3d23.1814693!4d77.3016453!16s%2Fm%2F0t_fqww?entry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3D"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 text-left group pl-0 md:pl-8 cursor-pointer"
+            >
               <div className="p-3.5 rounded-2xl bg-brand-blue/15 border border-brand-blue/25 text-brand-blue shadow-inner group-hover:scale-105 transition-transform duration-300">
                 <MapPin className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-[10px] text-brand-gray font-bold tracking-widest uppercase">OFFICIAL VENUE</p>
-                <p className="text-lg font-black text-white font-display mt-0.5">SISTec-R Campus</p>
-                <p className="text-xs text-brand-gray mt-0.5">Ratibad, Bhopal, Madhya Pradesh</p>
+                <p className="text-[10px] text-brand-gray font-bold tracking-widest uppercase group-hover:text-brand-gold transition-colors">OFFICIAL VENUE</p>
+                <p className="text-lg font-black text-white font-display mt-0.5 group-hover:text-brand-gold transition-colors">SISTec-R Campus</p>
+                <p className="text-xs text-brand-gray mt-0.5 group-hover:text-slate-200 transition-colors">Ratibad, Bhopal, Madhya Pradesh</p>
               </div>
-            </div>
+            </a>
 
           </div>
         </div>

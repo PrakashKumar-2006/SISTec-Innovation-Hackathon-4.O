@@ -113,7 +113,14 @@ export default function Footer({ onViewChange }) {
               </li>
               <li className="flex items-start gap-3">
                 <MapPin size={16} className="text-brand-teal shrink-0 mt-0.5" />
-                <span>SISTec-R Campus, Ratibad, Bhopal, 462044</span>
+                <a 
+                  href="https://www.google.com/maps/place/Sagar+Institute+of+Science,+Technology+%26+Research,+Ratibad/@23.1806836,77.2995781,18.42z/data=!4m6!3m5!1s0x397c5c3c7b0aa7e1:0xf4798e9656dfb029!8m2!3d23.1814693!4d77.3016453!16s%2Fm%2F0t_fqww?entry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3D"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-brand-blue transition-colors text-left"
+                >
+                  SISTec-R Campus, Ratibad, Bhopal, 462044
+                </a>
               </li>
             </ul>
           </div>

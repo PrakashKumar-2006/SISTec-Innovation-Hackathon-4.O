@@ -54,15 +54,20 @@ export default function Contact({ onViewChange }) {
           </div>
 
           {/* Address Card */}
-          <div className="group p-6 rounded-3xl bg-brand-card/30 border border-white/5 hover:border-brand-gold/30 shadow-card-shadow transition-all duration-300 text-center flex flex-col items-center">
+          <a 
+            href="https://www.google.com/maps/place/Sagar+Institute+of+Science,+Technology+%26+Research,+Ratibad/@23.1806836,77.2995781,18.42z/data=!4m6!3m5!1s0x397c5c3c7b0aa7e1:0xf4798e9656dfb029!8m2!3d23.1814693!4d77.3016453!16s%2Fm%2F0t_fqww?entry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3D"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group p-6 rounded-3xl bg-brand-card/30 border border-white/5 hover:border-brand-gold/30 shadow-card-shadow hover:-translate-y-1.5 transition-all duration-300 text-center flex flex-col items-center cursor-pointer"
+          >
             <div className="p-4 rounded-full bg-brand-gold/10 text-brand-gold mb-5 border border-brand-gold/20 group-hover:scale-110 transition-transform">
               <MapPin size={24} />
             </div>
-            <h3 className="text-lg font-bold text-white mb-3 font-display">Address</h3>
-            <p className="text-xs sm:text-sm text-brand-gray/80 leading-relaxed max-w-xs font-semibold">
+            <h3 className="text-lg font-bold text-white mb-3 font-display group-hover:text-brand-gold transition-colors">Address</h3>
+            <p className="text-xs sm:text-sm text-brand-gray/80 leading-relaxed max-w-xs font-semibold group-hover:text-slate-200 transition-colors">
               SISTec-R Sikandrabad, Ratibad, Bhopal, Madhya Pradesh 462044
             </p>
-          </div>
+          </a>
 
           {/* Email Card */}
           <div className="group p-6 rounded-3xl bg-brand-card/30 border border-white/5 hover:border-brand-gold/30 shadow-card-shadow transition-all duration-300 text-center flex flex-col items-center">

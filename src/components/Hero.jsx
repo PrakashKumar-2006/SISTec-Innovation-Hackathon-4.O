@@ -87,7 +87,7 @@ export default function Hero({ onRegisterClick }) {
                   SIH <span className="text-gold-metallic">4.0</span>
                 </h1>
                 <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-black tracking-wide text-white leading-none font-sans uppercase whitespace-nowrap">
-                  SISTec Innovation <span className="text-brand-gold">Hackathon</span>
+                  <span className="normal-case">SISTec</span> Innovation <span className="text-brand-gold">Hackathon</span>
                 </p>
               </div>
             </div>
