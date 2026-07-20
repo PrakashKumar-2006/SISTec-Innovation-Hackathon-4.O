@@ -63,7 +63,6 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
       name: 'Result',
       dropdown: [
         { name: 'Shortlisted Teams', view: 'shortlisted-teams' },
-        { name: 'Grand Finale Teams', view: 'sih-2026-finalists' },
         { name: 'Winner Of SIH 2026', view: 'sih-2026-winners' }
       ]
     },

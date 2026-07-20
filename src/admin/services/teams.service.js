@@ -24,4 +24,11 @@ export const teamsService = {
     const response = await api.patch(`/teams/${id}/status`, statusData);
     return response.data;
   },
+
+  /**
+   * Export teams to Excel Selection Template based on filters
+   */
+  exportSelectionTemplate: async (filters) => {
+    return api.get('/teams/export-selection-template', { params: filters, responseType: 'blob' });
+  },
 };
