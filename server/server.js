@@ -106,8 +106,7 @@ const sendConfirmationEmail = async (leaderEmail, leaderName, teamName, registra
         
         <!-- Header -->
         <div style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 30px 20px; text-align: center; color: white;">
-          <h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: 1px;">SISTec Innovation Hackathon 4.0</h1>
-          <p style="margin: 8px 0 0 0; font-size: 16px; opacity: 0.9;">Smart India Hackathon 2026</p>
+          <h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: 1px;">SISTec-R Innovation Hackathon 4.0</h1>
         </div>
 
         <!-- Body -->
@@ -117,7 +116,7 @@ const sendConfirmationEmail = async (leaderEmail, leaderName, teamName, registra
           </h2>
           <p style="font-size: 16px; color: #444; line-height: 1.6;">
             Hello <strong>${leaderName}</strong>,<br><br>
-            Thank you for registering for the <strong>Smart India Hackathon 4.0</strong>. We are thrilled to have you and your team on board for this exciting journey of innovation and problem-solving!
+            Thank you for registering for the <strong>SISTec-R Innovation Hackathon 4.0</strong>. We are thrilled to have you and your team on board for this exciting journey of innovation and problem-solving!
           </p>
 
           <!-- Team Details Card -->
@@ -169,7 +168,7 @@ const sendConfirmationEmail = async (leaderEmail, leaderName, teamName, registra
             </p>
           </div>
           
-          <p style="margin: 20px 0 0 0; font-size: 12px; color: #666;">&copy; 2026 SISTec Innovation Hackathon (SIH 4.0). All rights reserved.</p>
+          <p style="margin: 20px 0 0 0; font-size: 12px; color: #666;">&copy; 2026 SISTec-R Innovation Hackathon (SIH 4.0). All rights reserved.</p>
         </div>
       </div>
     `
