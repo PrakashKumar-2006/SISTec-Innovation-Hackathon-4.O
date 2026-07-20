@@ -27,6 +27,7 @@ import PhotoGallery from './components/PhotoGallery';
 import NotificationToast from './components/NotificationToast';
 import SIH2026Winners from './components/SIH2026Winners';
 import SIH2025Winners from './components/SIH2025Winners';
+import SIH2025Finalists from './components/SIH2025Finalists';
 
 export default function App() {
   const [showRegister, setShowRegister] = useState(false);
