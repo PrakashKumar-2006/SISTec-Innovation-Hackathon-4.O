@@ -48,7 +48,7 @@ export default function About({ isStandalone = false }) {
             
             {/* Top Dot Accent & CSE Dept Title (unboxed to match hero banner) */}
             <div className="space-y-3">
-              <p className="text-xs sm:text-sm font-extrabold tracking-[0.25em] text-brand-gold font-sans uppercase">
+              <p className="text-[9px] sm:text-sm md:text-base lg:text-lg font-black tracking-[0.18em] sm:tracking-[0.28em] text-brand-gold font-cinzel uppercase whitespace-nowrap">
                 Department of Computer Science & Engineering
               </p>
             </div>
