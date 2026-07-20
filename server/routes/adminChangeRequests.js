@@ -137,28 +137,20 @@ router.patch('/:id/status', roleMiddleware(['Super Admin', 'Admin', 'Moderator']
 
     await request.save();
 
-    // Send Email
-    if (registration && registration.teamLeaderEmail) {
-      try {
-        const mailOptions = {
-          from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
-          to: registration.teamLeaderEmail,
-          subject: `SIH 4.0 - Problem Statement Change Request ${status}`,
-          html: `
-            <h3>Problem Statement Change Request ${status}</h3>
-            <p>Dear ${registration.teamLeaderName || 'Team Leader'},</p>
-            <p>Your request to change your team's problem statement has been <strong>${status}</strong>.</p>
-            ${status === 'Approved' ? `<p>Your new assigned Problem Statement is: <strong>${request.requestedPsid} - ${request.requestedPsTitle}</strong></p>` : ''}
-            ${adminRemarks ? `<p><strong>Admin Remarks:</strong> ${adminRemarks}</p>` : ''}
-            <br/>
-            <p>Regards,<br/>SIH 4.0 Organizing Team</p>
-          `
-        };
-        await transporter.sendMail(mailOptions);
-      } catch (emailError) {
-        console.error('Failed to send email notification:', emailError);
-        // Do not fail the API response if email fails
-      }
+    // Send Email using centralized queue
+    if (registration && registration.leaderEmail) {
+      const { queueChangeRequestEmail } = require('../server');
+      queueChangeRequestEmail(
+        status, 
+        registration.leaderEmail, 
+        registration.leaderName || 'Team Leader', 
+        {
+          teamName: registration.teamName,
+          requestedPsid: request.requestedPsid,
+          requestedPsTitle: request.requestedPsTitle,
+          adminRemarks: request.adminRemarks
+        }
+      );
     }
 
     res.status(200).json({ success: true, data: request });

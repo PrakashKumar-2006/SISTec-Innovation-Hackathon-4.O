@@ -127,10 +127,79 @@ export function ContactDetailsModal({ isOpen, onClose, contactId, initialReplyMo
               <div className="space-y-6">
                 {/* Original Message */}
                 <div className="bg-brand-card border border-brand-purple/20 rounded-xl p-5 shadow-card-shadow">
-                  <h4 className="text-sm font-semibold text-brand-gold mb-2 uppercase tracking-wider">Subject: {contact.subject}</h4>
+                  <h4 className="text-sm font-semibold text-brand-gold mb-4 uppercase tracking-wider">Subject: {contact.subject}</h4>
+                  
+                  <div className="mb-4 space-y-2">
+                    <div className="flex text-sm border-b border-brand-purple/10 pb-2">
+                      <span className="text-brand-gray w-1/3">Category:</span>
+                      <span className="text-brand-text font-medium w-2/3">{contact.category || 'General Inquiry'}</span>
+                    </div>
+                    {contact.registrationCode && (
+                      <div className="flex text-sm border-b border-brand-purple/10 pb-2 pt-2">
+                        <span className="text-brand-gray w-1/3">Registration Code:</span>
+                        <span className="text-brand-text font-medium w-2/3">{contact.registrationCode}</span>
+                      </div>
+                    )}
+                    {contact.teamName && (
+                      <div className="flex text-sm border-b border-brand-purple/10 pb-2 pt-2">
+                        <span className="text-brand-gray w-1/3">Team Name:</span>
+                        <span className="text-brand-text font-medium w-2/3">{contact.teamName}</span>
+                      </div>
+                    )}
+                    {contact.transactionId && (
+                      <div className="flex text-sm border-b border-brand-purple/10 pb-2 pt-2">
+                        <span className="text-brand-gray w-1/3">Transaction ID:</span>
+                        <span className="text-brand-text font-medium w-2/3">{contact.transactionId}</span>
+                      </div>
+                    )}
+                    {contact.paymentReference && (
+                      <div className="flex text-sm border-b border-brand-purple/10 pb-2 pt-2">
+                        <span className="text-brand-gray w-1/3">Payment Ref:</span>
+                        <span className="text-brand-text font-medium w-2/3">{contact.paymentReference}</span>
+                      </div>
+                    )}
+                    {contact.issueType && (
+                      <div className="flex text-sm border-b border-brand-purple/10 pb-2 pt-2">
+                        <span className="text-brand-gray w-1/3">Issue Type:</span>
+                        <span className="text-brand-text font-medium w-2/3">{contact.issueType}</span>
+                      </div>
+                    )}
+                    {contact.browser && (
+                      <div className="flex text-sm border-b border-brand-purple/10 pb-2 pt-2">
+                        <span className="text-brand-gray w-1/3">Browser:</span>
+                        <span className="text-brand-text font-medium w-2/3">{contact.browser}</span>
+                      </div>
+                    )}
+                    {contact.device && (
+                      <div className="flex text-sm border-b border-brand-purple/10 pb-2 pt-2">
+                        <span className="text-brand-gray w-1/3">Device:</span>
+                        <span className="text-brand-text font-medium w-2/3">{contact.device}</span>
+                      </div>
+                    )}
+                  </div>
+
                   <div className="bg-brand-dark rounded-lg p-4 text-brand-text text-sm leading-relaxed whitespace-pre-wrap border border-brand-purple/10">
                     {contact.message}
                   </div>
+                  
+                  {contact.attachments && contact.attachments.length > 0 && (
+                    <div className="mt-4 pt-4 border-t border-brand-purple/10">
+                      <h4 className="text-xs font-semibold text-brand-gray uppercase tracking-wider mb-2">Attachments</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {contact.attachments.map((file, i) => (
+                          <a 
+                            key={i} 
+                            href={file} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="px-3 py-1.5 bg-brand-dark border border-brand-purple/30 rounded-md text-xs text-brand-teal hover:text-brand-gold hover:border-brand-gold transition-colors"
+                          >
+                            View Attachment {i + 1}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   
                   <div className="mt-4 flex justify-end">
                     <button 

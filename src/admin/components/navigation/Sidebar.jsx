@@ -19,7 +19,7 @@ const ADMIN_NAVIGATION = [
   { name: 'Problem Statements', path: '/admin/problems', icon: FileText, roles: ['Super Admin', 'Admin', 'Moderator', 'Viewer'] },
   { name: 'Change Requests', path: '/admin/requests', icon: MessageSquare, roles: ['Super Admin', 'Admin', 'Moderator', 'Viewer'] },
   { name: 'Contacts', path: '/admin/contacts', icon: Contact, roles: ['Super Admin', 'Admin', 'Moderator', 'Viewer'] },
-  { name: 'Results', path: '/admin/results', icon: Trophy, roles: ['Super Admin', 'Admin', 'Moderator', 'Viewer'] },
+  { name: 'Selections', path: '/admin/selections', icon: Trophy, roles: ['Super Admin', 'Admin', 'Moderator', 'Viewer'] },
   { name: 'Users', path: '/admin/users', icon: Users, roles: ['Super Admin'] },
   { name: 'Settings', path: '/admin/settings', icon: Settings, roles: ['Super Admin'] },
 ];
@@ -35,7 +35,7 @@ export function Sidebar({ className, onItemClick }) {
   return (
     <div className={cn('flex h-full flex-col bg-brand-darker border-r border-brand-purple/20 text-brand-text', className)}>
       <div className="p-6">
-        <h2 className="text-2xl font-bold tracking-tight text-brand-gold">SIH 4.0</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-brand-gold font-display">SIH 4.0</h2>
         <p className="text-sm text-brand-gray mt-1">Admin Portal</p>
       </div>
 

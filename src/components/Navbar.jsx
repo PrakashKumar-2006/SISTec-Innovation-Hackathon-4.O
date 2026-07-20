@@ -80,8 +80,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
     {
       name: 'Result',
       dropdown: [
-        { name: 'Grand Finale Teams', href: '#prizes' },
-        { name: 'Winner Of SIH 2025', href: '#prizes' }
+        { name: 'Shortlisted Teams', view: 'shortlisted-teams' }
       ]
     },
     {
@@ -91,7 +90,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
           name: 'SIH 3.0',
           subItems: [
             { name: 'SIH 2025' },
-            { name: 'Grand Finale Teams', view: 'sih-2025-finalists' },
+            { name: 'Grand Finale Teams', view: 'shortlisted-teams' },
             { name: 'Winner Of SIH 2025' }
           ]
         },
@@ -195,7 +194,9 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                   href={sub.href}
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    if (sub.name === 'Instructions') {
+                                    if (sub.view) {
+                                      onViewChange && onViewChange(sub.view);
+                                    } else if (sub.name === 'Instructions') {
                                       onViewChange && onViewChange('instructions');
                                     } else if (sub.name === 'About SIH') {
                                       onViewChange && onViewChange('about-sih');
@@ -340,7 +341,9 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                     onClick={(e) => {
                                       e.preventDefault();
                                       setIsOpen(false);
-                                      if (sub.name === 'Instructions') {
+                                      if (sub.view) {
+                                        onViewChange && onViewChange(sub.view);
+                                      } else if (sub.name === 'Instructions') {
                                         onViewChange && onViewChange('instructions');
                                       } else if (sub.name === 'About SIH') {
                                         onViewChange && onViewChange('about-sih');

@@ -40,6 +40,51 @@ const contactSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  category: {
+    type: String,
+    enum: ['General Inquiry', 'Registration Support', 'Payment Related Query', 'Technical Issue', 'Certificate / Result Query', 'Other'],
+    default: 'General Inquiry'
+  },
+  registrationCode: {
+    type: String,
+    trim: true
+  },
+  teamName: {
+    type: String,
+    trim: true
+  },
+  leaderName: {
+    type: String,
+    trim: true
+  },
+  leaderEmail: {
+    type: String,
+    trim: true,
+    lowercase: true
+  },
+  transactionId: {
+    type: String,
+    trim: true
+  },
+  paymentReference: {
+    type: String,
+    trim: true
+  },
+  browser: {
+    type: String,
+    trim: true
+  },
+  device: {
+    type: String,
+    trim: true
+  },
+  issueType: {
+    type: String,
+    trim: true
+  },
+  attachments: [{
+    type: String
+  }],
   subject: {
     type: String,
     required: [true, 'Subject is required'],

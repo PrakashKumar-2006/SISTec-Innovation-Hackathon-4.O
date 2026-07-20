@@ -24,6 +24,7 @@ const Razorpay = require('razorpay');
 const nodemailer = require('nodemailer');
 const { authMiddleware } = require("./middleware/auth");
 const { maintenanceMiddleware } = require("./middleware/maintenance");
+const { sendConfirmationEmail, sendSelectionEmail } = require('./utils/email');
 
 const app = express();
 
@@ -33,26 +34,16 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET || 'secret_placeholder'
 });
 
-// Setup Nodemailer SMTP Transporter
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.EMAIL_PORT || '587', 10),
-  secure: process.env.EMAIL_PORT === '465', // true for 465, false for other ports
-  auth: {
-    user: process.env.EMAIL_USER || '',
-    pass: process.env.EMAIL_PASS || '',
-  },
-  tls: {
-    rejectUnauthorized: false // Helps bypass local TLS cert errors during development
-  }
-});
+// Setup Nodemailer SMTP Transporter (Removed, now in utils/email.js)
 
 // Database-Backed Email Retry Queue Schema
 const emailQueueSchema = new mongoose.Schema({
+  emailType: { type: String, enum: ['REGISTRATION', 'SELECTION_SHORTLISTED', 'SELECTION_NOT_SHORTLISTED'], default: 'REGISTRATION' },
   registrationId: { type: String, required: true },
   leaderEmail: { type: String, required: true },
   leaderName: { type: String, required: true },
   teamName: { type: String, required: true },
+  payload: { type: mongoose.Schema.Types.Mixed }, // For extra data like round, theme, psTitle
   attempts: { type: Number, default: 0 },
   status: { 
     type: String, 
@@ -97,101 +88,123 @@ const logPaymentEvent = async (eventType, { registrationId, orderId, paymentId, 
   }
 };
 
-// Helper to send registration confirmation email (returns boolean or throws)
-const sendConfirmationEmail = async (leaderEmail, leaderName, teamName, registrationId) => {
-  // If email configuration is missing, print warning and skip to prevent backend errors
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    console.warn('WARNING: SMTP email configurations not set in .env. Skipping email dispatch.');
-    return true; // Pretend sent since credentials aren't set yet (safe for dev)
-  }
+// Helper to send registration confirmation email (Moved to utils/email.js)
 
-  const mailOptions = {
-    from: `"SIH 4.0 Hackathon" <${process.env.EMAIL_USER}>`,
-    to: leaderEmail,
-    subject: `SIH 4.0 Registration Successful! - Team ${teamName}`,
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #fdfdfd;">
-        <div style="text-align: center; border-bottom: 2px solid #D8AB55; padding-bottom: 15px; margin-bottom: 20px;">
-          <h2 style="color: #161619; margin: 0;">Smart India Hackathon 4.0</h2>
-          <p style="color: #D8AB55; font-size: 14px; font-weight: bold; margin: 5px 0 0 0; letter-spacing: 1px;">SISTec Innovation Hackathon</p>
-        </div>
-        
-        <div style="color: #333333; line-height: 1.6;">
-          <p>Dear <strong>${leaderName}</strong>,</p>
-          
-          <p>Congratulations! Your team <strong>"${teamName}"</strong> has successfully registered for the <strong>Smart India Hackathon 4.0 (SIH 4.0)</strong> at Sagar Institute of Science & Technology (SISTec-R).</p>
-          
-          <div style="background-color: #f9f9f9; border-left: 4px solid #D8AB55; padding: 15px; margin: 20px 0; border-radius: 4px;">
-            <p style="margin: 0; font-size: 14px; color: #666666;">Your Unique Registration ID is:</p>
-            <h3 style="margin: 5px 0 0 0; color: #D8AB55; font-family: monospace; font-size: 22px; letter-spacing: 2px;">${registrationId}</h3>
-          </div>
-          
-          <p>Please keep this Registration ID safe. You will need it to reference your nomination, check results, and upload future project milestone guidelines.</p>
-          
-          <p><strong>Next Steps:</strong></p>
-          <ul style="padding-left: 20px;">
-            <li>Abstract guidelines and submission templates will be sent to this email address shortly.</li>
-            <li>Ensure your team members are notified of the success.</li>
-          </ul>
-          
-          <p style="margin-top: 30px; font-size: 12px; color: #888888; text-align: center; border-top: 1px solid #eeeeee; padding-top: 15px;">
-            This is an automated notification. Please do not reply directly to this email. For any queries, contact the hackathon organization committee.
-          </p>
-        </div>
-      </div>
-    `
-  };
-
-  const info = await transporter.sendMail(mailOptions);
-  console.log(`Confirmation email successfully sent to ${leaderEmail}. MessageId: ${info.messageId}`);
-  return true;
-};
-
-// Queue a new email job in the database
+// Queue a new registration email job in the database
 const queueConfirmationEmail = async (leaderEmail, leaderName, teamName, registrationId) => {
   try {
     const job = new EmailQueue({
+      emailType: 'REGISTRATION',
       registrationId,
       leaderEmail,
       leaderName,
       teamName
     });
     await job.save();
-    console.log(`Queued email job in database for team "${teamName}" (${leaderEmail}).`);
-    // Run queue processor in the background
+    console.log(`Queued REGISTRATION email job for team "${teamName}" (${leaderEmail}).`);
     processEmailQueue();
   } catch (err) {
     console.error('Failed to queue confirmation email job:', err.message);
   }
 };
 
-// Background Email Queue Processor
-const processEmailQueue = async () => {
+// Queue a selection email job
+const queueSelectionEmail = async (teamData, isShortlisted) => {
   try {
-    // Find pending jobs scheduled to run now or in the past
+    const job = new EmailQueue({
+      emailType: isShortlisted ? 'SELECTION_SHORTLISTED' : 'SELECTION_NOT_SHORTLISTED',
+      registrationId: teamData.registrationId,
+      leaderEmail: teamData.leaderEmail,
+      leaderName: teamData.leaderName,
+      teamName: teamData.teamName,
+      payload: teamData
+    });
+    await job.save();
+    console.log(`Queued ${job.emailType} email job for team "${teamData.teamName}" (${teamData.leaderEmail}).`);
+    // Do not call processEmailQueue() here to avoid overwhelming during bulk publish.
+  } catch (err) {
+    console.error('Failed to queue selection email job:', err.message);
+  }
+};
+
+// Queue a support email job
+const queueSupportEmail = async (category, email, name, referenceId, payload) => {
+  try {
+    const job = new EmailQueue({
+      emailType: 'SUPPORT_ACK',
+      leaderEmail: email,
+      leaderName: name,
+      payload: { ...payload, category, referenceId }
+    });
+    await job.save();
+    console.log(`Queued SUPPORT_ACK email job for ${name} (${email}).`);
+    processEmailQueue();
+  } catch (err) {
+    console.error('Failed to queue support email job:', err.message);
+  }
+};
+
+// Queue a change request email job
+const queueChangeRequestEmail = async (status, email, name, payload) => {
+  try {
+    const job = new EmailQueue({
+      emailType: status === 'Approved' ? 'CR_APPROVED' : 'CR_REJECTED',
+      leaderEmail: email,
+      leaderName: name,
+      payload: payload
+    });
+    await job.save();
+    console.log(`Queued ${job.emailType} email job for ${name} (${email}).`);
+    processEmailQueue();
+  } catch (err) {
+    console.error('Failed to queue change request email job:', err.message);
+  }
+};
+
+// Background Email Queue Processor
+let isProcessingEmailQueue = false;
+const processEmailQueue = async () => {
+  if (isProcessingEmailQueue) return;
+  isProcessingEmailQueue = true;
+  
+  try {
+    // Process up to 50 emails per tick to respect SMTP limits and chunk properly
     const jobs = await EmailQueue.find({
       status: 'pending',
       nextRetryAt: { $lte: new Date() }
-    });
+    }).limit(50);
 
     for (const job of jobs) {
       job.attempts += 1;
       try {
-        await sendConfirmationEmail(job.leaderEmail, job.leaderName, job.teamName, job.registrationId);
+        if (job.emailType === 'REGISTRATION') {
+          await sendConfirmationEmail(job.leaderEmail, job.leaderName, job.teamName, job.registrationId);
+        } else if (job.emailType === 'SELECTION_SHORTLISTED') {
+          await sendSelectionEmail(job.payload, true);
+        } else if (job.emailType === 'SELECTION_NOT_SHORTLISTED') {
+          await sendSelectionEmail(job.payload, false);
+        } else if (job.emailType === 'SUPPORT_ACK') {
+          await sendSupportAckEmail(job.leaderEmail, job.leaderName, job.payload);
+        } else if (job.emailType === 'CR_APPROVED') {
+          await sendChangeRequestEmail(job.leaderEmail, job.leaderName, job.payload, true);
+        } else if (job.emailType === 'CR_REJECTED') {
+          await sendChangeRequestEmail(job.leaderEmail, job.leaderName, job.payload, false);
+        }
+
         job.status = 'sent';
         job.lastError = undefined;
 
         logPaymentEvent('EMAIL_SENT', {
           registrationId: job.registrationId,
-          payload: { email: job.leaderEmail }
+          payload: { email: job.leaderEmail, type: job.emailType }
         });
       } catch (err) {
-        console.error(`Email attempt #${job.attempts} failed for ${job.leaderEmail}:`, err.message);
+        console.error(`Email attempt #${job.attempts} failed for ${job.leaderEmail} (${job.emailType}):`, err.message);
         job.lastError = err.message;
 
         logPaymentEvent('EMAIL_FAILED', {
           registrationId: job.registrationId,
-          payload: { email: job.leaderEmail, error: err.message, attempt: job.attempts }
+          payload: { email: job.leaderEmail, error: err.message, attempt: job.attempts, type: job.emailType }
         });
 
         if (job.attempts >= 3) {
@@ -204,11 +217,21 @@ const processEmailQueue = async () => {
         }
       }
       await job.save();
+      
+      // Add a tiny delay between emails to avoid spam filters / rate limits
+      await new Promise(resolve => setTimeout(resolve, 500));
     }
   } catch (queueErr) {
     console.error('Error processing email queue:', queueErr.message);
+  } finally {
+    isProcessingEmailQueue = false;
   }
 };
+
+// Export queueSelectionEmail and queueSupportEmail so controllers can use it
+module.exports.queueSelectionEmail = queueSelectionEmail;
+module.exports.queueSupportEmail = queueSupportEmail;
+module.exports.queueChangeRequestEmail = queueChangeRequestEmail;
 
 // Start background cron-like interval polling the queue every 60 seconds
 setInterval(processEmailQueue, 60 * 1000);
@@ -283,6 +306,10 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
       'http://127.0.0.1:5173', 
       'http://localhost:3000', 
       'http://127.0.0.1:3000',
+      'http://localhost:3001', 
+      'http://127.0.0.1:3001',
+      'http://localhost:3002', 
+      'http://127.0.0.1:3002',
       'https://sistec-innovation-hackathon-4-o.onrender.com',
       'https://sistec-innovation-hackathon-4-0.onrender.com'
     ];
@@ -322,9 +349,12 @@ const adminProblemsRoutes = require("./routes/adminProblems");
 const adminChangeRequestsRoutes = require("./routes/adminChangeRequests");
 const adminAnalyticsRoutes = require("./routes/adminAnalytics");
 const adminContactsRoutes = require("./routes/adminContacts");
-const adminResultsRoutes = require("./routes/adminResults");
+const adminSelectionsRoutes = require("./routes/adminSelections");
 const adminUsersRoutes = require("./routes/adminUsers");
 const adminSettingsRoutes = require("./routes/adminSettings");
+const publicProblemsRoutes = require("./routes/publicProblems");
+const publicSelectionsRoutes = require("./routes/publicSelections");
+const publicSupportRoutes = require("./routes/publicSupport");
 
 // Apply strict rate limiting specifically to the admin login endpoint
 app.use('/api/admin/login', authLimiter);
@@ -339,9 +369,14 @@ app.use('/api/admin/problems', adminProblemsRoutes);
 app.use('/api/admin/change-requests', adminChangeRequestsRoutes);
 app.use('/api/admin/analytics', adminAnalyticsRoutes);
 app.use('/api/admin/contacts', adminContactsRoutes);
-app.use('/api/admin/results', adminResultsRoutes);
+app.use('/api/admin/selections', adminSelectionsRoutes);
 app.use('/api/admin/users', adminUsersRoutes);
 app.use('/api/admin/settings', adminSettingsRoutes);
+
+// Public Data Routes
+app.use('/api/public/problem-statements', publicProblemsRoutes);
+app.use('/api/public/shortlisted-teams', publicSelectionsRoutes);
+app.use('/api/public/support', publicSupportRoutes);
 
 // Connect to MongoDB
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sih_registrations';

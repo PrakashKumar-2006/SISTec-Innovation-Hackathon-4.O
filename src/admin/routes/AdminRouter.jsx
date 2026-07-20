@@ -18,7 +18,7 @@ const ProblemsList = lazy(() => import('../pages/problems/ProblemsList'));
 const ProblemDetails = lazy(() => import('../pages/problems/ProblemDetails'));
 const ChangeRequestsList = lazy(() => import('../pages/requests/ChangeRequestsList'));
 const ContactsList = lazy(() => import('../pages/contacts/ContactsList'));
-const ResultsList = lazy(() => import('../pages/results/ResultsList'));
+const SelectionsList = lazy(() => import('../pages/selections/SelectionsList'));
 const AdminUsersList = lazy(() => import('../pages/users/AdminUsersList'));
 const Settings = lazy(() => import('../pages/settings/Settings'));
 
@@ -46,6 +46,12 @@ export default function AdminRouter() {
           <Route path="dashboard" element={
             <RoleGuard allowedRoles={['Super Admin', 'Admin', 'Moderator', 'Viewer']}>
               <Dashboard />
+            </RoleGuard>
+          } />
+          
+          <Route path="selections" element={
+            <RoleGuard allowedRoles={['Super Admin', 'Admin', 'Moderator', 'Viewer']}>
+              <Suspense fallback={<PageLoader />}><SelectionsList /></Suspense>
             </RoleGuard>
           } />
           
@@ -91,14 +97,6 @@ export default function AdminRouter() {
             </RoleGuard>
           } />
           
-          <Route 
-            path="results" 
-            element={
-              <RoleGuard allowedRoles={['Super Admin', 'Admin', 'Moderator', 'Viewer']}>
-                <Suspense fallback={<PageLoader />}><ResultsList /></Suspense>
-              </RoleGuard>
-            } 
-          />
 
           <Route path="settings" element={
             <RoleGuard allowedRoles={['Super Admin']}>
