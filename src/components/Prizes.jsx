@@ -2,6 +2,27 @@ import React from 'react';
 import { Trophy, Calendar, MapPin } from 'lucide-react';
 
 export default function Prizes({ isStandalone = false }) {
+  const handleMouseMove = (e) => {
+    if (window.innerWidth < 1024) return;
+    const card = e.currentTarget;
+    const box = card.getBoundingClientRect();
+    const x = e.clientX - box.left - box.width / 2;
+    const y = e.clientY - box.top - box.height / 2;
+    
+    // Rotate card max 10 degrees on hover
+    const rotateX = -(y / (box.height / 2)) * 10;
+    const rotateY = (x / (box.width / 2)) * 10;
+    
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    card.style.transition = 'transform 0.1s ease-out';
+  };
+
+  const handleMouseLeave = (e) => {
+    const card = e.currentTarget;
+    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+    card.style.transition = 'transform 0.5s ease-out';
+  };
+
   const prizes = [
     {
       place: '02',
@@ -176,11 +197,14 @@ export default function Prizes({ isStandalone = false }) {
             return (
               <div
                 key={idx}
-                className={`relative rounded-3xl bg-gradient-to-br ${prize.themeColor} backdrop-blur-md border ${prize.borderColor} p-6 flex flex-col justify-between transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] ${prize.glow} ${orderClasses[idx]} ${
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                className={`relative rounded-3xl bg-gradient-to-br ${prize.themeColor} backdrop-blur-md border ${prize.borderColor} p-6 flex flex-col justify-between transition-shadow duration-300 ${prize.glow} ${orderClasses[idx]} ${
                   prize.featured 
-                    ? 'md:scale-105 md:z-10 min-h-[390px]'
+                    ? 'lg:z-10 min-h-[390px]'
                     : 'min-h-[350px]'
                 } group overflow-hidden`}
+                style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
               >
                 {/* Large background number for editorial touch */}
                 <span className="absolute -right-2 -bottom-4 text-[6.5rem] font-black font-display text-white/[0.02] select-none leading-none group-hover:text-white/[0.04] transition-colors duration-500">

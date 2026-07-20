@@ -1,7 +1,119 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Rocket } from 'lucide-react';
 
 export default function Hero({ onRegisterClick }) {
+  const canvasRef = useRef(null);
+
+  // Particle Canvas Background Animation
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    let animationFrameId;
+    let particles = [];
+    let width = canvas.width = canvas.offsetWidth;
+    let height = canvas.height = canvas.offsetHeight;
+    
+    const mouse = { x: null, y: null, radius: 120 };
+    
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = canvas.offsetWidth;
+      height = canvas.height = canvas.offsetHeight;
+    };
+    
+    const handleMouseMove = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    };
+    
+    const handleMouseLeave = () => {
+      mouse.x = null;
+      mouse.y = null;
+    };
+    
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseleave', handleMouseLeave);
+    
+    // Initialize particles based on screen area
+    const particleCount = Math.min(70, Math.floor((width * height) / 20000));
+    particles = [];
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.45,
+        vy: (Math.random() - 0.5) * 0.45,
+        radius: Math.random() * 2 + 1,
+        baseRadius: Math.random() * 2 + 1,
+      });
+    }
+    
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height);
+      
+      // Draw link lines between close particles
+      ctx.strokeStyle = 'rgba(216, 171, 85, 0.06)';
+      ctx.lineWidth = 0.8;
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      
+      // Draw and update particles
+      ctx.fillStyle = 'rgba(216, 171, 85, 0.45)';
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+        
+        p.x += p.vx;
+        p.y += p.vy;
+        
+        // Bounce off bounds smoothly
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+        
+        // Mouse interaction (push away)
+        if (mouse.x !== null && mouse.y !== null) {
+          const dx = p.x - mouse.x;
+          const dy = p.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < mouse.radius) {
+            const force = (mouse.radius - dist) / mouse.radius;
+            const angle = Math.atan2(dy, dx);
+            p.x += Math.cos(angle) * force * 1.8;
+            p.y += Math.sin(angle) * force * 1.8;
+          }
+        }
+      });
+      
+      animationFrameId = requestAnimationFrame(draw);
+    };
+    
+    draw();
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseleave', handleMouseLeave);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
   // Countdown Timer Logic
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -44,6 +156,7 @@ export default function Hero({ onRegisterClick }) {
     <section id="home" className="relative min-h-[95vh] lg:min-h-screen bg-brand-darker overflow-hidden pt-[90px] sm:pt-[110px] lg:pt-[120px] flex items-center py-12 lg:py-0">
       {/* Background Visual Grid & Glowing effects */}
       <div className="absolute inset-0 tech-grid opacity-[0.03] pointer-events-none"></div>
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none -z-10" />
       <div className="absolute top-1/4 left-10 w-[500px] h-[500px] bg-brand-gold/5 rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse-slow"></div>
       <div className="absolute bottom-10 right-10 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[160px] pointer-events-none -z-10"></div>
 
