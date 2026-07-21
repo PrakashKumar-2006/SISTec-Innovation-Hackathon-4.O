@@ -100,7 +100,7 @@ const loadRazorpayScript = () => {
 };
 
 export default function RegisterModal({ onClose }) {
-  const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const backendUrl = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '');
 
   // Fetch Problem Statements from Backend
   const { data: problemStatements = [], isLoading: isLoadingPS } = useQuery({
@@ -207,23 +207,19 @@ export default function RegisterModal({ onClose }) {
     const newErrors = {};
 
     if (currentStep === 1) {
-      if (!formData.teamName.trim()) newErrors.teamName = 'Team name is required';
       if (!formData.leaderName.trim()) newErrors.leaderName = 'Leader name is required';
-      if (!formData.leaderGender) {
-        newErrors.leaderGender = 'Leader gender selection is required';
-      }
-      if (!formData.theme) {
-        newErrors.theme = 'Theme selection is required';
+      if (!formData.teamName.trim()) newErrors.teamName = 'Team name is required';
+      if (!formData.theme) newErrors.theme = 'Theme selection is required';
+      if (!formData.leaderGender) newErrors.leaderGender = 'Leader gender selection is required';
+      if (!formData.leaderPhone.trim()) {
+        newErrors.leaderPhone = 'Leader phone number is required';
+      } else if (!/^\d{10}$/.test(formData.leaderPhone.replace(/[^0-9]/g, ''))) {
+        newErrors.leaderPhone = 'Enter a valid 10-digit phone number';
       }
       if (!formData.leaderEmail.trim()) {
         newErrors.leaderEmail = 'Leader email is required';
       } else if (!/\S+@\S+\.\S+/.test(formData.leaderEmail)) {
         newErrors.leaderEmail = 'Invalid email address';
-      }
-      if (!formData.leaderPhone.trim()) {
-        newErrors.leaderPhone = 'Leader phone number is required';
-      } else if (!/^\d{10}$/.test(formData.leaderPhone.replace(/[^0-9]/g, ''))) {
-        newErrors.leaderPhone = 'Enter a valid 10-digit phone number';
       }
       if (!formData.instituteName.trim()) newErrors.instituteName = 'Institute name is required';
     }
@@ -265,7 +261,29 @@ export default function RegisterModal({ onClose }) {
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+
+    const errorKeys = Object.keys(newErrors);
+    if (errorKeys.length > 0) {
+      setTimeout(() => {
+        const firstErrorField = errorKeys[0];
+        let el = document.querySelector(`[name="${firstErrorField}"]`);
+        
+        // For file inputs that are hidden, find their label or container
+        if (!el && (firstErrorField === 'ideaPpt' || firstErrorField === 'consentLetter')) {
+          const fileInput = document.getElementById(`${firstErrorField}-file`);
+          if (fileInput && fileInput.labels && fileInput.labels.length > 0) {
+            el = fileInput.labels[0];
+          }
+        }
+        
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (typeof el.focus === 'function') el.focus();
+        }
+      }, 100);
+    }
+
+    return errorKeys.length === 0;
   };
 
   const handleNext = () => {
@@ -298,8 +316,20 @@ export default function RegisterModal({ onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateStep(1) || !validateStep(2) || !validateStep(3)) {
-      setErrors((prev) => ({ ...prev, submit: 'Please fix the errors in previous steps before submitting.' }));
+    
+    if (!validateStep(1)) {
+      setStep(1);
+      setErrors((prev) => ({ ...prev, submit: 'Please fix the errors in Step 1.' }));
+      return;
+    }
+    if (!validateStep(2)) {
+      setStep(2);
+      setErrors((prev) => ({ ...prev, submit: 'Please fix the errors in Step 2.' }));
+      return;
+    }
+    if (!validateStep(3)) {
+      setStep(3);
+      setErrors((prev) => ({ ...prev, submit: 'Please fix the errors in Step 3.' }));
       return;
     }
 
@@ -857,6 +887,12 @@ export default function RegisterModal({ onClose }) {
                             psid: selectedId,
                             psTitle: psObj ? psObj.title : prev.psTitle
                           }));
+                          setErrors(prev => {
+                            const newErrs = { ...prev };
+                            delete newErrs.psid;
+                            if (psObj) delete newErrs.psTitle;
+                            return newErrs;
+                          });
                         }}
                         className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
                           errors.psid ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
@@ -881,21 +917,53 @@ export default function RegisterModal({ onClose }) {
                       )}
                     </div>
 
+<<<<<<< HEAD
                     {/* PS Title */}
+=======
+                    {/* PS Title Dropdown */}
+>>>>>>> c2bf7500066a715507182685b6a5aca62f946b08
                     <div>
                       <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase text-left">
                         PS Title *
                       </label>
-                      <input
-                        type="text"
+                      <select
                         name="psTitle"
                         value={formData.psTitle}
+<<<<<<< HEAD
                         onChange={handleInputChange}
                         placeholder="Problem Statement Title"
                         className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
                           errors.psTitle ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
                         } focus:outline-none text-xs text-[#241708] placeholder-[#605040] transition-all font-medium`}
                       />
+=======
+                        onChange={(e) => {
+                          const selectedTitle = e.target.value;
+                          const psObj = problemStatements.find(ps => ps.statement === selectedTitle);
+                          setFormData(prev => ({
+                            ...prev,
+                            psTitle: selectedTitle,
+                            psid: psObj ? psObj.psNumber : prev.psid
+                          }));
+                          setErrors(prev => {
+                            const newErrs = { ...prev };
+                            delete newErrs.psTitle;
+                            if (psObj) delete newErrs.psid;
+                            return newErrs;
+                          });
+                        }}
+                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                          errors.psTitle ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                        } focus:outline-none text-sm text-white transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner cursor-pointer`}
+                      >
+                        <option value="" className="text-slate-500 bg-[#080809]">Select Problem Statement...</option>
+                        {problemStatements.map((ps) => (
+                          <option key={ps.psNumber} value={ps.statement} className="bg-[#080809] text-white">
+                            {ps.statement}
+                          </option>
+                        ))}
+                      </select>
+>>>>>>> c2bf7500066a715507182685b6a5aca62f946b08
                       {errors.psTitle && (
                         <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
                           <AlertCircle size={10} /> {errors.psTitle}
@@ -947,8 +1015,13 @@ export default function RegisterModal({ onClose }) {
                             {formData.ideaPpt ? formData.ideaPpt.name : 'No file chosen'}
                           </span>
 
+<<<<<<< HEAD
                           <span className="text-[9px] text-[#A09080]">
                             PPT, PPTX, PDF (Max 10MB)
+=======
+                          <span className="text-[10px] text-slate-400">
+                            Supported files: PPT, PPTX, PDF (Max 20MB)
+>>>>>>> c2bf7500066a715507182685b6a5aca62f946b08
                           </span>
                         </div>
                       </div>
@@ -1000,8 +1073,13 @@ export default function RegisterModal({ onClose }) {
                             {formData.consentLetter ? formData.consentLetter.name : 'No file chosen'}
                           </span>
 
+<<<<<<< HEAD
                           <span className="text-[9px] text-[#A09080]">
                             PDF, PNG, JPG (Max 10MB)
+=======
+                          <span className="text-[10px] text-slate-400">
+                            Supported files: PDF, PNG, JPG (Max 20MB)
+>>>>>>> c2bf7500066a715507182685b6a5aca62f946b08
                           </span>
                         </div>
                       </div>
@@ -1192,9 +1270,22 @@ export default function RegisterModal({ onClose }) {
               </div>
             </div>
             <div className="space-y-3">
+<<<<<<< HEAD
               <h3 className="text-3xl font-black font-display text-[#8C3A16]">Registration Successful!</h3>
               <p className="text-sm text-[#7A6A58] max-w-lg mx-auto leading-relaxed">
                 Thank you for registering team <strong className="text-[#241708]">"{registrationResult.teamName}"</strong>. Your Registration ID is:
+=======
+              <h3 className="text-3xl font-bold font-display text-brand-navy">
+                {registrationResult.message ? 'Already Registered!' : 'Registration Successful!'}
+              </h3>
+              {registrationResult.message && (
+                <p className="text-sm text-amber-400 font-medium pb-2">
+                  {registrationResult.message}
+                </p>
+              )}
+              <p className="text-sm text-slate-400 max-w-lg mx-auto leading-relaxed">
+                Thank you for registering team <strong className="text-white">"{registrationResult.teamName}"</strong>. Your Registration ID is:
+>>>>>>> c2bf7500066a715507182685b6a5aca62f946b08
               </p>
               <div className="inline-block py-2.5 px-6 rounded-2xl bg-[#FAF6EE] border border-[#8C3A16]/30 text-[#8C3A16] font-mono font-bold text-xl tracking-wider shadow-sm select-all">
                 {registrationResult.registrationId}

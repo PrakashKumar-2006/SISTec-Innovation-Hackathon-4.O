@@ -121,7 +121,7 @@ router.put('/:id', roleMiddleware(['Super Admin', 'Admin', 'Moderator']), async 
     
     const updated = await ProblemStatement.findByIdAndUpdate(
       req.params.id,
-      { ...req.body, updatedBy: req.user.id },
+      { ...req.body, updatedBy: req.admin.id },
       { new: true, runValidators: true }
     );
     if (!updated) {
@@ -159,7 +159,7 @@ router.patch('/:id/status', roleMiddleware(['Super Admin', 'Admin', 'Moderator']
     }
     const updated = await ProblemStatement.findByIdAndUpdate(
       req.params.id,
-      { status, updatedBy: req.user.id },
+      { status, updatedBy: req.admin.id },
       { new: true }
     );
     if (!updated) {
@@ -292,11 +292,11 @@ router.post('/import', roleMiddleware(['Super Admin', 'Admin']), upload.single('
                 detailedDescription: description,
                 techStack,
                 status,
-                updatedBy: req.user.id
+                updatedBy: req.admin.id
               },
               $setOnInsert: {
                 psNumber,
-                createdBy: req.user.id
+                createdBy: req.admin.id
               }
             },
             upsert: true

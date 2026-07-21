@@ -6,7 +6,7 @@ import { Search, X, Building2, Cpu, Sparkles, AlertCircle, Filter, Tag } from 'l
 import ClickRipple from './ClickRipple';
 
 // Configuration
-const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const backendUrl = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '');
 
 const getDomainTheme = (domain) => {
   const d = domain.toLowerCase();
@@ -89,15 +89,20 @@ export default function ProblemStatements() {
 
   const problemStatements = data || [];
   // Unique domains for select options
-  const uniqueDomains = ['All', ...new Set(problemStatements.map(item => item.domain))];
+  const uniqueDomains = ['All', ...new Set(problemStatements.map(item => item.domain).filter(Boolean))];
 
   // Filtering Logic
   const filteredStatements = problemStatements.filter(item => {
+    const orgStr = item.org || '';
+    const titleStr = item.title || item.statement || '';
+    const psNumberStr = item.psNumber || '';
+    const domainStr = item.domain || '';
+
     const matchesSearch = 
-      item.org.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.psNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.domain.toLowerCase().includes(searchTerm.toLowerCase());
+      orgStr.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      titleStr.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      psNumberStr.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      domainStr.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
     const matchesDomain = selectedDomain === 'All' || item.domain === selectedDomain;
