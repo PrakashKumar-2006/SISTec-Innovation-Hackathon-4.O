@@ -1,11 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { CalendarCheck, Rocket, Flag, Award, ClipboardList } from 'lucide-react';
 
 export default function Timeline({ isStandalone = false }) {
+  const sectionRef = useRef(null);
   const [activeStep, setActiveStep] = useState(0);
   const [currentFocus, setCurrentFocus] = useState(-1);
+  const [hasEnteredViewport, setHasEnteredViewport] = useState(isStandalone);
+
+  // Intersection Observer to trigger entrance sequence when scrolled into view
+  useEffect(() => {
+    if (isStandalone) {
+      setHasEnteredViewport(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setHasEnteredViewport(true);
+            observer.disconnect(); // Trigger once and disconnect
+          }
+        });
+      },
+      { threshold: 0.15 } // Trigger when 15% of the timeline is visible
+    );
+
+    const currentRef = sectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+      observer.disconnect();
+    };
+  }, [isStandalone]);
 
   useEffect(() => {
+    if (!hasEnteredViewport) return;
+
     // Phase 1: Slow, elegant entrance sequence with path drawing & step activation
     const timers = [
       setTimeout(() => { setActiveStep(1); setCurrentFocus(0); }, 300),   // Draw Step 1, highlight Step 1
@@ -16,7 +52,7 @@ export default function Timeline({ isStandalone = false }) {
       setTimeout(() => { setActiveStep(6); }, 11300)                     // All steps loaded
     ];
     return () => timers.forEach(clearTimeout);
-  }, []);
+  }, [hasEnteredViewport]);
 
   // Phase 2: Shifting active glow loop once all cards are loaded (Slowed down to 4.5s)
   useEffect(() => {
@@ -128,7 +164,7 @@ export default function Timeline({ isStandalone = false }) {
   ];
 
   return (
-    <section id="timeline" className={`relative ${isStandalone ? 'pt-32 pb-16 sm:pt-40 sm:pb-24' : 'py-12 sm:py-16'} bg-brand-darker overflow-hidden tech-grid-dense border-t border-white/5`}>
+    <section ref={sectionRef} id="timeline" className={`relative ${isStandalone ? 'pt-32 pb-16 sm:pt-40 sm:pb-24' : 'py-12 sm:py-16'} bg-brand-darker overflow-hidden tech-grid-dense border-t border-white/5`}>
       {/* Background radial glows */}
       <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[140px] pointer-events-none -z-10 animate-[pulse_10s_ease-in-out_infinite]" />
       <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-brand-pink/5 rounded-full blur-[140px] pointer-events-none -z-10 animate-[pulse_12s_ease-in-out_infinite_2s]" />

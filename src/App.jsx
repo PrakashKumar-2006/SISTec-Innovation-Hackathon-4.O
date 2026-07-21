@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -33,6 +33,32 @@ export default function App() {
   const [showRegister, setShowRegister] = useState(false);
   const [currentView, setCurrentView] = useState('landing'); // 'landing' or 'problem-statements'
 
+  // Intersection Observer for Reveal-on-Scroll entry animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+          }
+        });
+      },
+      {
+        root: null,
+        threshold: 0.08, // trigger when 8% of section is visible
+        rootMargin: '0px 0px -40px 0px'
+      }
+    );
+
+    const elements = document.querySelectorAll('.reveal-on-scroll');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => {
+      elements.forEach((el) => observer.unobserve(el));
+      observer.disconnect();
+    };
+  }, [currentView]);
+
   // Function to switch view and scroll to hash if landing
   const handleViewChange = (view, hash) => {
     setCurrentView(view);
@@ -66,16 +92,16 @@ export default function App() {
         {currentView === 'landing' ? (
           <>
             <Hero onRegisterClick={() => setShowRegister(true)} />
-            <About />
-            <Prizes />
-            <Objectives />
-            <Themes onViewChange={handleViewChange} />
-            <ProcessFlow />
-            <Timeline />
-            <Schedule />
-            <Committee />
-            <FAQs />
-            <Developers />
+            <div className="reveal-on-scroll"><About /></div>
+            <div className="reveal-on-scroll"><Prizes /></div>
+            <div className="reveal-on-scroll"><Objectives /></div>
+            <div className="reveal-on-scroll"><Themes onViewChange={handleViewChange} /></div>
+            <div className="reveal-on-scroll"><ProcessFlow /></div>
+            <div className="reveal-on-scroll"><Timeline /></div>
+            <div className="reveal-on-scroll"><Schedule /></div>
+            <div className="reveal-on-scroll"><Committee /></div>
+            <div className="reveal-on-scroll"><FAQs /></div>
+            <div className="reveal-on-scroll"><Developers /></div>
           </>
         ) : currentView === 'about-sih' ? (
           <About isStandalone={true} />

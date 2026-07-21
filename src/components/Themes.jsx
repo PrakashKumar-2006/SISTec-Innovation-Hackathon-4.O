@@ -4,6 +4,27 @@ import { Sprout, GraduationCap, Car, ShieldCheck, HeartPulse, Cpu, Search, Spark
 export default function Themes({ onViewChange, isStandalone = false }) {
   const [searchTerm, setSearchTerm] = useState('');
 
+  const handleMouseMove = (e) => {
+    if (window.innerWidth < 1024) return;
+    const card = e.currentTarget;
+    const box = card.getBoundingClientRect();
+    const x = e.clientX - box.left - box.width / 2;
+    const y = e.clientY - box.top - box.height / 2;
+    
+    // Rotate card max 8 degrees on hover
+    const rotateX = -(y / (box.height / 2)) * 8;
+    const rotateY = (x / (box.width / 2)) * 8;
+    
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.015, 1.015, 1.015)`;
+    card.style.transition = 'transform 0.1s ease-out';
+  };
+
+  const handleMouseLeave = (e) => {
+    const card = e.currentTarget;
+    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+    card.style.transition = 'transform 0.5s ease-out';
+  };
+
   const themes = [
     {
       title: 'AgriTech',
@@ -110,7 +131,10 @@ export default function Themes({ onViewChange, isStandalone = false }) {
             filteredThemes.map((theme, idx) => (
               <div
                 key={idx}
-                className={`relative p-3.5 sm:p-6 rounded-2xl sm:rounded-[2rem] bg-brand-card/45 backdrop-blur-sm border border-white/5 bg-gradient-to-b ${theme.color} ${theme.borderColor} transition-all duration-500 hover:-translate-y-2 shadow-card-shadow ${theme.glow} group overflow-hidden flex flex-col justify-between`}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                className={`relative p-3.5 sm:p-6 rounded-2xl sm:rounded-[2rem] bg-brand-card/45 backdrop-blur-sm border border-white/5 bg-gradient-to-b ${theme.color} ${theme.borderColor} transition-shadow duration-300 shadow-card-shadow ${theme.glow} group overflow-hidden flex flex-col justify-between`}
+                style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
               >
                 
                 {/* Visual Watermark background icon */}

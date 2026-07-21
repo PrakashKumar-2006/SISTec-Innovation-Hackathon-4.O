@@ -1,7 +1,119 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Rocket } from 'lucide-react';
 
 export default function Hero({ onRegisterClick }) {
+  const canvasRef = useRef(null);
+
+  // Particle Canvas Background Animation
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    let animationFrameId;
+    let particles = [];
+    let width = canvas.width = canvas.offsetWidth;
+    let height = canvas.height = canvas.offsetHeight;
+    
+    const mouse = { x: null, y: null, radius: 120 };
+    
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = canvas.offsetWidth;
+      height = canvas.height = canvas.offsetHeight;
+    };
+    
+    const handleMouseMove = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    };
+    
+    const handleMouseLeave = () => {
+      mouse.x = null;
+      mouse.y = null;
+    };
+    
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseleave', handleMouseLeave);
+    
+    // Initialize particles based on screen area
+    const particleCount = Math.min(70, Math.floor((width * height) / 20000));
+    particles = [];
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.45,
+        vy: (Math.random() - 0.5) * 0.45,
+        radius: Math.random() * 2 + 1,
+        baseRadius: Math.random() * 2 + 1,
+      });
+    }
+    
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height);
+      
+      // Draw link lines between close particles
+      ctx.strokeStyle = 'rgba(216, 171, 85, 0.06)';
+      ctx.lineWidth = 0.8;
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      
+      // Draw and update particles
+      ctx.fillStyle = 'rgba(216, 171, 85, 0.45)';
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+        
+        p.x += p.vx;
+        p.y += p.vy;
+        
+        // Bounce off bounds smoothly
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+        
+        // Mouse interaction (push away)
+        if (mouse.x !== null && mouse.y !== null) {
+          const dx = p.x - mouse.x;
+          const dy = p.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < mouse.radius) {
+            const force = (mouse.radius - dist) / mouse.radius;
+            const angle = Math.atan2(dy, dx);
+            p.x += Math.cos(angle) * force * 1.8;
+            p.y += Math.sin(angle) * force * 1.8;
+          }
+        }
+      });
+      
+      animationFrameId = requestAnimationFrame(draw);
+    };
+    
+    draw();
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseleave', handleMouseLeave);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
   // Countdown Timer Logic
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -44,6 +156,7 @@ export default function Hero({ onRegisterClick }) {
     <section id="home" className="relative min-h-[95vh] lg:min-h-screen bg-brand-darker overflow-hidden pt-[90px] sm:pt-[110px] lg:pt-[120px] flex items-center py-12 lg:py-0">
       {/* Background Visual Grid & Glowing effects */}
       <div className="absolute inset-0 tech-grid opacity-[0.03] pointer-events-none"></div>
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none -z-10" />
       <div className="absolute top-1/4 left-10 w-[500px] h-[500px] bg-brand-gold/5 rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse-slow"></div>
       <div className="absolute bottom-10 right-10 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[160px] pointer-events-none -z-10"></div>
 
@@ -51,7 +164,7 @@ export default function Hero({ onRegisterClick }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* ── LEFT COLUMN: Text and branding (Enlarged) ── */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left space-y-8 sm:space-y-10">
+          <div className="lg:col-span-6 flex flex-col items-start text-left space-y-8 sm:space-y-10">
             
             {/* Top Dot Accent & CSE Dept Title */}
             <div className="space-y-3">
@@ -78,8 +191,8 @@ export default function Hero({ onRegisterClick }) {
                 />
               </div>
 
-              {/* Vertical line divider (Desktop only) */}
-              <div className="hidden sm:block w-[2px] bg-gradient-to-b from-brand-gold/80 via-brand-gold/20 to-transparent"></div>
+              {/* Golden line divider (Horizontal fade on mobile, Vertical fade on desktop - more to less) */}
+              <div className="w-24 h-[2px] sm:w-[2px] sm:h-auto bg-gradient-to-r from-[#D8AB55] to-transparent sm:bg-gradient-to-b sm:from-[#D8AB55] sm:to-transparent my-1 sm:my-0 shrink-0"></div>
 
               {/* Title texts */}
               <div className="flex flex-col justify-center text-center sm:text-left space-y-2 sm:space-y-3">
@@ -141,7 +254,7 @@ export default function Hero({ onRegisterClick }) {
           </div>
 
           {/* ── RIGHT COLUMN: Student Collage Graphic (Enlarged & Slanted) ── */}
-          <div className="lg:col-span-5 relative w-full flex flex-col justify-center items-center">
+          <div className="lg:col-span-6 relative w-full flex flex-col justify-center items-center">
             
             {/* Top Right Quote bubble (Enlarged, unboxed layout to match the banner graphic) */}
             <div className="absolute top-[-35px] right-2 sm:right-6 lg:top-[-50px] lg:right-10 z-20 animate-float flex items-start gap-3 select-none">
@@ -165,7 +278,7 @@ export default function Hero({ onRegisterClick }) {
             </div>
 
             {/* Futuristic Slanted Student Photo Container */}
-            <div className="relative w-full max-w-lg lg:max-w-none aspect-[4/3] sm:aspect-square lg:aspect-[1/1] overflow-hidden lg:overflow-visible group mt-8 lg:mt-0">
+            <div className="relative w-full max-w-lg lg:max-w-none aspect-[4/3] sm:aspect-square lg:aspect-[4/3] overflow-hidden lg:overflow-visible group mt-8 lg:mt-0">
               
               {/* Decorative backglow */}
               <div className="absolute -top-12 -left-12 w-64 h-64 bg-brand-gold/10 rounded-full blur-[100px] -z-10 animate-pulse-slow"></div>
@@ -176,7 +289,7 @@ export default function Hero({ onRegisterClick }) {
                 {/* Slanted Image Wrapper */}
                 <div className="relative w-full h-full bg-brand-darker clip-path-hero-slant rounded-[22px] overflow-hidden">
                   <img 
-                    src="/hackathon_students.png" 
+                    src="/home_page_image.jpg" 
                     alt="Students Collaborating at Hackathon" 
                     className="absolute inset-0 w-full h-full object-cover opacity-95 scale-105 group-hover:scale-110 transition-transform duration-700 ease-out"
                   />
