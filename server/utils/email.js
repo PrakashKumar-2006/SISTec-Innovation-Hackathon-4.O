@@ -25,18 +25,18 @@ const sendConfirmationEmail = async (leaderEmail, leaderName, teamName, registra
   const mailOptions = {
     from: `"SIH 4.0 Hackathon" <${process.env.EMAIL_USER}>`,
     to: leaderEmail,
-    subject: `SIH 4.0 Registration Successful! - Team ${teamName}`,
+    subject: `SISTec-R Innovation Hackathon - Registration Submitted (Team ${teamName})`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #fdfdfd;">
         <div style="text-align: center; border-bottom: 2px solid #D8AB55; padding-bottom: 15px; margin-bottom: 20px;">
-          <h2 style="color: #161619; margin: 0;">Smart India Hackathon 4.0</h2>
+          <h2 style="color: #161619; margin: 0;">SISTec-R Innovation Hackathon 4.0</h2>
           <p style="color: #D8AB55; font-size: 14px; font-weight: bold; margin: 5px 0 0 0; letter-spacing: 1px;">SISTec Innovation Hackathon</p>
         </div>
         
         <div style="color: #333333; line-height: 1.6;">
           <p>Dear <strong>${leaderName}</strong>,</p>
           
-          <p>Congratulations! Your team <strong>"${teamName}"</strong> has successfully registered for the <strong>Smart India Hackathon 4.0 (SIH 4.0)</strong> at Sagar Institute of Science & Technology (SISTec-R).</p>
+          <p>Congratulations! Your team <strong>"${teamName}"</strong> has successfully submitted the registration form for the <strong>SISTec-R Innovation Hackathon 4.0 (SIH 4.0)</strong> at Sagar Institute of Science & Technology (SISTec-R).</p>
           
           <div style="background-color: #f9f9f9; border-left: 4px solid #D8AB55; padding: 15px; margin: 20px 0; border-radius: 4px;">
             <p style="margin: 0; font-size: 14px; color: #666666;">Your Unique Registration ID is:</p>
@@ -44,6 +44,8 @@ const sendConfirmationEmail = async (leaderEmail, leaderName, teamName, registra
           </div>
           
           <p>Please keep this Registration ID safe. You will need it to reference your nomination, check results, and upload future project milestone guidelines.</p>
+          
+          <p><strong>Note:</strong> Your registration is currently pending manual payment verification by our team. We will notify you once your payment screenshot and transaction ID are verified.</p>
           
           <p><strong>Next Steps:</strong></p>
           <ul style="padding-left: 20px;">
@@ -81,7 +83,7 @@ const sendSelectionEmail = async (teamData, isShortlisted) => {
     htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #fdfdfd;">
         <div style="text-align: center; border-bottom: 2px solid #D8AB55; padding-bottom: 15px; margin-bottom: 20px;">
-          <h2 style="color: #161619; margin: 0;">Smart India Hackathon 4.0</h2>
+          <h2 style="color: #161619; margin: 0;">SISTec-R Innovation Hackathon 4.0</h2>
           <p style="color: #D8AB55; font-size: 14px; font-weight: bold; margin: 5px 0 0 0; letter-spacing: 1px;">Selection Notification</p>
         </div>
         
@@ -109,7 +111,7 @@ const sendSelectionEmail = async (teamData, isShortlisted) => {
     htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #fdfdfd;">
         <div style="text-align: center; border-bottom: 2px solid #D8AB55; padding-bottom: 15px; margin-bottom: 20px;">
-          <h2 style="color: #161619; margin: 0;">Smart India Hackathon 4.0</h2>
+          <h2 style="color: #161619; margin: 0;">SISTec-R Innovation Hackathon 4.0</h2>
           <p style="color: #D8AB55; font-size: 14px; font-weight: bold; margin: 5px 0 0 0; letter-spacing: 1px;">Selection Notification</p>
         </div>
         
@@ -160,7 +162,7 @@ const sendSupportAckEmail = async (leaderEmail, leaderName, payload) => {
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #fdfdfd;">
         <div style="text-align: center; border-bottom: 2px solid #D8AB55; padding-bottom: 15px; margin-bottom: 20px;">
-          <h2 style="color: #161619; margin: 0;">Smart India Hackathon 4.0</h2>
+          <h2 style="color: #161619; margin: 0;">SISTec-R Innovation Hackathon 4.0</h2>
           <p style="color: #D8AB55; font-size: 14px; font-weight: bold; margin: 5px 0 0 0; letter-spacing: 1px;">Help & Support Center</p>
         </div>
         
@@ -211,7 +213,7 @@ const sendChangeRequestEmail = async (leaderEmail, leaderName, payload, isApprov
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #fdfdfd;">
         <div style="text-align: center; border-bottom: 2px solid #D8AB55; padding-bottom: 15px; margin-bottom: 20px;">
-          <h2 style="color: #161619; margin: 0;">Smart India Hackathon 4.0</h2>
+          <h2 style="color: #161619; margin: 0;">SISTec-R Innovation Hackathon 4.0</h2>
           <p style="color: #D8AB55; font-size: 14px; font-weight: bold; margin: 5px 0 0 0; letter-spacing: 1px;">Change Request Update</p>
         </div>
         
@@ -248,9 +250,71 @@ const sendChangeRequestEmail = async (leaderEmail, leaderName, payload, isApprov
   return true;
 };
 
+const sendVerificationEmail = async (leaderEmail, leaderName, teamName, registrationId, status, adminRemarks) => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.warn('WARNING: SMTP email configurations not set in .env. Skipping verification email dispatch.');
+    return true;
+  }
+
+  const transporter = createTransporter();
+  const isVerified = status === 'verified';
+  const statusStr = isVerified ? 'Verified' : 'Flagged';
+  const statusColor = isVerified ? '#2e7d32' : '#d32f2f';
+
+  const mailOptions = {
+    from: `"SIH 4.0 Support" <${process.env.EMAIL_USER}>`,
+    to: leaderEmail,
+    subject: `SISTec-R Innovation Hackathon - Payment ${statusStr} (Team ${teamName})`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #fdfdfd;">
+        <div style="text-align: center; border-bottom: 2px solid #D8AB55; padding-bottom: 15px; margin-bottom: 20px;">
+          <h2 style="color: #161619; margin: 0;">SISTec-R Innovation Hackathon 4.0</h2>
+          <p style="color: #D8AB55; font-size: 14px; font-weight: bold; margin: 5px 0 0 0; letter-spacing: 1px;">Payment Verification Update</p>
+        </div>
+        
+        <div style="color: #333333; line-height: 1.6;">
+          <p>Dear <strong>${leaderName}</strong>,</p>
+          <p>Your recent payment submission for team <strong>"${teamName}"</strong> has been reviewed by our team.</p>
+          
+          <div style="background-color: #f9f9f9; border-left: 4px solid ${statusColor}; padding: 15px; margin: 20px 0; border-radius: 4px;">
+            <p style="margin: 0 0 5px 0; font-size: 14px; color: #666666;"><strong>Verification Status:</strong></p>
+            <p style="margin: 0; font-size: 16px; color: ${statusColor}; font-weight: bold;">${statusStr}</p>
+          </div>
+          
+          ${isVerified ? `
+            <p>Congratulations! Your payment has been successfully verified. Your registration is now fully confirmed for SISTec-R Innovation Hackathon 4.0.</p>
+          ` : `
+            <p>Unfortunately, there was an issue verifying your payment. Your registration is currently <strong>flagged</strong>.</p>
+          `}
+          
+          ${adminRemarks ? `
+          <div style="background-color: #fff8e1; border-left: 4px solid #fbc02d; padding: 15px; margin: 20px 0; border-radius: 4px;">
+            <p style="margin: 0 0 5px 0; font-size: 14px; color: #666666;"><strong>Admin Remarks:</strong></p>
+            <p style="margin: 0; font-size: 14px; color: #333333;">${adminRemarks}</p>
+          </div>
+          ` : ''}
+          
+          ${!isVerified ? `
+            <p>Please contact our support team immediately at <a href="mailto:support@sistec.ac.in" style="color: #D8AB55;">support@sistec.ac.in</a> to resolve this issue and complete your registration.</p>
+          ` : ''}
+          
+          <p style="margin-top: 30px; font-size: 12px; color: #888888; text-align: center; border-top: 1px solid #eeeeee; padding-top: 15px;">
+            &copy; ${new Date().getFullYear()} SIH 4.0 Organizing Committee | Sagar Institute of Science & Technology
+          </p>
+        </div>
+      </div>
+    `
+  };
+
+  const info = await transporter.sendMail(mailOptions);
+  console.log(`Verification email sent to ${leaderEmail}. MessageId: ${info.messageId}`);
+  return true;
+};
+
 module.exports = {
   sendConfirmationEmail,
   sendSelectionEmail,
   sendSupportAckEmail,
-  sendChangeRequestEmail
+  sendChangeRequestEmail,
+  sendVerificationEmail
 };

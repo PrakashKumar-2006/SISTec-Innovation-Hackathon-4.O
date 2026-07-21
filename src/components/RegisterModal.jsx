@@ -69,6 +69,8 @@ const defaultFormData = {
   leaderGender: '',
   theme: '',
   instituteName: '',
+  isIeeeCsiMember: '',
+  transactionId: '',
   member1Name: '', member1Gender: '', member1Email: '', member1Phone: '',
   member2Name: '', member2Gender: '', member2Email: '', member2Phone: '',
   member3Name: '', member3Gender: '', member3Email: '', member3Phone: '',
@@ -77,6 +79,7 @@ const defaultFormData = {
   psTitle: '',
   ideaPpt: null,
   consentLetter: null,
+  paymentScreenshot: null,
 };
 
 const loadRazorpayScript = () => {
@@ -136,6 +139,7 @@ export default function RegisterModal({ onClose }) {
     const files = [];
     if (saved.formData?.ideaPpt?.__fileMeta) files.push({ field: 'ideaPpt', name: saved.formData.ideaPpt.name });
     if (saved.formData?.consentLetter?.__fileMeta) files.push({ field: 'consentLetter', name: saved.formData.consentLetter.name });
+    if (saved.formData?.paymentScreenshot?.__fileMeta) files.push({ field: 'paymentScreenshot', name: saved.formData.paymentScreenshot.name });
     return files;
   });
   const [fileMetaHints, setFileMetaHints] = useState(() => {
@@ -144,6 +148,7 @@ export default function RegisterModal({ onClose }) {
     const hints = {};
     if (saved.formData?.ideaPpt?.__fileMeta) hints.ideaPpt = saved.formData.ideaPpt.name;
     if (saved.formData?.consentLetter?.__fileMeta) hints.consentLetter = saved.formData.consentLetter.name;
+    if (saved.formData?.paymentScreenshot?.__fileMeta) hints.paymentScreenshot = saved.formData.paymentScreenshot.name;
     return hints;
   });
 
@@ -222,6 +227,7 @@ export default function RegisterModal({ onClose }) {
         newErrors.leaderEmail = 'Invalid email address';
       }
       if (!formData.instituteName.trim()) newErrors.instituteName = 'Institute name is required';
+      if (!formData.isIeeeCsiMember) newErrors.isIeeeCsiMember = 'Membership status is required';
     }
 
     if (currentStep === 2) {
@@ -260,6 +266,11 @@ export default function RegisterModal({ onClose }) {
       if (!formData.consentLetter) newErrors.consentLetter = 'Consent Letter is required';
     }
 
+    if (currentStep === 5) {
+      if (!formData.transactionId.trim()) newErrors.transactionId = 'Transaction ID is required';
+      if (!formData.paymentScreenshot) newErrors.paymentScreenshot = 'Payment screenshot is required';
+    }
+
     setErrors(newErrors);
 
     const errorKeys = Object.keys(newErrors);
@@ -269,7 +280,7 @@ export default function RegisterModal({ onClose }) {
         let el = document.querySelector(`[name="${firstErrorField}"]`);
         
         // For file inputs that are hidden, find their label or container
-        if (!el && (firstErrorField === 'ideaPpt' || firstErrorField === 'consentLetter')) {
+        if (!el && (firstErrorField === 'ideaPpt' || firstErrorField === 'consentLetter' || firstErrorField === 'paymentScreenshot')) {
           const fileInput = document.getElementById(`${firstErrorField}-file`);
           if (fileInput && fileInput.labels && fileInput.labels.length > 0) {
             el = fileInput.labels[0];
@@ -332,6 +343,10 @@ export default function RegisterModal({ onClose }) {
       setErrors((prev) => ({ ...prev, submit: 'Please fix the errors in Step 3.' }));
       return;
     }
+    if (!validateStep(5)) {
+      setErrors((prev) => ({ ...prev, submit: 'Please provide transaction ID and payment screenshot.' }));
+      return;
+    }
 
     setIsSubmitting(true);
 
@@ -363,6 +378,10 @@ export default function RegisterModal({ onClose }) {
       submitData.append('psTitle', formData.psTitle);
       submitData.append('ideaPpt', formData.ideaPpt);
       submitData.append('consentLetter', formData.consentLetter);
+      
+      submitData.append('isIeeeCsiMember', formData.isIeeeCsiMember);
+      submitData.append('transactionId', formData.transactionId);
+      submitData.append('paymentScreenshot', formData.paymentScreenshot);
 
       const response = await fetch(`${backendUrl}/api/register`, {
         method: 'POST',
@@ -386,6 +405,7 @@ export default function RegisterModal({ onClose }) {
         RegistrationSession.clear();
         setRegistrationResult({
           success: true,
+          alreadyRegistered: true,
           registrationId: data.registrationId,
           teamName: data.teamName,
           message: 'Your payment was previously completed.'
@@ -394,70 +414,13 @@ export default function RegisterModal({ onClose }) {
         return;
       }
 
-      const isLoaded = await loadRazorpayScript();
-      if (!isLoaded) {
-        setErrors({ submit: 'Failed to load Razorpay checkout overlay. Check your internet connection.' });
-        setIsSubmitting(false);
-        return;
-      }
-
-      const options = {
-        key: data.keyId,
-        amount: data.amount,
-        currency: 'INR',
-        name: 'SIH 4.0 Hackathon',
-        description: `Registration Fee for team ${data.teamName}`,
-        order_id: data.orderId,
-        handler: async function (paymentRes) {
-          try {
-            setIsSubmitting(true);
-            const verifyRes = await fetch(`${backendUrl}/api/payment/verify`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                razorpay_order_id: paymentRes.razorpay_order_id,
-                razorpay_payment_id: paymentRes.razorpay_payment_id,
-                razorpay_signature: paymentRes.razorpay_signature,
-              }),
-            });
-
-            const verifyData = await verifyRes.json();
-            if (verifyRes.ok) {
-              RegistrationSession.clear();
-              setRegistrationResult(verifyData);
-            } else {
-              setErrors({ submit: verifyData.error || 'Payment verification failed.' });
-            }
-          } catch (verifyErr) {
-            console.error(verifyErr);
-            setErrors({ submit: 'Verification server connection error. Please contact organizers.' });
-          } finally {
-            setIsSubmitting(false);
-          }
-        },
-        prefill: {
-          name: data.leaderName,
-          email: data.leaderEmail,
-          contact: data.leaderPhone,
-        },
-        theme: { color: '#D8AB55' },
-        modal: {
-          ondismiss: function () {
-            setIsSubmitting(false);
-          },
-        },
-      };
-
-      const rzp = new window.Razorpay(options);
-
-      rzp.on('payment.failed', function (response) {
-        const reason = response?.error?.description || response?.error?.reason || 'Payment failed.';
-        const code = response?.error?.code ? ` (${response.error.code})` : '';
-        setErrors({ submit: `Payment failed: ${reason}${code}. Please try again or use a different payment method.` });
-        setIsSubmitting(false);
+      RegistrationSession.clear();
+      setRegistrationResult({
+        success: true,
+        registrationId: data.registrationId || (data.data && data.data.registrationId) || 'REG-PENDING',
+        teamName: formData.teamName,
+        message: 'Registration submitted successfully. Pending payment verification.'
       });
-
-      rzp.open();
 
     } catch (err) {
       console.error(err);
@@ -752,25 +715,50 @@ export default function RegisterModal({ onClose }) {
                     </div>
                   </div>
 
-                  <div className="pt-1">
-                    <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
-                      Institute Name
-                    </label>
-                    <input
-                      type="text"
-                      name="instituteName"
-                      value={formData.instituteName}
-                      onChange={handleInputChange}
-                      placeholder="Institute Name"
-                      className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                        errors.instituteName ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                      } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
-                    />
-                    {errors.instituteName && (
-                      <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
-                        <AlertCircle size={10} /> {errors.instituteName}
-                      </p>
-                    )}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-1">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
+                        Institute Name
+                      </label>
+                      <input
+                        type="text"
+                        name="instituteName"
+                        value={formData.instituteName}
+                        onChange={handleInputChange}
+                        placeholder="Institute Name"
+                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                          errors.instituteName ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                        } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
+                      />
+                      {errors.instituteName && (
+                        <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                          <AlertCircle size={10} /> {errors.instituteName}
+                        </p>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
+                        IEEE/CSI Member
+                      </label>
+                      <select
+                        name="isIeeeCsiMember"
+                        value={formData.isIeeeCsiMember}
+                        onChange={handleInputChange}
+                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                          errors.isIeeeCsiMember ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                        } focus:outline-none text-sm text-white transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner cursor-pointer`}
+                      >
+                        <option value="" disabled className="text-slate-500 bg-[#080809]">Select Membership Status</option>
+                        <option value="Yes" className="bg-[#121214] text-white">Yes</option>
+                        <option value="No" className="bg-[#121214] text-white">No</option>
+                      </select>
+                      {errors.isIeeeCsiMember && (
+                        <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                          <AlertCircle size={10} /> {errors.isIeeeCsiMember}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
@@ -1139,9 +1127,13 @@ export default function RegisterModal({ onClose }) {
                         <span className="text-slate-400 block">Leader Email</span>
                         <span className="text-slate-200 font-semibold text-sm">{formData.leaderEmail || '-'}</span>
                       </div>
-                      <div className="sm:col-span-2">
+                      <div>
                         <span className="text-slate-400 block">Institute Name</span>
                         <span className="text-slate-200 font-semibold text-sm">{formData.instituteName || '-'}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-400 block">IEEE/CSI Member</span>
+                        <span className="text-slate-200 font-semibold text-sm">{formData.isIeeeCsiMember || '-'}</span>
                       </div>
                     </div>
                   </div>
@@ -1238,13 +1230,13 @@ export default function RegisterModal({ onClose }) {
 
               {/* Step 5: Payment */}
               {step === 5 && (
-                <div className="animate-fade-in space-y-6 text-center py-6">
-                  <div className="max-w-md mx-auto bg-[#101012] border border-slate-800/80 rounded-2xl p-6 space-y-6">
+                <div className="animate-fade-in space-y-6 text-center py-6 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
+                  <div className="max-w-md mx-auto bg-[#101012] border border-slate-800/80 rounded-2xl p-6 space-y-6 text-left">
                     <div className="w-16 h-16 bg-brand-gold/10 border border-brand-gold/20 rounded-full flex items-center justify-center mx-auto text-brand-gold shadow-sm">
                       <CreditCard size={28} />
                     </div>
                     
-                    <div className="space-y-2">
+                    <div className="space-y-2 text-center">
                       <h4 className="text-xl font-bold font-display text-white">Registration Payment</h4>
                       <p className="text-xs text-slate-400">
                         Please complete the registration fee to submit your nomination for SIH 4.0.
@@ -1261,17 +1253,113 @@ export default function RegisterModal({ onClose }) {
                         <span className="text-white font-semibold">{formData.leaderName}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-slate-400">Category Theme</span>
-                        <span className="text-white font-semibold">{formData.theme}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
                         <span className="text-slate-400">Amount to Pay</span>
-                        <span className="text-brand-gold font-bold">₹1.00</span>
+                        <span className="text-brand-gold font-bold">
+                          {formData.isIeeeCsiMember === 'Yes' ? '₹1200.00' : '₹1500.00'}
+                        </span>
                       </div>
                     </div>
 
-                    <div className="text-xs text-slate-500 bg-[#161619]/40 rounded-xl p-3 leading-relaxed border border-slate-900">
-                      Payment is processed securely by Razorpay. Once payment is confirmed, your registration ID will be generated and confirmation sent to <span className="text-slate-300 font-semibold">{formData.leaderEmail}</span>.
+                    {/* QR Code Section */}
+                    <div className="flex justify-center py-2">
+                      <div className="bg-white p-2 rounded-xl">
+                        <div className="w-48 h-48 border-2 border-slate-100 flex items-center justify-center overflow-hidden">
+                          {formData.isIeeeCsiMember === 'Yes' ? (
+                            <img src="/qr1.jpeg" alt="QR Code A (₹1200)" className="w-full h-full object-contain" />
+                          ) : (
+                            <img src="/qr2.jpeg" alt="QR Code B (₹1500)" className="w-full h-full object-contain" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Payment Details Form */}
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
+                          Transaction ID
+                        </label>
+                        <input
+                          type="text"
+                          name="transactionId"
+                          value={formData.transactionId}
+                          onChange={handleInputChange}
+                          placeholder="e.g. UPI Ref No / UTR"
+                          className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                            errors.transactionId ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                          } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
+                        />
+                        {errors.transactionId && (
+                          <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                            <AlertCircle size={10} /> {errors.transactionId}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col items-center">
+                        <label className="w-full text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase">
+                          Payment Screenshot
+                        </label>
+                        {!formData.paymentScreenshot && fileMetaHints.paymentScreenshot && (
+                          <div className="w-full mb-2 px-3 py-2 rounded-xl bg-amber-950/30 border border-amber-700/40 flex items-center gap-2">
+                            <RotateCcw size={12} className="text-amber-400 shrink-0" />
+                            <p className="text-[10px] text-amber-300 leading-snug">
+                              Previously uploaded: <strong>{fileMetaHints.paymentScreenshot}</strong> — please re-select.
+                            </p>
+                          </div>
+                        )}
+                        <div className={`w-full border-2 border-dashed rounded-2xl p-4 text-center transition-all ${
+                          errors.paymentScreenshot 
+                            ? 'border-red-300 bg-red-50/20' 
+                            : formData.paymentScreenshot 
+                              ? 'border-emerald-300 bg-emerald-50/10'
+                              : fileMetaHints.paymentScreenshot
+                                ? 'border-amber-600/50 bg-amber-950/10'
+                                : 'border-brand-gold/30 hover:border-brand-gold/60 bg-[#080809]/40'
+                        }`}>
+                          <input
+                            type="file"
+                            id="paymentScreenshot-file"
+                            className="hidden"
+                            accept=".png,.jpg,.jpeg,.pdf"
+                            onChange={(e) => handleFileChange(e, 'paymentScreenshot')}
+                          />
+                          <div className="flex flex-col items-center cursor-pointer space-y-3">
+                            <label 
+                              htmlFor="paymentScreenshot-file"
+                              className="flex flex-col items-center cursor-pointer space-y-2"
+                            >
+                              <div className="w-10 h-10 rounded-full bg-emerald-100 text-brand-gold flex items-center justify-center hover:scale-105 transition-transform">
+                                <Upload size={16} />
+                              </div>
+                              <span className="px-4 py-1.5 bg-brand-gold hover:bg-emerald-600 text-white font-bold text-xs rounded-full transition-all shadow-sm">
+                                {fileMetaHints.paymentScreenshot && !formData.paymentScreenshot ? 'Re-select Screenshot' : 'Choose Screenshot'}
+                              </span>
+                            </label>
+
+                            <div className="flex flex-col items-center space-y-1 w-full">
+                              <span className="text-xs text-slate-500 font-medium truncate max-w-full px-2">
+                                {formData.paymentScreenshot ? formData.paymentScreenshot.name : 'No file chosen'}
+                              </span>
+                              {formData.paymentScreenshot && (
+                                <button
+                                  type="button"
+                                  onClick={() => previewLocalFile(formData.paymentScreenshot)}
+                                  className="flex items-center gap-1 text-[10px] text-brand-gold hover:text-brand-gold/80 hover:underline font-bold bg-brand-gold/10 px-2.5 py-1 rounded-full border border-brand-gold/30 cursor-pointer"
+                                >
+                                  <Eye size={12} />
+                                  <span>Preview File</span>
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        {errors.paymentScreenshot && (
+                          <p className="text-[10px] text-red-500 mt-2 flex items-center gap-1">
+                            <AlertCircle size={10} /> {errors.paymentScreenshot}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1281,18 +1369,31 @@ export default function RegisterModal({ onClose }) {
 
               {/* Navigation Buttons */}
               <div className="mt-8 pt-6 border-t border-slate-800/50 flex justify-between items-center">
-                {step > 1 ? (
+                <div className="flex items-center gap-3">
                   <button
                     type="button"
-                    onClick={handlePrev}
-                    className="px-8 py-2.5 rounded-full border border-brand-gold text-brand-gold font-bold hover:bg-brand-gold/10 transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm"
+                    onClick={() => {
+                      if (window.confirm("Are you sure you want to cancel? All unsaved progress will be lost.")) {
+                        RegistrationSession.clear();
+                        onClose();
+                      }
+                    }}
+                    className="px-6 py-2.5 rounded-full border border-red-500/50 text-red-400 font-bold hover:bg-red-500/10 hover:border-red-500 hover:text-red-500 transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm"
                   >
-                    <ArrowLeft size={16} />
-                    <span>Prev</span>
+                    <X size={16} />
+                    <span>Cancel</span>
                   </button>
-                ) : (
-                  <div /> // placeholder for alignment
-                )}
+                  {step > 1 && (
+                    <button
+                      type="button"
+                      onClick={handlePrev}
+                      className="px-8 py-2.5 rounded-full border border-brand-gold text-brand-gold font-bold hover:bg-brand-gold/10 transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm"
+                    >
+                      <ArrowLeft size={16} />
+                      <span>Prev</span>
+                    </button>
+                  )}
+                </div>
 
                 {step < 5 ? (
                   <button
@@ -1337,7 +1438,7 @@ export default function RegisterModal({ onClose }) {
             </div>
             <div className="space-y-3">
               <h3 className="text-3xl font-bold font-display text-brand-navy">
-                {registrationResult.message ? 'Already Registered!' : 'Registration Successful!'}
+                {registrationResult.alreadyRegistered ? 'Already Registered!' : 'Registration Successful!'}
               </h3>
               {registrationResult.message && (
                 <p className="text-sm text-amber-400 font-medium pb-2">
