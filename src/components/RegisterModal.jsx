@@ -536,9 +536,9 @@ export default function RegisterModal({ onClose }) {
               </div>
             )}
 
-            {/* Stepper Indicator (Modern 1-Line Aligned Bar) */}
-            <div className="hidden md:flex relative justify-between items-center max-w-xl mx-auto mb-5 px-6 font-sans shrink-0">
-              <div className="absolute top-4 left-10 right-10 h-[3px] bg-[#E3D7C5] -z-10 rounded-full">
+            {/* Stepper Indicator (Modern Spacious 1-Line Aligned Bar) */}
+            <div className="hidden md:flex relative justify-between items-center w-full max-w-3xl mx-auto mb-5 px-8 font-sans shrink-0">
+              <div className="absolute top-4 left-12 right-12 h-[3px] bg-[#E3D7C5] -z-10 rounded-full">
                 <div 
                   className="h-full bg-gradient-to-r from-[#C97F1B] to-[#8C3A16] transition-all duration-500 ease-out rounded-full"
                   style={{ width: `${((step - 1) / (stepLabels.length - 1)) * 100}%` }}
@@ -549,7 +549,7 @@ export default function RegisterModal({ onClose }) {
                 const isActive = step >= lbl.num;
                 const isCurrent = step === lbl.num;
                 return (
-                  <div key={lbl.num} className="flex flex-col items-center text-center">
+                  <div key={lbl.num} className="flex flex-col items-center text-center w-24">
                     <div 
                       className={`w-8 h-8 rounded-full flex items-center justify-center font-extrabold text-xs border-2 transition-all duration-500 ease-out ${
                         isCurrent 
@@ -562,7 +562,7 @@ export default function RegisterModal({ onClose }) {
                       {isActive && !isCurrent ? <Check size={14} strokeWidth={3} /> : lbl.num}
                     </div>
                     <span 
-                      className={`text-[11px] font-bold mt-1.5 whitespace-nowrap select-none transition-all duration-300 ${
+                      className={`text-xs font-bold mt-1.5 whitespace-nowrap select-none transition-all duration-300 ${
                         isCurrent 
                           ? 'text-[#8C3A16] font-black' 
                           : isActive 
@@ -657,15 +657,21 @@ export default function RegisterModal({ onClose }) {
                         onChange={handleInputChange}
                         className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
                           errors.theme ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
-                        } focus:outline-none text-xs text-[#241708] transition-all cursor-pointer font-medium`}
+                        } focus:outline-none text-xs text-[#241708] font-semibold transition-all cursor-pointer appearance-none shadow-sm`}
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238C3A16'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'right 0.85rem center',
+                          backgroundSize: '1em'
+                        }}
                       >
                         {isLoadingPS ? (
-                          <option value="" disabled className="text-[#A09080] bg-white">Loading Themes...</option>
+                          <option value="" disabled className="text-[#7A6A58] bg-[#FFFDF7]">Loading Themes...</option>
                         ) : (
-                          <option value="" disabled className="text-[#A09080] bg-white">Select Category Theme</option>
+                          <option value="" disabled className="text-[#7A6A58] bg-[#FFFDF7]">Select Category Theme</option>
                         )}
                         {!isLoadingPS && uniqueDomains.map((domain) => (
-                          <option key={domain} value={domain} className="bg-white text-[#241708]">
+                          <option key={domain} value={domain} className="bg-[#FFFDF7] text-[#241708] font-medium py-1">
                             {domain}
                           </option>
                         ))}
@@ -687,12 +693,18 @@ export default function RegisterModal({ onClose }) {
                         onChange={handleInputChange}
                         className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
                           errors.leaderGender ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
-                        } focus:outline-none text-xs text-[#241708] transition-all cursor-pointer font-medium`}
+                        } focus:outline-none text-xs text-[#241708] font-semibold transition-all cursor-pointer appearance-none shadow-sm`}
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238C3A16'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'right 0.85rem center',
+                          backgroundSize: '1em'
+                        }}
                       >
-                        <option value="" disabled className="text-[#A09080] bg-white">Select Gender</option>
-                        <option value="Male" className="bg-white text-[#241708]">Male</option>
-                        <option value="Female" className="bg-white text-[#241708]">Female</option>
-                        <option value="Other" className="bg-white text-[#241708]">Other</option>
+                        <option value="" disabled className="text-[#7A6A58] bg-[#FFFDF7]">Select Gender</option>
+                        <option value="Male" className="bg-[#FFFDF7] text-[#241708] font-medium">Male</option>
+                        <option value="Female" className="bg-[#FFFDF7] text-[#241708] font-medium">Female</option>
+                        <option value="Other" className="bg-[#FFFDF7] text-[#241708] font-medium">Other</option>
                       </select>
                       {errors.leaderGender && (
                         <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
@@ -872,6 +884,7 @@ export default function RegisterModal({ onClose }) {
               {step === 3 && (
                 <div className="space-y-3.5 text-left font-sans animate-fade-in">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                    {/* PSID Dropdown */}
                     <div>
                       <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase text-left">
                         PSID (Problem Statement ID) *
@@ -885,7 +898,7 @@ export default function RegisterModal({ onClose }) {
                           setFormData(prev => ({
                             ...prev,
                             psid: selectedId,
-                            psTitle: psObj ? psObj.title : prev.psTitle
+                            psTitle: psObj ? (psObj.title || psObj.statement) : prev.psTitle
                           }));
                           setErrors(prev => {
                             const newErrs = { ...prev };
@@ -896,17 +909,23 @@ export default function RegisterModal({ onClose }) {
                         }}
                         className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
                           errors.psid ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
-                        } focus:outline-none text-xs text-[#241708] transition-all cursor-pointer font-medium`}
+                        } focus:outline-none text-xs text-[#241708] font-semibold transition-all cursor-pointer appearance-none shadow-sm`}
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238C3A16'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'right 0.85rem center',
+                          backgroundSize: '1em'
+                        }}
                       >
                       {isLoadingPS ? (
-                        <option value="" className="bg-white text-[#241708]">Loading Problem Statements...</option>
+                        <option value="" className="bg-[#FFFDF7] text-[#241708]">Loading Problem Statements...</option>
                       ) : (
-                        <option value="" className="bg-white text-[#241708]">Select a Problem Statement...</option>
+                        <option value="" className="bg-[#FFFDF7] text-[#7A6A58]">Select PSID...</option>
                       )}
                       
                       {!isLoadingPS && problemStatements.map((ps) => (
-                        <option key={ps.psNumber} value={ps.psNumber} className="bg-white text-[#241708]">
-                          {ps.psNumber} — {ps.domain} — {ps.title}
+                        <option key={ps.psNumber} value={ps.psNumber} className="bg-[#FFFDF7] text-[#241708] font-medium py-1">
+                          {ps.psNumber} — {ps.domain || ps.category || 'General'} — {ps.title || ps.statement}
                         </option>
                       ))}
                       </select>
@@ -917,11 +936,7 @@ export default function RegisterModal({ onClose }) {
                       )}
                     </div>
 
-<<<<<<< HEAD
-                    {/* PS Title */}
-=======
                     {/* PS Title Dropdown */}
->>>>>>> c2bf7500066a715507182685b6a5aca62f946b08
                     <div>
                       <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase text-left">
                         PS Title *
@@ -929,17 +944,9 @@ export default function RegisterModal({ onClose }) {
                       <select
                         name="psTitle"
                         value={formData.psTitle}
-<<<<<<< HEAD
-                        onChange={handleInputChange}
-                        placeholder="Problem Statement Title"
-                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
-                          errors.psTitle ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
-                        } focus:outline-none text-xs text-[#241708] placeholder-[#605040] transition-all font-medium`}
-                      />
-=======
                         onChange={(e) => {
                           const selectedTitle = e.target.value;
-                          const psObj = problemStatements.find(ps => ps.statement === selectedTitle);
+                          const psObj = problemStatements.find(ps => (ps.statement === selectedTitle || ps.title === selectedTitle));
                           setFormData(prev => ({
                             ...prev,
                             psTitle: selectedTitle,
@@ -952,18 +959,23 @@ export default function RegisterModal({ onClose }) {
                             return newErrs;
                           });
                         }}
-                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                          errors.psTitle ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                        } focus:outline-none text-sm text-white transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner cursor-pointer`}
+                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
+                          errors.psTitle ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                        } focus:outline-none text-xs text-[#241708] font-semibold transition-all cursor-pointer appearance-none shadow-sm`}
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238C3A16'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'right 0.85rem center',
+                          backgroundSize: '1em'
+                        }}
                       >
-                        <option value="" className="text-slate-500 bg-[#080809]">Select Problem Statement...</option>
+                        <option value="" className="bg-[#FFFDF7] text-[#7A6A58]">Select Problem Statement Title...</option>
                         {problemStatements.map((ps) => (
-                          <option key={ps.psNumber} value={ps.statement} className="bg-[#080809] text-white">
-                            {ps.statement}
+                          <option key={ps.psNumber} value={ps.statement || ps.title} className="bg-[#FFFDF7] text-[#241708] font-medium py-1">
+                            {ps.statement || ps.title}
                           </option>
                         ))}
                       </select>
->>>>>>> c2bf7500066a715507182685b6a5aca62f946b08
                       {errors.psTitle && (
                         <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
                           <AlertCircle size={10} /> {errors.psTitle}
@@ -971,6 +983,8 @@ export default function RegisterModal({ onClose }) {
                       )}
                     </div>
                   </div>
+
+
 
                   {/* File Upload Zone (Compact 1-Screen Fit) */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
@@ -1015,13 +1029,8 @@ export default function RegisterModal({ onClose }) {
                             {formData.ideaPpt ? formData.ideaPpt.name : 'No file chosen'}
                           </span>
 
-<<<<<<< HEAD
-                          <span className="text-[9px] text-[#A09080]">
-                            PPT, PPTX, PDF (Max 10MB)
-=======
-                          <span className="text-[10px] text-slate-400">
-                            Supported files: PPT, PPTX, PDF (Max 20MB)
->>>>>>> c2bf7500066a715507182685b6a5aca62f946b08
+                          <span className="text-[9px] text-[#605040]">
+                            PPT, PPTX, PDF (Max 20MB)
                           </span>
                         </div>
                       </div>
@@ -1073,13 +1082,8 @@ export default function RegisterModal({ onClose }) {
                             {formData.consentLetter ? formData.consentLetter.name : 'No file chosen'}
                           </span>
 
-<<<<<<< HEAD
-                          <span className="text-[9px] text-[#A09080]">
-                            PDF, PNG, JPG (Max 10MB)
-=======
-                          <span className="text-[10px] text-slate-400">
-                            Supported files: PDF, PNG, JPG (Max 20MB)
->>>>>>> c2bf7500066a715507182685b6a5aca62f946b08
+                          <span className="text-[9px] text-[#605040]">
+                            PDF, PNG, JPG (Max 20MB)
                           </span>
                         </div>
                       </div>
@@ -1270,22 +1274,16 @@ export default function RegisterModal({ onClose }) {
               </div>
             </div>
             <div className="space-y-3">
-<<<<<<< HEAD
-              <h3 className="text-3xl font-black font-display text-[#8C3A16]">Registration Successful!</h3>
-              <p className="text-sm text-[#7A6A58] max-w-lg mx-auto leading-relaxed">
-                Thank you for registering team <strong className="text-[#241708]">"{registrationResult.teamName}"</strong>. Your Registration ID is:
-=======
-              <h3 className="text-3xl font-bold font-display text-brand-navy">
+              <h3 className="text-3xl font-black font-display text-[#8C3A16]">
                 {registrationResult.message ? 'Already Registered!' : 'Registration Successful!'}
               </h3>
               {registrationResult.message && (
-                <p className="text-sm text-amber-400 font-medium pb-2">
+                <p className="text-sm text-amber-700 font-medium pb-2">
                   {registrationResult.message}
                 </p>
               )}
-              <p className="text-sm text-slate-400 max-w-lg mx-auto leading-relaxed">
-                Thank you for registering team <strong className="text-white">"{registrationResult.teamName}"</strong>. Your Registration ID is:
->>>>>>> c2bf7500066a715507182685b6a5aca62f946b08
+              <p className="text-sm text-[#7A6A58] max-w-lg mx-auto leading-relaxed">
+                Thank you for registering team <strong className="text-[#241708]">"{registrationResult.teamName}"</strong>. Your Registration ID is:
               </p>
               <div className="inline-block py-2.5 px-6 rounded-2xl bg-[#FAF6EE] border border-[#8C3A16]/30 text-[#8C3A16] font-mono font-bold text-xl tracking-wider shadow-sm select-all">
                 {registrationResult.registrationId}

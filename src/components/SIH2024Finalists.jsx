@@ -837,34 +837,34 @@ export default function SIH2024Finalists({ onViewChange }) {
                       className="group border-b border-white/5 bg-brand-card/5 hover:bg-brand-card/25 hover:shadow-[inset_4px_0_0_0_#FFB224] transition-all duration-300"
                     >
                       <td className="px-6 py-5">
-                        <span className="font-mono text-xs font-bold text-white/50">{item.sNo}</span>
+                        <span className="font-mono text-xs font-bold text-[#7A6A58]">{item.sNo}</span>
                       </td>
                       <td className="px-6 py-5">
-                        <span className="font-mono text-xs font-bold text-brand-gold bg-brand-gold/10 border border-brand-gold/20 px-2.5 py-1 rounded-lg whitespace-nowrap">
+                        <span className="font-mono text-xs font-bold text-[#8C3A16] bg-[#8C3A16]/10 border border-[#8C3A16]/20 px-2.5 py-1 rounded-lg whitespace-nowrap">
                           {item.regNo}
                         </span>
                       </td>
                       <td className="px-6 py-5">
-                        <span className="text-xs font-bold text-white leading-snug block">{item.leader}</span>
+                        <span className="text-xs font-black text-[#241708] leading-snug block">{item.leader}</span>
                       </td>
                       <td className="px-6 py-5">
-                        <span className="text-xs font-bold text-white/90 leading-snug block">{item.team}</span>
+                        <span className="text-xs font-black text-[#8C3A16] leading-snug block">{item.team}</span>
                       </td>
                       <td className="px-6 py-5">
-                        <span className="inline-block px-2.5 py-1 rounded-lg border border-white/10 bg-white/5 text-[9px] font-bold uppercase tracking-wider text-brand-gray/80">
+                        <span className="inline-block px-2.5 py-1 rounded-lg border border-[#D9CCBA] bg-[#FAF6EE] text-[9px] font-bold uppercase tracking-wider text-[#6B5B49]">
                           {item.theme}
                         </span>
                       </td>
                       <td className="px-6 py-5">
-                        <span className="font-mono text-xs font-bold text-brand-blue">{item.psid}</span>
+                        <span className="font-mono text-xs font-extrabold text-[#C97F1B]">{item.psid}</span>
                       </td>
                       <td className="px-6 py-5 w-[420px] max-w-md">
-                        <span className="text-xs text-brand-gray/95 block leading-relaxed whitespace-normal break-words text-justify">
+                        <span className="text-xs text-[#3E2E20] font-medium block leading-relaxed whitespace-normal break-words text-justify">
                           {item.problem}
                         </span>
                       </td>
                       <td className="px-6 py-5">
-                        <span className="text-xs font-semibold text-brand-gray/80 leading-normal block">{item.college}</span>
+                        <span className="text-xs font-bold text-[#241708] leading-normal block">{item.college}</span>
                       </td>
                     </tr>
                   ))
@@ -903,30 +903,30 @@ export default function SIH2024Finalists({ onViewChange }) {
                   </span>
                 </div>
                 
-                <h4 className="text-xs font-bold text-white leading-snug mb-0.5">
+                <h4 className="text-xs font-black text-[#241708] leading-snug mb-0.5">
                   Leader: {item.leader}
                 </h4>
-                <p className="text-xs font-bold text-brand-gold mb-1">
+                <p className="text-xs font-black text-[#8C3A16] mb-1">
                   Team: {item.team}
                 </p>
-                <p className="text-[10px] text-brand-gray/60 mb-3 font-semibold">
+                <p className="text-[10px] text-[#6B5B49] mb-3 font-semibold">
                   {item.college}
                 </p>
 
-                <div className="space-y-1.5 pt-3 border-t border-white/5 text-[11px] text-brand-gray mb-3">
+                <div className="space-y-1.5 pt-3 border-t border-[#ECE2D2] text-[11px] text-[#3E2E20] mb-3">
                   <div className="flex justify-between items-center gap-2">
-                    <span className="text-[9px] uppercase font-bold text-white/40">Theme</span>
-                    <span className="font-medium text-white/80 text-right truncate max-w-[70%]">{item.theme}</span>
+                    <span className="text-[9px] uppercase font-bold text-[#6B5B49]">Theme</span>
+                    <span className="font-bold text-[#8C3A16] text-right truncate max-w-[70%]">{item.theme}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-[9px] uppercase font-bold text-white/40">PS Code</span>
-                    <span className="font-bold text-brand-blue font-mono">{item.psid}</span>
+                    <span className="text-[9px] uppercase font-bold text-[#6B5B49]">PS Code</span>
+                    <span className="font-bold text-[#C97F1B] font-mono">{item.psid}</span>
                   </div>
                 </div>
 
-                <div className="space-y-1.5 pt-3 border-t border-white/5 text-[11px]">
-                  <span className="text-[9px] uppercase font-bold text-white/40 block">Problem Statement Title</span>
-                  <p className="text-xs text-brand-gray leading-relaxed font-normal bg-brand-dark/45 p-3 rounded-xl border border-white/5 break-words text-justify">
+                <div className="space-y-1.5 pt-3 border-t border-[#ECE2D2] text-[11px]">
+                  <span className="text-[9px] uppercase font-bold text-[#6B5B49] block">Problem Statement Title</span>
+                  <p className="text-xs text-[#3E2E20] leading-relaxed font-medium bg-[#FAF6EE] p-3 rounded-xl border border-[#ECE2D2] break-words text-justify">
                     {item.problem}
                   </p>
                 </div>
