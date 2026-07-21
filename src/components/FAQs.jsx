@@ -27,7 +27,7 @@ export default function FAQs() {
     },
     {
       q: 'When/Where will the shortlisted Ideas be announced?',
-      a: 'The results will be declared on the official SIH 4.0 result portal by November 4th, 2026. Selected team leaders will receive official joining/venue instruction emails.'
+      a: 'The results will be declared on the official SIH 4.0 result portal by September 27th, 2026. Selected team leaders will receive official joining/venue instruction emails.'
     },
     {
       q: 'What are the prizes to be won?',
@@ -55,9 +55,6 @@ export default function FAQs() {
         
         {/* Header */}
         <div className="space-y-4 text-center mb-16">
-          <p className="text-xs sm:text-sm font-black tracking-[0.25em] text-[var(--vermilion)] font-sans uppercase mb-2">
-            Got Questions?
-          </p>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] font-display leading-tight" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
             Frequently Asked{' '}
             <span className="text-[var(--marigold-deep)]">

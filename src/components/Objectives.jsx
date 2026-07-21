@@ -1,53 +1,78 @@
-import React from 'react';
-import { Target, Zap, Briefcase, GraduationCap, Quote } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Quote, ChevronLeft, ChevronRight, ZoomIn, X, Trophy } from 'lucide-react';
+import winnerGroup from '../../winer group image.JPG';
+import winner1st from '../../2025  1st prize winer.JPG';
+import winner2nd from '../../2025 2nd Prize winer.JPG';
+import winner3rd from '../../2025 3nd Prize winer.JPG';
+import winnerTheme1 from '../../Themes Prize winer 1.JPG';
+import winnerTheme2 from '../../Themes Prize winer 2.JPG';
 
 export default function Objectives({ isStandalone = false }) {
-  const objectiveList = [
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+
+  const galleryImages = [
     {
-      index: '01',
-      title: 'Diverse Problem Domains',
-      desc: 'Focus on more than 12 Domains with 10 to 15 curated Problem Statements in each area.',
-      icon: Target,
-      iconColor: 'text-emerald-400 animate-pulse',
-      color: 'from-emerald-500/10 to-transparent',
-      borderColor: 'hover:border-emerald-500/30 shadow-emerald-500/5',
-      glow: 'group-hover:shadow-[0_0_25px_rgba(16,185,129,0.15)]',
-      progressColor: 'from-emerald-500 to-emerald-300'
+      id: 1,
+      src: winnerGroup,
+      title: "Grand Finale Winners",
+      badge: "SIH 3.0 Champions Group",
+      subtitle: "Celebrating teams, mentors, and coordinators in a moment of triumph."
     },
     {
-      index: '02',
-      title: 'National Collaboration',
-      desc: 'Expecting 60+ Elite Teams to participate from engineering colleges across various states.',
-      icon: Zap,
-      iconColor: 'text-pink-400',
-      color: 'from-pink-500/10 to-transparent',
-      borderColor: 'hover:border-pink-500/30 shadow-pink-500/5',
-      glow: 'group-hover:shadow-[0_0_25px_rgba(236,72,153,0.15)]',
-      progressColor: 'from-pink-500 to-pink-300'
+      id: 2,
+      src: winner1st,
+      title: "1st Prize Winners — SIH 3.0",
+      badge: "1st Prize Winner",
+      subtitle: "Awarded for outstanding innovation, technical feasibility, and prototype execution."
     },
     {
-      index: '03',
-      title: 'Career Opportunities',
-      desc: 'Connect with top recruiters and secure high-value internships directly from the hackathon.',
-      icon: Briefcase,
-      iconColor: 'text-blue-400',
-      color: 'from-blue-500/10 to-transparent',
-      borderColor: 'hover:border-blue-500/30 shadow-blue-500/5',
-      glow: 'group-hover:shadow-[0_0_25px_rgba(59,130,246,0.15)]',
-      progressColor: 'from-blue-500 to-blue-300'
+      id: 3,
+      src: winner2nd,
+      title: "2nd Prize Winners — SIH 3.0",
+      badge: "2nd Prize Winner",
+      subtitle: "Runner-up team recognized for presenting a highly scalable, high-impact solution."
     },
     {
-      index: '04',
-      title: 'Incubation & Start-ups',
-      desc: 'Get mentorship, incubation support, and opportunities to convert outstanding prototypes into startups.',
-      icon: GraduationCap,
-      iconColor: 'text-amber-400',
-      color: 'from-amber-500/10 to-transparent',
-      borderColor: 'hover:border-amber-500/30 shadow-amber-500/5',
-      glow: 'group-hover:shadow-[0_0_25px_rgba(245,158,11,0.15)]',
-      progressColor: 'from-amber-500 to-amber-300'
+      id: 4,
+      src: winner3rd,
+      title: "3rd Prize Winners — SIH 3.0",
+      badge: "3rd Prize Winner",
+      subtitle: "Third place winners recognized for design excellence and coding execution."
+    },
+    {
+      id: 5,
+      src: winnerTheme1,
+      title: "Theme Prize Winner — Track 1",
+      badge: "Theme Winner",
+      subtitle: "Special recognition for excellence in solving targeted domain-specific challenges."
+    },
+    {
+      id: 6,
+      src: winnerTheme2,
+      title: "Theme Prize Winner — Track 2",
+      badge: "Theme Winner",
+      subtitle: "Special recognition for domain innovation and creative problem solving."
     }
   ];
+
+  // Autoplay slider logic
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(() => {
+      handleNext();
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [currentIndex, isPlaying]);
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % galleryImages.length);
+  };
 
   return (
     <section id="objectives" className={`relative ${isStandalone ? 'pt-32 pb-16 sm:pt-40 sm:pb-24' : 'py-12 sm:py-16'} bg-brand-dark overflow-hidden`}>
@@ -56,14 +81,11 @@ export default function Objectives({ isStandalone = false }) {
       <div className="absolute top-1/4 right-0 w-80 h-80 bg-brand-orange/5 rounded-full blur-[100px] pointer-events-none"></div>
 
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Left Column: Mission Description & Quote */}
           <div className="lg:col-span-5 space-y-8 text-left">
             <div className="mb-6">
-              <p className="text-xs sm:text-sm font-black tracking-[0.25em] text-[var(--vermilion)] font-sans uppercase mb-2">
-                Core Vision
-              </p>
               <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] font-display leading-tight" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
                 Objective of <span className="text-[var(--marigold-deep)]">SIH 4.0</span>
               </h2>
@@ -75,7 +97,6 @@ export default function Objectives({ isStandalone = false }) {
 
             {/* Quote Card */}
             <div className="relative p-6 rounded-2xl bg-brand-card/45 border border-white/5 shadow-xl overflow-hidden group">
-              {/* Decorative side accent bar */}
               <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-gradient-to-b from-brand-orange via-brand-pink to-brand-blue"></div>
               
               <div className="relative z-10 space-y-4">
@@ -96,49 +117,144 @@ export default function Objectives({ isStandalone = false }) {
             </div>
           </div>
 
-          {/* Right Column: Staggered Interactive Cards Grid */}
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 lg:pt-12">
-            {objectiveList.map((obj, idx) => {
-              const IconComponent = obj.icon;
-              return (
-                <div 
-                  key={idx}
-                  className={`p-6 rounded-[2rem] bg-brand-card/35 backdrop-blur-md border border-white/5 ${obj.borderColor} bg-gradient-to-b ${obj.color} flex flex-col justify-between transition-all duration-500 hover:-translate-y-2 shadow-card-shadow ${obj.glow} group relative overflow-hidden`}
-                >
-                  {/* Visual Watermark background icon */}
-                  <div className="absolute right-0 bottom-0 text-[10rem] text-white/[0.01] pointer-events-none transform translate-x-6 translate-y-6 group-hover:scale-110 group-hover:text-white/[0.02] transition-all duration-500 flex items-center justify-center">
-                    <IconComponent className="w-40 h-40" />
-                  </div>
+          {/* Right Column: 3D Side-by-Side Stacked Card Slider */}
+          <div className="lg:col-span-7 flex flex-col items-center justify-center pt-4 lg:pt-0 relative">
+            
+            {/* 3D Stack Container */}
+            <div className="relative w-full h-[280px] sm:h-[360px] md:h-[400px] flex items-center justify-center overflow-visible select-none">
+              {galleryImages.map((image, idx) => {
+                const total = galleryImages.length;
+                let diff = idx - currentIndex;
+                
+                // Wrap-around difference
+                if (diff < -total / 2) diff += total;
+                if (diff > total / 2) diff -= total;
 
-                  {/* Index tag on the top right */}
-                  <span className="absolute right-4 top-4 text-xs font-mono font-bold text-white/20 group-hover:text-white/40 transition-colors">
-                    {obj.index}
-                  </span>
+                let positionClass = '';
 
-                  <div className="relative z-10">
-                    {/* Icon container with gradient border and hover rotation */}
-                    <div className="w-12 h-12 rounded-2xl bg-brand-darker border border-white/5 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                      <IconComponent className={`w-5 h-5 ${obj.iconColor}`} />
+                if (diff === 0) {
+                  // Active Center Card
+                  positionClass = 'z-30 scale-100 opacity-100 translate-x-0 rotate-0 shadow-2xl border-[#8C3A16]/50 cursor-pointer';
+                } else if (diff === -1 || (diff < 0 && diff >= -1)) {
+                  // Left Side Card (angled)
+                  positionClass = 'z-20 scale-[0.82] opacity-50 -translate-x-[28%] sm:-translate-x-[36%] -rotate-[6deg] hover:opacity-80 cursor-pointer border-[#E3D7C5]';
+                } else if (diff === 1 || (diff > 0 && diff <= 1)) {
+                  // Right Side Card (angled)
+                  positionClass = 'z-20 scale-[0.82] opacity-50 translate-x-[28%] sm:translate-x-[36%] rotate-[6deg] hover:opacity-80 cursor-pointer border-[#E3D7C5]';
+                } else {
+                  // Hidden Cards behind
+                  positionClass = 'z-10 scale-[0.6] opacity-0 pointer-events-none translate-x-0 rotate-0';
+                }
+
+                return (
+                  <div
+                    key={image.id}
+                    onClick={() => {
+                      if (diff === -1) handlePrev();
+                      else if (diff === 1) handleNext();
+                      else setSelectedPhoto(image);
+                    }}
+                    className={`absolute w-[260px] sm:w-[380px] md:w-[460px] aspect-[4/3] rounded-3xl overflow-hidden bg-[#FAF6EE] border-2 backdrop-blur-md transition-all duration-700 ease-out p-2 ${positionClass}`}
+                  >
+                    <div className="relative w-full h-full rounded-2xl overflow-hidden bg-stone-900">
+                      <img
+                        src={image.src}
+                        alt={image.title}
+                        className="w-full h-full object-cover pointer-events-none"
+                      />
+                      {/* Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+
+                      {/* Top Badge */}
+                      <div className="absolute top-3 left-3">
+                        <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#8C3A16] text-white shadow-sm">
+                          {image.badge}
+                        </span>
+                      </div>
+
+                      {/* Zoom Icon */}
+                      <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 backdrop-blur-md text-white flex items-center justify-center">
+                        <ZoomIn size={14} />
+                      </div>
+
+                      {/* Title at Bottom */}
+                      <div className="absolute bottom-3 left-3 right-3 text-left">
+                        <p className="text-xs sm:text-sm font-black text-white drop-shadow-md">
+                          {image.title}
+                        </p>
+                      </div>
                     </div>
-                    
-                    <h3 className="text-lg font-bold text-white tracking-wide font-display group-hover:text-brand-gold transition-colors">
-                      {obj.title
-                    }</h3>
-                    
-                    <p className="text-xs sm:text-sm text-brand-gray mt-2 leading-relaxed font-normal">
-                      {obj.desc}
-                    </p>
                   </div>
+                );
+              })}
+            </div>
 
-                  {/* Animated progress accent at the bottom */}
-                  <div className={`w-0 h-[1.5px] bg-gradient-to-r ${obj.progressColor} group-hover:w-full transition-all duration-500 mt-6 relative z-10`}></div>
-                </div>
-              );
-            })}
+            {/* Slider Controls */}
+            <div className="flex items-center gap-4 mt-6 z-40">
+              <button
+                onClick={handlePrev}
+                className="w-10 h-10 rounded-full bg-[#FAF6EE] border border-[#E3D7C5] hover:border-[#8C3A16] text-[#8C3A16] flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95 shadow-md"
+              >
+                <ChevronLeft size={20} />
+              </button>
+
+              {/* Dots Indicators */}
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#FAF6EE] border border-[#E3D7C5] shadow-inner">
+                {galleryImages.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                      currentIndex === idx
+                        ? 'w-6 bg-[#8C3A16]'
+                        : 'w-2.5 bg-[#8C3A16]/30 hover:bg-[#8C3A16]/60'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={handleNext}
+                className="w-10 h-10 rounded-full bg-[#FAF6EE] border border-[#E3D7C5] hover:border-[#8C3A16] text-[#8C3A16] flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95 shadow-md"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+
           </div>
 
         </div>
       </div>
+
+      {/* Lightbox Modal for Photo Zoom */}
+      {selectedPhoto && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in"
+          onClick={() => setSelectedPhoto(null)}
+        >
+          <div className="relative max-w-4xl w-full bg-[#FAF6EE] rounded-3xl p-3 sm:p-4 border border-[#E3D7C5] shadow-2xl overflow-hidden text-left" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-3 border-b border-[#D9CCBA]">
+              <div className="flex items-center gap-2">
+                <Trophy className="w-5 h-5 text-[#8C3A16]" />
+                <h4 className="text-sm font-black text-[#8C3A16]">{selectedPhoto.title}</h4>
+              </div>
+              <button 
+                onClick={() => setSelectedPhoto(null)}
+                className="w-8 h-8 rounded-full bg-[#8C3A16]/10 text-[#8C3A16] hover:bg-[#8C3A16] hover:text-white transition-colors flex items-center justify-center cursor-pointer"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <div className="p-2 max-h-[75vh] overflow-hidden flex justify-center items-center">
+              <img 
+                src={selectedPhoto.src} 
+                alt={selectedPhoto.title}
+                className="max-h-[70vh] w-auto max-w-full rounded-2xl object-contain shadow-md"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

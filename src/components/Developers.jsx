@@ -95,9 +95,6 @@ export default function Developers() {
         
         {/* Header */}
         <div className="space-y-4 max-w-2xl mx-auto mb-16 animate-fade-in">
-          <p className="text-xs sm:text-sm font-black tracking-[0.25em] text-[var(--vermilion)] font-sans uppercase mb-2">
-            Engineering &amp; Tech Team
-          </p>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] font-display leading-tight" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
             Developers of{' '}
             <span className="text-[var(--marigold-deep)]">

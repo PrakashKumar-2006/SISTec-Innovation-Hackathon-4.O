@@ -46,14 +46,13 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
         { name: 'About SIH', href: '#about' },
         { name: 'Timeline', href: '#timeline' },
         { name: 'Program Schedule', href: '#schedule' },
-        { name: 'Photo Gallery', href: '#gallery' }
+        { name: 'Previous SIH', view: 'previous-sih' }
       ]
     },
     {
       name: 'Guidelines',
       dropdown: [
         { name: 'Instructions', href: '#instructions' },
-        { name: 'How to Apply', href: '#process' },
         { name: 'Idea Template', href: '#process' },
         { name: 'Consent Letter', href: '#process' }
       ]
@@ -64,35 +63,6 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
       dropdown: [
         { name: 'Shortlisted Teams', view: 'shortlisted-teams' },
         { name: 'Winner of SIH 2026', view: 'sih-2026-winners' }
-      ]
-    },
-    {
-      name: 'Previous SIH',
-      dropdown: [
-        {
-          name: 'SIH 3.0',
-          subItems: [
-            { name: 'SIH 2025' },
-            { name: 'Grand Finale Teams', view: 'sih-2025-finalists' },
-            { name: 'Winner of SIH 2025', view: 'sih-2025-winners' }
-          ]
-        },
-        {
-          name: 'SIH 2.0',
-          subItems: [
-            { name: 'SIH 2024', view: 'sih-2024' },
-            { name: 'Grand Finale Teams', view: 'sih-2024-finalists' },
-            { name: 'Winner of SIH 2024', view: 'sih-2024-winners' }
-          ]
-        },
-        {
-          name: 'SIH 1.0',
-          subItems: [
-            { name: 'SIH 2023' },
-            { name: 'Grand Finale Teams', view: 'sih-2023-finalists' },
-            { name: 'Winner of SIH 2023', view: 'sih-2023-winners' }
-          ]
-        }
       ]
     },
     { name: 'Contact Us', href: '#contact' }
@@ -159,15 +129,15 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
 
                     {/* Dropdown Menu */}
                     {item.dropdown && (
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-52 rounded-2xl bg-brand-card/95 backdrop-blur-xl border border-white/5 p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible translate-y-3 group-hover:translate-y-0 transition-all duration-300 shadow-[0_20px_40px_rgba(0,0,0,0.4)] z-50">
+                      <div className="absolute top-full left-0 mt-2 w-56 rounded-2xl bg-[#FAF6EE] border border-[#E3D7C5] p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 shadow-xl z-50">
                         {item.dropdown.map((sub, sIdx) => {
                           const hasSubItems = !!sub.subItems;
                           return (
                             <div key={sIdx} className="relative group/sub">
                               {hasSubItems ? (
-                                <div className="flex items-center justify-between w-full px-4 py-2.5 text-xs font-semibold rounded-xl text-brand-navy/70 hover:text-brand-gold hover:bg-brand-gold/10 transition-all duration-200 cursor-pointer">
+                                <div className="flex items-center justify-between w-full px-4 py-2.5 text-xs font-bold rounded-xl text-[#241708] hover:text-[#8C3A16] hover:bg-[#8C3A16]/10 transition-colors duration-200 cursor-pointer">
                                   <span>{sub.name}</span>
-                                  <ChevronRight size={12} className="text-brand-navy/40 group-hover/sub:text-brand-gold transition-colors" />
+                                  <ChevronRight size={14} className="text-[#8C3A16]/60 group-hover/sub:text-[#8C3A16] transition-colors" />
                                 </div>
                               ) : (
                                 <a
@@ -184,8 +154,6 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                       onViewChange && onViewChange('timeline');
                                     } else if (sub.name === 'Program Schedule') {
                                       onViewChange && onViewChange('schedule');
-                                    } else if (sub.name === 'Photo Gallery') {
-                                      onViewChange && onViewChange('photo-gallery');
                                     } else if (sub.name === 'Winner of SIH 2026') {
                                       onViewChange && onViewChange('sih-2026-winners');
                                     } else if (sub.name === 'Grand Finale Teams') {
@@ -199,7 +167,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                       onViewChange && onViewChange('landing', sub.href);
                                     }
                                   }}
-                                  className="block px-4 py-2.5 text-xs font-semibold rounded-xl text-brand-navy/70 hover:text-brand-gold hover:bg-brand-gold/10 hover:translate-x-1 active:scale-95 transition-all duration-200 text-left"
+                                  className="block px-4 py-2.5 text-xs font-bold rounded-xl text-[#241708] hover:text-[#8C3A16] hover:bg-[#8C3A16]/10 transition-colors duration-200 text-left"
                                 >
                                   {sub.name}
                                 </a>
@@ -207,7 +175,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
 
                               {/* Secondary Flyout Menu */}
                               {hasSubItems && (
-                                <div className="absolute top-0 right-full mr-2 w-52 rounded-2xl bg-brand-card/95 backdrop-blur-xl border border-white/5 p-2 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible translate-x-[-10px] group-hover/sub:translate-x-0 transition-all duration-300 shadow-[0_20px_40px_rgba(0,0,0,0.5)] z-50">
+                                <div className="absolute top-0 left-full ml-1 w-52 rounded-2xl bg-[#FAF6EE] border border-[#E3D7C5] p-2 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200 shadow-xl z-50">
                                   {sub.subItems.map((nested, nIdx) => (
                                     <a
                                       key={nIdx}
@@ -222,7 +190,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                           onViewChange && onViewChange('landing', '#timeline');
                                         }
                                       }}
-                                      className="block px-4 py-2.5 text-xs font-semibold rounded-xl text-brand-navy/70 hover:text-brand-gold hover:bg-brand-gold/10 hover:translate-x-1 active:scale-95 transition-all duration-200 text-left"
+                                      className="block px-4 py-2.5 text-xs font-bold rounded-xl text-[#241708] hover:text-[#8C3A16] hover:bg-[#8C3A16]/10 transition-colors duration-200 text-left"
                                     >
                                       {nested.name}
                                     </a>

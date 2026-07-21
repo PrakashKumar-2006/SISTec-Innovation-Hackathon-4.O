@@ -22,10 +22,10 @@ import SIH2024Finalists from './components/SIH2024Finalists';
 import SIH2023Winners from './components/SIH2023Winners';
 import SIH2024Winners from './components/SIH2024Winners';
 import ShortlistedTeams from './components/ShortlistedTeams';
-import PhotoGallery from './components/PhotoGallery';
 import SIH2026Winners from './components/SIH2026Winners';
 import SIH2025Winners from './components/SIH2025Winners';
 import SIH2025Finalists from './components/SIH2025Finalists';
+import PreviousSIH from './components/PreviousSIH';
 
 export default function App() {
   const [showRegister, setShowRegister] = useState(false);
@@ -103,7 +103,7 @@ export default function App() {
         ) : currentView === 'about-sih' ? (
           <About isStandalone={true} />
         ) : currentView === 'photo-gallery' ? (
-          <PhotoGallery />
+          <Objectives isStandalone={true} />
         ) : currentView === 'timeline' ? (
           <Timeline isStandalone={true} />
         ) : currentView === 'schedule' ? (
@@ -134,6 +134,8 @@ export default function App() {
           <SIH2026Winners onViewChange={handleViewChange} />
         ) : currentView === 'sih-2025-winners' ? (
           <SIH2025Winners onViewChange={handleViewChange} />
+        ) : currentView === 'previous-sih' ? (
+          <PreviousSIH onViewChange={handleViewChange} />
         ) : null}
       </main>
 

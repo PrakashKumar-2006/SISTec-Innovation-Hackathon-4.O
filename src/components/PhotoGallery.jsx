@@ -94,19 +94,15 @@ export default function PhotoGallery() {
       <div className="w-full max-w-5xl mx-auto relative z-10 flex flex-col items-center">
 
         {/* ── Header ── */}
-        <div
-          className="text-center mb-10 sm:mb-12"
+        <div 
+          ref={headerRef}
+          className="text-center max-w-3xl mx-auto mb-12 sm:mb-16"
           style={{
             transition: 'opacity 0.7s ease, transform 0.7s ease',
             opacity: headerVisible ? 1 : 0,
             transform: headerVisible ? 'translateY(0)' : 'translateY(28px)',
           }}
         >
-          <p className="text-xs sm:text-sm font-black tracking-[0.25em] text-[var(--vermilion)] font-sans uppercase mb-4 flex items-center justify-center gap-2">
-            <ImageIcon size={14} className="text-[var(--vermilion)] animate-pulse" />
-            Winners Gallery
-          </p>
-
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight mb-4 font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
             <span className="text-[var(--clay)]">SIH 3.0 </span>
             <span className="text-[var(--marigold-deep)]">

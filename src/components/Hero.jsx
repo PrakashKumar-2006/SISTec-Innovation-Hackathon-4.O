@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Rocket, ArrowRight, Bell, Megaphone } from 'lucide-react';
+import { Rocket, ArrowRight, Bell, Megaphone, Users, FileText, Trophy } from 'lucide-react';
 import hackathonLogo from '../../NEW HACKTHON LOGO TRANSPARENT.png';
 
 export default function Hero({ onRegisterClick, onViewChange }) {
@@ -13,8 +13,8 @@ export default function Hero({ onRegisterClick, onViewChange }) {
   });
 
   useEffect(() => {
-    // Target date for SIH 4.0 (November 8, 2026)
-    const targetDate = new Date('November 8, 2026 10:00:00').getTime();
+    // Target date for SIH 4.0 (September 30, 2026)
+    const targetDate = new Date('September 30, 2026 10:00:00').getTime();
 
     const interval = setInterval(() => {
       const now = new Date().getTime();
@@ -45,14 +45,17 @@ export default function Hero({ onRegisterClick, onViewChange }) {
   const renderUnit = (value, label) => {
     const display = formatNumber(value);
     return (
-      <div className="flex flex-col items-center min-w-[48px] sm:min-w-[56px]">
-        <span
-          className="text-3xl sm:text-4xl text-[var(--clay)] leading-none select-none"
-          style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}
-        >
-          {display}
-        </span>
-        <span className="text-[9px] sm:text-[10px] font-black text-[var(--clay)]/50 tracking-[0.2em] uppercase mt-1 font-sans">
+      <div className="flex flex-col items-center">
+        <div className="bg-[#FFFDF7] border-2 border-[#E3D7C5] shadow-lg rounded-2xl px-3.5 py-2.5 sm:px-5 sm:py-3.5 min-w-[64px] sm:min-w-[76px] flex items-center justify-center relative overflow-hidden group hover:border-[#8C3A16] hover:shadow-xl transition-all duration-300">
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#8C3A16] to-[#C97F1B] opacity-90" />
+          <span
+            className="text-3xl sm:text-4xl lg:text-5xl text-[#8C3A16] leading-none select-none tracking-tight font-black"
+            style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}
+          >
+            {display}
+          </span>
+        </div>
+        <span className="text-[9px] sm:text-[10px] font-black text-[#6B5B49] tracking-[0.18em] uppercase mt-1.5 font-sans bg-[#8C3A16]/10 px-2.5 py-0.5 rounded-full border border-[#8C3A16]/20">
           {label}
         </span>
       </div>
@@ -70,22 +73,22 @@ export default function Hero({ onRegisterClick, onViewChange }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* ── LEFT COLUMN: Text and branding (Enlarged) ── */}
-          <div className="lg:col-span-6 flex flex-col items-start text-left space-y-8 sm:space-y-10 relative">
+          <div className="lg:col-span-6 flex flex-col items-center sm:items-start text-center sm:text-left space-y-8 sm:space-y-10 relative">
             
             {/* Department Full-Width Header — above the banner */}
-            <div className="relative z-10 w-full">
+            <div className="w-full">
               <p
-                className="text-sm sm:text-base lg:text-lg tracking-[0.22em] text-[var(--marigold)] uppercase flex items-center gap-3 flex-wrap"
-                style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}
+                className="text-[9px] sm:text-xs font-black uppercase tracking-[0.2em] text-[var(--clay)]/80 flex items-center justify-center sm:justify-between border-b border-[var(--line)]/50 pb-2 select-none gap-2"
+                style={{ fontFamily: "'Outfit', sans-serif" }}
               >
-                <span className="flex gap-1">
-                  {[...Array(6)].map((_, i) => (
+                <span className="hidden sm:flex gap-1">
+                  {[...Array(4)].map((_, i) => (
                     <span key={i} className="w-1.5 h-1.5 rounded-full bg-[var(--marigold)]/60 inline-block" />
                   ))}
                 </span>
                 Department of CSE | AI &amp; ML | IOT
-                <span className="flex gap-1">
-                  {[...Array(6)].map((_, i) => (
+                <span className="hidden sm:flex gap-1">
+                  {[...Array(4)].map((_, i) => (
                     <span key={i} className="w-1.5 h-1.5 rounded-full bg-[var(--marigold)]/60 inline-block" />
                   ))}
                 </span>
@@ -93,24 +96,24 @@ export default function Hero({ onRegisterClick, onViewChange }) {
             </div>
 
             {/* ── Banner Branding Block: Logo | Divider | Text ── */}
-            <div className="flex items-center gap-0 relative z-10 w-full">
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4 sm:gap-0 relative z-10 w-full text-center sm:text-left">
 
-              {/* Logo - no box, transparent, bigger */}
+              {/* Logo */}
               <div className="flex-shrink-0 flex flex-col items-center justify-center">
                 <img
                   src={hackathonLogo}
                   alt="SISTec Innovation Hackathon Logo"
-                  className="w-36 h-36 sm:w-48 sm:h-48 lg:w-60 lg:h-60 object-contain select-none"
+                  className="w-36 h-36 sm:w-44 sm:h-44 lg:w-60 lg:h-60 object-contain select-none"
                 />
               </div>
 
-              {/* Gold Vertical Divider */}
-              <div className="flex-shrink-0 mx-4 sm:mx-6 self-stretch flex flex-col items-center">
+              {/* Gold Vertical Divider (Desktop Only) */}
+              <div className="hidden sm:flex flex-shrink-0 mx-4 sm:mx-6 self-stretch flex-col items-center">
                 <div className="w-[2px] flex-1 bg-gradient-to-b from-transparent via-[var(--marigold)] to-transparent" />
               </div>
 
               {/* SISTec Innovation Hackathon 4.0 Stacked Heading */}
-              <div className="flex flex-col items-start justify-center flex-1 min-w-0">
+              <div className="flex flex-col items-center sm:items-start justify-center flex-1 min-w-0">
                 <h1 className="leading-[0.88] tracking-tight" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
                   <span className="block text-4xl sm:text-5xl lg:text-6xl text-[var(--clay)]">SISTec</span>
                   <span className="block text-3xl sm:text-4xl lg:text-5xl text-[var(--clay)]/70">Innovation</span>
@@ -119,27 +122,30 @@ export default function Hero({ onRegisterClick, onViewChange }) {
                 </h1>
               </div>
 
-
             </div>
 
 
             {/* Countdown Box & Register Now Button Row */}
-            <div className="flex flex-col sm:flex-row items-stretch gap-4 w-full max-w-2xl relative z-10">
-              {/* Countdown — no box, free-floating units */}
-              <div className="flex-1 flex flex-col gap-2 relative z-10">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-5 w-full relative z-10">
+              {/* Countdown — Unit Cards */}
+              <div className="flex flex-col items-center sm:items-start gap-2 relative z-10 w-full sm:w-auto">
                 {/* Live badge */}
-                <div className="flex items-center gap-1.5 select-none">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--vermilion)] animate-pulse"></span>
-                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--vermilion)] font-sans">Live Countdown</span>
+                <div className="flex items-center gap-2 select-none">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#8C3A16] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#8C3A16]"></span>
+                  </span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.22em] text-[#8C3A16] font-sans">Live Countdown</span>
                 </div>
-                {/* Units row */}
-                <div className="flex items-end gap-4 sm:gap-6">
+
+                {/* Units row with colons */}
+                <div className="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2.5 w-full">
                   {renderUnit(timeLeft.days, 'Days')}
-                  <span className="text-[var(--clay)]/30 font-black text-2xl mb-4 select-none">·</span>
+                  <span className="text-[#8C3A16] font-black text-2xl sm:text-3xl -mt-5 animate-pulse select-none">:</span>
                   {renderUnit(timeLeft.hours, 'Hrs')}
-                  <span className="text-[var(--clay)]/30 font-black text-2xl mb-4 select-none">·</span>
+                  <span className="text-[#8C3A16] font-black text-2xl sm:text-3xl -mt-5 animate-pulse select-none">:</span>
                   {renderUnit(timeLeft.minutes, 'Mins')}
-                  <span className="text-[var(--clay)]/30 font-black text-2xl mb-4 select-none">·</span>
+                  <span className="text-[#8C3A16] font-black text-2xl sm:text-3xl -mt-5 animate-pulse select-none">:</span>
                   {renderUnit(timeLeft.seconds, 'Secs')}
                 </div>
               </div>
@@ -147,14 +153,18 @@ export default function Hero({ onRegisterClick, onViewChange }) {
               {/* Register Now Button Pill */}
               <button
                 onClick={onRegisterClick}
-                className="flex items-center justify-between gap-4 px-6 py-4 rounded-2xl bg-[#F2A93B] hover:bg-[#C97F1B] transition-all duration-300 shadow-lg group cursor-pointer border-none text-[var(--panel)] hover:scale-[1.02] active:scale-95 text-left sm:w-64 shrink-0 font-bold"
+                className="flex items-center justify-between gap-4 px-6 py-4 rounded-2xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] hover:from-[#6B3213] hover:to-[#A64B1E] transition-all duration-300 shadow-xl hover:shadow-2xl group cursor-pointer border border-[#C97F1B]/40 hover:scale-[1.03] active:scale-95 text-left w-full sm:w-64 shrink-0 mt-2 sm:mt-4"
               >
                 <div className="flex flex-col">
-                  <span className="text-sm sm:text-base font-black tracking-tight leading-none uppercase">Register now</span>
-                  <span className="text-[9px] sm:text-[10px] font-bold text-[var(--panel)]/80 mt-1.5">Team of 4 · free entry</span>
+                  <span className="text-sm sm:text-base font-black tracking-wider uppercase text-white leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+                    Register now
+                  </span>
+                  <span className="text-[9px] sm:text-[10px] font-bold text-white/90 bg-black/25 px-2.5 py-0.5 rounded-full border border-white/20 mt-1.5 w-fit">
+                    Team of 2-6 · Free Entry
+                  </span>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-[var(--panel)] text-[var(--marigold)] flex items-center justify-center shrink-0 group-hover:translate-x-1 transition-transform">
-                  <ArrowRight size={16} />
+                <div className="w-9 h-9 rounded-full bg-white text-[#8C3A16] flex items-center justify-center shrink-0 shadow-md group-hover:translate-x-1.5 transition-transform duration-300">
+                  <ArrowRight size={18} strokeWidth={2.5} />
                 </div>
               </button>
             </div>
@@ -162,19 +172,51 @@ export default function Hero({ onRegisterClick, onViewChange }) {
             {/* Horizontal Line Divider */}
             <div className="w-full h-[1px] bg-[var(--line)]/60 pt-2 relative z-10"></div>
 
-            {/* Stats Row */}
-            <div className="flex flex-wrap items-center gap-8 sm:gap-12 w-full relative z-10 pt-2">
-              <div className="text-left">
-                <span className="block text-2xl sm:text-3xl font-black text-brand-text font-sans">500+</span>
-                <span className="block text-[9px] sm:text-[10px] font-black text-brand-gray tracking-widest uppercase mt-1">Participants</span>
+            {/* Stats Row (Redesigned Modern Cards) */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 w-full relative z-10 pt-2">
+              {/* Card 1: Participants */}
+              <div className="flex items-center gap-3 p-3.5 sm:p-4 rounded-2xl bg-[#FAF6EE] border border-[#E3D7C5] hover:border-[#8C3A16]/50 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 group">
+                <div className="w-10 h-10 rounded-xl bg-[#8C3A16]/10 text-[#8C3A16] flex items-center justify-center shrink-0 group-hover:bg-[#8C3A16] group-hover:text-white transition-colors duration-300">
+                  <Users size={20} />
+                </div>
+                <div className="text-left overflow-hidden">
+                  <span className="block text-xl sm:text-2xl font-black text-[#8C3A16] font-display tracking-tight leading-none" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                    100+
+                  </span>
+                  <span className="block text-[9px] sm:text-[10px] font-extrabold text-[#6B5B49] tracking-wider uppercase mt-1 truncate">
+                    Participants
+                  </span>
+                </div>
               </div>
-              <div className="text-left">
-                <span className="block text-2xl sm:text-3xl font-black text-brand-text font-sans">40+</span>
-                <span className="block text-[9px] sm:text-[10px] font-black text-brand-gray tracking-widest uppercase mt-1">Problem Statements</span>
+
+              {/* Card 2: Problem Statements */}
+              <div className="flex items-center gap-3 p-3.5 sm:p-4 rounded-2xl bg-[#FAF6EE] border border-[#E3D7C5] hover:border-[#8C3A16]/50 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 group">
+                <div className="w-10 h-10 rounded-xl bg-[#C97F1B]/10 text-[#C97F1B] flex items-center justify-center shrink-0 group-hover:bg-[#C97F1B] group-hover:text-white transition-colors duration-300">
+                  <FileText size={20} />
+                </div>
+                <div className="text-left overflow-hidden">
+                  <span className="block text-xl sm:text-2xl font-black text-[#8C3A16] font-display tracking-tight leading-none" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                    20+
+                  </span>
+                  <span className="block text-[9px] sm:text-[10px] font-extrabold text-[#6B5B49] tracking-wider uppercase mt-1 truncate">
+                    Problem Statements
+                  </span>
+                </div>
               </div>
-              <div className="text-left">
-                <span className="block text-2xl sm:text-3xl font-black text-brand-text font-sans">₹2L</span>
-                <span className="block text-[9px] sm:text-[10px] font-black text-brand-gray tracking-widest uppercase mt-1">Prize Pool</span>
+
+              {/* Card 3: Prize Pool */}
+              <div className="flex items-center gap-3 p-3.5 sm:p-4 rounded-2xl bg-[#FAF6EE] border border-[#E3D7C5] hover:border-[#8C3A16]/50 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 group">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center shrink-0 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300">
+                  <Trophy size={20} />
+                </div>
+                <div className="text-left overflow-hidden">
+                  <span className="block text-xl sm:text-2xl font-black text-[#8C3A16] font-display tracking-tight leading-none" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                    ₹1 Lakh
+                  </span>
+                  <span className="block text-[9px] sm:text-[10px] font-extrabold text-[#6B5B49] tracking-wider uppercase mt-1 truncate">
+                    Prize Pool
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -184,8 +226,8 @@ export default function Hero({ onRegisterClick, onViewChange }) {
           <div className="lg:col-span-6 relative w-full flex flex-col justify-center items-center">
             
             {/* Collage Image Container */}
-            <div className="relative w-full max-w-lg lg:max-w-none aspect-[4/3] sm:aspect-[4/3] rounded-[2.5rem] p-1.5 bg-[#FAF6F0] border border-[var(--line)] shadow-[0_20px_50px_rgba(43,26,19,0.08)] mt-8 lg:mt-0 select-none">
-              <div className="w-full h-full rounded-[2.2rem] overflow-hidden relative">
+            <div className="relative w-full max-w-lg lg:max-w-none aspect-[4/3] rounded-[2rem] sm:rounded-[2.5rem] p-1.5 bg-[#FAF6F0] border border-[var(--line)] shadow-[0_20px_50px_rgba(43,26,19,0.08)] mt-6 lg:mt-0 select-none">
+              <div className="w-full h-full rounded-[1.8rem] sm:rounded-[2.2rem] overflow-hidden relative">
                 <img 
                   src="/home_page_image.jpg" 
                   alt="Students Collaborating at Hackathon" 
@@ -198,17 +240,17 @@ export default function Hero({ onRegisterClick, onViewChange }) {
               {/* Overlapping Badges */}
               
               {/* Badge 1: Registrations Open */}
-              <div className="absolute -top-6 -left-4 sm:-left-8 z-20 animate-float-2 flex items-center gap-3 bg-[var(--paper)] border border-[var(--line-strong)] rounded-2xl p-3 sm:p-4 shadow-[0_12px_28px_rgba(43,26,19,0.06)] max-w-[240px] sm:max-w-[280px]">
-                <div className="w-8 h-8 rounded-lg bg-[var(--vermilion)] text-white flex items-center justify-center shrink-0">
-                  <Megaphone size={16} />
+              <div className="absolute -top-4 sm:-top-6 left-2 sm:-left-8 z-20 animate-float-2 flex items-center gap-3 bg-[var(--paper)] border border-[var(--line-strong)] rounded-2xl p-2.5 sm:p-4 shadow-lg max-w-[210px] sm:max-w-[280px]">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[var(--vermilion)] text-white flex items-center justify-center shrink-0">
+                  <Megaphone size={15} />
                 </div>
                 <div className="text-left">
-                  <p className="text-[10px] sm:text-xs font-bold text-brand-navy leading-snug">
+                  <p className="text-[9px] sm:text-xs font-bold text-brand-navy leading-snug">
                     Registrations are open.
                   </p>
                   <button 
                     onClick={onRegisterClick}
-                    className="text-[9px] sm:text-[10px] font-black text-[var(--vermilion)] hover:underline uppercase mt-1 block border-none bg-transparent cursor-pointer p-0"
+                    className="text-[8px] sm:text-[10px] font-black text-[var(--vermilion)] hover:underline uppercase mt-0.5 block border-none bg-transparent cursor-pointer p-0"
                   >
                     Register
                   </button>
@@ -216,17 +258,17 @@ export default function Hero({ onRegisterClick, onViewChange }) {
               </div>
 
               {/* Badge 2: Problem Statements Released */}
-              <div className="absolute -bottom-6 -right-4 sm:-right-8 z-20 animate-float-3 flex items-center gap-3 bg-[var(--paper)] border border-[var(--line-strong)] rounded-2xl p-3 sm:p-4 shadow-[0_12px_28px_rgba(43,26,19,0.06)] max-w-[240px] sm:max-w-[280px]">
-                <div className="w-8 h-8 rounded-lg bg-[var(--vermilion)] text-white flex items-center justify-center shrink-0">
-                  <Bell size={16} />
+              <div className="absolute -bottom-4 sm:-bottom-6 right-2 sm:-right-8 z-20 animate-float-3 flex items-center gap-3 bg-[var(--paper)] border border-[var(--line-strong)] rounded-2xl p-2.5 sm:p-4 shadow-lg max-w-[210px] sm:max-w-[280px]">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[var(--vermilion)] text-white flex items-center justify-center shrink-0">
+                  <Bell size={15} />
                 </div>
                 <div className="text-left">
-                  <p className="text-[10px] sm:text-xs font-bold text-brand-navy leading-snug">
+                  <p className="text-[9px] sm:text-xs font-bold text-brand-navy leading-snug">
                     Problem statements released.
                   </p>
                   <button 
                     onClick={() => onViewChange && onViewChange('problem-statements')}
-                    className="text-[9px] sm:text-[10px] font-black text-[var(--vermilion)] hover:underline uppercase mt-1 block border-none bg-transparent cursor-pointer p-0"
+                    className="text-[8px] sm:text-[10px] font-black text-[var(--vermilion)] hover:underline uppercase mt-0.5 block border-none bg-transparent cursor-pointer p-0"
                   >
                     Check it
                   </button>

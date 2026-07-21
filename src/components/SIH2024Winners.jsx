@@ -66,7 +66,7 @@ function ProblemCell({ text }) {
   );
 }
 
-export default function SIH2024Winners({ onViewChange }) {
+export default function SIH2024Winners({ onViewChange, hideHeader = false }) {
   const [activeSlide, setActiveSlide] = useState(0);
   const [slideDirection, setSlideDirection] = useState('next'); // 'next' or 'prev'
 
@@ -74,13 +74,13 @@ export default function SIH2024Winners({ onViewChange }) {
     {
       type: 'image',
       url: '/sih4.png',
-      title: 'SIH 2.0 Grand Finale Event',
-      desc: 'Prize Distribution and Valedictory Function celebrating extraordinary innovation and technical excellence.'
+      title: 'SIH 2024 Grand Finale',
+      desc: 'SISTec Innovation Hackathon 2.0 Celebrating Product Innovation and Problem Solving.'
     },
     {
       type: 'custom',
-      title: 'Winners & Podium Finishers',
-      desc: 'Honoring the teams that demonstrated outstanding prototypes at SISTec Innovation Hackathon 2.0.'
+      title: 'Honor Roll - Top Teams',
+      desc: 'Here are the podium finishers who conquered the challenges of SIH 2.0.'
     }
   ];
 
@@ -103,7 +103,7 @@ export default function SIH2024Winners({ onViewChange }) {
   };
 
   return (
-    <section className="relative min-h-screen bg-brand-darker pt-24 sm:pt-28 pb-20 px-3 sm:px-6 lg:px-8 text-white select-none">
+    <section className={`relative ${hideHeader ? 'py-4' : 'min-h-screen bg-brand-darker pt-24 sm:pt-28 pb-20'} px-3 sm:px-6 lg:px-8 text-white select-none`}>
       {/* Ambient background glows */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-gold/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
       <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[150px] pointer-events-none -z-10"></div>
@@ -111,27 +111,28 @@ export default function SIH2024Winners({ onViewChange }) {
       <div className="max-w-7xl mx-auto">
         
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 text-left">
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2.5">
-              <Trophy className="text-[var(--marigold)] animate-pulse" size={24} />
-              <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-[var(--clay)] uppercase font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
-                Winners of SIH 2024
-              </h2>
+        {!hideHeader && (
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 text-left">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2.5">
+                <Trophy className="text-[var(--marigold)] animate-pulse" size={24} />
+                <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-[var(--clay)] uppercase font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+                  Winners of SIH 2024
+                </h2>
+              </div>
+              <p className="text-[var(--ink-soft)] text-xs sm:text-sm font-medium font-sans">
+                SISTec Innovation Hackathon 2.0 (SIH 2024) podium finishers and highlights.
+              </p>
             </div>
-            <p className="text-[var(--ink-soft)] text-xs sm:text-sm font-medium font-sans">
-              SISTec Innovation Hackathon 2.0 (SIH 2024) podium finishers and highlights.
-            </p>
+            
+            <button
+              onClick={() => onViewChange && onViewChange('landing')}
+              className="flex items-center gap-2 px-5 py-2 rounded-full bg-[var(--panel)] border border-[var(--marigold)]/30 text-xs font-bold text-[var(--marigold)] hover:text-white transition-all duration-300 cursor-pointer shadow-md active:scale-95 shrink-0"
+            >
+              <ArrowLeft size={14} /> Back to Home
+            </button>
           </div>
-          
-          <button
-            onClick={() => onViewChange && onViewChange('landing')}
-            className="flex items-center gap-2 px-5 py-2 rounded-full bg-[var(--panel)] border border-[var(--marigold)]/30 text-xs font-bold text-[var(--marigold)] hover:text-white transition-all duration-300 cursor-pointer shadow-md active:scale-95 shrink-0"
-          >
-            <ArrowLeft size={14} /> Back to Home
-          </button>
-        </div>
-
+        )}
 
         {/* ── Slide-Transition Carousel (Adjusted Padding & Layout) ── */}
         <div className="w-full max-w-5xl mx-auto mb-12 relative rounded-3xl overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-brand-card h-[340px] sm:h-[400px] md:h-[440px]">

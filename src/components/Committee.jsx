@@ -326,9 +326,6 @@ export default function Committee() {
         
         {/* Header */}
         <div className="max-w-2xl mx-auto mb-16">
-          <p className="text-xs sm:text-sm font-black tracking-[0.25em] text-[var(--vermilion)] font-sans uppercase mb-2">
-            Leadership &amp; Organizers
-          </p>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
             Our <span className="text-[var(--marigold-deep)]">Committee</span>
           </h2>

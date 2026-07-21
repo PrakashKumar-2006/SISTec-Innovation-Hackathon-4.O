@@ -120,10 +120,6 @@ export default function ProblemStatements() {
         
         {/* Header Section */}
         <div className="max-w-3xl text-left mb-12 animate-fade-in">
-          <p className="text-xs sm:text-sm font-extrabold tracking-[0.25em] text-[var(--vermilion)] font-sans uppercase mb-4 flex items-center gap-2">
-            <Sparkles size={14} className="animate-pulse text-[var(--vermilion)]" />
-            Problem Statements Portal
-          </p>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--clay)] font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
             SIH 4.0 <span className="text-[var(--marigold-deep)]">National Challenges</span>
           </h1>

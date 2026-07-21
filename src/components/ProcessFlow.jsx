@@ -191,9 +191,6 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
         
         {/* Section Heading */}
         <div className="max-w-2xl mx-auto text-center mb-10 sm:mb-12">
-          <span className="text-[10px] font-black text-[var(--marigold-deep)] uppercase tracking-[0.25em] font-sans">
-            Workflow Infographic
-          </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--clay)] mt-2 leading-tight font-display">
             The Hackathon Process Flow
           </h2>
@@ -385,79 +382,153 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
           })}
         </div>
 
-        {/* ── Mobile Vertical Timeline (md:hidden) ── */}
-        <div className="md:hidden flex flex-col gap-6 max-w-xl mx-auto relative pl-6 text-left">
+        {/* ── Mobile Unique Interactive Stage Carousel & Tab Stepper (md:hidden) ── */}
+        <div className="md:hidden flex flex-col gap-6 max-w-md mx-auto relative text-left">
           
-          {/* Background vertical line (uncompleted) */}
-          <div className="absolute left-6 top-3 bottom-3 w-[1.5px] bg-[var(--line-strong)]/40 pointer-events-none" />
+          {/* Top Horizontal Stage Stepper Pills */}
+          <div className="flex items-center justify-between gap-1.5 p-1.5 rounded-2xl bg-[#FAF6EE] border border-[#E3D7C5] shadow-sm select-none">
+            {steps.map((st, idx) => {
+              const IconComp = st.icon;
+              const isSelected = (currentFocus >= 0 ? currentFocus : Math.max(0, activeStep - 1)) === idx;
 
-          {/* Glowing active drawing vertical line */}
-          <div 
-            className="absolute left-6 top-3 w-[2px] bg-gradient-to-b from-[#10B981] via-[#EC4899] to-[#F2A93B] pointer-events-none transition-all duration-1000 ease-out"
-            style={{
-              height: `${Math.min(100, Math.max(0, (activeStep - 1) * 33.3))}%`,
-              maxHeight: '96%'
-            }}
-          />
+              return (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentFocus(idx)}
+                  className={`flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-all duration-300 cursor-pointer ${
+                    isSelected
+                      ? 'bg-white shadow-md border scale-105'
+                      : 'opacity-70 hover:opacity-100 bg-transparent border-transparent'
+                  }`}
+                  style={{
+                    borderColor: isSelected ? st.themeColor : 'transparent'
+                  }}
+                >
+                  <div 
+                    className="w-7 h-7 rounded-lg flex items-center justify-center mb-1 transition-colors"
+                    style={{
+                      backgroundColor: isSelected ? `${st.themeColor}20` : '#FAF6EE',
+                      color: st.themeColor
+                    }}
+                  >
+                    <IconComp size={15} />
+                  </div>
+                  <span 
+                    className="text-[9px] font-black tracking-wider uppercase font-mono"
+                    style={{ color: isSelected ? st.themeColor : '#6B5B49' }}
+                  >
+                    Stage {st.num}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
 
-          {steps.map((ev, idx) => {
-            const IconComponent = ev.icon;
-            const isStepActive = activeStep > idx;
-            const isFocused = currentFocus === idx;
+          {/* Active Stage Card Display */}
+          {(() => {
+            const activeIdx = Math.max(0, Math.min(steps.length - 1, currentFocus >= 0 ? currentFocus : Math.max(0, activeStep - 1)));
+            const curr = steps[activeIdx];
+            const IconComp = curr.icon;
 
             return (
-              <div key={idx} className="flex gap-4 items-start relative group">
-                
-                {/* Left Timeline Step Node */}
-                <div className="relative shrink-0 z-10">
-                  {isStepActive && isFocused && (
-                    <div 
-                      className="absolute inset-0 rounded-full border-2 opacity-50 animate-[ping_1.8s_ease-out_infinite]"
-                      style={{ borderColor: ev.themeColor }}
-                    />
-                  )}
-                  {isStepActive ? (
-                    <div 
-                      className={`w-10 h-10 rounded-full bg-white border-2 ${ev.nodeBorder} flex flex-col items-center justify-center shadow-lg transition-transform duration-500 ${
-                        isFocused ? 'scale-110' : 'scale-100'
-                      }`}
-                    >
-                      <span className="text-[5px] font-black text-[var(--ink-soft)] tracking-wider">STAGE</span>
-                      <span className="text-xs font-black text-[var(--clay)]">{ev.num}</span>
-                    </div>
-                  ) : (
-                    <div className="w-10 h-10 rounded-full bg-[#FAF6F0] border-2 border-[var(--line-strong)]/30 flex flex-col items-center justify-center text-[var(--ink-faint)]">
-                      <span className="text-[5px] font-bold tracking-wider">STAGE</span>
-                      <span className="text-xs font-bold">{ev.num}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Right Card Content */}
+              <div className="flex flex-col gap-4 relative">
+                {/* 3D Main Stage Showcase Card */}
                 <div 
-                  className={`flex-1 transform transition-all duration-700 ${
-                    isStepActive 
-                      ? 'opacity-100 translate-x-0' 
-                      : 'opacity-0 translate-x-8 pointer-events-none'
-                  } bg-gradient-to-br ${
-                    isFocused ? ev.activeColor : `${ev.color} border ${ev.borderColor} ${ev.glow}`
-                  } backdrop-blur-md rounded-2xl p-4 shadow-xl text-left`}
+                  className={`w-full rounded-3xl p-6 shadow-2xl relative overflow-hidden transition-all duration-500 bg-gradient-to-br ${curr.activeColor} border backdrop-blur-md`}
+                  style={{ borderColor: curr.themeColor }}
                 >
-                  <div className="flex items-center gap-2.5 mb-1.5">
-                    <div className="w-7 h-7 rounded-lg bg-brand-darker border border-white/5 flex items-center justify-center">
-                      <IconComponent className={`w-3.5 h-3.5 ${ev.iconColor}`} />
-                    </div>
-                    <span className={`text-[10px] font-black font-mono tracking-wider ${isFocused ? 'text-white' : 'text-brand-gold'}`}>{ev.phase}</span>
+                  {/* Top Bar: Stage Pill & Number Badge */}
+                  <div className="flex items-center justify-between mb-4">
+                    <span 
+                      className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-white/10 border text-white"
+                      style={{ borderColor: `${curr.themeColor}60` }}
+                    >
+                      {curr.phase}
+                    </span>
+                    <span 
+                      className="text-xl font-black font-mono opacity-50 text-white"
+                    >
+                      0{activeIdx + 1} / 04
+                    </span>
                   </div>
-                  <div className="space-y-0.5">
-                    <h4 className="text-base font-extrabold text-white tracking-wide font-display group-hover:text-brand-gold transition-colors">{ev.title}</h4>
-                    <p className="text-xs text-slate-300 leading-relaxed font-semibold">{ev.desc}</p>
+
+                  {/* Icon & Title Row */}
+                  <div className="flex items-center gap-4 mb-3">
+                    <div 
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-lg border border-white/20"
+                      style={{ backgroundColor: `${curr.themeColor}25`, color: curr.themeColor }}
+                    >
+                      <IconComp size={28} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-white font-display leading-tight">
+                        {curr.title}
+                      </h3>
+                      <p className="text-xs font-bold text-slate-300 mt-0.5">
+                        Hackathon Process Step
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium mb-5">
+                    {curr.desc}
+                  </p>
+
+                  {/* Action Link Button for each stage */}
+                  <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+                    <button
+                      onClick={() => {
+                        if (activeIdx === 0 && onViewChange) onViewChange('register');
+                        else if (activeIdx === 1 && onViewChange) onViewChange('problem-statements');
+                        else if (onViewChange) onViewChange('schedule');
+                      }}
+                      className="w-full py-2.5 px-4 rounded-xl font-extrabold text-xs tracking-wider uppercase text-white flex items-center justify-between shadow-md transition-all duration-300 hover:scale-[1.02] active:scale-95 cursor-pointer"
+                      style={{ backgroundColor: curr.themeColor }}
+                    >
+                      <span>
+                        {activeIdx === 0 ? 'Register Team' : activeIdx === 1 ? 'Explore Problem Statements' : activeIdx === 2 ? 'Check Shortlist' : 'View Finale Schedule'}
+                      </span>
+                      <span className="text-sm font-black">→</span>
+                    </button>
                   </div>
                 </div>
 
+                {/* Bottom Navigation & Progress Dots */}
+                <div className="flex items-center justify-between px-2">
+                  <button
+                    onClick={() => setCurrentFocus((prev) => (prev > 0 ? prev - 1 : steps.length - 1))}
+                    className="w-10 h-10 rounded-full bg-[#FAF6EE] border border-[#E3D7C5] text-[#8C3A16] font-extrabold flex items-center justify-center shadow-sm active:scale-95 cursor-pointer"
+                  >
+                    ←
+                  </button>
+
+                  {/* Step dots */}
+                  <div className="flex items-center gap-2">
+                    {steps.map((st, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setCurrentFocus(i)}
+                        className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                          i === activeIdx ? 'w-8' : 'w-2.5 bg-[#E3D7C5]'
+                        }`}
+                        style={{
+                          backgroundColor: i === activeIdx ? st.themeColor : undefined
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setCurrentFocus((prev) => (prev < steps.length - 1 ? prev + 1 : 0))}
+                    className="w-10 h-10 rounded-full bg-[#FAF6EE] border border-[#E3D7C5] text-[#8C3A16] font-extrabold flex items-center justify-center shadow-sm active:scale-95 cursor-pointer"
+                  >
+                    →
+                  </button>
+                </div>
               </div>
             );
-          })}
+          })()}
 
         </div>
 
