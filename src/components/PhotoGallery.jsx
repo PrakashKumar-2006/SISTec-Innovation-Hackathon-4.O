@@ -102,21 +102,22 @@ export default function PhotoGallery() {
             transform: headerVisible ? 'translateY(0)' : 'translateY(28px)',
           }}
         >
-          <p className="text-xs sm:text-sm font-extrabold tracking-[0.25em] text-brand-gold font-sans uppercase mb-5 flex items-center justify-center gap-2">
-            <ImageIcon size={14} className="text-brand-gold animate-pulse" />
+          <p className="text-xs sm:text-sm font-black tracking-[0.25em] text-[var(--vermilion)] font-sans uppercase mb-4 flex items-center justify-center gap-2">
+            <ImageIcon size={14} className="text-[var(--vermilion)] animate-pulse" />
             Winners Gallery
           </p>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-4">
-            <span className="text-white">SIH 3.0 </span>
-            <span className="bg-gradient-to-r from-brand-gold via-yellow-200 to-amber-500 bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight mb-4 font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+            <span className="text-[var(--clay)]">SIH 3.0 </span>
+            <span className="text-[var(--marigold-deep)]">
               Moments of Glory
             </span>
           </h1>
-          <p className="text-brand-gray text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+          <p className="text-[var(--ink-soft)] text-sm sm:text-base max-w-xl mx-auto leading-relaxed font-sans font-medium">
             Relive the triumphs of the outstanding teams and individuals from SISTec Innovation Hackathon 3.0.
           </p>
         </div>
+
 
         {/* ── 3D Coverflow Slider Container ── */}
         <div

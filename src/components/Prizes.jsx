@@ -126,12 +126,16 @@ export default function Prizes({ isStandalone = false }) {
         
         {/* ── Section Heading with Inline Animated SVG Trophy ── */}
         <div className="max-w-5xl mx-auto mb-16 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 flex-wrap">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white font-display leading-tight">
+          <p className="w-full text-xs sm:text-sm font-black tracking-[0.25em] text-[var(--vermilion)] font-sans uppercase mb-1">
+            Rewards &amp; Recognition
+          </p>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] font-display leading-tight" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
             Total Cash Prizes Up to{' '}
-            <span className="bg-gradient-to-r from-brand-gold via-yellow-200 to-amber-500 bg-clip-text text-transparent whitespace-nowrap">
+            <span className="text-[var(--marigold-deep)] whitespace-nowrap">
               ₹1 Lakh!
             </span>
           </h2>
+
           
           {/* Animated SVG Trophy placed inline right next to '1 Lakh!' */}
           <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 drop-shadow-[0_0_25px_rgba(216,171,85,0.3)] shrink-0 select-none pointer-events-none mt-2 md:mt-0">

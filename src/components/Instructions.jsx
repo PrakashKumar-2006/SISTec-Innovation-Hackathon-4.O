@@ -257,12 +257,13 @@ export default function Instructions({ onViewChange, onRegisterClick }) {
               <ClipboardList size={11} className="text-brand-gold" />
               Official Guidelines
             </span>
-            <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-none mt-1">
-              Instructions <span className="bg-gradient-to-r from-brand-gold via-yellow-200 to-amber-500 bg-clip-text text-transparent">& Guidelines</span>
+            <h1 className="text-3xl sm:text-5xl font-black text-[var(--clay)] tracking-tight leading-none mt-1 font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+              Instructions <span className="text-[var(--marigold-deep)]">&amp; Guidelines</span>
             </h1>
-            <p className="text-brand-gray text-xs sm:text-sm font-medium">
+            <p className="text-[var(--ink-soft)] text-xs sm:text-sm font-medium font-sans">
               Carefully review the hackathon rules and registration requirements below.
             </p>
+
           </div>
         </div>
 

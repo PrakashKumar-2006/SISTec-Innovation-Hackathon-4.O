@@ -105,10 +105,14 @@ export default function Themes({ onViewChange, isStandalone = false }) {
         {/* Search Row */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-white/5 mb-16">
           <div className="text-left">
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight font-display">
-              SIH 4.0 <span className="text-gold-metallic">Themes & Tracks</span>
+            <p className="text-xs sm:text-sm font-black tracking-[0.25em] text-[var(--vermilion)] font-sans uppercase mb-2">
+              Innovation Buckets
+            </p>
+            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+              SIH 4.0 <span className="text-[var(--marigold-deep)]">Themes &amp; Tracks</span>
             </h2>
           </div>
+
 
           {/* Search Input wrapped in glowing gradient border */}
           <div className="relative w-full lg:max-w-xs p-[1.5px] rounded-2xl bg-gradient-to-r from-brand-orange/20 via-brand-pink/20 to-brand-blue/20">

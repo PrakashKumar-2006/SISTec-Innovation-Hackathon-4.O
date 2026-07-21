@@ -438,19 +438,20 @@ export default function RegisterModal({ onClose }) {
 
   const stepLabels = [
     { num: 1, title: 'Team Details' },
-    { num: 2, title: 'Team Member Details' },
+    { num: 2, title: 'Members' },
     { num: 3, title: 'Solution' },
-    { num: 4, title: 'Review Details' },
+    { num: 4, title: 'Review' },
     { num: 5, title: 'Payment' },
   ];
 
   return (
-    <div className="fixed inset-0 w-full h-full bg-[#080809] z-[100] overflow-y-auto flex flex-col font-sans">
-      <div className="w-full bg-[#0D0D0F]/85 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-20">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></div>
-            <span className="text-[10px] sm:text-xs font-mono font-bold tracking-widest text-emerald-500 uppercase">
+    <div className="fixed inset-0 w-full h-full bg-[#241708]/75 backdrop-blur-md z-[100] overflow-y-auto flex flex-col font-sans">
+      <div className="w-full bg-[#FFFDF7]/95 backdrop-blur-md border-b border-[#E6DCCE] sticky top-0 z-20 shadow-sm">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between font-sans">
+
+          <div className="flex items-center gap-2.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse shadow-[0_0_8px_#16a34a]"></div>
+            <span className="text-xs sm:text-sm font-extrabold font-sans tracking-wide text-emerald-800 uppercase">
               Secure Submission Channel
             </span>
           </div>
@@ -460,54 +461,44 @@ export default function RegisterModal({ onClose }) {
                 onClose();
               }
             }}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 border border-slate-800 text-xs font-bold text-slate-400 hover:text-brand-gold hover:border-brand-gold/40 hover:bg-slate-800/50 transition-all cursor-pointer shadow-md"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#FAF6EE] border border-[#E3D7C5] text-xs font-bold text-[#8C3A16] hover:bg-[#F3EAD9] hover:border-[#8C3A16] hover:text-[#6B2A0F] transition-all cursor-pointer shadow-sm"
+
           >
             <ArrowLeft size={14} />
-            <span>Save & Exit</span>
+            <span>Save &amp; Exit</span>
           </button>
         </div>
       </div>
 
-      <div className="flex-grow flex items-center justify-center p-4 sm:p-8">
-        <div className="relative w-full max-w-4xl bg-transparent sm:bg-[#0F0F11] border-none sm:border sm:border-slate-800/80 rounded-3xl p-4 sm:p-8 shadow-none sm:shadow-2xl z-10">
+      <div className="flex-grow flex items-center justify-center p-2 sm:p-4 max-h-screen overflow-hidden">
+        <div className="relative w-full max-w-4xl h-[560px] sm:h-[600px] max-h-[92vh] bg-[#FFFDF7] border border-[#E6DCCE] rounded-3xl p-4 sm:p-6 shadow-2xl z-10 text-left flex flex-col justify-between overflow-hidden">
 
         {!registrationResult ? (
           <>
-            <div className="text-center space-y-2 mb-6">
-              <h3 className="text-3xl font-bold font-display text-gold-metallic tracking-tight">
+            {/* Modal Header */}
+            <div className="text-center space-y-1 mb-3 shrink-0">
+              <h3 className="text-xl sm:text-2xl font-black font-display text-[#8C3A16] tracking-tight" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
                 SIH 4.0 Registration Form
               </h3>
+              <p className="text-xs text-[#6B5B49] font-medium font-sans">
+                Fill in team details and problem statement selection to complete registration.
+              </p>
             </div>
 
             {recoveredSession && (
-              <div className="mb-6 p-4 rounded-2xl bg-amber-950/30 border border-amber-700/50 flex items-start gap-3 animate-fade-in">
-                <div className="mt-0.5 text-amber-400 shrink-0">
-                  <RotateCcw size={16} />
+              <div className="mb-3 p-2.5 rounded-xl bg-amber-50 border border-amber-200 flex items-center gap-3 animate-fade-in font-sans shrink-0">
+                <div className="text-amber-700 shrink-0">
+                  <RotateCcw size={14} />
                 </div>
                 <div className="flex-grow text-left">
-                  <p className="text-xs font-bold text-amber-300 mb-1">Progress Restored</p>
-                  <p className="text-[11px] text-amber-200/80 leading-relaxed">
-                    Your previous registration progress has been automatically restored from where you left off.
-                    {recoveredFiles.length > 0 && (
-                      <>
-                        {' '}Please re-select your uploaded file{recoveredFiles.length > 1 ? 's' : ''}{' '}
-                        (Step 3):{' '}
-                        {recoveredFiles.map((f, i) => (
-                          <span key={f.field}>
-                            <strong className="text-amber-100">{f.name}</strong>
-                            {i < recoveredFiles.length - 1 ? ', ' : ''}
-                          </span>
-                        ))}
-                      </>
-                    )}
-                  </p>
+                  <p className="text-xs font-bold text-amber-900">Progress Restored from auto-saved draft</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => {
                     setRecoveredSession(false);
                   }}
-                  className="shrink-0 text-amber-500 hover:text-amber-300 transition-colors cursor-pointer mt-0.5"
+                  className="shrink-0 text-amber-700 hover:text-amber-900 transition-colors cursor-pointer"
                   aria-label="Dismiss"
                 >
                   <X size={14} />
@@ -515,10 +506,11 @@ export default function RegisterModal({ onClose }) {
               </div>
             )}
 
-            <div className="hidden md:flex relative justify-between items-center max-w-2xl mx-auto mb-10 px-4">
-              <div className="absolute top-5 left-10 right-10 h-[2px] bg-slate-800 -z-10">
+            {/* Stepper Indicator (Modern 1-Line Aligned Bar) */}
+            <div className="hidden md:flex relative justify-between items-center max-w-xl mx-auto mb-5 px-6 font-sans shrink-0">
+              <div className="absolute top-4 left-10 right-10 h-[3px] bg-[#E3D7C5] -z-10 rounded-full">
                 <div 
-                  className="h-full bg-brand-gold transition-all duration-500 ease-out shadow-[0_0_8px_#D8AB55]"
+                  className="h-full bg-gradient-to-r from-[#C97F1B] to-[#8C3A16] transition-all duration-500 ease-out rounded-full"
                   style={{ width: `${((step - 1) / (stepLabels.length - 1)) * 100}%` }}
                 ></div>
               </div>
@@ -527,25 +519,25 @@ export default function RegisterModal({ onClose }) {
                 const isActive = step >= lbl.num;
                 const isCurrent = step === lbl.num;
                 return (
-                  <div key={lbl.num} className="flex flex-col items-center text-center w-24">
+                  <div key={lbl.num} className="flex flex-col items-center text-center">
                     <div 
-                      className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border-2 transition-all duration-500 ease-out ${
+                      className={`w-8 h-8 rounded-full flex items-center justify-center font-extrabold text-xs border-2 transition-all duration-500 ease-out ${
                         isCurrent 
-                          ? 'bg-brand-gold border-brand-gold text-[#080809] shadow-[0_0_15px_rgba(216,171,85,0.4)] scale-110' 
+                          ? 'bg-[#8C3A16] border-[#8C3A16] text-white shadow-md ring-4 ring-[#8C3A16]/20 scale-110' 
                           : isActive 
-                            ? 'bg-brand-gold border-brand-gold text-[#080809]' 
-                            : 'bg-[#121214] border-slate-800 text-slate-500'
+                            ? 'bg-[#C97F1B] border-[#C97F1B] text-white shadow-sm' 
+                            : 'bg-[#F7F2E9] border-[#D9CCBA] text-[#7A6A58]'
                       }`}
                     >
-                      {isActive && !isCurrent ? <Check size={16} /> : lbl.num}
+                      {isActive && !isCurrent ? <Check size={14} strokeWidth={3} /> : lbl.num}
                     </div>
                     <span 
-                      className={`text-[10px] sm:text-xs font-semibold mt-2 select-none min-h-[32px] leading-tight transition-all duration-300 ${
+                      className={`text-[11px] font-bold mt-1.5 whitespace-nowrap select-none transition-all duration-300 ${
                         isCurrent 
-                          ? 'text-white font-bold' 
+                          ? 'text-[#8C3A16] font-black' 
                           : isActive 
-                            ? 'text-brand-gold' 
-                            : 'text-slate-500'
+                            ? 'text-[#C97F1B] font-bold' 
+                            : 'text-[#7A6A58]'
                       }`}
                     >
                       {lbl.title}
@@ -555,189 +547,189 @@ export default function RegisterModal({ onClose }) {
               })}
             </div>
 
-            <div className="flex md:hidden flex-col items-center max-w-xs mx-auto mb-8 px-4 space-y-2 text-center">
-              <span className="text-[10px] font-bold tracking-widest text-brand-gold uppercase">
-                Step {step} of 5
+            <div className="flex md:hidden flex-col items-center max-w-xs mx-auto mb-4 px-4 space-y-1 text-center font-sans shrink-0">
+              <span className="text-[10px] font-bold tracking-widest text-[#C97F1B] uppercase">
+                Step {step} of 5 — {stepLabels[step - 1].title}
               </span>
-              <h4 className="text-base font-extrabold text-white">
-                {stepLabels[step - 1].title}
-              </h4>
-              <div className="w-full h-1.5 bg-slate-800/80 rounded-full overflow-hidden">
+              <div className="w-full h-1.5 bg-[#E5DBCB] rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-brand-gold transition-all duration-500 ease-out shadow-[0_0_8px_#D8AB55]"
+                  className="h-full bg-[#8C3A16] transition-all duration-500 ease-out rounded-full"
                   style={{ width: `${(step / 5) * 100}%` }}
                 ></div>
               </div>
             </div>
 
-            <div className="bg-transparent sm:bg-[#161619] rounded-3xl p-0 sm:p-8 border-none sm:border sm:border-slate-800/80 min-h-[450px] sm:min-h-[500px] flex flex-col justify-between shadow-none sm:shadow-lg">
-              <div className="flex-grow">
+            {/* Main Form Body (Fixed Identical Card Height Across All Steps) */}
+            <div className="flex-1 overflow-hidden px-1 py-1 flex flex-col justify-between">
+              <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 flex flex-col justify-center">
               
               {errors.submit && (
-                <div className="mb-6 p-4 rounded-xl bg-red-950/20 border border-red-900/50 text-red-400 text-sm flex items-center gap-2">
-                  <AlertCircle size={18} />
+                <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2 font-sans">
+                  <AlertCircle size={16} className="shrink-0" />
                   <span>{errors.submit}</span>
                 </div>
               )}
 
+
+              {/* Step 1: Team Leader & Institute Info */}
               {step === 1 && (
-                <div className="animate-fade-in space-y-5 text-left">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="animate-fade-in space-y-3.5 text-left font-sans">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                     <div>
-                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
-                        Leader Name
+                      <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase">
+                        Leader Name *
                       </label>
                       <input
                         type="text"
                         name="leaderName"
                         value={formData.leaderName}
                         onChange={handleInputChange}
-                        placeholder="Leader Name"
-                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                          errors.leaderName ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                        } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
+                        placeholder="e.g. Rahul Sharma"
+                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
+                          errors.leaderName ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                        } focus:outline-none text-xs text-[#241708] placeholder-[#605040] transition-all font-medium`}
                       />
                       {errors.leaderName && (
-                        <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                        <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
                           <AlertCircle size={10} /> {errors.leaderName}
                         </p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
-                        Team Name
+                      <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase">
+                        Team Name *
                       </label>
                       <input
                         type="text"
                         name="teamName"
                         value={formData.teamName}
                         onChange={handleInputChange}
-                        placeholder="Team Name"
-                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                          errors.teamName ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                        } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
+                        placeholder="e.g. Innovators 4.0"
+                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
+                          errors.teamName ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                        } focus:outline-none text-xs text-[#241708] placeholder-[#605040] transition-all font-medium`}
                       />
                       {errors.teamName && (
-                        <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                        <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
                           <AlertCircle size={10} /> {errors.teamName}
                         </p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
-                        Choose Theme
+                      <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase">
+                        Choose Theme *
                       </label>
                       <select
                         name="theme"
                         value={formData.theme}
                         onChange={handleInputChange}
-                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                          errors.theme ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                        } focus:outline-none text-sm text-white transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner cursor-pointer`}
+                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
+                          errors.theme ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                        } focus:outline-none text-xs text-[#241708] transition-all cursor-pointer font-medium`}
                       >
                         {isLoadingPS ? (
-                          <option value="" disabled className="text-slate-500 bg-[#080809]">Loading Themes...</option>
+                          <option value="" disabled className="text-[#A09080] bg-white">Loading Themes...</option>
                         ) : (
-                          <option value="" disabled className="text-slate-500 bg-[#080809]">Select Theme</option>
+                          <option value="" disabled className="text-[#A09080] bg-white">Select Category Theme</option>
                         )}
                         {!isLoadingPS && uniqueDomains.map((domain) => (
-                          <option key={domain} value={domain} className="bg-[#121214] text-white">
+                          <option key={domain} value={domain} className="bg-white text-[#241708]">
                             {domain}
                           </option>
                         ))}
                       </select>
                       {errors.theme && (
-                        <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                        <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
                           <AlertCircle size={10} /> {errors.theme}
                         </p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
-                        Leader Gender
+                      <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase">
+                        Leader Gender *
                       </label>
                       <select
                         name="leaderGender"
                         value={formData.leaderGender}
                         onChange={handleInputChange}
-                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                          errors.leaderGender ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                        } focus:outline-none text-sm text-white transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner cursor-pointer`}
+                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
+                          errors.leaderGender ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                        } focus:outline-none text-xs text-[#241708] transition-all cursor-pointer font-medium`}
                       >
-                        <option value="" disabled className="text-slate-500 bg-[#080809]">Select Gender</option>
-                        <option value="Male" className="bg-[#121214] text-white">Male</option>
-                        <option value="Female" className="bg-[#121214] text-white">Female</option>
-                        <option value="Other" className="bg-[#121214] text-white">Other</option>
+                        <option value="" disabled className="text-[#A09080] bg-white">Select Gender</option>
+                        <option value="Male" className="bg-white text-[#241708]">Male</option>
+                        <option value="Female" className="bg-white text-[#241708]">Female</option>
+                        <option value="Other" className="bg-white text-[#241708]">Other</option>
                       </select>
                       {errors.leaderGender && (
-                        <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                        <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
                           <AlertCircle size={10} /> {errors.leaderGender}
                         </p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
-                        Leader Phone
+                      <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase">
+                        Leader Phone *
                       </label>
                       <input
                         type="text"
                         name="leaderPhone"
                         value={formData.leaderPhone}
                         onChange={handleInputChange}
-                        placeholder="Leader phone"
-                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                          errors.leaderPhone ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                        } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
+                        placeholder="10-digit mobile number"
+                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
+                          errors.leaderPhone ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                        } focus:outline-none text-xs text-[#241708] placeholder-[#605040] transition-all font-medium`}
                       />
                       {errors.leaderPhone && (
-                        <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                        <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
                           <AlertCircle size={10} /> {errors.leaderPhone}
                         </p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
-                        Leader Email
+                      <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase">
+                        Leader Email *
                       </label>
                       <input
                         type="email"
                         name="leaderEmail"
                         value={formData.leaderEmail}
                         onChange={handleInputChange}
-                        placeholder="Leader Email"
-                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                          errors.leaderEmail ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                        } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
+                        placeholder="rahul@example.com"
+                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
+                          errors.leaderEmail ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                        } focus:outline-none text-xs text-[#241708] placeholder-[#605040] transition-all font-medium`}
                       />
                       {errors.leaderEmail && (
-                        <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                        <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
                           <AlertCircle size={10} /> {errors.leaderEmail}
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="pt-1">
-                    <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
-                      Institute Name
+                  <div>
+                    <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase">
+                      Institute / College Name *
                     </label>
                     <input
                       type="text"
                       name="instituteName"
                       value={formData.instituteName}
                       onChange={handleInputChange}
-                      placeholder="Institute Name"
-                      className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                        errors.instituteName ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                      } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
+                      placeholder="e.g. Sagar Institute of Science, Technology & Research (SISTec-R)"
+                      className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
+                        errors.instituteName ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                      } focus:outline-none text-xs text-[#241708] placeholder-[#605040] transition-all font-medium`}
                     />
                     {errors.instituteName && (
-                      <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                      <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
                         <AlertCircle size={10} /> {errors.instituteName}
                       </p>
                     )}
@@ -745,31 +737,38 @@ export default function RegisterModal({ onClose }) {
                 </div>
               )}
 
+              {/* Step 2: Team Members (Ultra Compact 1-Screen Fit Layout) */}
               {step === 2 && (
-                <div className="space-y-6 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar text-left">
-                  {[1, 2, 3, 4].map((num) => (
-                    <div key={num} className="p-5 border border-white/5 rounded-2xl bg-[#080809]/40 space-y-4">
-                      <h4 className="text-sm font-bold text-brand-gold font-display flex items-center gap-1.5 border-b border-white/5 pb-2">
-                        <span className="w-5 h-5 rounded-full bg-brand-gold/10 text-brand-gold border border-brand-gold/20 flex items-center justify-center text-[10px] font-mono">
-                          0{num}
-                        </span>
-                        Member {num} Details
-                      </h4>
+                <div className="space-y-3 text-left font-sans">
+                  <p className="text-[11px] text-[#7A6A58] font-medium mb-1">
+                    Add up to 4 team members. (Optional — leave blank if not applicable).
+                  </p>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[1, 2, 3, 4].map((num) => (
+                    <div key={num} className="border-b border-[#ECE2D2]/80 pb-2.5 mb-2.5 last:border-b-0 last:pb-0 last:mb-0">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <h4 className="text-[11px] font-extrabold text-[#8C3A16] uppercase tracking-wider flex items-center gap-1.5">
+                          <span className="w-4 h-4 rounded-full bg-[#8C3A16] text-white flex items-center justify-center text-[9px] font-mono">
+                            {num}
+                          </span>
+                          Member {num} Details
+                        </h4>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
                         <div>
                           <input
                             type="text"
                             name={`member${num}Name`}
                             value={formData[`member${num}Name`]}
                             onChange={handleInputChange}
-                            placeholder={`Member ${num} Name`}
-                            className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                              errors[`member${num}Name`] ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                            } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
+                            placeholder="Full Name"
+                            className={`w-full px-3 py-2 rounded-lg bg-white border ${
+                              errors[`member${num}Name`] ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                            } focus:outline-none text-xs text-[#241708] placeholder-[#605040] transition-all font-medium`}
                           />
                           {errors[`member${num}Name`] && (
-                            <p className="text-[10px] text-red-500 mt-1">
+                            <p className="text-[9px] text-red-600 mt-0.5 font-semibold">
                               {errors[`member${num}Name`]}
                             </p>
                           )}
@@ -780,17 +779,17 @@ export default function RegisterModal({ onClose }) {
                             name={`member${num}Gender`}
                             value={formData[`member${num}Gender`]}
                             onChange={handleInputChange}
-                            className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                              errors[`member${num}Gender`] ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                            } focus:outline-none text-sm text-white transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner cursor-pointer`}
+                            className={`w-full px-3 py-2 rounded-lg bg-white border ${
+                              errors[`member${num}Gender`] ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                            } focus:outline-none text-xs text-[#241708] transition-all cursor-pointer font-medium`}
                           >
-                            <option value="" disabled className="text-slate-500 bg-[#080809]">Select Gender</option>
-                            <option value="Male" className="bg-[#121214] text-white">Male</option>
-                            <option value="Female" className="bg-[#121214] text-white">Female</option>
-                            <option value="Other" className="bg-[#121214] text-white">Other</option>
+                            <option value="" disabled className="text-[#A09080] bg-white">Gender</option>
+                            <option value="Male" className="bg-white text-[#241708]">Male</option>
+                            <option value="Female" className="bg-white text-[#241708]">Female</option>
+                            <option value="Other" className="bg-white text-[#241708]">Other</option>
                           </select>
                           {errors[`member${num}Gender`] && (
-                            <p className="text-[10px] text-red-500 mt-1">
+                            <p className="text-[9px] text-red-600 mt-0.5 font-semibold">
                               {errors[`member${num}Gender`]}
                             </p>
                           )}
@@ -802,13 +801,13 @@ export default function RegisterModal({ onClose }) {
                             name={`member${num}Email`}
                             value={formData[`member${num}Email`]}
                             onChange={handleInputChange}
-                            placeholder={`Member ${num} Email`}
-                            className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                              errors[`member${num}Email`] ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                            } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
+                            placeholder="Email Address"
+                            className={`w-full px-3 py-2 rounded-lg bg-white border ${
+                              errors[`member${num}Email`] ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                            } focus:outline-none text-xs text-[#241708] placeholder-[#605040] transition-all font-medium`}
                           />
                           {errors[`member${num}Email`] && (
-                            <p className="text-[10px] text-red-500 mt-1">
+                            <p className="text-[9px] text-red-600 mt-0.5 font-semibold">
                               {errors[`member${num}Email`]}
                             </p>
                           )}
@@ -820,13 +819,13 @@ export default function RegisterModal({ onClose }) {
                             name={`member${num}Phone`}
                             value={formData[`member${num}Phone`]}
                             onChange={handleInputChange}
-                            placeholder={`Member ${num} Phone`}
-                            className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                              errors[`member${num}Phone`] ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                            } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
+                            placeholder="Phone Number"
+                            className={`w-full px-3 py-2 rounded-lg bg-white border ${
+                              errors[`member${num}Phone`] ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                            } focus:outline-none text-xs text-[#241708] placeholder-[#605040] transition-all font-medium`}
                           />
                           {errors[`member${num}Phone`] && (
-                            <p className="text-[10px] text-red-500 mt-1">
+                            <p className="text-[9px] text-red-600 mt-0.5 font-semibold">
                               {errors[`member${num}Phone`]}
                             </p>
                           )}
@@ -837,12 +836,15 @@ export default function RegisterModal({ onClose }) {
                 </div>
               )}
 
+
+
+              {/* Step 3: Solution Details & Uploads */}
               {step === 3 && (
-                <div className="space-y-6 text-left">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3.5 text-left font-sans animate-fade-in">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                     <div>
-                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase text-left">
-                        PSID (Problem Statement ID)
+                      <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase text-left">
+                        PSID (Problem Statement ID) *
                       </label>
                       <select
                         name="psid"
@@ -856,33 +858,33 @@ export default function RegisterModal({ onClose }) {
                             psTitle: psObj ? psObj.title : prev.psTitle
                           }));
                         }}
-                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                          errors.psid ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                        } focus:outline-none text-sm text-white transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner cursor-pointer`}
+                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
+                          errors.psid ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                        } focus:outline-none text-xs text-[#241708] transition-all cursor-pointer font-medium`}
                       >
                       {isLoadingPS ? (
-                        <option value="">Loading Problem Statements...</option>
+                        <option value="" className="bg-white text-[#241708]">Loading Problem Statements...</option>
                       ) : (
-                        <option value="">Select a Problem Statement...</option>
+                        <option value="" className="bg-white text-[#241708]">Select a Problem Statement...</option>
                       )}
                       
                       {!isLoadingPS && problemStatements.map((ps) => (
-                        <option key={ps.psNumber} value={ps.psNumber} className="bg-brand-dark text-white">
+                        <option key={ps.psNumber} value={ps.psNumber} className="bg-white text-[#241708]">
                           {ps.psNumber} — {ps.domain} — {ps.title}
                         </option>
                       ))}
                       </select>
                       {errors.psid && (
-                        <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                        <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
                           <AlertCircle size={10} /> {errors.psid}
                         </p>
                       )}
                     </div>
 
-                    {/* PS Title — auto-filled but editable */}
+                    {/* PS Title */}
                     <div>
-                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase text-left">
-                        PS Title
+                      <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase text-left">
+                        PS Title *
                       </label>
                       <input
                         type="text"
@@ -890,43 +892,39 @@ export default function RegisterModal({ onClose }) {
                         value={formData.psTitle}
                         onChange={handleInputChange}
                         placeholder="Problem Statement Title"
-                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                          errors.psTitle ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                        } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
+                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
+                          errors.psTitle ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                        } focus:outline-none text-xs text-[#241708] placeholder-[#605040] transition-all font-medium`}
                       />
                       {errors.psTitle && (
-                        <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                        <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
                           <AlertCircle size={10} /> {errors.psTitle}
                         </p>
                       )}
                     </div>
                   </div>
 
-
-                  {/* File Upload Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                  {/* File Upload Zone (Compact 1-Screen Fit) */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
                     {/* Idea PPT */}
-                    <div className="flex flex-col items-center">
-                      <label className="w-full text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase text-left">
-                        Idea PPT
+                    <div className="flex flex-col">
+                      <label className="w-full text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase text-left">
+                        Idea PPT *
                       </label>
-                      {/* Recovery hint — shown when we have metadata but no actual File */}
                       {!formData.ideaPpt && fileMetaHints.ideaPpt && (
-                        <div className="w-full mb-2 px-3 py-2 rounded-xl bg-amber-950/30 border border-amber-700/40 flex items-center gap-2">
-                          <RotateCcw size={12} className="text-amber-400 shrink-0" />
-                          <p className="text-[10px] text-amber-300 leading-snug">
-                            Previously uploaded: <strong>{fileMetaHints.ideaPpt}</strong> — please re-select this file.
+                        <div className="w-full mb-1.5 px-2.5 py-1.5 rounded-lg bg-amber-50 border border-amber-200 flex items-center gap-2">
+                          <RotateCcw size={12} className="text-amber-700 shrink-0" />
+                          <p className="text-[10px] text-amber-800 leading-snug">
+                            Re-select: <strong>{fileMetaHints.ideaPpt}</strong>
                           </p>
                         </div>
                       )}
-                      <div className={`w-full border-2 border-dashed rounded-2xl p-6 text-center transition-all ${
+                      <div className={`w-full border-2 border-dashed rounded-xl p-3 text-center transition-all bg-white hover:bg-[#FAF6EE]/50 ${
                         errors.ideaPpt 
-                          ? 'border-red-300 bg-red-50/20' 
+                          ? 'border-red-400' 
                           : formData.ideaPpt 
-                            ? 'border-emerald-300 bg-emerald-50/10'
-                            : fileMetaHints.ideaPpt
-                              ? 'border-amber-600/50 bg-amber-950/10'
-                              : 'border-brand-gold/30 hover:border-brand-gold/60 bg-[#080809]/40'
+                            ? 'border-emerald-500 bg-emerald-50/20'
+                            : 'border-[#D9CCBA] hover:border-[#8C3A16]'
                       }`}>
                         <input
                           type="file"
@@ -935,69 +933,51 @@ export default function RegisterModal({ onClose }) {
                           accept=".ppt,.pptx,.pdf"
                           onChange={(e) => handleFileChange(e, 'ideaPpt')}
                         />
-                        <div className="flex flex-col items-center cursor-pointer space-y-3">
-                          <label 
-                            htmlFor="ideaPpt-file"
-                            className="flex flex-col items-center cursor-pointer space-y-2"
-                          >
-                            <div className="w-12 h-12 rounded-full bg-emerald-100 text-brand-gold flex items-center justify-center hover:scale-105 transition-transform">
-                              <Upload size={20} />
+                        <div className="flex flex-col items-center cursor-pointer space-y-1.5">
+                          <label htmlFor="ideaPpt-file" className="flex flex-col items-center cursor-pointer space-y-1">
+                            <div className="w-8 h-8 rounded-full bg-[#8C3A16]/10 text-[#8C3A16] flex items-center justify-center">
+                              <Upload size={14} />
                             </div>
-                            <span className="px-4 py-1.5 bg-brand-gold hover:bg-emerald-600 text-white font-bold text-xs rounded-full transition-all shadow-sm">
-                              {fileMetaHints.ideaPpt && !formData.ideaPpt ? 'Re-select Idea PPT' : 'Choose Idea PPT'}
+                            <span className="px-3 py-1 bg-[#8C3A16] text-white font-bold text-[11px] rounded-full">
+                              {fileMetaHints.ideaPpt && !formData.ideaPpt ? 'Re-select PPT' : 'Choose PPT'}
                             </span>
                           </label>
 
-                          <div className="flex flex-col items-center space-y-1.5 w-full">
-                            <span className="text-xs text-slate-500 font-medium truncate max-w-full px-2">
-                              {formData.ideaPpt ? formData.ideaPpt.name : 'No file chosen'}
-                            </span>
-                            {formData.ideaPpt && (
-                              <button
-                                type="button"
-                                onClick={() => previewLocalFile(formData.ideaPpt)}
-                                className="flex items-center gap-1 text-[10px] text-brand-gold hover:text-brand-gold/80 hover:underline font-bold bg-brand-gold/10 px-2.5 py-1 rounded-full border border-brand-gold/30 cursor-pointer"
-                              >
-                                <Eye size={12} />
-                                <span>Preview Selected File</span>
-                              </button>
-                            )}
-                          </div>
+                          <span className="text-[11px] text-[#241708] font-bold truncate max-w-full px-2">
+                            {formData.ideaPpt ? formData.ideaPpt.name : 'No file chosen'}
+                          </span>
 
-                          <span className="text-[10px] text-slate-400">
-                            Supported files: PPT, PPTX, PDF (Max 10MB)
+                          <span className="text-[9px] text-[#A09080]">
+                            PPT, PPTX, PDF (Max 10MB)
                           </span>
                         </div>
                       </div>
                       {errors.ideaPpt && (
-                        <p className="text-[10px] text-red-500 mt-2 flex items-center gap-1">
+                        <p className="text-[10px] text-red-600 mt-1 flex items-center gap-1 font-semibold">
                           <AlertCircle size={10} /> {errors.ideaPpt}
                         </p>
                       )}
                     </div>
 
                     {/* Consent Letter */}
-                    <div className="flex flex-col items-center">
-                      <label className="w-full text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase text-left">
-                        Consent Letter
+                    <div className="flex flex-col">
+                      <label className="w-full text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase text-left">
+                        Consent Letter *
                       </label>
-                      {/* Recovery hint — shown when we have metadata but no actual File */}
                       {!formData.consentLetter && fileMetaHints.consentLetter && (
-                        <div className="w-full mb-2 px-3 py-2 rounded-xl bg-amber-950/30 border border-amber-700/40 flex items-center gap-2">
-                          <RotateCcw size={12} className="text-amber-400 shrink-0" />
-                          <p className="text-[10px] text-amber-300 leading-snug">
-                            Previously uploaded: <strong>{fileMetaHints.consentLetter}</strong> — please re-select this file.
+                        <div className="w-full mb-1.5 px-2.5 py-1.5 rounded-lg bg-amber-50 border border-amber-200 flex items-center gap-2">
+                          <RotateCcw size={12} className="text-amber-700 shrink-0" />
+                          <p className="text-[10px] text-amber-800 leading-snug">
+                            Re-select: <strong>{fileMetaHints.consentLetter}</strong>
                           </p>
                         </div>
                       )}
-                      <div className={`w-full border-2 border-dashed rounded-2xl p-6 text-center transition-all ${
+                      <div className={`w-full border-2 border-dashed rounded-xl p-3 text-center transition-all bg-white hover:bg-[#FAF6EE]/50 ${
                         errors.consentLetter 
-                          ? 'border-red-300 bg-red-50/20' 
+                          ? 'border-red-400' 
                           : formData.consentLetter 
-                            ? 'border-emerald-300 bg-emerald-50/10'
-                            : fileMetaHints.consentLetter
-                              ? 'border-amber-600/50 bg-amber-950/10'
-                              : 'border-brand-gold/30 hover:border-brand-gold/60 bg-[#080809]/40'
+                            ? 'border-emerald-500 bg-emerald-50/20'
+                            : 'border-[#D9CCBA] hover:border-[#8C3A16]'
                       }`}>
                         <input
                           type="file"
@@ -1006,42 +986,27 @@ export default function RegisterModal({ onClose }) {
                           accept=".pdf,.png,.jpg,.jpeg"
                           onChange={(e) => handleFileChange(e, 'consentLetter')}
                         />
-                        <div className="flex flex-col items-center cursor-pointer space-y-3">
-                          <label 
-                            htmlFor="consentLetter-file"
-                            className="flex flex-col items-center cursor-pointer space-y-2"
-                          >
-                            <div className="w-12 h-12 rounded-full bg-emerald-100 text-brand-gold flex items-center justify-center hover:scale-105 transition-transform">
-                              <Upload size={20} />
+                        <div className="flex flex-col items-center cursor-pointer space-y-1.5">
+                          <label htmlFor="consentLetter-file" className="flex flex-col items-center cursor-pointer space-y-1">
+                            <div className="w-8 h-8 rounded-full bg-[#8C3A16]/10 text-[#8C3A16] flex items-center justify-center">
+                              <Upload size={14} />
                             </div>
-                            <span className="px-4 py-1.5 bg-brand-gold hover:bg-emerald-600 text-white font-bold text-xs rounded-full transition-all shadow-sm">
-                              {fileMetaHints.consentLetter && !formData.consentLetter ? 'Re-select Consent Letter' : 'Choose Consent Letter'}
+                            <span className="px-3 py-1 bg-[#8C3A16] text-white font-bold text-[11px] rounded-full">
+                              {fileMetaHints.consentLetter && !formData.consentLetter ? 'Re-select Letter' : 'Choose Letter'}
                             </span>
                           </label>
 
-                          <div className="flex flex-col items-center space-y-1.5 w-full">
-                            <span className="text-xs text-slate-500 font-medium truncate max-w-full px-2">
-                              {formData.consentLetter ? formData.consentLetter.name : 'No file chosen'}
-                            </span>
-                            {formData.consentLetter && (
-                              <button
-                                type="button"
-                                onClick={() => previewLocalFile(formData.consentLetter)}
-                                className="flex items-center gap-1 text-[10px] text-brand-gold hover:text-brand-gold/80 hover:underline font-bold bg-brand-gold/10 px-2.5 py-1 rounded-full border border-brand-gold/30 cursor-pointer"
-                              >
-                                <Eye size={12} />
-                                <span>Preview Selected File</span>
-                              </button>
-                            )}
-                          </div>
+                          <span className="text-[11px] text-[#241708] font-bold truncate max-w-full px-2">
+                            {formData.consentLetter ? formData.consentLetter.name : 'No file chosen'}
+                          </span>
 
-                          <span className="text-[10px] text-slate-400">
-                            Supported files: PDF, PNG, JPG (Max 10MB)
+                          <span className="text-[9px] text-[#A09080]">
+                            PDF, PNG, JPG (Max 10MB)
                           </span>
                         </div>
                       </div>
                       {errors.consentLetter && (
-                        <p className="text-[10px] text-red-500 mt-2 flex items-center gap-1">
+                        <p className="text-[10px] text-red-600 mt-1 flex items-center gap-1 font-semibold">
                           <AlertCircle size={10} /> {errors.consentLetter}
                         </p>
                       )}
@@ -1050,131 +1015,78 @@ export default function RegisterModal({ onClose }) {
                 </div>
               )}
 
-              {/* Step 4: Review Details */}
+              {/* Step 4: Review Details (Ultra Compact) */}
               {step === 4 && (
-                <div className="space-y-6 max-h-[50vh] overflow-y-auto pr-2">
+                <div className="space-y-3.5 text-left font-sans animate-fade-in">
                   
                   {/* Team Details Block */}
-                  <div className="space-y-3 text-left">
-                    <h4 className="text-sm font-bold text-brand-gold font-display border-b border-slate-800 pb-1.5">
-                      TEAM DETAILS
+                  <div className="space-y-2">
+                    <h4 className="text-[11px] font-black text-[#8C3A16] uppercase tracking-wider border-b border-[#ECE2D2] pb-1">
+                      Team &amp; Leader Details
                     </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                      <div>
-                        <span className="text-slate-400 block">Leader Name</span>
-                        <span className="text-slate-200 font-semibold text-sm">{formData.leaderName || '-'}</span>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+                      <div className="p-2 bg-white rounded-lg border border-[#ECE2D2]">
+                        <span className="text-[#A09080] block text-[9px] uppercase font-bold">Leader</span>
+                        <span className="text-[#241708] font-bold text-xs truncate block">{formData.leaderName || '-'}</span>
                       </div>
-                      <div>
-                        <span className="text-slate-400 block">Team Name</span>
-                        <span className="text-slate-200 font-semibold text-sm">{formData.teamName || '-'}</span>
+                      <div className="p-2 bg-white rounded-lg border border-[#ECE2D2]">
+                        <span className="text-[#A09080] block text-[9px] uppercase font-bold">Team Name</span>
+                        <span className="text-[#241708] font-bold text-xs truncate block">{formData.teamName || '-'}</span>
                       </div>
-                      <div>
-                        <span className="text-slate-400 block">Choose Theme</span>
-                        <span className="text-slate-200 font-semibold text-sm">{formData.theme || '-'}</span>
+                      <div className="p-2 bg-white rounded-lg border border-[#ECE2D2]">
+                        <span className="text-[#A09080] block text-[9px] uppercase font-bold">Theme</span>
+                        <span className="text-[#241708] font-bold text-xs truncate block">{formData.theme || '-'}</span>
                       </div>
-                      <div>
-                        <span className="text-slate-400 block">Leader Gender</span>
-                        <span className="text-slate-200 font-semibold text-sm">{formData.leaderGender || '-'}</span>
+                      <div className="p-2 bg-white rounded-lg border border-[#ECE2D2]">
+                        <span className="text-[#A09080] block text-[9px] uppercase font-bold">Phone</span>
+                        <span className="text-[#241708] font-bold text-xs">{formData.leaderPhone || '-'}</span>
                       </div>
-                      <div>
-                        <span className="text-slate-400 block">Leader Phone</span>
-                        <span className="text-slate-200 font-semibold text-sm">{formData.leaderPhone || '-'}</span>
+                      <div className="p-2 bg-white rounded-lg border border-[#ECE2D2]">
+                        <span className="text-[#A09080] block text-[9px] uppercase font-bold">Email</span>
+                        <span className="text-[#241708] font-bold text-xs truncate block">{formData.leaderEmail || '-'}</span>
                       </div>
-                      <div>
-                        <span className="text-slate-400 block">Leader Email</span>
-                        <span className="text-slate-200 font-semibold text-sm">{formData.leaderEmail || '-'}</span>
-                      </div>
-                      <div className="sm:col-span-2">
-                        <span className="text-slate-400 block">Institute Name</span>
-                        <span className="text-slate-200 font-semibold text-sm">{formData.instituteName || '-'}</span>
+                      <div className="p-2 bg-white rounded-lg border border-[#ECE2D2]">
+                        <span className="text-[#A09080] block text-[9px] uppercase font-bold">Institute</span>
+                        <span className="text-[#241708] font-bold text-xs truncate block">{formData.instituteName || '-'}</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Members Details Block */}
-                  <div className="space-y-3 text-left pt-2">
-                    <h4 className="text-sm font-bold text-brand-gold font-display border-b border-slate-800 pb-1.5">
-                      MEMBER DETAILS
+                  <div className="space-y-1.5">
+                    <h4 className="text-[11px] font-black text-[#8C3A16] uppercase tracking-wider border-b border-[#ECE2D2] pb-1">
+                      Team Members
                     </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {[1, 2, 3, 4].map((num) => {
                         const name = formData[`member${num}Name`]?.trim();
                         if (!name) return null;
                         return (
-                          <div key={num} className="p-4 bg-[#080809]/60 border border-slate-800/80 rounded-2xl space-y-2 text-xs">
-                            <span className="font-bold text-brand-gold block tracking-wide">Member {num}</span>
-                            <div className="space-y-1">
-                              <div>
-                                <span className="text-slate-400">Name: </span> 
-                                <span className="text-slate-200 font-medium">{name}</span>
-                              </div>
-                              <div>
-                                <span className="text-slate-400">Gender: </span> 
-                                <span className="text-slate-200 font-medium">{formData[`member${num}Gender`]}</span>
-                              </div>
-                              <div>
-                                <span className="text-slate-400">Email: </span> 
-                                <span className="text-slate-200 font-medium">{formData[`member${num}Email`]}</span>
-                              </div>
-                              <div>
-                                <span className="text-slate-400">Phone: </span> 
-                                <span className="text-slate-200 font-medium">{formData[`member${num}Phone`]}</span>
-                              </div>
-                            </div>
+                          <div key={num} className="p-2 bg-white border border-[#ECE2D2] rounded-lg text-xs flex justify-between items-center">
+                            <span className="font-bold text-[#8C3A16] text-xs">M{num}: {name}</span>
+                            <span className="text-[#7A6A58] text-[10px]">{formData[`member${num}Phone`]}</span>
                           </div>
                         );
                       })}
                       {!formData.member1Name && !formData.member2Name && !formData.member3Name && !formData.member4Name && (
-                        <p className="text-xs text-slate-400 col-span-2 italic">No additional team members added.</p>
+                        <p className="text-[11px] text-[#A09080] italic">No additional team members added.</p>
                       )}
                     </div>
                   </div>
 
                   {/* Solution Block */}
-                  <div className="space-y-3 text-left pt-2">
-                    <h4 className="text-sm font-bold text-brand-gold font-display border-b border-slate-800 pb-1.5">
-                      SOLUTION DETAILS
+                  <div className="space-y-1.5">
+                    <h4 className="text-[11px] font-black text-[#8C3A16] uppercase tracking-wider border-b border-[#ECE2D2] pb-1">
+                      Selected Problem Statement
                     </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                      <div>
-                        <span className="text-slate-400 block">PSID</span>
-                        <span className="text-slate-200 font-semibold text-sm">{formData.psid || '-'}</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                      <div className="p-2 bg-white rounded-lg border border-[#ECE2D2]">
+                        <span className="text-[#A09080] block text-[9px] uppercase font-bold">PSID</span>
+                        <span className="text-[#241708] font-bold text-xs">{formData.psid || '-'}</span>
                       </div>
-                      <div>
-                        <span className="text-slate-400 block">PS Title</span>
-                        <span className="text-slate-200 font-semibold text-sm">{formData.psTitle || '-'}</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-400 block">Idea PPT</span>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-brand-gold font-medium truncate block max-w-[150px]">{formData.ideaPpt ? formData.ideaPpt.name : '-'}</span>
-                          {formData.ideaPpt && (
-                            <button
-                              type="button"
-                              onClick={() => previewLocalFile(formData.ideaPpt)}
-                              className="text-[10px] bg-brand-gold/10 hover:bg-brand-gold/20 border border-brand-gold/30 text-brand-gold font-bold px-3 py-1 rounded-full flex items-center gap-1 cursor-pointer transition-colors"
-                            >
-                              <Eye size={10} />
-                              Preview
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                      <div>
-                        <span className="text-slate-400 block">Consent Letter</span>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-brand-gold font-medium truncate block max-w-[150px]">{formData.consentLetter ? formData.consentLetter.name : '-'}</span>
-                          {formData.consentLetter && (
-                            <button
-                              type="button"
-                              onClick={() => previewLocalFile(formData.consentLetter)}
-                              className="text-[10px] bg-brand-gold/10 hover:bg-brand-gold/20 border border-brand-gold/30 text-brand-gold font-bold px-3 py-1 rounded-full flex items-center gap-1 cursor-pointer transition-colors"
-                            >
-                              <Eye size={10} />
-                              Preview
-                            </button>
-                          )}
-                        </div>
+                      <div className="p-2 bg-white rounded-lg border border-[#ECE2D2]">
+                        <span className="text-[#A09080] block text-[9px] uppercase font-bold">PS Title</span>
+                        <span className="text-[#241708] font-bold text-xs truncate block">{formData.psTitle || '-'}</span>
                       </div>
                     </div>
                   </div>
@@ -1183,56 +1095,52 @@ export default function RegisterModal({ onClose }) {
 
               {/* Step 5: Payment */}
               {step === 5 && (
-                <div className="animate-fade-in space-y-6 text-center py-6">
-                  <div className="max-w-md mx-auto bg-[#101012] border border-slate-800/80 rounded-2xl p-6 space-y-6">
-                    <div className="w-16 h-16 bg-brand-gold/10 border border-brand-gold/20 rounded-full flex items-center justify-center mx-auto text-brand-gold shadow-sm">
-                      <CreditCard size={28} />
+                <div className="animate-fade-in space-y-4 text-center py-2 font-sans">
+                  <div className="max-w-sm mx-auto bg-white border border-[#ECE2D2] rounded-2xl p-4 space-y-4 shadow-sm">
+                    <div className="w-12 h-12 bg-[#8C3A16]/10 border border-[#8C3A16]/20 rounded-full flex items-center justify-center mx-auto text-[#8C3A16]">
+                      <CreditCard size={20} />
                     </div>
                     
-                    <div className="space-y-2">
-                      <h4 className="text-xl font-bold font-display text-white">Registration Payment</h4>
-                      <p className="text-xs text-slate-400">
-                        Please complete the registration fee to submit your nomination for SIH 4.0.
+                    <div className="space-y-0.5">
+                      <h4 className="text-base font-black text-[#8C3A16] font-display">Registration Payment</h4>
+                      <p className="text-[11px] text-[#7A6A58]">
+                        Complete fee payment to register team nomination for SIH 4.0.
                       </p>
                     </div>
 
-                    <div className="border-t border-b border-slate-800/60 py-4 space-y-3">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-slate-400">Team Name</span>
-                        <span className="text-white font-semibold">{formData.teamName}</span>
+                    <div className="border-t border-b border-[#ECE2D2] py-2.5 space-y-1.5 text-left text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-[#7A6A58]">Team Name</span>
+                        <span className="text-[#241708] font-bold">{formData.teamName}</span>
                       </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-slate-400">Team Leader</span>
-                        <span className="text-white font-semibold">{formData.leaderName}</span>
+                      <div className="flex justify-between">
+                        <span className="text-[#7A6A58]">Team Leader</span>
+                        <span className="text-[#241708] font-bold">{formData.leaderName}</span>
                       </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-slate-400">Category Theme</span>
-                        <span className="text-white font-semibold">{formData.theme}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-slate-400">Amount to Pay</span>
-                        <span className="text-brand-gold font-bold">₹1.00</span>
+                      <div className="flex justify-between items-center pt-1.5 border-t border-[#ECE2D2]">
+                        <span className="text-[#7A6A58] font-bold">Amount Payable</span>
+                        <span className="text-[#8C3A16] font-black text-lg">₹1.00</span>
                       </div>
                     </div>
 
-                    <div className="text-xs text-slate-500 bg-[#161619]/40 rounded-xl p-3 leading-relaxed border border-slate-900">
-                      Payment is processed securely by Razorpay. Once payment is confirmed, your registration ID will be generated and confirmation sent to <span className="text-slate-300 font-semibold">{formData.leaderEmail}</span>.
+                    <div className="text-[10px] text-[#7A6A58] bg-[#FAF6EE] rounded-lg p-2 leading-tight border border-[#E8DFC9]">
+                      Secured by Razorpay. Confirmation sent to <span className="text-[#241708] font-bold">{formData.leaderEmail}</span>.
                     </div>
                   </div>
                 </div>
               )}
 
-              </div>
+              </div> {/* Close flex-grow */}
 
-              {/* Navigation Buttons */}
-              <div className="mt-8 pt-6 border-t border-slate-800/50 flex justify-between items-center">
+              {/* Navigation Buttons (Compact Footer) */}
+              <div className="mt-3 pt-3 border-t border-[#E8DFC9] flex justify-between items-center font-sans shrink-0">
                 {step > 1 ? (
                   <button
                     type="button"
                     onClick={handlePrev}
-                    className="px-8 py-2.5 rounded-full border border-brand-gold text-brand-gold font-bold hover:bg-brand-gold/10 transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm"
+                    className="px-6 py-2 rounded-full border border-[#8C3A16] text-[#8C3A16] bg-transparent hover:bg-[#FAF6EE] font-bold transition-all flex items-center gap-1 cursor-pointer text-xs uppercase shadow-sm"
                   >
-                    <ArrowLeft size={16} />
+                    <ArrowLeft size={14} />
                     <span>Prev</span>
                   </button>
                 ) : (
@@ -1243,26 +1151,26 @@ export default function RegisterModal({ onClose }) {
                   <button
                     type="button"
                     onClick={handleNext}
-                    className="px-8 py-2.5 rounded-full bg-btn-gradient hover:opacity-90 text-white font-bold transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm border-none ml-auto"
+                    className="px-6 py-2 rounded-full bg-[#8C3A16] hover:bg-[#6B2A0F] text-white font-black uppercase tracking-wider transition-all flex items-center gap-1 cursor-pointer text-xs shadow-md border-none ml-auto"
                   >
                     <span>Next</span>
-                    <ArrowRight size={16} />
+                    <ArrowRight size={14} />
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={handleSubmit}
                     disabled={isSubmitting}
-                    className="px-8 py-2.5 rounded-full bg-btn-gradient hover:opacity-90 text-white font-bold transition-all flex items-center gap-1.5 cursor-pointer text-sm shadow-sm border-none ml-auto disabled:opacity-50"
+                    className="px-6 py-2 rounded-full bg-[#8C3A16] hover:bg-[#6B2A0F] text-white font-black uppercase tracking-wider transition-all flex items-center gap-1 cursor-pointer text-xs shadow-md border-none ml-auto disabled:opacity-50"
                   >
                     {isSubmitting ? (
                       <>
-                        <div className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin"></div>
-                        <span>Processing Payment...</span>
+                        <div className="w-3.5 h-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin"></div>
+                        <span>Processing...</span>
                       </>
                     ) : (
                       <>
-                        <span>Pay & Register</span>
+                        <span>Pay &amp; Register</span>
                         <Send size={14} />
                       </>
                     )}
@@ -1270,32 +1178,35 @@ export default function RegisterModal({ onClose }) {
                 )}
               </div>
 
-            </div>
+
+            </div> {/* Close Main Form Body */}
           </>
+
         ) : (
+
           /* Success Screen */
-          <div className="py-8 text-center space-y-6">
+          <div className="py-8 text-center space-y-6 font-sans">
             <div className="flex justify-center">
-              <div className="w-20 h-20 rounded-full bg-emerald-950/20 border-2 border-brand-gold flex items-center justify-center text-emerald-500 shadow-emerald-500/10 shadow-lg animate-bounce">
+              <div className="w-20 h-20 rounded-full bg-emerald-100 border-2 border-emerald-500 flex items-center justify-center text-emerald-700 shadow-md animate-bounce">
                 <CheckCircle2 size={40} />
               </div>
             </div>
             <div className="space-y-3">
-              <h3 className="text-3xl font-bold font-display text-brand-navy">Registration Successful!</h3>
-              <p className="text-sm text-slate-400 max-w-lg mx-auto leading-relaxed">
-                Thank you for registering team <strong className="text-white">"{registrationResult.teamName}"</strong>. Your Registration ID is:
+              <h3 className="text-3xl font-black font-display text-[#8C3A16]">Registration Successful!</h3>
+              <p className="text-sm text-[#7A6A58] max-w-lg mx-auto leading-relaxed">
+                Thank you for registering team <strong className="text-[#241708]">"{registrationResult.teamName}"</strong>. Your Registration ID is:
               </p>
-              <div className="inline-block py-2.5 px-6 rounded-2xl bg-brand-gold/10 border border-brand-gold/20 text-brand-gold font-mono font-bold text-lg tracking-wider shadow-sm select-all">
+              <div className="inline-block py-2.5 px-6 rounded-2xl bg-[#FAF6EE] border border-[#8C3A16]/30 text-[#8C3A16] font-mono font-bold text-xl tracking-wider shadow-sm select-all">
                 {registrationResult.registrationId}
               </div>
-              <p className="text-xs text-slate-500 max-w-md mx-auto pt-2">
-                Save this ID for references. Abstract guidelines and event notifications will be sent to <strong className="text-slate-200">{formData.leaderEmail}</strong>.
+              <p className="text-xs text-[#7A6A58] max-w-md mx-auto pt-2">
+                Save this ID for references. Abstract guidelines and event notifications will be sent to <strong className="text-[#241708]">{formData.leaderEmail}</strong>.
               </p>
             </div>
             <div className="pt-6">
               <button
                 onClick={onClose}
-                className="px-8 py-3 rounded-full bg-btn-gradient hover:opacity-90 text-white font-bold tracking-wide text-xs transition-all cursor-pointer shadow-md"
+                className="px-8 py-3 rounded-full bg-[#8C3A16] hover:bg-[#6B2A0F] text-white font-black tracking-wider text-xs uppercase transition-all cursor-pointer shadow-md"
               >
                 Close Window
               </button>
@@ -1308,3 +1219,5 @@ export default function RegisterModal({ onClose }) {
   </div>
   );
 }
+
+

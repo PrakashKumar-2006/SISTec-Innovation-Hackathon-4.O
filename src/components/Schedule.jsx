@@ -161,10 +161,15 @@ export default function Schedule({ isStandalone = false }) {
         
         {/* Header */}
         <div className="max-w-2xl mx-auto text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight font-display">
-            Event <span className="text-gold-metallic">Schedule</span>
+          <p className="text-xs sm:text-sm font-black tracking-[0.25em] text-[var(--vermilion)] font-sans uppercase mb-3 flex items-center justify-center gap-2">
+            <Clock size={14} className="text-[var(--vermilion)] animate-pulse" />
+            Timetable &amp; Agendas
+          </p>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+            Event <span className="text-[var(--marigold-deep)]">Schedule</span>
           </h2>
         </div>
+
 
         {/* Day Toggles */}
         <div className="flex justify-center gap-4 mb-16">

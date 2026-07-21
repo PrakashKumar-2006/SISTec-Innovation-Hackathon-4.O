@@ -115,14 +115,14 @@ export default function ProblemStatements() {
         
         {/* Header Section */}
         <div className="max-w-3xl text-left mb-12 animate-fade-in">
-          <p className="text-xs sm:text-sm font-extrabold tracking-[0.25em] text-brand-orange font-sans uppercase mb-4 flex items-center gap-2">
-            <Sparkles size={14} className="animate-pulse" />
+          <p className="text-xs sm:text-sm font-extrabold tracking-[0.25em] text-[var(--vermilion)] font-sans uppercase mb-4 flex items-center gap-2">
+            <Sparkles size={14} className="animate-pulse text-[var(--vermilion)]" />
             Problem Statements Portal
           </p>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white font-display">
-            SIH 4.0 <span className="text-gold-metallic">National Challenges</span>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--clay)] font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+            SIH 4.0 <span className="text-[var(--marigold-deep)]">National Challenges</span>
           </h1>
-          <p className="text-brand-gray text-sm sm:text-base font-normal mt-4 leading-relaxed max-w-2xl">
+          <p className="text-[var(--ink-soft)] text-sm sm:text-base font-normal mt-4 leading-relaxed max-w-2xl font-sans">
             Browse through active problem statements submitted by state corporations, municipal bodies, and corporate partners. Filter, search, and align your team to win.
           </p>
         </div>
@@ -146,61 +146,61 @@ export default function ProblemStatements() {
             {/* Uniform Filters Dashboard */}
             <div 
               style={{ animationDelay: '100ms' }}
-              className="p-6 rounded-[2rem] bg-brand-card/30 backdrop-blur-md border border-white/5 shadow-card-shadow mb-10 animate-fade-in opacity-0"
+              className="p-6 rounded-[2rem] bg-[var(--panel)] border border-[var(--marigold)]/20 shadow-xl mb-10 animate-fade-in opacity-0"
             >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Search Input Box */}
             <div className="flex flex-col gap-2 text-left">
-              <label className="text-[10px] font-bold text-brand-gray tracking-wider uppercase pl-1 flex items-center gap-1">
+              <label className="text-[10px] font-bold text-[var(--marigold)] tracking-wider uppercase pl-1 flex items-center gap-1 font-sans">
                 <Search size={10} /> Search Challenges
               </label>
-              <div className="relative h-12 rounded-2xl bg-brand-dark/45 border border-white/5 flex items-center px-4 transition-all focus-within:border-brand-blue/30">
-                <Search className="text-brand-gray mr-2.5 shrink-0" size={16} />
+              <div className="relative h-12 rounded-2xl bg-[var(--panel-soft)] border border-[var(--marigold)]/30 flex items-center px-4 transition-all focus-within:border-[var(--marigold)]">
+                <Search className="text-[var(--ink-faint)] mr-2.5 shrink-0" size={16} />
                 <input
                   type="text"
                   placeholder="PS number, keyword, organization..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-transparent border-none text-xs sm:text-sm text-white placeholder-brand-gray focus:outline-none"
+                  className="w-full bg-transparent border-none text-xs sm:text-sm text-white placeholder-[var(--ink-faint)] focus:outline-none"
                 />
               </div>
             </div>
 
             {/* Category Select Dropdown */}
             <div className="flex flex-col gap-2 text-left">
-              <label className="text-[10px] font-bold text-brand-gray tracking-wider uppercase pl-1 flex items-center gap-1">
+              <label className="text-[10px] font-bold text-[var(--marigold)] tracking-wider uppercase pl-1 flex items-center gap-1 font-sans">
                 <Tag size={10} /> Category Type
               </label>
-              <div className="relative h-12 rounded-2xl bg-brand-dark/45 border border-white/5 flex items-center px-4 transition-all focus-within:border-brand-blue/30">
-                <Filter className="text-brand-gray mr-2.5 shrink-0" size={14} />
+              <div className="relative h-12 rounded-2xl bg-[var(--panel-soft)] border border-[var(--marigold)]/30 flex items-center px-4 transition-all focus-within:border-[var(--marigold)]">
+                <Filter className="text-[var(--ink-faint)] mr-2.5 shrink-0" size={14} />
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
                   className="w-full bg-transparent border-none text-xs sm:text-sm text-white focus:outline-none cursor-pointer"
                 >
-                  <option value="All" className="bg-brand-dark text-white">All Categories</option>
-                  <option value="Software" className="bg-brand-dark text-white">Software</option>
-                  <option value="Hardware" className="bg-brand-dark text-white">Hardware</option>
-                  <option value="Hardware/Software" className="bg-brand-dark text-white">Hardware/Software</option>
+                  <option value="All" className="bg-[var(--panel)] text-white">All Categories</option>
+                  <option value="Software" className="bg-[var(--panel)] text-white">Software</option>
+                  <option value="Hardware" className="bg-[var(--panel)] text-white">Hardware</option>
+                  <option value="Hardware/Software" className="bg-[var(--panel)] text-white">Hardware/Software</option>
                 </select>
               </div>
             </div>
 
             {/* Domain Dropdown Select */}
             <div className="flex flex-col gap-2 text-left">
-              <label className="text-[10px] font-bold text-brand-gray tracking-wider uppercase pl-1 flex items-center gap-1">
+              <label className="text-[10px] font-bold text-[var(--marigold)] tracking-wider uppercase pl-1 flex items-center gap-1 font-sans">
                 <Cpu size={10} /> Domain Bucket
               </label>
-              <div className="relative h-12 rounded-2xl bg-brand-dark/45 border border-white/5 flex items-center px-4 transition-all focus-within:border-brand-blue/30">
-                <Cpu className="text-brand-gray mr-2.5 shrink-0" size={14} />
+              <div className="relative h-12 rounded-2xl bg-[var(--panel-soft)] border border-[var(--marigold)]/30 flex items-center px-4 transition-all focus-within:border-[var(--marigold)]">
+                <Cpu className="text-[var(--ink-faint)] mr-2.5 shrink-0" size={14} />
                 <select
                   value={selectedDomain}
                   onChange={(e) => setSelectedDomain(e.target.value)}
                   className="w-full bg-transparent border-none text-xs sm:text-sm text-white focus:outline-none cursor-pointer"
                 >
                   {uniqueDomains.map((dom, dIdx) => (
-                    <option key={dIdx} value={dom} className="bg-brand-dark text-white">
+                    <option key={dIdx} value={dom} className="bg-[var(--panel)] text-white">
                       {dom === 'All' ? 'All Domains' : dom}
                     </option>
                   ))}
@@ -213,34 +213,35 @@ export default function ProblemStatements() {
 
 
         {/* Desktop Table View */}
-        <div className="hidden md:block rounded-[2rem] bg-brand-card/15 backdrop-blur-md border border-white/5 overflow-hidden shadow-card-shadow">
+        <div className="hidden md:block rounded-[2rem] bg-[var(--panel)] border border-[var(--marigold)]/20 overflow-hidden shadow-2xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[1000px]">
               <thead>
-                <tr className="border-b border-white/5 bg-brand-darker/60">
-                  <th className="px-6 py-4.5 text-[11px] font-bold uppercase tracking-wider w-20">
-                    <span className="text-gold-metallic">S. No.</span>
+                <tr className="border-b border-[var(--marigold)]/20 bg-[var(--panel-soft)]">
+                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-20 text-[var(--marigold)] font-sans">
+                    S. No.
                   </th>
-                  <th className="px-6 py-4.5 text-[11px] font-bold uppercase tracking-wider w-64">
-                    <span className="text-gold-metallic">Organization</span>
+                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-64 text-[var(--marigold)] font-sans">
+                    Organization
                   </th>
-                  <th className="px-6 py-4.5 text-[11px] font-bold uppercase tracking-wider max-w-sm">
-                    <span className="text-gold-metallic">Problem Statement</span>
+                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider max-w-sm text-[var(--marigold)] font-sans">
+                    Problem Statement
                   </th>
-                  <th className="px-6 py-4.5 text-[11px] font-bold uppercase tracking-wider w-32">
-                    <span className="text-gold-metallic">PS Number</span>
+                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-32 text-[var(--marigold)] font-sans">
+                    PS Number
                   </th>
-                  <th className="px-6 py-4.5 text-[11px] font-bold uppercase tracking-wider w-44">
-                    <span className="text-gold-metallic">Category</span>
+                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-44 text-[var(--marigold)] font-sans">
+                    Category
                   </th>
-                  <th className="px-6 py-4.5 text-[11px] font-bold uppercase tracking-wider w-48">
-                    <span className="text-gold-metallic">Domain Bucket</span>
+                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-48 text-[var(--marigold)] font-sans">
+                    Domain Bucket
                   </th>
-                  <th className="px-6 py-4.5 text-[11px] font-bold uppercase tracking-wider w-44 text-center">
-                    <span className="text-gold-metallic">Problem Description</span>
+                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-44 text-center text-[var(--marigold)] font-sans">
+                    Description
                   </th>
                 </tr>
               </thead>
+
               <tbody className="divide-y divide-white/5">
                 {filteredStatements.length > 0 ? (
                   filteredStatements.map((item, idx) => (

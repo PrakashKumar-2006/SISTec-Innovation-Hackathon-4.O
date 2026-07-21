@@ -8,7 +8,6 @@ import Themes from './components/Themes';
 import ProcessFlow from './components/ProcessFlow';
 import Timeline from './components/Timeline';
 import Schedule from './components/Schedule';
-import Committee from './components/Committee';
 import FAQs from './components/FAQs';
 import Developers from './components/Developers';
 import Footer from './components/Footer';
@@ -24,7 +23,6 @@ import SIH2023Winners from './components/SIH2023Winners';
 import SIH2024Winners from './components/SIH2024Winners';
 import ShortlistedTeams from './components/ShortlistedTeams';
 import PhotoGallery from './components/PhotoGallery';
-import NotificationToast from './components/NotificationToast';
 import SIH2026Winners from './components/SIH2026Winners';
 import SIH2025Winners from './components/SIH2025Winners';
 import SIH2025Finalists from './components/SIH2025Finalists';
@@ -91,15 +89,14 @@ export default function App() {
       <main>
         {currentView === 'landing' ? (
           <>
-            <Hero onRegisterClick={() => setShowRegister(true)} />
+            <Hero onRegisterClick={() => setShowRegister(true)} onViewChange={handleViewChange} />
             <div className="reveal-on-scroll"><About /></div>
             <div className="reveal-on-scroll"><Prizes /></div>
             <div className="reveal-on-scroll"><Objectives /></div>
             <div className="reveal-on-scroll"><Themes onViewChange={handleViewChange} /></div>
-            <div className="reveal-on-scroll"><ProcessFlow /></div>
+            <div className="reveal-on-scroll"><ProcessFlow onViewChange={handleViewChange} /></div>
             <div className="reveal-on-scroll"><Timeline /></div>
             <div className="reveal-on-scroll"><Schedule /></div>
-            <div className="reveal-on-scroll"><Committee /></div>
             <div className="reveal-on-scroll"><FAQs /></div>
             <div className="reveal-on-scroll"><Developers /></div>
           </>
@@ -148,12 +145,6 @@ export default function App() {
         <RegisterModal onClose={() => setShowRegister(false)} />
       )}
 
-      {/* Dynamic Popups / Notifications */}
-      <NotificationToast
-        onRegisterClick={() => setShowRegister(true)}
-        onViewChange={handleViewChange}
-        isRegisterOpen={showRegister}
-      />
     </div>
   );
 }
