@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Selection = require('../models/Selection');
 const { authMiddleware, roleMiddleware } = require('../middleware/auth');
+const { queueVerificationEmail } = require('../server');
 
 // Protected Routes - All require at least 'Viewer' role
 router.use(authMiddleware);
@@ -176,6 +177,18 @@ router.patch('/:id/status', roleMiddleware(['Super Admin', 'Admin', 'Moderator']
     
     if (!team) {
       return res.status(404).json({ success: false, message: 'Team not found' });
+    }
+    
+    // Trigger email if verificationStatus changed to verified or flagged
+    if (verificationStatus === 'verified' || verificationStatus === 'flagged') {
+      queueVerificationEmail(
+        team.leaderEmail, 
+        team.leaderName, 
+        team.teamName, 
+        team.registrationId, 
+        verificationStatus, 
+        adminRemarks
+      );
     }
     
     res.json({ success: true, data: team });

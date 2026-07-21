@@ -69,6 +69,8 @@ const defaultFormData = {
   leaderGender: '',
   theme: '',
   instituteName: '',
+  isIeeeCsiMember: '',
+  transactionId: '',
   member1Name: '', member1Gender: '', member1Email: '', member1Phone: '',
   member2Name: '', member2Gender: '', member2Email: '', member2Phone: '',
   member3Name: '', member3Gender: '', member3Email: '', member3Phone: '',
@@ -77,6 +79,7 @@ const defaultFormData = {
   psTitle: '',
   ideaPpt: null,
   consentLetter: null,
+  paymentScreenshot: null,
 };
 
 const loadRazorpayScript = () => {
@@ -136,6 +139,7 @@ export default function RegisterModal({ onClose }) {
     const files = [];
     if (saved.formData?.ideaPpt?.__fileMeta) files.push({ field: 'ideaPpt', name: saved.formData.ideaPpt.name });
     if (saved.formData?.consentLetter?.__fileMeta) files.push({ field: 'consentLetter', name: saved.formData.consentLetter.name });
+    if (saved.formData?.paymentScreenshot?.__fileMeta) files.push({ field: 'paymentScreenshot', name: saved.formData.paymentScreenshot.name });
     return files;
   });
   const [fileMetaHints, setFileMetaHints] = useState(() => {
@@ -144,6 +148,7 @@ export default function RegisterModal({ onClose }) {
     const hints = {};
     if (saved.formData?.ideaPpt?.__fileMeta) hints.ideaPpt = saved.formData.ideaPpt.name;
     if (saved.formData?.consentLetter?.__fileMeta) hints.consentLetter = saved.formData.consentLetter.name;
+    if (saved.formData?.paymentScreenshot?.__fileMeta) hints.paymentScreenshot = saved.formData.paymentScreenshot.name;
     return hints;
   });
 
@@ -222,6 +227,7 @@ export default function RegisterModal({ onClose }) {
         newErrors.leaderEmail = 'Invalid email address';
       }
       if (!formData.instituteName.trim()) newErrors.instituteName = 'Institute name is required';
+      if (!formData.isIeeeCsiMember) newErrors.isIeeeCsiMember = 'Membership status is required';
     }
 
     if (currentStep === 2) {
@@ -260,6 +266,11 @@ export default function RegisterModal({ onClose }) {
       if (!formData.consentLetter) newErrors.consentLetter = 'Consent Letter is required';
     }
 
+    if (currentStep === 5) {
+      if (!formData.transactionId.trim()) newErrors.transactionId = 'Transaction ID is required';
+      if (!formData.paymentScreenshot) newErrors.paymentScreenshot = 'Payment screenshot is required';
+    }
+
     setErrors(newErrors);
 
     const errorKeys = Object.keys(newErrors);
@@ -269,7 +280,7 @@ export default function RegisterModal({ onClose }) {
         let el = document.querySelector(`[name="${firstErrorField}"]`);
         
         // For file inputs that are hidden, find their label or container
-        if (!el && (firstErrorField === 'ideaPpt' || firstErrorField === 'consentLetter')) {
+        if (!el && (firstErrorField === 'ideaPpt' || firstErrorField === 'consentLetter' || firstErrorField === 'paymentScreenshot')) {
           const fileInput = document.getElementById(`${firstErrorField}-file`);
           if (fileInput && fileInput.labels && fileInput.labels.length > 0) {
             el = fileInput.labels[0];
@@ -332,6 +343,10 @@ export default function RegisterModal({ onClose }) {
       setErrors((prev) => ({ ...prev, submit: 'Please fix the errors in Step 3.' }));
       return;
     }
+    if (!validateStep(5)) {
+      setErrors((prev) => ({ ...prev, submit: 'Please provide transaction ID and payment screenshot.' }));
+      return;
+    }
 
     setIsSubmitting(true);
 
@@ -363,6 +378,10 @@ export default function RegisterModal({ onClose }) {
       submitData.append('psTitle', formData.psTitle);
       submitData.append('ideaPpt', formData.ideaPpt);
       submitData.append('consentLetter', formData.consentLetter);
+      
+      submitData.append('isIeeeCsiMember', formData.isIeeeCsiMember);
+      submitData.append('transactionId', formData.transactionId);
+      submitData.append('paymentScreenshot', formData.paymentScreenshot);
 
       const response = await fetch(`${backendUrl}/api/register`, {
         method: 'POST',
@@ -386,6 +405,7 @@ export default function RegisterModal({ onClose }) {
         RegistrationSession.clear();
         setRegistrationResult({
           success: true,
+          alreadyRegistered: true,
           registrationId: data.registrationId,
           teamName: data.teamName,
           message: 'Your payment was previously completed.'
@@ -394,70 +414,13 @@ export default function RegisterModal({ onClose }) {
         return;
       }
 
-      const isLoaded = await loadRazorpayScript();
-      if (!isLoaded) {
-        setErrors({ submit: 'Failed to load Razorpay checkout overlay. Check your internet connection.' });
-        setIsSubmitting(false);
-        return;
-      }
-
-      const options = {
-        key: data.keyId,
-        amount: data.amount,
-        currency: 'INR',
-        name: 'SIH 4.0 Hackathon',
-        description: `Registration Fee for team ${data.teamName}`,
-        order_id: data.orderId,
-        handler: async function (paymentRes) {
-          try {
-            setIsSubmitting(true);
-            const verifyRes = await fetch(`${backendUrl}/api/payment/verify`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                razorpay_order_id: paymentRes.razorpay_order_id,
-                razorpay_payment_id: paymentRes.razorpay_payment_id,
-                razorpay_signature: paymentRes.razorpay_signature,
-              }),
-            });
-
-            const verifyData = await verifyRes.json();
-            if (verifyRes.ok) {
-              RegistrationSession.clear();
-              setRegistrationResult(verifyData);
-            } else {
-              setErrors({ submit: verifyData.error || 'Payment verification failed.' });
-            }
-          } catch (verifyErr) {
-            console.error(verifyErr);
-            setErrors({ submit: 'Verification server connection error. Please contact organizers.' });
-          } finally {
-            setIsSubmitting(false);
-          }
-        },
-        prefill: {
-          name: data.leaderName,
-          email: data.leaderEmail,
-          contact: data.leaderPhone,
-        },
-        theme: { color: '#D8AB55' },
-        modal: {
-          ondismiss: function () {
-            setIsSubmitting(false);
-          },
-        },
-      };
-
-      const rzp = new window.Razorpay(options);
-
-      rzp.on('payment.failed', function (response) {
-        const reason = response?.error?.description || response?.error?.reason || 'Payment failed.';
-        const code = response?.error?.code ? ` (${response.error.code})` : '';
-        setErrors({ submit: `Payment failed: ${reason}${code}. Please try again or use a different payment method.` });
-        setIsSubmitting(false);
+      RegistrationSession.clear();
+      setRegistrationResult({
+        success: true,
+        registrationId: data.registrationId || (data.data && data.data.registrationId) || 'REG-PENDING',
+        teamName: formData.teamName,
+        message: 'Registration submitted successfully. Pending payment verification.'
       });
-
-      rzp.open();
 
     } catch (err) {
       console.error(err);
@@ -756,25 +719,50 @@ export default function RegisterModal({ onClose }) {
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase">
-                      Institute / College Name *
-                    </label>
-                    <input
-                      type="text"
-                      name="instituteName"
-                      value={formData.instituteName}
-                      onChange={handleInputChange}
-                      placeholder="e.g. Sagar Institute of Science, Technology & Research (SISTec-R)"
-                      className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
-                        errors.instituteName ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
-                      } focus:outline-none text-xs text-[#241708] placeholder-[#605040] transition-all font-medium`}
-                    />
-                    {errors.instituteName && (
-                      <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
-                        <AlertCircle size={10} /> {errors.instituteName}
-                      </p>
-                    )}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
+                    <div>
+                      <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase">
+                        Institute / College Name *
+                      </label>
+                      <input
+                        type="text"
+                        name="instituteName"
+                        value={formData.instituteName}
+                        onChange={handleInputChange}
+                        placeholder="e.g. Sagar Institute of Science, Technology & Research (SISTec-R)"
+                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
+                          errors.instituteName ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                        } focus:outline-none text-xs text-[#241708] placeholder-[#605040] transition-all font-medium`}
+                      />
+                      {errors.instituteName && (
+                        <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
+                          <AlertCircle size={10} /> {errors.instituteName}
+                        </p>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase">
+                        IEEE/CSI Member *
+                      </label>
+                      <select
+                        name="isIeeeCsiMember"
+                        value={formData.isIeeeCsiMember}
+                        onChange={handleInputChange}
+                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
+                          errors.isIeeeCsiMember ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                        } focus:outline-none text-xs text-[#241708] transition-all cursor-pointer font-medium`}
+                      >
+                        <option value="" disabled className="text-[#A09080] bg-white">Select Membership Status</option>
+                        <option value="Yes" className="bg-white text-[#241708]">Yes</option>
+                        <option value="No" className="bg-white text-[#241708]">No</option>
+                      </select>
+                      {errors.isIeeeCsiMember && (
+                        <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
+                          <AlertCircle size={10} /> {errors.isIeeeCsiMember}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
@@ -1131,6 +1119,10 @@ export default function RegisterModal({ onClose }) {
                         <span className="text-[#A09080] block text-[9px] uppercase font-bold">Institute</span>
                         <span className="text-[#241708] font-bold text-xs truncate block">{formData.instituteName || '-'}</span>
                       </div>
+                      <div className="p-2 bg-white rounded-lg border border-[#ECE2D2]">
+                        <span className="text-[#A09080] block text-[9px] uppercase font-bold">IEEE/CSI Member</span>
+                        <span className="text-[#241708] font-bold text-xs">{formData.isIeeeCsiMember || '-'}</span>
+                      </div>
                     </div>
                   </div>
 
@@ -1178,12 +1170,12 @@ export default function RegisterModal({ onClose }) {
               {/* Step 5: Payment */}
               {step === 5 && (
                 <div className="animate-fade-in space-y-4 text-center py-2 font-sans">
-                  <div className="max-w-sm mx-auto bg-white border border-[#ECE2D2] rounded-2xl p-4 space-y-4 shadow-sm">
+                  <div className="max-w-sm mx-auto bg-white border border-[#ECE2D2] rounded-2xl p-4 space-y-4 shadow-sm text-left">
                     <div className="w-12 h-12 bg-[#8C3A16]/10 border border-[#8C3A16]/20 rounded-full flex items-center justify-center mx-auto text-[#8C3A16]">
                       <CreditCard size={20} />
                     </div>
                     
-                    <div className="space-y-0.5">
+                    <div className="space-y-0.5 text-center">
                       <h4 className="text-base font-black text-[#8C3A16] font-display">Registration Payment</h4>
                       <p className="text-[11px] text-[#7A6A58]">
                         Complete fee payment to register team nomination for SIH 4.0.
@@ -1199,14 +1191,114 @@ export default function RegisterModal({ onClose }) {
                         <span className="text-[#7A6A58]">Team Leader</span>
                         <span className="text-[#241708] font-bold">{formData.leaderName}</span>
                       </div>
-                      <div className="flex justify-between items-center pt-1.5 border-t border-[#ECE2D2]">
-                        <span className="text-[#7A6A58] font-bold">Amount Payable</span>
-                        <span className="text-[#8C3A16] font-black text-lg">₹1.00</span>
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-[#7A6A58] font-bold">Amount to Pay</span>
+                        <span className="text-[#8C3A16] font-black text-sm">
+                          {formData.isIeeeCsiMember === 'Yes' ? '₹1200.00' : '₹1500.00'}
+                        </span>
                       </div>
                     </div>
 
-                    <div className="text-[10px] text-[#7A6A58] bg-[#FAF6EE] rounded-lg p-2 leading-tight border border-[#E8DFC9]">
-                      Secured by Razorpay. Confirmation sent to <span className="text-[#241708] font-bold">{formData.leaderEmail}</span>.
+                    {/* QR Code Section */}
+                    <div className="flex justify-center py-2">
+                      <div className="bg-white p-2 rounded-xl">
+                        <div className="w-48 h-48 border-2 border-slate-100 flex items-center justify-center overflow-hidden">
+                          {formData.isIeeeCsiMember === 'Yes' ? (
+                            <img src="/qr1.jpeg" alt="QR Code A (₹1200)" className="w-full h-full object-contain" />
+                          ) : (
+                            <img src="/qr2.jpeg" alt="QR Code B (₹1500)" className="w-full h-full object-contain" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Payment Details Form */}
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
+                          Transaction ID
+                        </label>
+                        <input
+                          type="text"
+                          name="transactionId"
+                          value={formData.transactionId}
+                          onChange={handleInputChange}
+                          placeholder="e.g. UPI Ref No / UTR"
+                          className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
+                            errors.transactionId ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
+                          } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
+                        />
+                        {errors.transactionId && (
+                          <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                            <AlertCircle size={10} /> {errors.transactionId}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col items-center">
+                        <label className="w-full text-xs font-bold text-slate-500 tracking-wider mb-2 font-mono uppercase">
+                          Payment Screenshot
+                        </label>
+                        {!formData.paymentScreenshot && fileMetaHints.paymentScreenshot && (
+                          <div className="w-full mb-2 px-3 py-2 rounded-xl bg-amber-950/30 border border-amber-700/40 flex items-center gap-2">
+                            <RotateCcw size={12} className="text-amber-400 shrink-0" />
+                            <p className="text-[10px] text-amber-300 leading-snug">
+                              Previously uploaded: <strong>{fileMetaHints.paymentScreenshot}</strong> — please re-select.
+                            </p>
+                          </div>
+                        )}
+                        <div className={`w-full border-2 border-dashed rounded-2xl p-4 text-center transition-all ${
+                          errors.paymentScreenshot 
+                            ? 'border-red-300 bg-red-50/20' 
+                            : formData.paymentScreenshot 
+                              ? 'border-emerald-300 bg-emerald-50/10'
+                              : fileMetaHints.paymentScreenshot
+                                ? 'border-amber-600/50 bg-amber-950/10'
+                                : 'border-brand-gold/30 hover:border-brand-gold/60 bg-[#080809]/40'
+                        }`}>
+                          <input
+                            type="file"
+                            id="paymentScreenshot-file"
+                            className="hidden"
+                            accept=".png,.jpg,.jpeg,.pdf"
+                            onChange={(e) => handleFileChange(e, 'paymentScreenshot')}
+                          />
+                          <div className="flex flex-col items-center cursor-pointer space-y-3">
+                            <label 
+                              htmlFor="paymentScreenshot-file"
+                              className="flex flex-col items-center cursor-pointer space-y-2"
+                            >
+                              <div className="w-10 h-10 rounded-full bg-emerald-100 text-brand-gold flex items-center justify-center hover:scale-105 transition-transform">
+                                <Upload size={16} />
+                              </div>
+                              <span className="px-4 py-1.5 bg-brand-gold hover:bg-emerald-600 text-white font-bold text-xs rounded-full transition-all shadow-sm">
+                                {fileMetaHints.paymentScreenshot && !formData.paymentScreenshot ? 'Re-select Screenshot' : 'Choose Screenshot'}
+                              </span>
+                            </label>
+
+                            <div className="flex flex-col items-center space-y-1 w-full">
+                              <span className="text-xs text-slate-500 font-medium truncate max-w-full px-2">
+                                {formData.paymentScreenshot ? formData.paymentScreenshot.name : 'No file chosen'}
+                              </span>
+                              {formData.paymentScreenshot && (
+                                <button
+                                  type="button"
+                                  onClick={() => previewLocalFile(formData.paymentScreenshot)}
+                                  className="flex items-center gap-1 text-[10px] text-brand-gold hover:text-brand-gold/80 hover:underline font-bold bg-brand-gold/10 px-2.5 py-1 rounded-full border border-brand-gold/30 cursor-pointer"
+                                >
+                                  <Eye size={12} />
+                                  <span>Preview File</span>
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        {errors.paymentScreenshot && (
+                          <p className="text-[10px] text-red-500 mt-2 flex items-center gap-1">
+                            <AlertCircle size={10} /> {errors.paymentScreenshot}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1216,18 +1308,31 @@ export default function RegisterModal({ onClose }) {
 
               {/* Navigation Buttons (Compact Footer) */}
               <div className="mt-3 pt-3 border-t border-[#E8DFC9] flex justify-between items-center font-sans shrink-0">
-                {step > 1 ? (
+                <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={handlePrev}
-                    className="px-6 py-2 rounded-full border border-[#8C3A16] text-[#8C3A16] bg-transparent hover:bg-[#FAF6EE] font-bold transition-all flex items-center gap-1 cursor-pointer text-xs uppercase shadow-sm"
+                    onClick={() => {
+                      if (window.confirm("Are you sure you want to cancel? All unsaved progress will be lost.")) {
+                        RegistrationSession.clear();
+                        onClose();
+                      }
+                    }}
+                    className="px-4 py-2 rounded-full border border-red-800/30 text-red-800 bg-transparent hover:bg-red-50 font-bold transition-all flex items-center gap-1 cursor-pointer text-xs uppercase shadow-sm"
                   >
-                    <ArrowLeft size={14} />
-                    <span>Prev</span>
+                    <X size={14} />
+                    <span>Cancel</span>
                   </button>
-                ) : (
-                  <div /> // placeholder for alignment
-                )}
+                  {step > 1 ? (
+                    <button
+                      type="button"
+                      onClick={handlePrev}
+                      className="px-6 py-2 rounded-full border border-[#8C3A16] text-[#8C3A16] bg-transparent hover:bg-[#FAF6EE] font-bold transition-all flex items-center gap-1 cursor-pointer text-xs uppercase shadow-sm"
+                    >
+                      <ArrowLeft size={14} />
+                      <span>Prev</span>
+                    </button>
+                  ) : null}
+                </div>
 
                 {step < 5 ? (
                   <button

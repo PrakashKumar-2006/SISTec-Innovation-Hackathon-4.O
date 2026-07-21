@@ -116,6 +116,7 @@ export default function TeamDetails() {
                 <div className="space-y-4">
                   <div><span className="text-brand-gray block mb-1">Institute Name</span><p className="font-medium">{team.instituteName}</p></div>
                   <div><span className="text-brand-gray block mb-1">Theme</span><p className="font-medium"><Tag className="inline h-3 w-3 mr-1 text-brand-teal"/>{team.theme}</p></div>
+                  <div><span className="text-brand-gray block mb-1">IEEE/CSI Member</span><p className="font-medium">{team.isIeeeCsiMember || 'No'}</p></div>
                 </div>
                 <div className="space-y-4">
                   <div><span className="text-brand-gray block mb-1">PS ID</span><p className="font-mono text-brand-gold">{team.psid}</p></div>
@@ -187,6 +188,21 @@ export default function TeamDetails() {
                   </div>
                 ) : (
                   <span className="text-xs text-destructive">Not uploaded</span>
+                )}
+              </div>
+
+              <div className="bg-brand-dark p-4 rounded-lg border border-brand-purple/20 flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-brand-text">Payment Screenshot</span>
+                </div>
+                {team.paymentScreenshot ? (
+                  <div className="flex gap-2">
+                    <a href={team.paymentScreenshot} target="_blank" rel="noreferrer" className="flex-1 flex items-center justify-center gap-2 bg-emerald-500/10 text-emerald-500 px-3 py-2 rounded-md hover:bg-emerald-500 hover:text-brand-dark transition-colors text-sm font-medium">
+                      <ExternalLink className="h-4 w-4" /> View Screenshot
+                    </a>
+                  </div>
+                ) : (
+                  <span className="text-xs text-brand-gray">Not uploaded</span>
                 )}
               </div>
             </CardContent>
@@ -261,8 +277,7 @@ export default function TeamDetails() {
                   <StatusBadge status={team.paymentStatus} type="payment" />
                 </div>
                 <div className="text-xs text-brand-gray space-y-2">
-                  <p>Order ID: <span className="font-mono text-brand-gold">{team.paymentOrderId || 'N/A'}</span></p>
-                  <p>Payment ID: <span className="font-mono text-brand-gold">{team.paymentId || 'N/A'}</span></p>
+                  <p>Transaction ID: <span className="font-mono text-brand-gold">{team.transactionId || 'N/A'}</span></p>
                   <p>Amount: <span className="text-brand-text font-medium">₹{team.amountPaid || 0}</span></p>
                 </div>
             </CardContent>
