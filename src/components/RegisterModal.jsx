@@ -100,7 +100,7 @@ const loadRazorpayScript = () => {
 };
 
 export default function RegisterModal({ onClose }) {
-  const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const backendUrl = import.meta.env.VITE_API_URL || '';
 
   // Fetch Problem Statements from Backend
   const { data: problemStatements = [], isLoading: isLoadingPS } = useQuery({

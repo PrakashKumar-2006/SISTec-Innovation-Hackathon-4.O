@@ -6,7 +6,7 @@ import { Search, X, Building2, Cpu, Sparkles, AlertCircle, Filter, Tag } from 'l
 import ClickRipple from './ClickRipple';
 
 // Configuration
-const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const backendUrl = import.meta.env.VITE_API_URL || '';
 
 const getDomainTheme = (domain) => {
   const d = domain.toLowerCase();
