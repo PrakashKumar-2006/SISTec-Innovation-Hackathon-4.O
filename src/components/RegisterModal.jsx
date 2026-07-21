@@ -719,72 +719,50 @@ export default function RegisterModal({ onClose }) {
                     </div>
                   </div>
 
-<<<<<<< HEAD
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-1">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
                     <div>
-                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
-                        Institute Name
+                      <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase">
+                        Institute / College Name *
                       </label>
                       <input
                         type="text"
                         name="instituteName"
                         value={formData.instituteName}
                         onChange={handleInputChange}
-                        placeholder="Institute Name"
-                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                          errors.instituteName ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                        } focus:outline-none text-sm text-white placeholder-slate-500/80 transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner`}
+                        placeholder="e.g. Sagar Institute of Science, Technology & Research (SISTec-R)"
+                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
+                          errors.instituteName ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                        } focus:outline-none text-xs text-[#241708] placeholder-[#605040] transition-all font-medium`}
                       />
                       {errors.instituteName && (
-                        <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                        <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
                           <AlertCircle size={10} /> {errors.instituteName}
                         </p>
                       )}
                     </div>
                     
                     <div>
-                      <label className="block text-xs font-bold text-slate-400 tracking-wider mb-2 font-mono uppercase">
-                        IEEE/CSI Member
+                      <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase">
+                        IEEE/CSI Member *
                       </label>
                       <select
                         name="isIeeeCsiMember"
                         value={formData.isIeeeCsiMember}
                         onChange={handleInputChange}
-                        className={`w-full px-5 py-3 rounded-2xl bg-[#080809]/60 border ${
-                          errors.isIeeeCsiMember ? 'border-red-500/80 focus:border-red-500' : 'border-white/10 focus:border-brand-gold/50'
-                        } focus:outline-none text-sm text-white transition-all focus:ring-1 focus:ring-brand-gold/30 shadow-inner cursor-pointer`}
+                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
+                          errors.isIeeeCsiMember ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
+                        } focus:outline-none text-xs text-[#241708] transition-all cursor-pointer font-medium`}
                       >
-                        <option value="" disabled className="text-slate-500 bg-[#080809]">Select Membership Status</option>
-                        <option value="Yes" className="bg-[#121214] text-white">Yes</option>
-                        <option value="No" className="bg-[#121214] text-white">No</option>
+                        <option value="" disabled className="text-[#A09080] bg-white">Select Membership Status</option>
+                        <option value="Yes" className="bg-white text-[#241708]">Yes</option>
+                        <option value="No" className="bg-white text-[#241708]">No</option>
                       </select>
                       {errors.isIeeeCsiMember && (
-                        <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                        <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
                           <AlertCircle size={10} /> {errors.isIeeeCsiMember}
                         </p>
                       )}
                     </div>
-=======
-                  <div>
-                    <label className="block text-[11px] font-extrabold text-[#6B3213] tracking-wider mb-1 uppercase">
-                      Institute / College Name *
-                    </label>
-                    <input
-                      type="text"
-                      name="instituteName"
-                      value={formData.instituteName}
-                      onChange={handleInputChange}
-                      placeholder="e.g. Sagar Institute of Science, Technology & Research (SISTec-R)"
-                      className={`w-full px-4 py-2.5 rounded-xl bg-white border ${
-                        errors.instituteName ? 'border-red-500' : 'border-[#D9CCBA] focus:border-[#8C3A16]'
-                      } focus:outline-none text-xs text-[#241708] placeholder-[#605040] transition-all font-medium`}
-                    />
-                    {errors.instituteName && (
-                      <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
-                        <AlertCircle size={10} /> {errors.instituteName}
-                      </p>
-                    )}
->>>>>>> a0d2305065efe03189d16fb185586f8e2e66de43
                   </div>
                 </div>
               )}
