@@ -1299,7 +1299,6 @@ export default function RegisterModal({ onClose }) {
                           </p>
                         )}
                       </div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -1333,7 +1332,6 @@ export default function RegisterModal({ onClose }) {
                       <span>Prev</span>
                     </button>
                   ) : null}
-                  </button>
                 </div>
 
                 {step < 5 ? (
