@@ -95,16 +95,20 @@ export default function Developers() {
         
         {/* Header */}
         <div className="space-y-4 max-w-2xl mx-auto mb-16 animate-fade-in">
-          <h2 className="text-5xl sm:text-6xl font-bold tracking-tight text-white">
+          <p className="text-xs sm:text-sm font-black tracking-[0.25em] text-[var(--vermilion)] font-sans uppercase mb-2">
+            Engineering &amp; Tech Team
+          </p>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] font-display leading-tight" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
             Developers of{' '}
-            <span className="text-gold-metallic">
+            <span className="text-[var(--marigold-deep)]">
               SIH
             </span>
           </h2>
-          <p className="text-brand-gray text-sm sm:text-base font-normal">
+          <p className="text-[var(--ink-soft)] text-sm sm:text-base font-medium font-sans">
             Meet the talented student development team behind the SIH web infrastructure.
           </p>
         </div>
+
 
         {/* Developer Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-7xl mx-auto">

@@ -49,16 +49,17 @@ export default function About({ isStandalone = false }) {
             {/* Top Dot Accent & CSE Dept Title (unboxed to match hero banner) */}
             <div className="space-y-3">
               <p className="text-[9px] sm:text-sm md:text-base lg:text-lg font-black tracking-[0.18em] sm:tracking-[0.28em] text-brand-gold font-cinzel uppercase whitespace-nowrap">
-                Department of Computer Science & Engineering
+                Department of CSE | AI & ML | IOT
               </p>
             </div>
             
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.1] font-display">
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] leading-[1.1] font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
               SIH is{' '}
-              <span className="text-gold-metallic block sm:inline">
+              <span className="text-[var(--marigold-deep)] block sm:inline">
                 Organized by SISTec Ratibad
               </span>
             </h2>
+
             
             <div className="space-y-5">
               <div className="flex items-start gap-4 p-4.5 rounded-2xl bg-brand-card/20 border border-white/5 hover:border-brand-gold/15 transition-all duration-300">

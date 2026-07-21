@@ -72,10 +72,10 @@ export default function ShortlistedTeams({ onViewChange }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Navigation & Header */}
-        <div className="mb-12">
+        <div className="mb-12 text-left">
           <button 
             onClick={() => onViewChange('landing')}
-            className="flex items-center text-brand-gold hover:text-white transition-colors mb-6 group w-fit"
+            className="flex items-center text-[var(--marigold-deep)] hover:text-[var(--clay)] transition-colors mb-6 group w-fit font-bold text-sm"
           >
             <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
             Back to Home
@@ -83,17 +83,18 @@ export default function ShortlistedTeams({ onViewChange }) {
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/10 border border-brand-gold/20 text-brand-gold text-sm font-medium mb-4">
-                <Award className="w-4 h-4" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--marigold)]/15 border border-[var(--marigold)]/30 text-[var(--clay)] text-xs font-black uppercase tracking-widest mb-4 font-sans">
+                <Award className="w-4 h-4 text-[var(--vermilion)]" />
                 SIH 4.0 Selection Results
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              <h1 className="text-4xl md:text-5xl font-black text-[var(--clay)] mb-4 font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
                 Shortlisted Teams
               </h1>
-              <p className="text-brand-gray text-lg max-w-2xl">
+              <p className="text-[var(--ink-soft)] text-base max-w-2xl font-sans font-medium">
                 Congratulations to all the selected teams! Find your team below using the search or filter options.
               </p>
             </div>
+
 
             {/* Stats (from fetched data) */}
             {data.length > 0 && (
@@ -160,31 +161,32 @@ export default function ShortlistedTeams({ onViewChange }) {
         ) : error ? (
           <div className="py-20 text-center">
             <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4 opacity-50" />
-            <h3 className="text-xl font-bold text-white mb-2">Error Loading Data</h3>
-            <p className="text-brand-gray">{error}</p>
+            <h3 className="text-xl font-bold text-[var(--clay)] mb-2 font-display">Error Loading Data</h3>
+            <p className="text-[var(--ink-soft)] font-sans">{error}</p>
           </div>
         ) : data.length === 0 ? (
-          <div className="py-24 text-center bg-brand-card/30 border border-brand-purple/20 rounded-2xl">
-            <Award className="w-16 h-16 text-brand-gold mx-auto mb-6 opacity-50" />
-            <h3 className="text-2xl font-bold text-white mb-3">Results Are Coming Soon!</h3>
-            <p className="text-brand-gray max-w-lg mx-auto text-lg">
+          <div className="py-24 text-center bg-[var(--panel)] border border-[var(--marigold)]/20 rounded-2xl">
+            <Award className="w-16 h-16 text-[var(--marigold)] mx-auto mb-6 opacity-70" />
+            <h3 className="text-2xl font-black text-white mb-3 font-display">Results Are Coming Soon!</h3>
+            <p className="text-[var(--ink-faint)] max-w-lg mx-auto text-base font-sans">
               The evaluation process is currently underway. Please check back later for the official list of shortlisted teams.
             </p>
           </div>
         ) : filteredData.length === 0 ? (
-          <div className="py-20 text-center bg-brand-card/30 border border-brand-purple/20 rounded-2xl">
-            <AlertCircle className="w-12 h-12 text-brand-gold mx-auto mb-4 opacity-50" />
-            <h3 className="text-xl font-bold text-white mb-2">No matches found</h3>
-            <p className="text-brand-gray">
+          <div className="py-20 text-center bg-[var(--panel)] border border-[var(--marigold)]/20 rounded-2xl">
+            <AlertCircle className="w-12 h-12 text-[var(--marigold)] mx-auto mb-4 opacity-70" />
+            <h3 className="text-xl font-black text-white mb-2 font-display">No matches found</h3>
+            <p className="text-[var(--ink-faint)] font-sans">
               Try adjusting your search terms or filters to find what you're looking for.
             </p>
             <button 
               onClick={() => { setSearch(''); setFilterTheme('All'); setFilterInstitute('All'); }}
-              className="mt-6 px-6 py-2 bg-brand-darker border border-brand-purple/30 text-white rounded-lg hover:bg-brand-purple/10 transition-colors"
+              className="mt-6 px-6 py-2 bg-[var(--panel-soft)] border border-[var(--marigold)]/30 text-white rounded-lg hover:bg-[var(--marigold)] hover:text-[var(--panel)] transition-colors text-xs font-bold"
             >
               Clear all filters
             </button>
           </div>
+
         ) : (
           <div className="space-y-6">
             

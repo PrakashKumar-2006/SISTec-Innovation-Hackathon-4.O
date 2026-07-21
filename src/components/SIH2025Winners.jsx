@@ -97,23 +97,24 @@ export default function SIH2025Winners({ onViewChange }) {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 text-left">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2.5">
-              <Trophy className="text-brand-gold animate-pulse" size={24} />
-              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-brand-gray to-brand-gold bg-clip-text text-transparent">
+              <Trophy className="text-[var(--marigold)] animate-pulse" size={24} />
+              <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-[var(--clay)] uppercase font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
                 Winners of SIH 2025
               </h2>
             </div>
-            <p className="text-brand-gray text-xs sm:text-sm font-normal">
+            <p className="text-[var(--ink-soft)] text-xs sm:text-sm font-medium font-sans">
               SISTec Innovation Hackathon 3.0 (SIH 2025) winners and podium standings.
             </p>
           </div>
           
           <button
             onClick={() => onViewChange && onViewChange('landing')}
-            className="flex items-center gap-2 px-5 py-2 rounded-full bg-brand-card border border-white/10 hover:border-brand-gold/50 text-xs font-bold text-brand-gold hover:text-white transition-all duration-300 cursor-pointer shadow-md active:scale-95 shrink-0"
+            className="flex items-center gap-2 px-5 py-2 rounded-full bg-[var(--panel)] border border-[var(--marigold)]/30 text-xs font-bold text-[var(--marigold)] hover:text-white transition-all duration-300 cursor-pointer shadow-md active:scale-95 shrink-0"
           >
             <ArrowLeft size={14} /> Back to Home
           </button>
         </div>
+
 
         {/* ── 3D Coverflow Slider for Winner Photos ── */}
         <div className="w-full flex flex-col items-center mb-14 relative">
@@ -225,30 +226,31 @@ export default function SIH2025Winners({ onViewChange }) {
 
         {/* Podium Finishers Details Title */}
         <div className="text-left mb-6 max-w-xl">
-          <h3 className="text-lg sm:text-xl font-extrabold text-white pl-1 border-l-4 border-brand-gold">
+          <h3 className="text-lg sm:text-xl font-extrabold text-[var(--clay)] pl-1 border-l-4 border-[var(--marigold)] font-display" style={{ fontFamily: "'Outfit', sans-serif" }}>
             Podium Details
           </h3>
-          <p className="text-xs text-brand-gray pl-3 mt-1.5">
+          <p className="text-xs text-[var(--ink-soft)] pl-3 mt-1.5 font-sans">
             Full problem, organization, and institution breakdown of the winning innovations.
           </p>
         </div>
 
         {/* Desktop View Table */}
-        <div className="hidden md:block rounded-2xl bg-brand-card/15 backdrop-blur-md border border-white/5 overflow-hidden shadow-2xl mb-10 text-left">
+        <div className="hidden md:block rounded-2xl bg-[var(--panel)] border border-[var(--marigold)]/20 overflow-hidden shadow-2xl mb-10 text-left">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[1000px]">
               <thead>
-                <tr className="border-b border-white/5 bg-brand-darker/60">
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-24 text-slate-400">Position</th>
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-24 text-slate-400">PS Code</th>
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-40 text-slate-400">Leader Name</th>
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-40 text-slate-400">Team Name</th>
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-36 text-slate-400">Theme</th>
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-[420px] max-w-md text-slate-400">Problem Statement Title</th>
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-64 text-slate-400">Institute Name</th>
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-32 text-slate-400">Prize Money</th>
+                <tr className="border-b border-[var(--marigold)]/20 bg-[var(--panel-soft)]">
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-24 text-[var(--marigold)] font-sans">Position</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-24 text-[var(--marigold)] font-sans">PS Code</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-40 text-[var(--marigold)] font-sans">Leader Name</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-40 text-[var(--marigold)] font-sans">Team Name</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-36 text-[var(--marigold)] font-sans">Theme</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-[420px] max-w-md text-[var(--marigold)] font-sans">Problem Statement Title</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-64 text-[var(--marigold)] font-sans">Institute Name</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-32 text-[var(--marigold)] font-sans">Prize Money</th>
                 </tr>
               </thead>
+
               <tbody className="divide-y divide-white/5">
                 {winnersData.map((winner, index) => (
                   <tr key={index} className="hover:bg-white/5 transition-colors duration-200">

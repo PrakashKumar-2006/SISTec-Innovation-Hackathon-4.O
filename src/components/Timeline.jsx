@@ -173,7 +173,8 @@ export default function Timeline({ isStandalone = false }) {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.007)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(255,255,255,0.007)_1.5px,transparent_1.5px)] bg-[size:30px_30px] opacity-35 pointer-events-none -z-10" />
 
       {/* CSS Animations for draw path and step sequence */}
-      <style dangerouslySetInnerHTML={{__html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @keyframes dash-flow {
           0% { stroke-dashoffset: 24; }
           100% { stroke-dashoffset: 0; }
@@ -212,54 +213,58 @@ export default function Timeline({ isStandalone = false }) {
       `}} />
 
       <div className="max-w-[1300px] mx-auto px-4 sm:px-6 relative z-10">
-        
+
         {/* Section Heading */}
-        <div className="max-w-2xl mx-auto text-center mb-20">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight font-display">
-            Timeline of <span className="bg-gradient-to-r from-brand-gold via-yellow-200 to-amber-500 bg-clip-text text-transparent">SIH 4.0</span>
+        <div className="max-w-2xl mx-auto text-center mb-16">
+          <p className="text-xs sm:text-sm font-black tracking-[0.25em] text-[var(--vermilion)] font-sans uppercase mb-3 flex items-center justify-center gap-2">
+            Roadmap &amp; Milestones
+          </p>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+            Timeline of <span className="text-[var(--marigold-deep)]">SIH 4.0</span>
           </h2>
         </div>
 
+
         {/* ── Desktop Snaking central timeline ── */}
         <div className="hidden md:block max-w-5xl mx-auto relative">
-          
+
           {events.map((ev, idx) => {
             const IconComponent = ev.icon;
             const isLeftNode = ev.isLeftNode; // Original Mockup Curve coordinates
-            const pathD = isLeftNode 
-              ? "M 50 0 C 50 20, 41.6 20, 41.6 50 C 41.6 80, 50 80, 50 100" 
+            const pathD = isLeftNode
+              ? "M 50 0 C 50 20, 41.6 20, 41.6 50 C 41.6 80, 50 80, 50 100"
               : "M 50 0 C 50 20, 58.3 20, 58.3 50 C 58.3 80, 50 80, 50 100";
-            
+
             const isPathActive = activeStep > idx;
             const isNodeActive = activeStep > idx;
             const isCardActive = activeStep > idx;
-            
+
             // Check if this specific step is currently focused/highlighted
             const isFocused = currentFocus === idx;
 
             return (
-              <div 
+              <div
                 key={idx}
                 className="relative w-full min-h-[250px] flex items-center justify-center"
               >
                 {/* ── Segment Background SVG ── */}
                 <div className="absolute inset-0 w-full h-full pointer-events-none z-10">
                   <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none">
-                    
-                    {/* Background Static Path (Dark grey/uncompleted) */}
-                    <path 
-                      d={pathD} 
-                      stroke="rgba(255,255,255,0.06)" 
-                      strokeWidth="2.5" 
+
+                    {/* Background Static Path (Visible soft warm line) */}
+                    <path
+                      d={pathD}
+                      stroke="rgba(220, 193, 144, 0.4)"
+                      strokeWidth="2.5"
                       vectorEffect="non-scaling-stroke"
                     />
 
                     {/* Active Drawing S-Curve Path - Draw speed slowed to 2.0s */}
                     {isPathActive && (
-                      <path 
-                        d={pathD} 
-                        stroke={isFocused ? "#FFFFFF" : ev.themeColor} 
-                        strokeWidth={isFocused ? "3.2" : "2.8"} 
+                      <path
+                        d={pathD}
+                        stroke={ev.themeColor}
+                        strokeWidth={isFocused ? "3.2" : "2.8"}
                         className={`transition-all duration-500 ${activeStep === idx + 1 ? 'animate-draw-path' : ''}`}
                         style={{
                           strokeDasharray: '120',
@@ -272,49 +277,47 @@ export default function Timeline({ isStandalone = false }) {
 
                     {/* Horizontal Connector Pin-Line between Node and Card */}
                     {isNodeActive && (
-                      <line 
-                        x1={isLeftNode ? "41.6" : "58.3"} 
-                        y1="50" 
-                        x2="50" 
-                        y2="50" 
-                        stroke={ev.themeColor} 
-                        strokeWidth={isFocused ? "2.5" : "2"} 
+                      <line
+                        x1={isLeftNode ? "41.6" : "58.3"}
+                        y1="50"
+                        x2={isLeftNode ? "55" : "45"}
+                        y2="50"
+                        stroke={ev.themeColor}
+                        strokeWidth={isFocused ? "2.5" : "2"}
                         strokeDasharray="4 4"
                         className="animate-dash-flow opacity-80"
                         vectorEffect="non-scaling-stroke"
                       />
                     )}
 
-                    {/* Connector dot on card border edge */}
-                    {isNodeActive && (
-                      <circle 
-                        cx="50" 
-                        cy="50" 
-                        r={isFocused ? "5.5" : "4"} 
-                        fill={ev.themeColor} 
-                        className="transition-all duration-300"
-                        style={{ filter: `drop-shadow(0 0 8px ${ev.themeColor})` }}
-                      />
-                    )}
-                    
                   </svg>
                 </div>
 
+                {/* ── Perfect Circle Connector Dot (HTML-based, positioned at card border edge) ── */}
+                {isNodeActive && (
+                  <div
+                    className={`absolute top-1/2 -translate-y-1/2 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full z-20 shadow-md transition-all duration-300 ${isLeftNode ? 'left-[55%] -translate-x-1/2' : 'left-[45%] -translate-x-1/2'
+                      }`}
+                    style={{
+                      backgroundColor: ev.themeColor,
+                      boxShadow: isFocused ? `0 0 10px ${ev.themeColor}` : 'none'
+                    }}
+                  />
+                )}
+
                 {/* Grid Content Layout */}
                 <div className="w-full grid grid-cols-12 items-center relative z-20">
-                  
-                  {/* Left Column (Col 1 to 6) */}
-                  <div className="col-span-6 flex justify-end pr-8">
+
+                  {/* Left Column (Col 1 to 5) */}
+                  <div className="col-span-5 flex justify-end pr-8">
                     {!isLeftNode && (
                       /* Card on Left side (Step 2, 4) - Highlighted with activeColor and extra scale if focused */
-                      <div 
-                        className={`w-full max-w-[460px] transform transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) ${
-                          isCardActive 
-                            ? `opacity-100 translate-y-0 ${isFocused ? 'scale-[1.05] z-30' : 'scale-100 opacity-90 z-20'} ${ev.floatClass}` 
+                      <div
+                        className={`w-full max-w-[460px] transform transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) ${isCardActive
+                            ? `opacity-100 translate-y-0 ${isFocused ? 'scale-[1.05] z-30' : 'scale-100 opacity-90 z-20'} ${ev.floatClass}`
                             : 'opacity-0 translate-y-12 scale-95 pointer-events-none'
-                        } relative group bg-gradient-to-br ${
-                          isFocused ? ev.activeColor : `${ev.color} border ${ev.borderColor} ${ev.glow}`
-                        } backdrop-blur-md rounded-2xl p-6 shadow-2xl hover:scale-[1.06] hover:rotate-[0.5deg] transition-all duration-500 text-left`}
+                          } relative group bg-gradient-to-br ${isFocused ? ev.activeColor : `${ev.color} border ${ev.borderColor} ${ev.glow}`
+                          } backdrop-blur-md rounded-2xl p-6 shadow-2xl hover:-translate-y-1.5 transition-all duration-500 text-left`}
                       >
                         <div className="flex items-center gap-3 mb-3.5">
                           <div className={`w-8 h-8 rounded-lg bg-brand-darker border ${isFocused ? 'border-brand-gold/45' : 'border-white/5'} flex items-center justify-center shadow-inner transition-colors`}>
@@ -336,20 +339,18 @@ export default function Timeline({ isStandalone = false }) {
                   </div>
 
                   {/* Center Node Spacing */}
-                  <div className="col-span-1" />
+                  <div className="col-span-2" />
 
                   {/* Right Column (Col 7 to 12) */}
                   <div className="col-span-5 flex justify-start pl-8">
                     {isLeftNode && (
                       /* Card on Right side (Step 1, 3, 5) - Highlighted with activeColor and extra scale if focused */
-                      <div 
-                        className={`w-full max-w-[460px] transform transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) ${
-                          isCardActive 
-                            ? `opacity-100 translate-y-0 ${isFocused ? 'scale-[1.05] z-30' : 'scale-100 opacity-90 z-20'} ${ev.floatClass}` 
+                      <div
+                        className={`w-full max-w-[460px] transform transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) ${isCardActive
+                            ? `opacity-100 translate-y-0 ${isFocused ? 'scale-[1.05] z-30' : 'scale-100 opacity-90 z-20'} ${ev.floatClass}`
                             : 'opacity-0 translate-y-12 scale-95 pointer-events-none'
-                        } relative group bg-gradient-to-br ${
-                          isFocused ? ev.activeColor : `${ev.color} border ${ev.borderColor} ${ev.glow}`
-                        } backdrop-blur-md rounded-2xl p-6 shadow-2xl hover:scale-[1.06] hover:rotate-[0.5deg] transition-all duration-500 text-left`}
+                          } relative group bg-gradient-to-br ${isFocused ? ev.activeColor : `${ev.color} border ${ev.borderColor} ${ev.glow}`
+                          } backdrop-blur-md rounded-2xl p-6 shadow-2xl hover:-translate-y-1.5 transition-all duration-500 text-left`}
                       >
                         <div className="flex items-center gap-3 mb-3.5">
                           <div className={`w-8 h-8 rounded-lg bg-brand-darker border ${isFocused ? 'border-brand-gold/45' : 'border-white/5'} flex items-center justify-center shadow-inner transition-colors`}>
@@ -373,36 +374,34 @@ export default function Timeline({ isStandalone = false }) {
                 </div>
 
                 {/* Absolute Floating Nodes with active pulsing sonar ring */}
-                <div 
-                  className={`absolute top-1/2 -translate-y-1/2 ${
-                    isLeftNode ? 'left-[41.6%]' : 'left-[58.3%]'
-                  } -translate-x-1/2 z-30`}
+                <div
+                  className={`absolute top-1/2 -translate-y-1/2 ${isLeftNode ? 'left-[41.6%]' : 'left-[58.3%]'
+                    } -translate-x-1/2 z-30`}
                   style={{ transform: 'translate(-50%, -50%)' }}
                 >
                   <div className="relative flex items-center justify-center w-24 h-24">
                     {/* Sonar Ring for the active focused step */}
                     {isNodeActive && isFocused && (
-                      <div 
+                      <div
                         className="absolute w-24 h-24 rounded-full border-2 opacity-50 animate-[ping_1.8s_ease-out_infinite]"
                         style={{ borderColor: ev.themeColor }}
                       />
                     )}
 
                     {isNodeActive ? (
-                      <div 
-                        className={`w-16 h-16 rounded-full bg-[#0D0D11] border-2 ${ev.nodeBorder} flex flex-col items-center justify-center shadow-lg transition-all duration-500 animate-node-pop ${
-                          isFocused ? 'scale-110' : 'scale-100 opacity-90'
-                        }`}
-                        style={{ 
+                      <div
+                        className={`w-16 h-16 rounded-full bg-white border-2 ${ev.nodeBorder} flex flex-col items-center justify-center shadow-lg transition-all duration-500 animate-node-pop ${isFocused ? 'scale-110' : 'scale-100 opacity-90'
+                          }`}
+                        style={{
                           boxShadow: isFocused ? `0 0 20px ${ev.nodeGlow}` : 'none'
                         }}
                       >
-                        <span className="text-[8px] font-black text-slate-400 tracking-widest leading-none">STEP</span>
-                        <span className="text-base font-black text-white mt-0.5 leading-none">{ev.num}</span>
+                        <span className="text-[8px] font-black text-[var(--ink-soft)] tracking-widest leading-none">STEP</span>
+                        <span className="text-base font-black text-[var(--clay)] mt-0.5 leading-none">{ev.num}</span>
                       </div>
                     ) : (
                       /* Greyed out / disabled uncompleted step node */
-                      <div className="w-16 h-16 rounded-full bg-[#13131a]/60 border-2 border-slate-800/80 flex flex-col items-center justify-center text-slate-600">
+                      <div className="w-16 h-16 rounded-full bg-[#FAF6F0] border-2 border-[var(--line-strong)]/30 flex flex-col items-center justify-center text-[var(--ink-faint)]">
                         <span className="text-[8px] font-bold tracking-widest leading-none">STEP</span>
                         <span className="text-base font-bold mt-0.5 leading-none">{ev.num}</span>
                       </div>
@@ -417,12 +416,12 @@ export default function Timeline({ isStandalone = false }) {
 
         {/* ── Mobile Vertical Timeline (md:hidden) ── */}
         <div className="md:hidden flex flex-col gap-10 max-w-xl mx-auto relative pl-6 text-left">
-          
+
           {/* Background vertical line (uncompleted) */}
-          <div className="absolute left-6 top-3 bottom-3 w-[1.5px] bg-slate-800/80 pointer-events-none" />
+          <div className="absolute left-6 top-3 bottom-3 w-[1.5px] bg-[var(--line-strong)]/40 pointer-events-none" />
 
           {/* Glowing active drawing vertical line */}
-          <div 
+          <div
             className="absolute left-6 top-3 w-[2px] bg-gradient-to-b from-brand-orange via-brand-pink to-brand-blue pointer-events-none transition-all duration-1000 ease-out"
             style={{
               height: `${Math.min(100, Math.max(0, (activeStep - 1) * 25))}%`,
@@ -437,28 +436,27 @@ export default function Timeline({ isStandalone = false }) {
 
             return (
               <div key={idx} className="flex gap-6 items-start relative group">
-                
+
                 {/* Left Timeline Step Node */}
                 <div className="relative shrink-0 z-10">
                   {isStepActive && isFocused && (
-                    <div 
+                    <div
                       className="absolute inset-0 rounded-full border-2 opacity-50 animate-[ping_1.8s_ease-out_infinite]"
                       style={{ borderColor: ev.themeColor }}
                     />
                   )}
                   {isStepActive ? (
-                    <div 
-                      className={`w-12 h-12 rounded-full bg-[#0d0d11] border-2 ${ev.nodeBorder} flex flex-col items-center justify-center animate-node-pop ${
-                        isFocused ? 'scale-105 shadow-lg' : 'scale-100 opacity-90'
-                      }`}
+                    <div
+                      className={`w-12 h-12 rounded-full bg-white border-2 ${ev.nodeBorder} flex flex-col items-center justify-center animate-node-pop ${isFocused ? 'scale-105 shadow-lg' : 'scale-100 opacity-90'
+                        }`}
                       style={{ boxShadow: isFocused ? `0 0 12px ${ev.nodeGlow}` : 'none' }}
                     >
-                      <span className="text-[6px] font-black text-slate-400 tracking-widest leading-none">STEP</span>
-                      <span className="text-xs font-black text-white leading-none mt-0.5">{ev.num}</span>
+                      <span className="text-[6px] font-black text-[var(--ink-soft)] tracking-widest leading-none">STEP</span>
+                      <span className="text-xs font-black text-[var(--clay)] leading-none mt-0.5">{ev.num}</span>
                     </div>
                   ) : (
                     /* Disabled state node */
-                    <div className="w-12 h-12 rounded-full bg-[#13131a] border-2 border-slate-800/80 flex flex-col items-center justify-center text-slate-600">
+                    <div className="w-12 h-12 rounded-full bg-[#FAF6F0] border-2 border-[var(--line-strong)]/30 flex flex-col items-center justify-center text-[var(--ink-faint)]">
                       <span className="text-[6px] font-bold tracking-widest leading-none">STEP</span>
                       <span className="text-xs font-bold leading-none mt-0.5">{ev.num}</span>
                     </div>
@@ -466,14 +464,12 @@ export default function Timeline({ isStandalone = false }) {
                 </div>
 
                 {/* Right Detail Card */}
-                <div 
-                  className={`w-full p-5 rounded-2xl bg-gradient-to-br ${
-                    isFocused ? ev.activeColor : `${ev.color} border ${ev.borderColor} ${ev.glow}`
-                  } backdrop-blur-md shadow-card-shadow relative overflow-hidden text-left transition-all duration-700 ${
-                    isStepActive 
-                      ? `opacity-100 translate-y-0 ${isFocused ? 'scale-[1.02]' : 'scale-100 opacity-95'}` 
+                <div
+                  className={`w-full p-5 rounded-2xl bg-gradient-to-br ${isFocused ? ev.activeColor : `${ev.color} border ${ev.borderColor} ${ev.glow}`
+                    } backdrop-blur-md shadow-card-shadow relative overflow-hidden text-left transition-all duration-700 ${isStepActive
+                      ? `opacity-100 translate-y-0 ${isFocused ? 'scale-[1.02]' : 'scale-100 opacity-95'}`
                       : 'opacity-0 translate-y-8 scale-95 pointer-events-none'
-                  }`}
+                    }`}
                 >
                   {/* Date and Icon */}
                   <div className="flex items-center gap-3 mb-4 relative z-10">

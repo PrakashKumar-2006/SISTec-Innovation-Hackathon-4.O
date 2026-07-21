@@ -55,17 +55,20 @@ export default function FAQs() {
         
         {/* Header */}
         <div className="space-y-4 text-center mb-16">
-
-          <h2 className="text-5xl sm:text-6xl font-bold tracking-tight text-navyDeep">
+          <p className="text-xs sm:text-sm font-black tracking-[0.25em] text-[var(--vermilion)] font-sans uppercase mb-2">
+            Got Questions?
+          </p>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] font-display leading-tight" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
             Frequently Asked{' '}
-            <span className="text-gold-metallic">
+            <span className="text-[var(--marigold-deep)]">
               Questions
             </span>
           </h2>
-          <p className="text-brand-gray text-sm sm:text-base font-normal">
+          <p className="text-[var(--ink-soft)] text-sm sm:text-base font-medium max-w-xl mx-auto font-sans">
             Find answers to common queries regarding registration rules, screening processes, food/accommodation, and timelines.
           </p>
         </div>
+
 
         {/* FAQs Accordion */}
         <div className="space-y-4">

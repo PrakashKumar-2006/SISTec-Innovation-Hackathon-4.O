@@ -68,33 +68,33 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         brand: {
-          navy: "#F8FAFC",       // Clean Off-White for text/contrast in Dark Mode
-          blue: "#FFFFFF",       // Primary Color (White)
-          purple: "#E2E8F0",     // Light Silver-Gray
-          cyan: "#D8AB55",       // Secondary Color (Gold)
-          teal: "#A27B2B",       // Darker Gold
-          orange: "#D8AB55",     // Secondary Color (Gold)
-          pink: "#FFE8B6",       // Amber/Light Gold
-          dark: "#0F0F11",       // Obsidian black base background
-          darker: "#080809",     // Pitch black body background
-          card: "#161619",       // Obsidian card surface background
-          text: "#F8FAFC",       // Clean Off-White for headings
-          gray: "#A1A1AA",       // Muted gray for readable body text
-          gold: "#D8AB55",       // Custom gold color
-          navyDeep: "#FFFFFF"    // Custom white color
+          navy: "var(--ink-soft)",       // #6B5B49 (Muted body text)
+          blue: "var(--vermilion)",      // #E6491E (Vibrant vermilion orange)
+          purple: "var(--clay)",         // #8C3A16 (Clay brown/rust accent)
+          cyan: "var(--vermilion)",      // #E6491E (Secondary accent)
+          teal: "var(--marigold-deep)",  // #C97F1B (Deep marigold gold)
+          orange: "var(--vermilion)",    // #E6491E (Accent orange)
+          pink: "var(--marigold)",       // #F2A93B (Bright marigold)
+          dark: "#FAF6F0",               // Soft warm cream section background
+          darker: "var(--paper)",        // #FFFDF7 (Paper cream base background)
+          card: "var(--paper)",          // #FFFDF7 (Card background)
+          text: "var(--ink)",            // #241708 (Deep ink brown for headings)
+          gray: "var(--ink-soft)",       // #6B5B49 (Muted text gray-brown)
+          gold: "var(--marigold)",       // #F2A93B (Custom marigold)
+          navyDeep: "var(--panel)"       // #2B1607 (Dark panel background)
         }
       },
       fontFamily: {
         sans: ["Plus Jakarta Sans", "sans-serif"],
-        display: ["Playfair Display", "serif"],
-        cinzel: ["Cinzel", "serif"],
+        display: ["Outfit", "sans-serif"],
+        cinzel: ["Outfit", "sans-serif"],
         outfit: ["Outfit", "sans-serif"]
       },
       backgroundImage: {
-        'sih-gradient': 'linear-gradient(135deg, #FFFFFF 0%, #D8AB55 100%)', // White to Gold gradient
-        'bg-gradient': 'linear-gradient(180deg, #0F0F11 0%, #080809 100%)',
-        'btn-gradient': 'linear-gradient(90deg, #D8AB55 0%, #A27B2B 100%)', // Gold gradient for buttons
-        'wave-gradient': 'linear-gradient(135deg, #0F0F11 0%, #080809 100%)',
+        'sih-gradient': 'linear-gradient(135deg, var(--paper) 0%, var(--marigold) 100%)', 
+        'bg-gradient': 'linear-gradient(180deg, var(--paper) 0%, #FAF5EE 100%)',
+        'btn-gradient': 'linear-gradient(90deg, var(--vermilion) 0%, var(--marigold) 100%)', 
+        'wave-gradient': 'linear-gradient(135deg, var(--paper) 0%, #FAF5EE 100%)',
       },
       boxShadow: {
         'cyan-glow': '0 0 15px rgba(216, 171, 85, 0.20)', // Gold glow

@@ -61,8 +61,11 @@ export default function Objectives({ isStandalone = false }) {
           {/* Left Column: Mission Description & Quote */}
           <div className="lg:col-span-5 space-y-8 text-left">
             <div className="mb-6">
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight font-display">
-                Objective of <span className="text-gold-metallic">SIH 4.0</span>
+              <p className="text-xs sm:text-sm font-black tracking-[0.25em] text-[var(--vermilion)] font-sans uppercase mb-2">
+                Core Vision
+              </p>
+              <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] font-display leading-tight" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+                Objective of <span className="text-[var(--marigold-deep)]">SIH 4.0</span>
               </h2>
             </div>
             
