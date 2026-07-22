@@ -93,7 +93,7 @@ export default function About({ isStandalone = false }) {
                 <div className="space-y-1">
                   <h4 className="text-base sm:text-lg font-bold text-white font-display">Idea to Viable Prototypes</h4>
                   <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
-                    Empowers young engineering minds from across India to transform wild ideas into viable working technology prototypes.
+                    Empowering young engineering minds across India to turn bold ideas into real-world technology prototypes.
                   </p>
                 </div>
               </div>

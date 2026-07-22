@@ -229,14 +229,14 @@ export default function Objectives({ isStandalone = false }) {
       {/* Lightbox Modal for Photo Zoom */}
       {selectedPhoto && (
         <div 
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in"
+          className="fixed inset-0 z-50 bg-[#FFFDF7]/92 backdrop-blur-lg flex items-center justify-center p-4 animate-fade-in"
           onClick={() => setSelectedPhoto(null)}
         >
-          <div className="relative max-w-4xl w-full bg-[#FAF6EE] rounded-3xl p-3 sm:p-4 border border-[#E3D7C5] shadow-2xl overflow-hidden text-left" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between p-3 border-b border-[#D9CCBA]">
+          <div className="relative max-w-4xl w-full bg-[#FFFDF7] rounded-3xl p-3 sm:p-4 border-2 border-[#8C3A16] shadow-2xl overflow-hidden text-left" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-3 border-b border-[#E3D7C5]">
               <div className="flex items-center gap-2">
                 <Trophy className="w-5 h-5 text-[#8C3A16]" />
-                <h4 className="text-sm font-black text-[#8C3A16]">{selectedPhoto.title}</h4>
+                <h4 className="text-sm font-black text-[#5C230C] font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>{selectedPhoto.title}</h4>
               </div>
               <button 
                 onClick={() => setSelectedPhoto(null)}
@@ -245,11 +245,11 @@ export default function Objectives({ isStandalone = false }) {
                 <X size={16} />
               </button>
             </div>
-            <div className="p-2 max-h-[75vh] overflow-hidden flex justify-center items-center">
+            <div className="p-2 max-h-[75vh] overflow-hidden flex justify-center items-center bg-[#FAF6EE] rounded-2xl border border-[#E3D7C5]">
               <img 
                 src={selectedPhoto.src} 
                 alt={selectedPhoto.title}
-                className="max-h-[70vh] w-auto max-w-full rounded-2xl object-contain shadow-md"
+                className="max-h-[70vh] w-auto max-w-full rounded-xl object-contain shadow-md"
               />
             </div>
           </div>

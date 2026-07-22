@@ -9,6 +9,7 @@ import round3Img from '../../Round 3 image.png';
 import yogaImg from '../../yoga session image.png';
 import breakfastImg from '../../morning Breakfast.png';
 import dinnerImg from '../../Dinner image.png';
+import trophyImg from '../../Trophy image.png';
 
 // Custom Category Inline SVGs
 
@@ -219,7 +220,7 @@ export default function Schedule({ isStandalone = false }) {
       shortTag: 'Prize Ceremony',
       icon: Trophy,
       badgeSVG: TrophyAwardSVG,
-      image: lampImg,
+      image: trophyImg,
       highlights: [
         { text: 'Trophy & Cash Prize Awarding', icon: Trophy },
         { text: 'Valedictory Keynote Address', icon: Mic },
@@ -435,22 +436,22 @@ export default function Schedule({ isStandalone = false }) {
                     </p>
                   </div>
 
-                  {/* Right Session Specific Illustration Image (FIXED CONTAINER DIMENSIONS PREVENTS LAYOUT SHIFT) */}
-                  <div className="sm:col-span-4 flex justify-center items-center py-2 sm:py-0 shrink-0">
-                    <div className="w-36 sm:w-44 h-40 sm:h-44 flex items-center justify-center relative">
-                      <div className="absolute inset-0 bg-[#F2A93B]/15 rounded-full blur-xl pointer-events-none -z-10" />
+                  {/* Right Session Specific Illustration Image (ENLARGED ON MOBILE TO MATCH LAMP IMAGE SIZE) */}
+                  <div className="sm:col-span-4 flex justify-center items-center py-3 sm:py-0 shrink-0">
+                    <div className="w-48 sm:w-44 h-52 sm:h-44 flex items-center justify-center relative">
+                      <div className="absolute inset-0 bg-[#F2A93B]/20 rounded-full blur-2xl pointer-events-none -z-10" />
                       <img 
                         src={currentItem.image} 
                         alt={currentItem.title} 
-                        className="max-w-full max-h-full object-contain drop-shadow-xl transition-all duration-700 ease-out hover:scale-105" 
+                        className="w-full h-full max-w-[200px] sm:max-w-full max-h-[200px] sm:max-h-full object-contain drop-shadow-2xl transition-all duration-700 ease-out hover:scale-105 scale-110 sm:scale-100" 
                       />
                     </div>
                   </div>
 
                 </div>
 
-                {/* ── SESSION AGENDA HIGHLIGHTS CONTAINER (FIXED STABLE GRID) ── */}
-                <div className="bg-[#FAF6EE] p-5 sm:p-6 rounded-2xl border border-[#E3D7C5] space-y-4 shrink-0">
+                {/* ── SESSION AGENDA HIGHLIGHTS CONTAINER (HIDDEN ON MOBILE, VISIBLE ON LAPTOP/DESKTOP) ── */}
+                <div className="hidden sm:block bg-[#FAF6EE] p-5 sm:p-6 rounded-2xl border border-[#E3D7C5] space-y-4 shrink-0">
                   <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#8C3A16]">
                     <Calendar className="w-4 h-4 text-[#8C3A16]" />
                     <span>SESSION AGENDA HIGHLIGHTS</span>

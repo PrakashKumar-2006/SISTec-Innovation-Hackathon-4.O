@@ -237,20 +237,20 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
 
           {/* Mobile Drawer (absolute overlay for full-width layout) */}
           {isOpen && (
-            <div className="lg:hidden absolute top-full left-0 w-full bg-[#0D0D0F] border-b border-white/5 p-5 flex flex-col gap-3.5 shadow-[0_20px_40px_rgba(0,0,0,0.6)] animate-fade-in max-h-[calc(100vh-80px)] overflow-y-auto z-50">
+            <div className="lg:hidden absolute top-full left-0 w-full bg-[#FFFDF7] border-b border-[#EBDAB9] p-5 flex flex-col gap-3.5 shadow-[0_20px_40px_rgba(43,26,19,0.12)] animate-fade-in max-h-[calc(100vh-80px)] overflow-y-auto z-50">
               {navItems.map((item, idx) => (
                 <div key={idx} className="flex flex-col">
                   {item.dropdown ? (
                     <>
                       <button
                         onClick={() => toggleDropdown(idx)}
-                        className="flex items-center justify-between text-left py-2 px-3 text-sm font-semibold text-brand-navy/80 hover:text-brand-gold rounded-lg hover:bg-white/5 active:scale-[0.97] transition-all bg-transparent border-none cursor-pointer"
+                        className="flex items-center justify-between text-left py-2 px-3 text-sm font-bold text-[#241708] hover:text-[#8C3A16] rounded-lg hover:bg-[#8C3A16]/10 active:scale-[0.97] transition-all bg-transparent border-none cursor-pointer"
                       >
                         {item.name}
-                        <ChevronDown size={16} className={`transition-transform duration-200 ${activeDropdown === idx ? 'rotate-180 text-brand-gold' : 'text-brand-navy/40'}`} />
+                        <ChevronDown size={16} className={`transition-transform duration-200 ${activeDropdown === idx ? 'rotate-180 text-[#8C3A16]' : 'text-[#6B5B49]'}`} />
                       </button>
                       {activeDropdown === idx && (
-                        <div className="pl-4 pr-2 py-2 flex flex-col gap-1.5 mt-1 bg-black/30 border border-white/5 rounded-xl ml-2 space-y-0.5">
+                        <div className="pl-4 pr-2 py-2 flex flex-col gap-1.5 mt-1 bg-[#FAF6EE] border border-[#E3D7C5] rounded-xl ml-2 space-y-0.5">
                           {item.dropdown.map((sub, sIdx) => {
                             const hasSubItems = !!sub.subItems;
                             return (
@@ -259,16 +259,16 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                   <>
                                     <button
                                       onClick={() => toggleMobileSubDropdown(sIdx)}
-                                      className="flex items-center justify-between w-full py-2 px-3 text-xs font-semibold text-brand-navy/75 hover:text-brand-gold rounded-lg hover:bg-white/5 transition-all text-left bg-transparent border-none cursor-pointer"
+                                      className="flex items-center justify-between w-full py-2 px-3 text-xs font-bold text-[#6B5B49] hover:text-[#8C3A16] rounded-lg hover:bg-[#8C3A16]/10 transition-all text-left bg-transparent border-none cursor-pointer"
                                     >
                                       <div className="flex items-center gap-2">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-brand-gold/60 shrink-0"></span>
+                                        <span className="w-1.5 h-1.5 rounded-full bg-[#8C3A16] shrink-0"></span>
                                         <span>{sub.name}</span>
                                       </div>
-                                      <ChevronDown size={14} className={`transition-transform duration-200 ${activeMobileSubDropdown === sIdx ? 'rotate-180 text-brand-gold' : 'text-brand-navy/40'}`} />
+                                      <ChevronDown size={14} className={`transition-transform duration-200 ${activeMobileSubDropdown === sIdx ? 'rotate-180 text-[#8C3A16]' : 'text-[#6B5B49]'}`} />
                                     </button>
                                     {activeMobileSubDropdown === sIdx && (
-                                      <div className="pl-5 pr-2 py-1.5 flex flex-col gap-1 mt-1 bg-black/40 border border-white/5 rounded-xl ml-4 space-y-0.5">
+                                      <div className="pl-5 pr-2 py-1.5 flex flex-col gap-1 mt-1 bg-[#FFFDF7] border border-[#E3D7C5] rounded-xl ml-4 space-y-0.5">
                                         {sub.subItems.map((nested, nIdx) => (
                                           <a
                                             key={nIdx}
@@ -284,9 +284,9 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                                 onViewChange && onViewChange('landing', '#timeline');
                                               }
                                             }}
-                                            className="py-1.5 px-3 text-[11px] font-medium text-brand-navy/60 hover:text-brand-gold hover:bg-white/5 rounded-md transition-all text-left flex items-center gap-1.5 block"
+                                            className="py-1.5 px-3 text-[11px] font-semibold text-[#6B5B49] hover:text-[#8C3A16] hover:bg-[#8C3A16]/10 rounded-md transition-all text-left flex items-center gap-1.5 block"
                                           >
-                                            <span className="w-1 h-1 rounded-full bg-brand-navy/40 shrink-0"></span>
+                                            <span className="w-1 h-1 rounded-full bg-[#8C3A16]/60 shrink-0"></span>
                                             {nested.name}
                                           </a>
                                         ))}
@@ -324,9 +324,9 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                         onViewChange && onViewChange('landing', sub.href);
                                       }
                                     }}
-                                    className="py-2 px-3 text-xs font-medium text-brand-navy/70 hover:text-brand-gold hover:bg-white/5 rounded-lg active:scale-[0.97] transition-all text-left flex items-center gap-2 block"
+                                    className="py-2 px-3 text-xs font-semibold text-[#6B5B49] hover:text-[#8C3A16] hover:bg-[#8C3A16]/10 rounded-lg active:scale-[0.97] transition-all text-left flex items-center gap-2 block"
                                   >
-                                    <span className="w-1.5 h-1.5 rounded-full bg-brand-gold/40 shrink-0"></span>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#8C3A16]/60 shrink-0"></span>
                                     {sub.name}
                                   </a>
                                 )}
@@ -350,9 +350,9 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                           onViewChange && onViewChange('landing', item.href);
                         }
                       }}
-                      className={`py-2 px-3 text-sm font-semibold rounded-lg active:scale-[0.97] transition-all text-left block ${(item.name === 'Problem Statements' && currentView === 'problem-statements') || (item.name === 'Home' && currentView === 'landing') || (item.name === 'Contact Us' && currentView === 'contact-us')
-                        ? 'text-brand-gold bg-brand-gold/10'
-                        : 'text-brand-navy/80 hover:text-brand-gold hover:bg-white/5'
+                      className={`py-2 px-3 text-sm font-bold rounded-lg active:scale-[0.97] transition-all text-left block ${(item.name === 'Problem Statements' && currentView === 'problem-statements') || (item.name === 'Home' && currentView === 'landing') || (item.name === 'Contact Us' && currentView === 'contact-us')
+                        ? 'text-[#8C3A16] bg-[#8C3A16]/10'
+                        : 'text-[#241708] hover:text-[#8C3A16] hover:bg-[#8C3A16]/10'
                         }`}
                     >
                       {item.name}
