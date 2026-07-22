@@ -15,11 +15,11 @@ export default function Committee() {
         role: "Hon'ble Chairman, Sagar Group",
         roleLabel: 'CHIEF PATRON',
         image: '/sudhir_agrawal.png',
-        socials: { 
-          linkedin: 'https://www.linkedin.com/in/sudhir-agarwal-12a959153/', 
-          facebook: 'https://www.facebook.com/sudhirkumar.agrawal.7', 
-          instagram: '#', 
-          twitter: '#' 
+        socials: {
+          linkedin: 'https://www.linkedin.com/in/sudhir-agarwal-12a959153/',
+          facebook: 'https://www.facebook.com/sudhirkumar.agrawal.7',
+          instagram: '#',
+          twitter: '#'
         }
       },
       {
@@ -27,11 +27,11 @@ export default function Committee() {
         role: 'MD, Sagar Group',
         roleLabel: 'CHIEF PATRON',
         image: '/siddharth_agrawal.png',
-        socials: { 
-          linkedin: 'https://www.linkedin.com/in/siddharth-agrawal-10499a52/', 
-          facebook: 'https://www.facebook.com/sidd.agrawal', 
-          instagram: 'https://www.instagram.com/siddharth.manit?igsh=dHJwcmlpc3VhMTF6', 
-          twitter: 'https://x.com/siddharthmanit?s=20' 
+        socials: {
+          linkedin: 'https://www.linkedin.com/in/siddharth-agrawal-10499a52/',
+          facebook: 'https://www.facebook.com/sidd.agrawal',
+          instagram: 'https://www.instagram.com/siddharth.manit?igsh=dHJwcmlpc3VhMTF6',
+          twitter: 'https://x.com/siddharthmanit?s=20'
         }
       }
     ],
@@ -41,11 +41,11 @@ export default function Committee() {
         role: 'Group Director, SISTec',
         roleLabel: 'PATRON',
         image: '/jyoti_deshmukh.png',
-        socials: { 
-          linkedin: 'https://www.linkedin.com/in/jyoti-deshmukh-16049a166/', 
-          facebook: '#', 
-          instagram: '#', 
-          twitter: '#' 
+        socials: {
+          linkedin: 'https://www.linkedin.com/in/jyoti-deshmukh-16049a166/',
+          facebook: '#',
+          instagram: '#',
+          twitter: '#'
         }
       },
       {
@@ -53,11 +53,11 @@ export default function Committee() {
         role: 'Principal, SISTec-E',
         roleLabel: 'PATRON',
         image: '/abhishek_choubey.png',
-        socials: { 
-          linkedin: 'https://www.linkedin.com/in/dr-abhishek-choubey-a0271849/', 
-          facebook: '#', 
-          instagram: '#', 
-          twitter: '#' 
+        socials: {
+          linkedin: 'https://www.linkedin.com/in/dr-abhishek-choubey-a0271849/',
+          facebook: '#',
+          instagram: '#',
+          twitter: '#'
         }
       }
     ]
@@ -231,37 +231,35 @@ export default function Committee() {
   };
 
   const renderMemberCard = (member, idx, badgeColorClass, bannerGradientClass, borderGlowClass, imageBorderColorClass, hoverBgClass, isChief = false, isMobileCompact = false) => (
-    <div 
-      key={idx} 
-      className={`relative overflow-hidden ${
-        isMobileCompact ? 'rounded-2xl h-[260px]' : 'rounded-[2rem] h-[340px] w-full max-w-[310px]'
-      } bg-brand-card/45 backdrop-blur-sm border border-white/5 flex flex-col transition-all duration-500 hover:-translate-y-1.5 mx-auto group/member shadow-card-shadow hover:border-white/12 ${borderGlowClass}`}
+    <div
+      key={idx}
+      className={`relative overflow-hidden ${isMobileCompact ? 'rounded-2xl h-[260px]' : 'rounded-[2rem] h-[340px] w-full max-w-[310px]'
+        } bg-brand-card/45 backdrop-blur-sm border border-white/5 flex flex-col transition-all duration-500 hover:-translate-y-1.5 mx-auto group/member shadow-card-shadow hover:border-white/12 ${borderGlowClass}`}
     >
       {/* 1. Colored Header Banner */}
-      <div className={`${
-        isMobileCompact ? 'h-16' : 'h-28'
-      } w-full bg-gradient-to-r ${bannerGradientClass} relative overflow-hidden shrink-0`}>
+      <div className={`${isMobileCompact ? 'h-16' : 'h-28'
+        } w-full bg-gradient-to-r ${bannerGradientClass} relative overflow-hidden shrink-0`}>
         {/* Subtle decorative grid layer in header */}
         <div className="absolute inset-0 bg-tech-grid opacity-10"></div>
       </div>
 
       {/* 2. Overlapping Circular Profile Image */}
-      <div className={`${
-        isMobileCompact ? 'w-20 h-20 -mt-10 border-2' : 'w-32 h-32 sm:w-36 sm:h-36 -mt-16 sm:-mt-18 border-4'
-      } rounded-full overflow-hidden ${imageBorderColorClass} mx-auto relative z-10 shadow-lg bg-brand-darker shrink-0`}>
-        <img 
-          src={member.image} 
-          alt={member.name} 
-          className="w-full h-full object-cover group-hover/member:scale-105 transition-all duration-500" 
+      <div className={`${isMobileCompact ? 'w-20 h-20 -mt-10 border-2' : 'w-32 h-32 sm:w-36 sm:h-36 -mt-16 sm:-mt-18 border-4'
+        } rounded-full overflow-hidden ${imageBorderColorClass} mx-auto relative z-10 shadow-lg bg-brand-darker shrink-0`}>
+        <img
+          src={member.image}
+          alt={member.name}
+          loading="lazy"
+          decoding="async"
+          className="w-full h-full object-cover group-hover/member:scale-105 transition-all duration-500"
         />
       </div>
 
       {/* 3. Card Body Details */}
       <div className={`${isMobileCompact ? 'px-3 pb-4 pt-1.5' : 'px-5 pb-6 pt-3'} flex flex-col justify-between flex-grow text-center`}>
         <div className="space-y-1.5">
-          <h4 className={`${
-            isMobileCompact ? 'text-[11px] font-extrabold line-clamp-1' : 'text-base sm:text-lg font-bold'
-          } text-white tracking-wide font-display group-hover/member:text-brand-gold transition-colors duration-300 px-1`}>
+          <h4 className={`${isMobileCompact ? 'text-[11px] font-extrabold line-clamp-1' : 'text-base sm:text-lg font-bold'
+            } text-white tracking-wide font-display group-hover/member:text-brand-gold transition-colors duration-300 px-1`}>
             {member.name}
           </h4>
           <p className={`${isMobileCompact ? 'text-[9px]' : 'text-xs'} text-brand-gray/80 font-normal leading-normal px-2 line-clamp-2`}>
@@ -323,7 +321,7 @@ export default function Committee() {
       <div className="absolute bottom-1/3 right-0 w-96 h-96 bg-brand-pink/5 rounded-full blur-[120px] pointer-events-none"></div>
 
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 relative z-10 text-center">
-        
+
         {/* Header */}
         <div className="max-w-2xl mx-auto mb-16">
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
@@ -341,13 +339,12 @@ export default function Committee() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-8 py-3 rounded-2xl text-xs sm:text-sm font-bold tracking-wider transition-all duration-300 cursor-pointer hover:scale-[1.02] active:scale-95 ${
-                activeTab === tab.id
+              className={`px-8 py-3 rounded-2xl text-xs sm:text-sm font-bold tracking-wider transition-all duration-300 cursor-pointer hover:scale-[1.02] active:scale-95 ${activeTab === tab.id
                   ? tab.id === 'patrons'
                     ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-[0_0_20px_rgba(6,182,212,0.3)]'
                     : 'bg-gradient-to-r from-amber-500 to-brand-orange text-white shadow-[0_0_20px_rgba(245,158,11,0.3)]'
                   : 'bg-brand-card/25 border border-white/5 text-brand-gray hover:text-white hover:border-white/10'
-              }`}
+                }`}
             >
               {tab.label}
             </button>
@@ -362,21 +359,21 @@ export default function Committee() {
               <div>
                 <div className="flex items-center justify-center gap-6 mb-6">
                   <div className="w-20 sm:w-32 md:w-40 h-[1px] bg-gradient-to-r from-purple-500 to-pink-500"></div>
-                  <img 
-                    src="/chief_patrons_logo.png" 
-                    alt="Chief Patrons" 
-                    className="h-20 sm:h-24 md:h-28 lg:h-32 w-auto object-contain drop-shadow-[0_0_20px_rgba(168,85,247,0.18)]" 
+                  <img
+                    src="/chief_patrons_logo.png"
+                    alt="Chief Patrons"
+                    className="h-20 sm:h-24 md:h-28 lg:h-32 w-auto object-contain drop-shadow-[0_0_20px_rgba(168,85,247,0.18)]"
                   />
                   <div className="w-20 sm:w-32 md:w-40 h-[1px] bg-gradient-to-r from-pink-500 to-purple-500"></div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 sm:gap-16 justify-center max-w-4xl mx-auto animate-fade-in">
-                  {patrons.chief.map((member, idx) => 
+                  {patrons.chief.map((member, idx) =>
                     renderMemberCard(
-                      member, 
-                      idx, 
+                      member,
+                      idx,
                       'text-purple-400',
-                      'from-purple-500/30 via-pink-500/10 to-transparent', 
+                      'from-purple-500/30 via-pink-500/10 to-transparent',
                       'hover:shadow-[0_0_25px_rgba(139,92,246,0.15)]',
                       'border-purple-500/60 group-hover/member:border-purple-500',
                       'hover:bg-purple-500 hover:shadow-[0_0_10px_rgba(168,85,247,0.4)]',
@@ -390,21 +387,21 @@ export default function Committee() {
               <div className="pt-4">
                 <div className="flex items-center justify-center gap-6 mb-6">
                   <div className="w-20 sm:w-32 md:w-40 h-[1px] bg-gradient-to-r from-cyan-400 to-blue-500"></div>
-                  <img 
-                    src="/patrons_logo.png" 
-                    alt="Patrons" 
-                    className="h-24 sm:h-28 md:h-32 lg:h-36 w-auto object-contain drop-shadow-[0_0_20px_rgba(6,182,212,0.18)]" 
+                  <img
+                    src="/patrons_logo.png"
+                    alt="Patrons"
+                    className="h-24 sm:h-28 md:h-32 lg:h-36 w-auto object-contain drop-shadow-[0_0_20px_rgba(6,182,212,0.18)]"
                   />
                   <div className="w-20 sm:w-32 md:w-40 h-[1px] bg-gradient-to-r from-blue-500 to-cyan-400"></div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 sm:gap-16 justify-center max-w-4xl mx-auto animate-fade-in">
-                  {patrons.regular.map((member, idx) => 
+                  {patrons.regular.map((member, idx) =>
                     renderMemberCard(
-                      member, 
-                      idx, 
+                      member,
+                      idx,
                       'text-cyan-400',
-                      'from-cyan-500/30 via-blue-500/10 to-transparent', 
+                      'from-cyan-500/30 via-blue-500/10 to-transparent',
                       'hover:shadow-[0_0_25px_rgba(6,182,212,0.15)]',
                       'border-cyan-500/60 group-hover/member:border-cyan-500',
                       'hover:bg-cyan-500 hover:shadow-[0_0_10px_rgba(6,182,212,0.4)]',
@@ -420,38 +417,38 @@ export default function Committee() {
             <div>
               <div className="flex items-center justify-center gap-6 mb-12">
                 <div className="w-20 sm:w-32 md:w-40 h-[1px] bg-gradient-to-r from-amber-500 to-brand-orange"></div>
-                <img 
-                  src="/coordinators_logo.png" 
-                  alt="Coordinators" 
-                  className="h-24 sm:h-28 md:h-32 lg:h-36 w-auto object-contain drop-shadow-[0_0_20px_rgba(245,158,11,0.18)]" 
+                <img
+                  src="/coordinators_logo.png"
+                  alt="Coordinators"
+                  className="h-24 sm:h-28 md:h-32 lg:h-36 w-auto object-contain drop-shadow-[0_0_20px_rgba(245,158,11,0.18)]"
                 />
                 <div className="w-20 sm:w-32 md:w-40 h-[1px] bg-gradient-to-r from-brand-orange to-brand-amber"></div>
               </div>
-              
+
               {/* Desktop Slider View (hidden on mobile, visible on sm and up) */}
               <div className="hidden sm:block relative px-12 sm:px-20 max-w-7xl mx-auto group animate-fade-in">
-                
+
                 {/* Viewport Mask */}
                 <div className="overflow-hidden py-4">
-                  <div 
+                  <div
                     className={`flex ${transitionStyle}`}
                     style={{ transform: `translate3d(-${currentIndex * (100 / visibleCards)}%, 0, 0)` }}
                   >
                     {coordinators.map((member, idx) => {
                       const theme = cardThemes[idx % cardThemes.length];
                       return (
-                        <div 
-                          key={idx} 
+                        <div
+                          key={idx}
                           className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 px-6 transition-opacity duration-300"
                           style={{
                             opacity: idx >= currentIndex && idx < currentIndex + visibleCards ? 1 : 0.35
                           }}
                         >
                           {renderMemberCard(
-                            member, 
-                            idx, 
-                            '', 
-                            theme.banner, 
+                            member,
+                            idx,
+                            '',
+                            theme.banner,
                             theme.borderGlow,
                             theme.imageBorder,
                             theme.socialHover
@@ -463,7 +460,7 @@ export default function Committee() {
                 </div>
 
                 {/* Left Navigation Button */}
-                <button 
+                <button
                   onClick={prevSlide}
                   className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 rounded-2xl bg-brand-card/35 backdrop-blur-md border border-amber-500/20 flex items-center justify-center text-amber-500 hover:text-brand-amber hover:border-amber-500/40 hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(245,158,11,0.15)] hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all duration-300 cursor-pointer z-20"
                 >
@@ -471,7 +468,7 @@ export default function Committee() {
                 </button>
 
                 {/* Right Navigation Button */}
-                <button 
+                <button
                   onClick={nextSlide}
                   className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 rounded-2xl bg-brand-card/35 backdrop-blur-md border border-amber-500/20 flex items-center justify-center text-amber-500 hover:text-brand-amber hover:border-amber-500/40 hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(245,158,11,0.15)] hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all duration-300 cursor-pointer z-20"
                 >
@@ -486,10 +483,10 @@ export default function Committee() {
                   return (
                     <div key={idx} className="w-full">
                       {renderMemberCard(
-                        member, 
-                        idx, 
-                        '', 
-                        theme.banner, 
+                        member,
+                        idx,
+                        '',
+                        theme.banner,
                         theme.borderGlow,
                         theme.imageBorder,
                         theme.socialHover,

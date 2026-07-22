@@ -109,22 +109,30 @@ export default function About({ isStandalone = false }) {
               ))}
             </ul>
 
-            {/* Stats Cards Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+            {/* Stats Cards Grid (Compact Horizontal Layout: Icon Side-by-Side with Text) */}
+            <div className="grid grid-cols-3 gap-2 xs:gap-3 sm:gap-4 pt-3 font-sans">
               {stats.map((stat, index) => (
                 <div 
                   key={index}
-                  className="p-5 rounded-2xl bg-brand-card/35 border border-white/5 flex flex-col items-start hover:border-brand-gold/30 shadow-card-shadow hover:shadow-[0_10px_30px_rgba(216,171,85,0.08)] hover:-translate-y-1 transition-all duration-300 relative group overflow-hidden"
+                  className="p-2 xs:p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-[#FFFDF7] border-2 border-[#E3D7C5] hover:border-[#8C3A16] flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-1.5 sm:gap-3.5 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 relative group overflow-hidden"
                 >
                   {/* Hover Left Accent Line */}
-                  <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-brand-orange to-brand-gold scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"></div>
+                  <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#8C3A16] to-[#C97F1B] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"></div>
                   
-                  <div className="p-2.5 rounded-xl bg-brand-dark/80 border border-white/5 mb-4 group-hover:border-brand-gold/20 transition-colors">
+                  <div className="w-7 h-7 xs:w-8 xs:h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#8C3A16]/10 border border-[#8C3A16]/20 flex items-center justify-center shrink-0">
                     {stat.icon}
                   </div>
-                  <span className="text-2xl font-black font-display text-white leading-none tracking-tight">{stat.value}</span>
-                  <span className="text-xs font-bold text-brand-gold mt-1.5 tracking-wide uppercase">{stat.label}</span>
-                  <span className="text-[10px] text-brand-gray mt-1 leading-normal font-medium">{stat.description}</span>
+                  <div className="min-w-0 overflow-hidden">
+                    <span className="block text-xs xs:text-sm sm:text-base lg:text-lg font-black font-display text-[#241708] leading-tight tracking-tight truncate" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+                      {stat.value}
+                    </span>
+                    <span className="block text-[7px] xs:text-[8px] sm:text-[10px] font-extrabold text-[#8C3A16] uppercase tracking-wider truncate mt-0.5">
+                      {stat.label}
+                    </span>
+                    <span className="hidden lg:block text-[9.5px] text-[#6B5B49] font-medium truncate mt-0.5">
+                      {stat.description}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>

@@ -223,23 +223,23 @@ export default function Prizes({ isStandalone = false }) {
         </div>
 
         {/* Venue and Date Panel */}
-        <div className="relative max-w-4xl mx-auto mt-16 p-1 rounded-3xl bg-gradient-to-r from-brand-orange/20 via-brand-pink/20 to-brand-blue/20 shadow-xl border border-white/5">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center p-6 md:p-8 rounded-[1.7rem] bg-brand-card/85 backdrop-blur-xl">
+        <div className="relative max-w-4xl mx-auto mt-16 p-1 rounded-3xl bg-gradient-to-r from-[#8C3A16]/20 via-[#C97F1B]/20 to-[#8C3A16]/20 shadow-lg border border-[#E3D7C5]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-center p-5 sm:p-8 rounded-[1.7rem] bg-[#FFFDF7]">
             
             {/* Date block */}
             <div className="flex items-center gap-4 text-left group">
-              <div className="p-3.5 rounded-2xl bg-brand-orange/15 border border-brand-orange/25 text-brand-orange shadow-inner group-hover:scale-105 transition-transform duration-300">
+              <div className="p-3.5 rounded-2xl bg-[#8C3A16]/10 border border-[#8C3A16]/20 text-[#8C3A16] shadow-2xs group-hover:scale-105 transition-transform duration-300">
                 <Calendar className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-[10px] text-brand-gray font-bold tracking-widest uppercase">GRAND FINALE DATE</p>
-                <p className="text-lg font-black text-white font-display mt-0.5">30 Sept & 01 Oct 2026</p>
-                <p className="text-xs text-brand-gray mt-0.5">Mark your calendars for the final pitch</p>
+                <p className="text-[10px] text-[#8C3A16] font-bold tracking-widest uppercase">GRAND FINALE DATE</p>
+                <p className="text-lg font-black text-[#241708] font-display mt-0.5" style={{ fontFamily: "'Outfit', sans-serif" }}>30 Sept &amp; 01 Oct 2026</p>
+                <p className="text-xs text-[#6B5B49] font-medium mt-0.5">Mark your calendars for the final pitch</p>
               </div>
             </div>
 
             {/* Visual separator line for larger screens */}
-            <div className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1px] h-12 bg-white/10"></div>
+            <div className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1px] h-12 bg-[#E3D7C5]"></div>
 
             {/* Venue block */}
             <a 
@@ -248,13 +248,13 @@ export default function Prizes({ isStandalone = false }) {
               rel="noopener noreferrer"
               className="flex items-center gap-4 text-left group pl-0 md:pl-8 cursor-pointer"
             >
-              <div className="p-3.5 rounded-2xl bg-brand-blue/15 border border-brand-blue/25 text-brand-blue shadow-inner group-hover:scale-105 transition-transform duration-300">
+              <div className="p-3.5 rounded-2xl bg-[#C97F1B]/10 border border-[#C97F1B]/20 text-[#C97F1B] shadow-2xs group-hover:scale-105 transition-transform duration-300">
                 <MapPin className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-[10px] text-brand-gray font-bold tracking-widest uppercase group-hover:text-brand-gold transition-colors">OFFICIAL VENUE</p>
-                <p className="text-lg font-black text-white font-display mt-0.5 group-hover:text-brand-gold transition-colors">SISTec-R Campus</p>
-                <p className="text-xs text-brand-gray mt-0.5 group-hover:text-slate-200 transition-colors">Ratibad, Bhopal, Madhya Pradesh</p>
+                <p className="text-[10px] text-[#8C3A16] font-bold tracking-widest uppercase group-hover:text-[#C97F1B] transition-colors">OFFICIAL VENUE</p>
+                <p className="text-lg font-black text-[#241708] font-display mt-0.5 group-hover:text-[#8C3A16] transition-colors" style={{ fontFamily: "'Outfit', sans-serif" }}>SISTec-R Campus</p>
+                <p className="text-xs text-[#6B5B49] font-medium mt-0.5 group-hover:text-[#241708] transition-colors">Ratibad, Bhopal, Madhya Pradesh</p>
               </div>
             </a>
 
