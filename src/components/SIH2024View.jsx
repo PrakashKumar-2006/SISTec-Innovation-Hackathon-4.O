@@ -52,6 +52,7 @@ export default function SIH2024View({ onViewChange }) {
           src="https://www.sistecrsih.in/sih%202024" 
           className={`w-full h-full border-none transition-opacity duration-1000 ${loading ? 'opacity-0' : 'opacity-100'}`}
           title="SIH 2024 Archive"
+          referrerPolicy="strict-origin-when-cross-origin"
           onLoad={() => setLoading(false)}
         />
       </div>

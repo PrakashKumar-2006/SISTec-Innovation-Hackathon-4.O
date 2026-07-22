@@ -143,9 +143,10 @@ export default function About({ isStandalone = false }) {
                 <div className="relative w-full aspect-[4/3] sm:aspect-video rounded-[1.8rem] overflow-hidden bg-brand-darker">
                   <iframe
                     className="w-full h-full border-none rounded-[1.8rem]"
-                    src="https://www.youtube-nocookie.com/embed/CM4Q8pvKgG4?autoplay=1&mute=1&loop=1&playlist=CM4Q8pvKgG4&playsinline=1&controls=1&rel=0&enablejsapi=1"
+                    src="https://www.youtube.com/embed/CM4Q8pvKgG4?autoplay=1&mute=1&loop=1&playlist=CM4Q8pvKgG4&playsinline=1&controls=1&rel=0"
                     title="SISTec Innovation Hackathon (SIH 4.0)"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
                     allowFullScreen
                   ></iframe>
                 </div>
