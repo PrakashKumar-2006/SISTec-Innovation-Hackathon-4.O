@@ -162,20 +162,20 @@ export default function SIH2026Winners({ onViewChange }) {
 
         {/* ── Text Layout ── */}
         <div className="space-y-4">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-gold/10 border border-brand-gold/20 text-brand-gold text-[10px] font-black uppercase tracking-widest animate-pulse">
-            <Sparkles size={11} />
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[var(--marigold)]/15 border border-[var(--marigold)]/30 text-[var(--clay)] text-[10px] font-black uppercase tracking-widest animate-pulse font-sans">
+            <Sparkles size={11} className="text-[var(--vermilion)]" />
             Evaluations Underway
           </div>
 
-          <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-none text-white uppercase">
+          <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-none text-[var(--clay)] uppercase font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
             Coming Soon
           </h2>
           
-          <h3 className="text-sm sm:text-base font-extrabold text-brand-gold uppercase tracking-[0.2em] font-sans">
+          <h3 className="text-sm sm:text-base font-black text-[var(--marigold-deep)] uppercase tracking-[0.2em] font-sans">
             SIH 2026 Grand Finale Results
           </h3>
           
-          <p className="text-brand-gray text-xs sm:text-sm leading-relaxed max-w-sm mx-auto font-medium">
+          <p className="text-[var(--ink-soft)] text-xs sm:text-sm leading-relaxed max-w-sm mx-auto font-medium font-sans">
             The evaluations for the final prototypes are currently in progress. The official team standings and special theme prizes will be published here soon!
           </p>
         </div>
@@ -184,7 +184,7 @@ export default function SIH2026Winners({ onViewChange }) {
         <div className="flex flex-col sm:flex-row items-center gap-3.5 mt-8 w-full sm:w-auto">
           <button
             onClick={() => onViewChange('landing')}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-brand-gold/40 text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-md"
+            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[var(--panel)] hover:bg-[var(--panel-soft)] text-[var(--paper)] border border-[var(--marigold)]/30 text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-md"
           >
             <ArrowLeft size={14} />
             Back to Home
@@ -192,12 +192,13 @@ export default function SIH2026Winners({ onViewChange }) {
           
           <button
             onClick={() => onViewChange('landing', '#timeline')}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-btn-gradient hover:scale-[1.02] active:scale-95 text-white text-xs font-extrabold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-orange-950/15"
+            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#F2A93B] hover:bg-[#C97F1B] hover:scale-[1.02] active:scale-95 text-[var(--panel)] text-xs font-black uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer shadow-lg"
           >
             <Calendar size={14} />
             Check Timeline
           </button>
         </div>
+
 
       </div>
     </section>

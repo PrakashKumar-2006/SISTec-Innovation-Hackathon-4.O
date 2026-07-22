@@ -326,10 +326,11 @@ export default function Committee() {
         
         {/* Header */}
         <div className="max-w-2xl mx-auto mb-16">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight font-display">
-            Our <span className="text-gold-metallic">Committee</span>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+            Our <span className="text-[var(--marigold-deep)]">Committee</span>
           </h2>
         </div>
+
 
         {/* Tab Toggles */}
         <div className="flex justify-center gap-4 mb-16">

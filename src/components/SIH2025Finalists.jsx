@@ -126,25 +126,26 @@ export default function SIH2025Finalists({ onViewChange }) {
       <div className="max-w-7xl mx-auto">
 
         {/* ── Header ── */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10 text-left">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2.5">
-              <Award className="text-brand-gold" size={24} />
-              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-brand-gray to-brand-gold bg-clip-text text-transparent">
+              <Award className="text-[var(--marigold)]" size={24} />
+              <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-[var(--clay)] uppercase font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
                 Grand Finale Teams — SIH 2025
               </h2>
             </div>
-            <p className="text-brand-gray text-xs sm:text-sm font-normal">
+            <p className="text-[var(--ink-soft)] text-xs sm:text-sm font-medium font-sans">
               {finalistsData.length} teams competed at SISTec Innovation Hackathon 3.0 (SIH 2025).
             </p>
           </div>
           <button
             onClick={() => onViewChange && onViewChange('landing', '#home')}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-card border border-white/10 hover:border-brand-gold/50 text-xs font-bold text-brand-gold hover:text-white transition-all duration-300 cursor-pointer shadow-md active:scale-95 shrink-0"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--panel)] border border-[var(--marigold)]/30 text-xs font-bold text-[var(--marigold)] hover:text-white transition-all duration-300 cursor-pointer shadow-md active:scale-95 shrink-0"
           >
             <ArrowLeft size={14} /> Back to Home
           </button>
         </div>
+
 
         {/* ── Stats Bar ── */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">

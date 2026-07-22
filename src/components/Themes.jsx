@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { Sprout, GraduationCap, Car, ShieldCheck, HeartPulse, Cpu, Search, Sparkles } from 'lucide-react';
+import React from 'react';
+import { Sprout, GraduationCap, Car, ShieldCheck, HeartPulse, Cpu, Sparkles } from 'lucide-react';
 
 export default function Themes({ onViewChange, isStandalone = false }) {
-  const [searchTerm, setSearchTerm] = useState('');
 
   const handleMouseMove = (e) => {
     if (window.innerWidth < 1024) return;
@@ -88,12 +87,6 @@ export default function Themes({ onViewChange, isStandalone = false }) {
     }
   ];
 
-  const filteredThemes = themes.filter(theme => 
-    theme.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    theme.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    theme.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
-
   return (
     <section id="themes" className={`relative ${isStandalone ? 'pt-32 pb-16 sm:pt-40 sm:pb-24' : 'py-12 sm:py-16'} bg-brand-darker overflow-hidden tech-grid-dense border-t border-white/5`}>
       {/* Background visual glowing blur circles */}
@@ -102,100 +95,80 @@ export default function Themes({ onViewChange, isStandalone = false }) {
 
       <div className="max-w-[1440px] mx-auto px-3 sm:px-8 relative z-10">
         
-        {/* Search Row */}
+        {/* Header Row */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-white/5 mb-16">
           <div className="text-left">
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight font-display">
-              SIH 4.0 <span className="text-gold-metallic">Themes & Tracks</span>
+            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+              SIH 4.0 <span className="text-[var(--marigold-deep)]">Themes &amp; Tracks</span>
             </h2>
-          </div>
-
-          {/* Search Input wrapped in glowing gradient border */}
-          <div className="relative w-full lg:max-w-xs p-[1.5px] rounded-2xl bg-gradient-to-r from-brand-orange/20 via-brand-pink/20 to-brand-blue/20">
-            <div className="relative w-full rounded-[15px] overflow-hidden bg-brand-dark flex items-center">
-              <Search className="absolute left-3.5 text-brand-gray" size={16} />
-              <input
-                type="text"
-                placeholder="Search statements or tags..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-transparent border-none text-xs sm:text-sm text-white placeholder-brand-gray focus:outline-none"
-              />
-            </div>
           </div>
         </div>
 
         {/* Tracks Grid: 2 columns on mobile, 2 on md, 3 on lg */}
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
-          {filteredThemes.length > 0 ? (
-            filteredThemes.map((theme, idx) => (
-              <div
-                key={idx}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-                className={`relative p-3.5 sm:p-6 rounded-2xl sm:rounded-[2rem] bg-brand-card/45 backdrop-blur-sm border border-white/5 bg-gradient-to-b ${theme.color} ${theme.borderColor} transition-shadow duration-300 shadow-card-shadow ${theme.glow} group overflow-hidden flex flex-col justify-between`}
-                style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
-              >
-                
-                {/* Visual Watermark background icon */}
-                <div className="absolute right-0 bottom-0 text-[6rem] sm:text-[10rem] text-white/[0.01] pointer-events-none transform translate-x-6 translate-y-6 group-hover:scale-110 group-hover:text-white/[0.02] transition-all duration-500 flex items-center justify-center">
-                  {theme.icon}
-                </div>
-
-                <div className="space-y-3.5 sm:space-y-4 relative z-10">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
-                    {/* Icon + Title side-by-side */}
-                    <div className="flex items-center gap-2 sm:gap-3.5 text-left">
-                      <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-darker border border-white/5 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-300 shrink-0">
-                        <span className="scale-75 sm:scale-100">{theme.icon}</span>
-                      </div>
-                      <h3 className="text-xs sm:text-lg font-bold text-white tracking-wide font-display group-hover:text-brand-gold transition-colors leading-tight">
-                        {theme.title}
-                      </h3>
-                    </div>
-                    {/* Category Label */}
-                    <span className="text-[8px] sm:text-[9px] font-bold tracking-widest font-mono uppercase bg-white/5 text-brand-gold/90 px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full border border-white/5 shrink-0 self-start sm:self-auto">
-                      {theme.category}
-                    </span>
-                  </div>
-
-                  <div className="text-left pt-1">
-                    <p className="text-[11px] sm:text-sm text-slate-200 leading-relaxed font-medium">
-                      {theme.description}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Sub tags list inside card */}
-                <div className="mt-6 sm:mt-8 relative z-10 pt-3 sm:pt-4 border-t border-white/5 text-left">
-                  <div className="flex flex-wrap gap-x-1 gap-y-1.5 mb-3 sm:mb-4">
-                    {theme.tags.map((tag, tIdx) => (
-                      <span 
-                        key={tIdx} 
-                        className="text-[9px] sm:text-[9px] font-semibold text-slate-200 bg-brand-darker/60 px-1.5 py-0.5 rounded border border-white/5"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Explore Problem Statements link */}
-                  <button 
-                    onClick={() => onViewChange && onViewChange('problem-statements')}
-                    className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-brand-gold/80 hover:text-brand-gold bg-transparent border-none transition-colors duration-300 group-hover:translate-x-1 cursor-pointer"
-                  >
-                    Explore PS
-                    <span className="text-xs font-light">→</span>
-                  </button>
-                </div>
-
+          {themes.map((theme, idx) => (
+            <div
+              key={idx}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              className={`relative p-3.5 sm:p-6 rounded-2xl sm:rounded-[2rem] bg-brand-card/45 backdrop-blur-sm border border-white/5 bg-gradient-to-b ${theme.color} ${theme.borderColor} transition-shadow duration-300 shadow-card-shadow ${theme.glow} group overflow-hidden flex flex-col justify-between`}
+              style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
+            >
+              
+              {/* Visual Watermark background icon */}
+              <div className="absolute right-0 bottom-0 text-[6rem] sm:text-[10rem] text-white/[0.01] pointer-events-none transform translate-x-6 translate-y-6 group-hover:scale-110 group-hover:text-white/[0.02] transition-all duration-500 flex items-center justify-center">
+                {theme.icon}
               </div>
-            ))
-          ) : (
-            <div className="col-span-full py-16 text-center text-brand-gray font-mono text-sm border border-dashed border-white/5 rounded-3xl bg-brand-card/20">
-              No matching tracks found. Try adjusting your filter or searching for something else.
+
+              <div className="space-y-3.5 sm:space-y-4 relative z-10">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
+                  {/* Icon + Title side-by-side */}
+                  <div className="flex items-center gap-2 sm:gap-3.5 text-left">
+                    <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-darker border border-white/5 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-300 shrink-0">
+                      <span className="scale-75 sm:scale-100">{theme.icon}</span>
+                    </div>
+                    <h3 className="text-xs sm:text-lg font-bold text-white tracking-wide font-display group-hover:text-brand-gold transition-colors leading-tight">
+                      {theme.title}
+                    </h3>
+                  </div>
+                  {/* Category Label */}
+                  <span className="text-[8px] sm:text-[9px] font-bold tracking-widest font-mono uppercase bg-white/5 text-brand-gold/90 px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full border border-white/5 shrink-0 self-start sm:self-auto">
+                    {theme.category}
+                  </span>
+                </div>
+
+                <div className="text-left pt-1">
+                  <p className="text-[11px] sm:text-sm text-slate-200 leading-relaxed font-medium">
+                    {theme.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Sub tags list inside card */}
+              <div className="mt-6 sm:mt-8 relative z-10 pt-3 sm:pt-4 border-t border-white/5 text-left">
+                <div className="flex flex-wrap gap-x-1 gap-y-1.5 mb-3 sm:mb-4">
+                  {theme.tags.map((tag, tIdx) => (
+                    <span 
+                      key={tIdx} 
+                      className="text-[9px] sm:text-[9px] font-semibold text-slate-200 bg-brand-darker/60 px-1.5 py-0.5 rounded border border-white/5"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Explore Problem Statements link */}
+                <button 
+                  onClick={() => onViewChange && onViewChange('problem-statements')}
+                  className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-brand-gold/80 hover:text-brand-gold bg-transparent border-none transition-colors duration-300 group-hover:translate-x-1 cursor-pointer"
+                >
+                  Explore PS
+                  <span className="text-xs font-light">→</span>
+                </button>
+              </div>
+
             </div>
-          )}
+          ))}
         </div>
 
       </div>

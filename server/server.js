@@ -17,7 +17,7 @@ const Razorpay = require('razorpay');
 const nodemailer = require('nodemailer');
 const { authMiddleware } = require("./middleware/auth");
 const { maintenanceMiddleware } = require("./middleware/maintenance");
-const { sendConfirmationEmail, sendSelectionEmail } = require('./utils/email');
+const { sendConfirmationEmail, sendSelectionEmail, sendVerificationEmail } = require('./utils/email');
 
 const app = express();
 
@@ -31,7 +31,7 @@ const razorpay = new Razorpay({
 
 // Database-Backed Email Retry Queue Schema
 const emailQueueSchema = new mongoose.Schema({
-  emailType: { type: String, enum: ['REGISTRATION', 'SELECTION_SHORTLISTED', 'SELECTION_NOT_SHORTLISTED'], default: 'REGISTRATION' },
+  emailType: { type: String, enum: ['REGISTRATION', 'SELECTION_SHORTLISTED', 'SELECTION_NOT_SHORTLISTED', 'SUPPORT_ACK', 'CR_APPROVED', 'CR_REJECTED', 'VERIFICATION_UPDATE'], default: 'REGISTRATION' },
   registrationId: { type: String, required: true },
   leaderEmail: { type: String, required: true },
   leaderName: { type: String, required: true },
@@ -154,6 +154,25 @@ const queueChangeRequestEmail = async (status, email, name, payload) => {
   }
 };
 
+// Queue a verification email job
+const queueVerificationEmail = async (leaderEmail, leaderName, teamName, registrationId, status, adminRemarks) => {
+  try {
+    const job = new EmailQueue({
+      emailType: 'VERIFICATION_UPDATE',
+      registrationId,
+      leaderEmail,
+      leaderName,
+      teamName,
+      payload: { status, adminRemarks }
+    });
+    await job.save();
+    console.log(`Queued VERIFICATION_UPDATE email job for team "${teamName}" (${leaderEmail}).`);
+    processEmailQueue();
+  } catch (err) {
+    console.error('Failed to queue verification email job:', err.message);
+  }
+};
+
 // Background Email Queue Processor
 let isProcessingEmailQueue = false;
 const processEmailQueue = async () => {
@@ -182,6 +201,8 @@ const processEmailQueue = async () => {
           await sendChangeRequestEmail(job.leaderEmail, job.leaderName, job.payload, true);
         } else if (job.emailType === 'CR_REJECTED') {
           await sendChangeRequestEmail(job.leaderEmail, job.leaderName, job.payload, false);
+        } else if (job.emailType === 'VERIFICATION_UPDATE') {
+          await sendVerificationEmail(job.leaderEmail, job.leaderName, job.teamName, job.registrationId, job.payload.status, job.payload.adminRemarks);
         }
 
         job.status = 'sent';
@@ -221,10 +242,12 @@ const processEmailQueue = async () => {
   }
 };
 
-// Export queueSelectionEmail and queueSupportEmail so controllers can use it
-module.exports.queueSelectionEmail = queueSelectionEmail;
-module.exports.queueSupportEmail = queueSupportEmail;
-module.exports.queueChangeRequestEmail = queueChangeRequestEmail;
+module.exports = {
+  queueSelectionEmail,
+  queueSupportEmail,
+  queueChangeRequestEmail,
+  queueVerificationEmail
+};
 
 // Start background cron-like interval polling the queue every 60 seconds
 setInterval(processEmailQueue, 60 * 1000);
@@ -386,6 +409,8 @@ mongoose.connect(MONGODB_URI)
         // Safe to ignore if index doesn't exist
         console.log('Registration index status verified (old non-sparse index is cleared).');
       });
+    mongoose.connection.db.collection('registrations').dropIndex('paymentOrderId_1')
+      .catch(() => {});
   })
   .catch((err) => console.error('MongoDB connection error:', err));
 
@@ -437,6 +462,9 @@ const registrationSchema = new mongoose.Schema({
   ],
   psid: { type: String, required: true },
   psTitle: { type: String, required: true },
+  isIeeeCsiMember: { type: String },
+  transactionId: { type: String },
+  paymentScreenshot: { type: String },
   ideaPpt: { type: String, required: true }, // Store path/URL
   consentLetter: { type: String, required: true }, // Store path/URL
   paymentStatus: { 
@@ -444,7 +472,7 @@ const registrationSchema = new mongoose.Schema({
     enum: ['pending', 'completed', 'failed'], 
     default: 'pending' 
   },
-  paymentOrderId: { type: String, unique: true },
+  paymentOrderId: { type: String, unique: true, sparse: true },
   paymentId: { type: String },
   amountPaid: { type: Number },
   createdAt: { type: Date, default: Date.now },
@@ -491,7 +519,8 @@ const registrationLimiter = rateLimit({
 // Endpoint for Registration Submission
 app.post('/api/register', registrationLimiter, upload.fields([
   { name: 'ideaPpt', maxCount: 1 },
-  { name: 'consentLetter', maxCount: 1 }
+  { name: 'consentLetter', maxCount: 1 },
+  { name: 'paymentScreenshot', maxCount: 1 }
 ]), async (req, res) => {
   const localFilePaths = [];
   try {
@@ -505,19 +534,23 @@ app.post('/api/register', registrationLimiter, upload.fields([
       instituteName,
       members, // Will be parsed from JSON string if sent via FormData
       psid,
-      psTitle
+      psTitle,
+      isIeeeCsiMember,
+      transactionId
     } = req.body;
 
     // Check files
-    if (!req.files || !req.files['ideaPpt'] || !req.files['consentLetter']) {
-      return res.status(400).json({ error: 'Both files (Idea PPT and Consent Letter) are required.' });
+    if (!req.files || !req.files['ideaPpt'] || !req.files['consentLetter'] || !req.files['paymentScreenshot']) {
+      return res.status(400).json({ error: 'Idea PPT, Consent Letter, and Payment Screenshot are all required.' });
     }
 
     // Keep track of local files to clean up later
     const ideaPptFile = req.files['ideaPpt'][0];
     const consentLetterFile = req.files['consentLetter'][0];
+    const paymentScreenshotFile = req.files['paymentScreenshot'][0];
     localFilePaths.push(ideaPptFile.path);
     localFilePaths.push(consentLetterFile.path);
+    localFilePaths.push(paymentScreenshotFile.path);
 
     // Parse members from string
     let parsedMembers = [];
@@ -550,6 +583,7 @@ app.post('/api/register', registrationLimiter, upload.fields([
 
     let ideaPptUrl = '';
     let consentLetterUrl = '';
+    let paymentScreenshotUrl = '';
 
     // Upload to Cloudinary if configured
     if (isCloudinaryConfigured) {
@@ -557,17 +591,20 @@ app.post('/api/register', registrationLimiter, upload.fields([
       try {
         ideaPptUrl = await uploadToCloudinary(ideaPptFile.path, 'sih_ppt');
         consentLetterUrl = await uploadToCloudinary(consentLetterFile.path, 'sih_consent');
+        paymentScreenshotUrl = await uploadToCloudinary(paymentScreenshotFile.path, 'sih_payment');
         console.log('Files uploaded successfully to Cloudinary.');
       } catch (uploadErr) {
         console.error('Cloudinary upload failed, falling back to local files:', uploadErr);
         // Fallback to local files
         ideaPptUrl = `http://localhost:${PORT}/uploads/${ideaPptFile.filename}`;
         consentLetterUrl = `http://localhost:${PORT}/uploads/${consentLetterFile.filename}`;
+        paymentScreenshotUrl = `http://localhost:${PORT}/uploads/${paymentScreenshotFile.filename}`;
       }
     } else {
       // Local fallback URLs
       ideaPptUrl = `http://localhost:${PORT}/uploads/${ideaPptFile.filename}`;
       consentLetterUrl = `http://localhost:${PORT}/uploads/${consentLetterFile.filename}`;
+      paymentScreenshotUrl = `http://localhost:${PORT}/uploads/${paymentScreenshotFile.filename}`;
     }
 
     // 2. Order Locking / Reuse existing pending registration if it exists
@@ -586,18 +623,26 @@ app.post('/api/register', registrationLimiter, upload.fields([
       existingPending.members = parsedMembers;
       existingPending.psid = psid;
       existingPending.psTitle = psTitle;
+      existingPending.isIeeeCsiMember = isIeeeCsiMember;
+      existingPending.transactionId = transactionId;
       existingPending.ideaPpt = ideaPptUrl;
       existingPending.consentLetter = consentLetterUrl;
-      existingPending.amountPaid = Number(process.env.REGISTRATION_FEE_INR || 1);
-      existingPending.expireAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // Reset expiry to 24h from now on edit
+      existingPending.paymentScreenshot = paymentScreenshotUrl;
+      existingPending.amountPaid = isIeeeCsiMember === 'Yes' ? 1200 : 1500;
+      existingPending.paymentStatus = 'completed';
+      existingPending.verificationStatus = 'pending';
+      existingPending.expireAt = undefined;
+
+      // If it doesn't have a registrationId yet
+      if (!existingPending.registrationId) {
+        const randomHex = require('crypto').randomBytes(3).toString('hex').toUpperCase();
+        existingPending.registrationId = `SIH4-${randomHex}`;
+      }
 
       await existingPending.save();
 
-      logPaymentEvent('ORDER_REUSED', {
-        orderId: existingPending.paymentOrderId,
-        payload: { leaderEmail: leaderEmailClean },
-        ip: req.ip
-      });
+      // Send Confirmation Email
+      queueConfirmationEmail(leaderEmailClean, leaderName, teamName, existingPending.registrationId);
 
       // Clean up local files if uploaded to Cloudinary
       if (isCloudinaryConfigured && ideaPptUrl.includes('cloudinary.com')) {
@@ -615,9 +660,7 @@ app.post('/api/register', registrationLimiter, upload.fields([
 
       return res.status(200).json({
         success: true,
-        orderId: existingPending.paymentOrderId,
-        amount: Number(process.env.REGISTRATION_FEE_INR || 1) * 100, // paise
-        keyId: process.env.RAZORPAY_KEY_ID || '',
+        registrationId: existingPending.registrationId,
         teamName,
         leaderName,
         leaderEmail: leaderEmailClean,
@@ -625,29 +668,13 @@ app.post('/api/register', registrationLimiter, upload.fields([
       });
     }
 
-    // Generate Razorpay Order
-    const amountInINR = Number(process.env.REGISTRATION_FEE_INR || 1);
-    const amountInPaise = amountInINR * 100;
-
-    let rpOrder;
-    try {
-      rpOrder = await razorpay.orders.create({
-        amount: amountInPaise,
-        currency: 'INR',
-        receipt: `receipt_${Date.now()}_${Math.round(Math.random() * 1000)}`
-      });
-    } catch (orderErr) {
-      console.error('Failed to create Razorpay order:', orderErr);
-      return res.status(500).json({ error: 'Failed to initialize payment gateway order.' });
-    }
-
-    logPaymentEvent('ORDER_CREATED', {
-      orderId: rpOrder.id,
-      payload: { amount: amountInPaise },
-      ip: req.ip
-    });
+    // Generate unique Registration ID
+    const randomHex = require('crypto').randomBytes(3).toString('hex').toUpperCase(); // 6 chars hex
+    const registrationId = `SIH4-${randomHex}`;
+    const amountInINR = isIeeeCsiMember === 'Yes' ? 1200 : 1500;
 
     const newRegistration = new Registration({
+      registrationId,
       teamName,
       leaderName,
       leaderEmail,
@@ -658,15 +685,21 @@ app.post('/api/register', registrationLimiter, upload.fields([
       members: parsedMembers,
       psid,
       psTitle,
+      isIeeeCsiMember,
+      transactionId,
       ideaPpt: ideaPptUrl,
       consentLetter: consentLetterUrl,
-      paymentStatus: 'pending',
-      paymentOrderId: rpOrder.id,
+      paymentScreenshot: paymentScreenshotUrl,
+      paymentStatus: 'completed',
+      verificationStatus: 'pending',
       amountPaid: amountInINR,
-      expireAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours expiry
+      expireAt: undefined // Completed registrations don't expire
     });
 
     await newRegistration.save();
+
+    // Send Confirmation Email
+    queueConfirmationEmail(leaderEmail, leaderName, teamName, registrationId);
 
     // Clean up local files if uploaded to Cloudinary
     if (isCloudinaryConfigured && ideaPptUrl.includes('cloudinary.com')) {
@@ -682,12 +715,10 @@ app.post('/api/register', registrationLimiter, upload.fields([
       });
     }
 
-    // Return Razorpay credentials and order details to client
+    // Return success response to client
     res.status(201).json({
       success: true,
-      orderId: rpOrder.id,
-      amount: rpOrder.amount,
-      keyId: process.env.RAZORPAY_KEY_ID || '',
+      registrationId,
       teamName,
       leaderName,
       leaderEmail,

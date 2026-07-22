@@ -25,66 +25,40 @@ export default function Prizes({ isStandalone = false }) {
 
   const prizes = [
     {
-      place: '02',
-      title: '2ND PRIZE',
-      amount: 'Runner Up',
-      description: 'Runner Up Trophy & Certificates',
-      subtitle: 'Claim the second spot in glory!',
-      badge: 'Silver Medalist',
-      perks: [
-        'Exciting Cash Reward',
-        'Official Runner-up Trophy',
-        'Silver Medals for Team',
-        'Excellence Certificates'
-      ],
-      themeColor: 'from-cyan-500/20 to-blue-600/5',
-      borderColor: 'border-cyan-500/20 group-hover:border-cyan-500/60',
-      glow: 'shadow-[0_0_30px_rgba(6,182,212,0.15)] group-hover:shadow-[0_15px_35px_rgba(6,182,212,0.25)]',
-      badgeBg: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
-      textGradient: 'from-white via-cyan-100 to-cyan-300',
-      icon: <Trophy className="w-8 h-8 text-cyan-400 animate-pulse" />
-    },
-    {
       place: '01',
-      title: '1ST PRIZE',
-      amount: 'Champion',
-      description: 'Grand Winner Trophy & Certificates',
-      subtitle: 'Claim the ultimate victory prize!',
-      badge: 'Grand Champion',
+      title: '1ST PRIZE — THEME WISE',
+      amount: 'WINNER',
+      description: 'Theme Champion Trophy & Cash Prize',
+      subtitle: 'Awarded to top performing team in each theme category!',
+      badge: 'Theme Winner',
       featured: true,
-      perks: [
-        'Grand Cash Reward',
-        'Official Champion Trophy',
-        'Gold Medals for Team',
-        'Excellence Certificates',
-        'Incubation Opportunity'
-      ],
-      themeColor: 'from-amber-500/25 to-orange-600/5',
-      borderColor: 'border-amber-500/30 group-hover:border-amber-500/70',
-      glow: 'shadow-[0_0_50px_rgba(245,158,11,0.25)] group-hover:shadow-[0_20px_45px_rgba(245,158,11,0.35)]',
-      badgeBg: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-      textGradient: 'from-[#FFE8B6] via-[#D8AB55] to-[#A27B2B]',
-      icon: <Trophy className="w-10 h-10 text-brand-gold animate-bounce" />
+      themeColor: 'bg-[#FAF6EE]',
+      borderColor: 'border-[#E3D7C5] hover:border-[#8C3A16]/60',
+      glow: 'shadow-md hover:shadow-xl hover:-translate-y-1',
+      badgeBg: 'bg-[#8C3A16] !text-white border-[#8C3A16] font-extrabold shadow-sm',
+      titleColor: 'text-[#C97F1B]',
+      amountColor: 'text-[#8C3A16]',
+      descColor: 'text-[#241708]',
+      subtitleColor: 'text-[#6B5B49]',
+      icon: <Trophy className="w-10 h-10 text-[#8C3A16] animate-bounce" />
     },
     {
-      place: '03',
-      title: '3RD PRIZE',
-      amount: '2nd Runner Up',
-      description: '2nd Runner Up Trophy & Certificates',
-      subtitle: 'Secure your place on the podium!',
-      badge: 'Bronze Medalist',
-      perks: [
-        'Exciting Cash Reward',
-        '2nd Runner-up Trophy',
-        'Bronze Medals for Team',
-        'Excellence Certificates'
-      ],
-      themeColor: 'from-orange-500/20 to-rose-600/5',
-      borderColor: 'border-orange-500/20 group-hover:border-orange-500/60',
-      glow: 'shadow-[0_0_30px_rgba(249,115,22,0.15)] group-hover:shadow-[0_15px_35px_rgba(249,115,22,0.25)]',
-      badgeBg: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
-      textGradient: 'from-[#FED7AA] via-[#F97316] to-[#C2410C]',
-      icon: <Trophy className="w-8 h-8 text-orange-400 animate-pulse" />
+      place: '02',
+      title: '2ND PRIZE — THEME WISE',
+      amount: 'RUNNER UP',
+      description: 'Theme Runner-Up Trophy & Cash Prize',
+      subtitle: 'Awarded to second spot team in each theme category!',
+      badge: 'Theme Runner Up',
+      featured: false,
+      themeColor: 'bg-[#FAF6EE]',
+      borderColor: 'border-[#E3D7C5] hover:border-[#C97F1B]/60',
+      glow: 'shadow-md hover:shadow-xl hover:-translate-y-1',
+      badgeBg: 'bg-[#C97F1B] !text-white border-[#C97F1B] font-extrabold shadow-sm',
+      titleColor: 'text-[#C97F1B]',
+      amountColor: 'text-[#8C3A16]',
+      descColor: 'text-[#241708]',
+      subtitleColor: 'text-[#6B5B49]',
+      icon: <Trophy className="w-9 h-9 text-[#C97F1B] animate-pulse" />
     }
   ];
 
@@ -126,12 +100,13 @@ export default function Prizes({ isStandalone = false }) {
         
         {/* ── Section Heading with Inline Animated SVG Trophy ── */}
         <div className="max-w-5xl mx-auto mb-16 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 flex-wrap">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white font-display leading-tight">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] font-display leading-tight" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
             Total Cash Prizes Up to{' '}
-            <span className="bg-gradient-to-r from-brand-gold via-yellow-200 to-amber-500 bg-clip-text text-transparent whitespace-nowrap">
+            <span className="text-[var(--marigold-deep)] whitespace-nowrap">
               ₹1 Lakh!
             </span>
           </h2>
+
           
           {/* Animated SVG Trophy placed inline right next to '1 Lakh!' */}
           <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 drop-shadow-[0_0_25px_rgba(216,171,85,0.3)] shrink-0 select-none pointer-events-none mt-2 md:mt-0">
@@ -186,67 +161,65 @@ export default function Prizes({ isStandalone = false }) {
           </div>
         </div>
 
-        {/* Prizes Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 lg:gap-12 items-end max-w-5xl mx-auto mb-16">
-          {[prizes[0], prizes[1], prizes[2]].map((prize, idx) => {
-            const orderClasses = [
-              'order-2 md:order-1',
-              'order-1 md:order-2',
-              'order-3 md:order-3'
-            ];
+        {/* Prizes Cards Grid (Theme-Wise 2 Clean Cards) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 items-stretch max-w-3xl mx-auto mb-16">
+          {prizes.map((prize, idx) => {
             return (
               <div
                 key={idx}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
-                className={`relative rounded-3xl bg-gradient-to-br ${prize.themeColor} backdrop-blur-md border ${prize.borderColor} p-6 flex flex-col justify-between transition-shadow duration-300 ${prize.glow} ${orderClasses[idx]} ${
+                className={`relative rounded-3xl ${prize.themeColor} border ${prize.borderColor} p-8 flex flex-col justify-between transition-all duration-300 ${prize.glow} ${
                   prize.featured 
-                    ? 'lg:z-10 min-h-[390px]'
-                    : 'min-h-[350px]'
-                } group overflow-hidden`}
+                    ? 'ring-2 ring-[#8C3A16]/20'
+                    : ''
+                } group overflow-hidden text-left`}
                 style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
               >
-                {/* Large background number for editorial touch */}
-                <span className="absolute -right-2 -bottom-4 text-[6.5rem] font-black font-display text-white/[0.02] select-none leading-none group-hover:text-white/[0.04] transition-colors duration-500">
+                {/* Large background number */}
+                <span className="absolute -right-2 -bottom-4 text-[8rem] font-black font-display text-[#8C3A16]/[0.05] select-none leading-none group-hover:text-[#8C3A16]/[0.10] transition-colors duration-500">
                   {prize.place}
                 </span>
 
-                <div className="space-y-4 pt-2 relative z-10">
-                  {/* Header Badge */}
-                  <div className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full border text-[10px] sm:text-xs font-bold uppercase tracking-wider ${prize.badgeBg}`}>
-                    {prize.badge}
+                <div className="space-y-6 pt-2 relative z-10">
+                  {/* Header Badge & Icon */}
+                  <div className="flex items-center justify-between">
+                    <div 
+                      className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-xs font-black uppercase tracking-wider text-white-force ${prize.badgeBg}`}
+                    >
+                      <span className="text-white-force font-extrabold">
+                        {prize.badge}
+                      </span>
+                    </div>
+                    {prize.icon}
                   </div>
 
-                  <div className="space-y-1">
-                    <h3 className="text-[10px] sm:text-xs font-bold tracking-widest text-brand-gray font-sans uppercase">
+                  <div className="space-y-2">
+                    <h3 className={`text-xs font-black tracking-widest ${prize.titleColor} font-sans uppercase`}>
                       {prize.title}
                     </h3>
-                    <p className={`text-3xl sm:text-4xl font-black font-display bg-gradient-to-b ${prize.textGradient} bg-clip-text text-transparent leading-none py-1`}>
+                    <p className={`text-5xl sm:text-6xl font-black font-display ${prize.amountColor} leading-none py-1`} style={{ fontFamily: "'Outfit', sans-serif" }}>
                       {prize.amount}
                     </p>
-                    <p className="text-xs text-brand-navy font-bold tracking-wide mt-0.5">
+                    <p className={`text-base ${prize.descColor} font-extrabold tracking-wide pt-1`}>
                       {prize.description}
                     </p>
                   </div>
-
-                  {/* List of Perks */}
-                  <ul className="space-y-2 pt-1.5">
-                    {prize.perks.map((perk, pIdx) => (
-                      <li key={pIdx} className="flex items-center gap-2 text-left text-xs text-brand-gray font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand-gold shrink-0"></span>
-                        <span>{perk}</span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
 
                 {/* Bottom footer text of card */}
-                <div className="pt-3 border-t border-white/5 mt-4 text-[10px] sm:text-xs text-brand-gray/80 font-medium italic relative z-10">
+                <div className={`pt-4 border-t border-[#D9CCBA] mt-8 text-xs ${prize.subtitleColor} font-extrabold italic relative z-10`}>
                   "{prize.subtitle}"
                 </div>
               </div>
             );
           })}
+        </div>
+
+        {/* Theme-wise Notification Banner */}
+        <div className="max-w-2xl mx-auto -mt-8 mb-12 p-3.5 rounded-2xl bg-[#FAF6EE] border border-[#8C3A16]/30 flex items-center justify-center gap-3 text-xs font-black text-[#8C3A16] text-center shadow-md">
+          <Trophy size={18} className="text-[#8C3A16] shrink-0 animate-bounce" />
+          <span>Winner &amp; Runner-Up trophies and cash rewards will be awarded for <strong className="text-[#241708] underline">EVERY</strong> theme category!</span>
         </div>
 
         {/* Venue and Date Panel */}
@@ -260,7 +233,7 @@ export default function Prizes({ isStandalone = false }) {
               </div>
               <div>
                 <p className="text-[10px] text-brand-gray font-bold tracking-widest uppercase">GRAND FINALE DATE</p>
-                <p className="text-lg font-black text-white font-display mt-0.5">08 November 2026</p>
+                <p className="text-lg font-black text-white font-display mt-0.5">30 Sept & 01 Oct 2026</p>
                 <p className="text-xs text-brand-gray mt-0.5">Mark your calendars for the final pitch</p>
               </div>
             </div>

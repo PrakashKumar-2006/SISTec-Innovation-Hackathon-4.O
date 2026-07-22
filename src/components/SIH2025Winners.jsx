@@ -48,14 +48,14 @@ function ProblemCell({ text }) {
   const isLong = text.length > 120;
   
   return (
-    <div className="max-w-md text-xs leading-relaxed text-slate-300">
+    <div className="max-w-md text-xs leading-relaxed text-[#241708] font-medium">
       <span>
         {expanded || !isLong ? text : `${text.slice(0, 110)}...`}
       </span>
       {isLong && (
         <button
           onClick={() => setExpanded(!expanded)}
-          className="text-brand-gold hover:text-yellow-400 font-black ml-1.5 focus:outline-none cursor-pointer underline text-[10px] uppercase tracking-widest whitespace-nowrap bg-transparent border-none"
+          className="text-[#C97F1B] hover:text-[#8C3A16] font-black ml-1.5 focus:outline-none cursor-pointer underline text-[10px] uppercase tracking-widest whitespace-nowrap bg-transparent border-none"
         >
           {expanded ? 'Read Less' : 'Read More'}
         </button>
@@ -64,7 +64,7 @@ function ProblemCell({ text }) {
   );
 }
 
-export default function SIH2025Winners({ onViewChange }) {
+export default function SIH2025Winners({ onViewChange, hideHeader = false }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
 
@@ -86,7 +86,7 @@ export default function SIH2025Winners({ onViewChange }) {
   };
 
   return (
-    <section className="relative min-h-screen bg-brand-darker pt-24 sm:pt-28 pb-20 px-3 sm:px-6 lg:px-8 text-white select-none">
+    <section className={`relative ${hideHeader ? 'py-4' : 'min-h-screen bg-brand-darker pt-24 sm:pt-28 pb-20'} px-3 sm:px-6 lg:px-8 text-[#241708] select-none`}>
       {/* Ambient background glows */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-gold/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
       <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[150px] pointer-events-none -z-10"></div>
@@ -94,26 +94,28 @@ export default function SIH2025Winners({ onViewChange }) {
       <div className="max-w-7xl mx-auto">
         
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 text-left">
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2.5">
-              <Trophy className="text-brand-gold animate-pulse" size={24} />
-              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-brand-gray to-brand-gold bg-clip-text text-transparent">
-                Winners of SIH 2025
-              </h2>
+        {!hideHeader && (
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 text-left">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2.5">
+                <Trophy className="text-[var(--marigold)] animate-pulse" size={24} />
+                <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-[var(--clay)] uppercase font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+                  Winners of SIH 2025
+                </h2>
+              </div>
+              <p className="text-[var(--ink-soft)] text-xs sm:text-sm font-medium font-sans">
+                SISTec Innovation Hackathon 3.0 (SIH 2025) winners and podium standings.
+              </p>
             </div>
-            <p className="text-brand-gray text-xs sm:text-sm font-normal">
-              SISTec Innovation Hackathon 3.0 (SIH 2025) winners and podium standings.
-            </p>
+            
+            <button
+              onClick={() => onViewChange && onViewChange('landing')}
+              className="flex items-center gap-2 px-5 py-2 rounded-full bg-[#FAF6EE] border border-[#E3D7C5] text-xs font-bold text-[#8C3A16] hover:bg-[#8C3A16] hover:text-white transition-all duration-300 cursor-pointer shadow-md active:scale-95 shrink-0"
+            >
+              <ArrowLeft size={14} /> Back to Home
+            </button>
           </div>
-          
-          <button
-            onClick={() => onViewChange && onViewChange('landing')}
-            className="flex items-center gap-2 px-5 py-2 rounded-full bg-brand-card border border-white/10 hover:border-brand-gold/50 text-xs font-bold text-brand-gold hover:text-white transition-all duration-300 cursor-pointer shadow-md active:scale-95 shrink-0"
-          >
-            <ArrowLeft size={14} /> Back to Home
-          </button>
-        </div>
+        )}
 
         {/* ── 3D Coverflow Slider for Winner Photos ── */}
         <div className="w-full flex flex-col items-center mb-14 relative">
@@ -161,26 +163,26 @@ export default function SIH2025Winners({ onViewChange }) {
                   />
                   
                   {/* Subtle vignette shadow overlay at the bottom */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none" />
 
                   {/* Clean Mini details Overlay (Only on active centered slide) */}
                   <div className={`absolute bottom-0 left-0 right-0 p-3 sm:p-5 flex items-end justify-between transition-opacity duration-500 text-left ${
                     isCenter ? 'opacity-100' : 'opacity-0 pointer-events-none'
                   }`}>
                     <div>
-                      <span className={`inline-block px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider mb-1 ${
-                        winner.position === 1 ? 'bg-brand-gold/15 border border-brand-gold/30 text-brand-gold' :
-                        winner.position === 2 ? 'bg-slate-400/15 border border-slate-400/30 text-slate-300' :
-                        'bg-amber-700/15 border border-amber-700/30 text-[#B45309]'
+                      <span className={`inline-block px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider mb-1.5 shadow-sm border ${
+                        winner.position === 1 ? 'bg-black/70 border-brand-gold/50 text-brand-gold' :
+                        winner.position === 2 ? 'bg-black/70 border-slate-300/50 text-slate-200' :
+                        'bg-black/70 border-amber-600/50 text-amber-300'
                       }`}>
                         {winner.position === 1 ? '1st Place' : winner.position === 2 ? '2nd Place' : '3rd Place'}
                       </span>
-                      <h3 className="text-white text-xs sm:text-base md:text-lg font-black tracking-wide leading-tight drop-shadow">
+                      <h3 className="text-white text-sm sm:text-base md:text-xl font-black tracking-wide leading-tight drop-shadow-md">
                         Team {winner.team}
                       </h3>
                     </div>
 
-                    <div className="text-brand-gold font-mono font-black text-[10px] sm:text-xs md:text-sm bg-brand-gold/10 border border-brand-gold/30 px-2.5 py-1 rounded-lg shrink-0">
+                    <div className="text-brand-gold font-mono font-black text-xs sm:text-sm bg-black/70 backdrop-blur-md border border-brand-gold/40 px-3 py-1 rounded-xl shrink-0 shadow-md">
                       {winner.prize}
                     </div>
                   </div>
@@ -194,7 +196,7 @@ export default function SIH2025Winners({ onViewChange }) {
           <div className="flex items-center gap-6 mt-6 sm:mt-8">
             <button
               onClick={handlePrev}
-              className="w-10 h-10 rounded-full bg-brand-card border border-white/10 hover:border-brand-gold hover:text-brand-gold text-white flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95 shadow-md"
+              className="w-10 h-10 rounded-full bg-[#FFFDF7] border border-[#E3D7C5] hover:border-[#8C3A16] hover:text-[#8C3A16] text-[#241708] flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95 shadow-md"
             >
               <ChevronLeft size={18} />
             </button>
@@ -206,8 +208,8 @@ export default function SIH2025Winners({ onViewChange }) {
                   onClick={() => setCurrentIndex(idx)}
                   className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                     currentIndex === idx
-                      ? 'w-6 bg-brand-gold shadow-[0_0_8px_rgba(216,171,85,0.4)]'
-                      : 'w-2 bg-white/20 hover:bg-white/45'
+                      ? 'w-6 bg-[#C97F1B] shadow-[0_0_8px_rgba(201,127,27,0.4)]'
+                      : 'w-2 bg-[#8C3A16]/20 hover:bg-[#8C3A16]/45'
                   }`}
                 />
               ))}
@@ -215,7 +217,7 @@ export default function SIH2025Winners({ onViewChange }) {
 
             <button
               onClick={handleNext}
-              className="w-10 h-10 rounded-full bg-brand-card border border-white/10 hover:border-brand-gold hover:text-brand-gold text-white flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95 shadow-md"
+              className="w-10 h-10 rounded-full bg-[#FFFDF7] border border-[#E3D7C5] hover:border-[#8C3A16] hover:text-[#8C3A16] text-[#241708] flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95 shadow-md"
             >
               <ChevronRight size={18} />
             </button>
@@ -225,61 +227,62 @@ export default function SIH2025Winners({ onViewChange }) {
 
         {/* Podium Finishers Details Title */}
         <div className="text-left mb-6 max-w-xl">
-          <h3 className="text-lg sm:text-xl font-extrabold text-white pl-1 border-l-4 border-brand-gold">
+          <h3 className="text-lg sm:text-xl font-extrabold text-[var(--clay)] pl-1 border-l-4 border-[var(--marigold)] font-display" style={{ fontFamily: "'Outfit', sans-serif" }}>
             Podium Details
           </h3>
-          <p className="text-xs text-brand-gray pl-3 mt-1.5">
+          <p className="text-xs text-[var(--ink-soft)] pl-3 mt-1.5 font-sans">
             Full problem, organization, and institution breakdown of the winning innovations.
           </p>
         </div>
 
         {/* Desktop View Table */}
-        <div className="hidden md:block rounded-2xl bg-brand-card/15 backdrop-blur-md border border-white/5 overflow-hidden shadow-2xl mb-10 text-left">
+        <div className="hidden md:block rounded-2xl bg-[#FFFDF7] border border-[#E3D7C5] overflow-hidden shadow-xl mb-10 text-left">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[1000px]">
               <thead>
-                <tr className="border-b border-white/5 bg-brand-darker/60">
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-24 text-slate-400">Position</th>
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-24 text-slate-400">PS Code</th>
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-40 text-slate-400">Leader Name</th>
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-40 text-slate-400">Team Name</th>
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-36 text-slate-400">Theme</th>
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-[420px] max-w-md text-slate-400">Problem Statement Title</th>
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-64 text-slate-400">Institute Name</th>
-                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-32 text-slate-400">Prize Money</th>
+                <tr className="border-b border-[#E3D7C5] bg-[#FAF0DD]">
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-24 text-[#8C3A16] font-sans">Position</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-24 text-[#8C3A16] font-sans">PS Code</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-40 text-[#8C3A16] font-sans">Leader Name</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-40 text-[#8C3A16] font-sans">Team Name</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-36 text-[#8C3A16] font-sans">Theme</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-[420px] max-w-md text-[#8C3A16] font-sans">Problem Statement Title</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-64 text-[#8C3A16] font-sans">Institute Name</th>
+                  <th className="px-5 py-4 text-[10px] font-black uppercase tracking-wider w-32 text-[#8C3A16] font-sans">Prize Money</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+
+              <tbody className="divide-y divide-[#E3D7C5]/40">
                 {winnersData.map((winner, index) => (
-                  <tr key={index} className="hover:bg-white/5 transition-colors duration-200">
+                  <tr key={index} className="hover:bg-[#FAF6EE] transition-colors duration-200">
                     <td className="px-5 py-4">
                       <span className={`inline-block px-2.5 py-0.5 rounded-full border text-[10px] font-black uppercase ${
-                        winner.position === 1 ? 'border-brand-gold/40 bg-brand-gold/10 text-brand-gold' :
-                        winner.position === 2 ? 'border-slate-400/40 bg-slate-400/10 text-slate-300' :
-                        'border-amber-700/40 bg-amber-700/10 text-[#B45309]'
+                        winner.position === 1 ? 'border-[#C97F1B]/40 bg-[#F2A93B]/15 text-[#8C3A16]' :
+                        winner.position === 2 ? 'border-slate-300 bg-slate-100 text-slate-700' :
+                        'border-amber-300 bg-amber-100 text-amber-900'
                       }`}>
                         {winner.position === 1 ? '1st Place' : winner.position === 2 ? '2nd Place' : '3rd Place'}
                       </span>
                     </td>
-                    <td className="px-5 py-4 font-mono text-xs text-brand-gray font-bold">
+                    <td className="px-5 py-4 font-mono text-xs text-[#8C3A16] font-bold">
                       {winner.psCode}
                     </td>
-                    <td className="px-5 py-4 font-sans text-xs text-slate-300 font-bold">
+                    <td className="px-5 py-4 font-sans text-xs text-[#241708] font-bold">
                       {winner.leader}
                     </td>
-                    <td className="px-5 py-4 font-sans text-xs text-white font-extrabold">
+                    <td className="px-5 py-4 font-sans text-xs text-[#8C3A16] font-extrabold">
                       {winner.team}
                     </td>
-                    <td className="px-5 py-4 font-sans text-xs text-slate-400 font-semibold">
+                    <td className="px-5 py-4 font-sans text-xs text-[#6B5B49] font-semibold">
                       {winner.theme}
                     </td>
-                    <td className="px-5 py-4 font-sans text-xs text-slate-300 max-w-md whitespace-normal leading-relaxed">
+                    <td className="px-5 py-4 font-sans text-xs text-[#241708] max-w-md whitespace-normal leading-relaxed">
                       <ProblemCell text={winner.problem} />
                     </td>
-                    <td className="px-5 py-4 font-sans text-xs text-slate-300 max-w-xs truncate font-semibold" title={winner.college}>
+                    <td className="px-5 py-4 font-sans text-xs text-[#6B5B49] max-w-xs truncate font-semibold" title={winner.college}>
                       {winner.college}
                     </td>
-                    <td className="px-5 py-4 font-sans text-xs text-brand-gold font-black">
+                    <td className="px-5 py-4 font-sans text-xs text-[#C97F1B] font-black">
                       {winner.prize}
                     </td>
                   </tr>
@@ -292,42 +295,42 @@ export default function SIH2025Winners({ onViewChange }) {
         {/* Mobile View List */}
         <div className="grid grid-cols-1 gap-4 md:hidden">
           {winnersData.map((winner, index) => (
-            <div key={index} className="rounded-2xl bg-brand-card/45 border border-white/10 p-5 space-y-4 text-left relative">
+            <div key={index} className="rounded-2xl bg-[#FFFDF7] border border-[#E3D7C5] p-5 space-y-4 text-left relative shadow-sm">
               
               <div className="flex justify-between items-center">
                 <span className={`inline-block px-2.5 py-0.5 rounded-full border text-[9px] font-black uppercase ${
-                  winner.position === 1 ? 'border-brand-gold/40 bg-brand-gold/10 text-brand-gold' :
-                  winner.position === 2 ? 'border-slate-400/40 bg-slate-400/10 text-slate-300' :
-                  'border-amber-700/40 bg-amber-700/10 text-[#B45309]'
+                  winner.position === 1 ? 'border-[#C97F1B]/40 bg-[#F2A93B]/15 text-[#8C3A16]' :
+                  winner.position === 2 ? 'border-slate-300 bg-slate-100 text-slate-700' :
+                  'border-amber-300 bg-amber-100 text-amber-900'
                 }`}>
                   {winner.position === 1 ? '1st Place' : winner.position === 2 ? '2nd Place' : '3rd Place'}
                 </span>
                 
-                <span className="font-mono text-xs text-brand-gold font-black">{winner.prize}</span>
+                <span className="font-mono text-xs text-[#C97F1B] font-black">{winner.prize}</span>
               </div>
 
               <div className="space-y-1">
-                <span className="font-mono text-[9px] text-slate-500 font-bold bg-white/5 border border-white/10 px-2 py-0.5 rounded uppercase">
+                <span className="font-mono text-[9px] text-[#8C3A16] font-bold bg-[#FAF0DD] border border-[#E3D7C5] px-2 py-0.5 rounded uppercase">
                   {winner.psCode}
                 </span>
-                <h4 className="text-white text-base font-extrabold pt-1">{winner.team}</h4>
-                <p className="text-slate-400 text-xs font-bold">
-                  Leader: <span className="text-slate-300">{winner.leader}</span>
+                <h4 className="text-[#8C3A16] text-base font-extrabold pt-1">{winner.team}</h4>
+                <p className="text-[#6B5B49] text-xs font-bold">
+                  Leader: <span className="text-[#241708]">{winner.leader}</span>
                 </p>
               </div>
 
-              <div className="border-t border-white/5 pt-3.5 space-y-2.5">
+              <div className="border-t border-[#E3D7C5]/60 pt-3.5 space-y-2.5">
                 <div>
-                  <span className="text-[9px] font-black uppercase tracking-wider text-slate-500">Institution</span>
-                  <p className="text-slate-300 text-xs font-semibold leading-relaxed mt-0.5">{winner.college}</p>
+                  <span className="text-[9px] font-black uppercase tracking-wider text-[#8C3A16]">Institution</span>
+                  <p className="text-[#241708] text-xs font-semibold leading-relaxed mt-0.5">{winner.college}</p>
                 </div>
                 <div>
-                  <span className="text-[9px] font-black uppercase tracking-wider text-slate-500">Theme</span>
-                  <p className="text-slate-300 text-xs font-semibold mt-0.5">{winner.theme}</p>
+                  <span className="text-[9px] font-black uppercase tracking-wider text-[#8C3A16]">Theme</span>
+                  <p className="text-[#6B5B49] text-xs font-semibold mt-0.5">{winner.theme}</p>
                 </div>
                 <div>
-                  <span className="text-[9px] font-black uppercase tracking-wider text-slate-500">Problem Statement</span>
-                  <p className="text-slate-400 text-xs leading-relaxed mt-1">{winner.problem}</p>
+                  <span className="text-[9px] font-black uppercase tracking-wider text-[#8C3A16]">Problem Statement</span>
+                  <p className="text-[#241708] text-xs leading-relaxed mt-1 font-medium">{winner.problem}</p>
                 </div>
               </div>
 

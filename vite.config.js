@@ -10,11 +10,11 @@ try {
     fs.mkdirSync(destDir, { recursive: true });
   }
 
-  // 1. Copy uploaded brain logo
-  const brainLogo = 'C:/Users/maury/.gemini/antigravity-ide/brain/ea2c1b71-93fd-4bc6-9648-2e383777a6eb/media__1784492602393.png';
-  if (fs.existsSync(brainLogo)) {
-    fs.copyFileSync(brainLogo, path.join(destDir, 'sih_logo.png'));
-    console.log('Brain logo copied successfully!');
+  // 1. Copy SISTec logo
+  const sistecLogo = './SISTec Rb-03-01.png';
+  if (fs.existsSync(sistecLogo)) {
+    fs.copyFileSync(sistecLogo, path.join(destDir, 'logo.png'));
+    console.log('SISTec logo copied successfully!');
   }
 
   // 2. Copy generated students hero image

@@ -326,7 +326,35 @@ export default function ProblemsList() {
         </div>
 
         <div className="flex gap-4 w-full md:w-auto">
-          {/* We could populate this dynamically if we had a dedicated endpoint, but simple text filter works for now */}
+          {/* Domain Bucket Filter */}
+          <Select 
+            value={domainFilter} 
+            onValueChange={(val) => { setDomainFilter(val); setPagination({ ...pagination, pageIndex: 0 }); }}
+          >
+            <SelectTrigger className="w-[160px] bg-brand-dark border-brand-purple/30 text-brand-text">
+              <SelectValue placeholder="Domain Bucket" />
+            </SelectTrigger>
+            <SelectContent className="bg-brand-card border-brand-purple/20 text-brand-text">
+              <SelectItem value="All">All Domains</SelectItem>
+              <SelectItem value="Agriculture, FoodTech & Rural Development">Agriculture</SelectItem>
+              <SelectItem value="Clean & Green Technology">CleanTech</SelectItem>
+              <SelectItem value="Disaster Management">Disaster Mgmt</SelectItem>
+              <SelectItem value="Fitness & Sports">Fitness</SelectItem>
+              <SelectItem value="Heritage & Culture">Heritage</SelectItem>
+              <SelectItem value="MedTech / BioTech / HealthTech">HealthTech</SelectItem>
+              <SelectItem value="Miscellaneous">Miscellaneous</SelectItem>
+              <SelectItem value="Renewable / Sustainable Energy">Energy</SelectItem>
+              <SelectItem value="Robotics and Drones">Robotics</SelectItem>
+              <SelectItem value="Smart Automation">Automation</SelectItem>
+              <SelectItem value="Smart Education">Education</SelectItem>
+              <SelectItem value="Smart Vehicles">Vehicles</SelectItem>
+              <SelectItem value="Travel & Tourism">Tourism</SelectItem>
+              <SelectItem value="Transportation & Logistics">Logistics</SelectItem>
+              <SelectItem value="Blockchain & Cybersecurity">Cybersecurity</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Status Filter */}
           <Select 
             value={statusFilter} 
             onValueChange={(val) => { setStatusFilter(val); setPagination({ ...pagination, pageIndex: 0 }); }}

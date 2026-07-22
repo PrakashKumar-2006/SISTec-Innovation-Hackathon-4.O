@@ -94,29 +94,26 @@ export default function PhotoGallery() {
       <div className="w-full max-w-5xl mx-auto relative z-10 flex flex-col items-center">
 
         {/* ── Header ── */}
-        <div
-          className="text-center mb-10 sm:mb-12"
+        <div 
+          ref={headerRef}
+          className="text-center max-w-3xl mx-auto mb-12 sm:mb-16"
           style={{
             transition: 'opacity 0.7s ease, transform 0.7s ease',
             opacity: headerVisible ? 1 : 0,
             transform: headerVisible ? 'translateY(0)' : 'translateY(28px)',
           }}
         >
-          <p className="text-xs sm:text-sm font-extrabold tracking-[0.25em] text-brand-gold font-sans uppercase mb-5 flex items-center justify-center gap-2">
-            <ImageIcon size={14} className="text-brand-gold animate-pulse" />
-            Winners Gallery
-          </p>
-
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-4">
-            <span className="text-white">SIH 3.0 </span>
-            <span className="bg-gradient-to-r from-brand-gold via-yellow-200 to-amber-500 bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight mb-4 font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+            <span className="text-[var(--clay)]">SIH 3.0 </span>
+            <span className="text-[var(--marigold-deep)]">
               Moments of Glory
             </span>
           </h1>
-          <p className="text-brand-gray text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+          <p className="text-[var(--ink-soft)] text-sm sm:text-base max-w-xl mx-auto leading-relaxed font-sans font-medium">
             Relive the triumphs of the outstanding teams and individuals from SISTec Innovation Hackathon 3.0.
           </p>
         </div>
+
 
         {/* ── 3D Coverflow Slider Container ── */}
         <div
@@ -222,7 +219,7 @@ export default function PhotoGallery() {
 
           {/* ── Active Slide Details Card ── */}
           <div className="w-full max-w-2xl bg-brand-card/90 backdrop-blur-xl border border-white/10 rounded-2xl p-5 sm:p-6 mt-8 sm:mt-10 shadow-2xl text-center">
-            <span className="text-[10px] font-black tracking-widest text-brand-gold bg-brand-gold/10 px-3.5 py-1 rounded-full border border-brand-gold/20 uppercase font-sans">
+            <span className="text-[10px] font-black tracking-widest text-white bg-[#8C3A16] px-3.5 py-1 rounded-full border border-[#8C3A16] uppercase font-sans shadow-sm">
               {galleryImages[currentIndex].category}
             </span>
             
