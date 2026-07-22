@@ -53,16 +53,23 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
     return () => timers.forEach(clearTimeout);
   }, [hasEnteredViewport]);
 
-  // Shifting active glow loop once all cards are loaded
+  const [isPaused, setIsPaused] = useState(false);
+
+  // Shifting active glow loop once all cards are loaded (pauses on user tap)
   useEffect(() => {
-    if (activeStep < 5) return;
+    if (activeStep < 5 || isPaused) return;
 
     const interval = setInterval(() => {
       setCurrentFocus((prev) => (prev + 1) % 4);
     }, 4500); // Switch highlighted step every 4.5 seconds
 
     return () => clearInterval(interval);
-  }, [activeStep]);
+  }, [activeStep, isPaused]);
+
+  const handleStepTap = (idx) => {
+    setCurrentFocus(idx);
+    setIsPaused(true);
+  };
 
   const steps = [
     {
@@ -287,7 +294,8 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
                     {isLeftNode && (
                       /* Card on Left side (Step 1, 3) */
                       <div 
-                        className={`w-full max-w-[460px] transform transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) ${
+                        onClick={() => handleStepTap(idx)}
+                        className={`w-full max-w-[460px] transform transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) cursor-pointer ${
                           isCardActive 
                             ? `opacity-100 translate-y-0 ${isFocused ? 'scale-[1.03] z-30' : 'scale-100 opacity-90 z-20'} ${ev.floatClass}` 
                             : 'opacity-0 translate-y-8 scale-95 pointer-events-none'
@@ -317,7 +325,8 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
                     {!isLeftNode && (
                       /* Card on Right side (Step 2, 4) */
                       <div 
-                        className={`w-full max-w-[460px] transform transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) ${
+                        onClick={() => handleStepTap(idx)}
+                        className={`w-full max-w-[460px] transform transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) cursor-pointer ${
                           isCardActive 
                             ? `opacity-100 translate-y-0 ${isFocused ? 'scale-[1.03] z-30' : 'scale-100 opacity-90 z-20'} ${ev.floatClass}` 
                             : 'opacity-0 translate-y-8 scale-95 pointer-events-none'
@@ -343,7 +352,8 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
 
                 {/* Absolute Floating Nodes with active pulsing sonar ring */}
                 <div 
-                  className="absolute top-1/2 -translate-y-1/2 left-[50%] -translate-x-1/2 z-30"
+                  onClick={() => handleStepTap(idx)}
+                  className="absolute top-1/2 -translate-y-1/2 left-[50%] -translate-x-1/2 z-30 cursor-pointer"
                   style={{ transform: 'translate(-50%, -50%)' }}
                 >
                   <div className="relative flex items-center justify-center w-16 h-16">
@@ -394,7 +404,7 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
               return (
                 <button
                   key={idx}
-                  onClick={() => setCurrentFocus(idx)}
+                  onClick={() => handleStepTap(idx)}
                   className={`flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-all duration-300 cursor-pointer ${
                     isSelected
                       ? 'bg-white shadow-md border scale-105'
@@ -495,36 +505,38 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
                 </div>
 
                 {/* Bottom Navigation & Progress Dots */}
-                <div className="flex items-center justify-between px-2">
-                  <button
-                    onClick={() => setCurrentFocus((prev) => (prev > 0 ? prev - 1 : steps.length - 1))}
-                    className="w-10 h-10 rounded-full bg-[#FAF6EE] border border-[#E3D7C5] text-[#8C3A16] font-extrabold flex items-center justify-center shadow-sm active:scale-95 cursor-pointer"
-                  >
-                    ←
-                  </button>
+                <div className="flex flex-col items-center gap-3 px-2">
+                  <div className="flex items-center justify-between w-full">
+                    <button
+                      onClick={() => handleStepTap(activeIdx > 0 ? activeIdx - 1 : steps.length - 1)}
+                      className="w-10 h-10 rounded-full bg-[#FAF6EE] border border-[#E3D7C5] text-[#8C3A16] font-extrabold flex items-center justify-center shadow-sm active:scale-95 cursor-pointer"
+                    >
+                      ←
+                    </button>
 
-                  {/* Step dots */}
-                  <div className="flex items-center gap-2">
-                    {steps.map((st, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setCurrentFocus(i)}
-                        className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                          i === activeIdx ? 'w-8' : 'w-2.5 bg-[#E3D7C5]'
-                        }`}
-                        style={{
-                          backgroundColor: i === activeIdx ? st.themeColor : undefined
-                        }}
-                      />
-                    ))}
+                    {/* Step dots */}
+                    <div className="flex items-center gap-2">
+                      {steps.map((st, i) => (
+                        <button
+                          key={i}
+                          onClick={() => handleStepTap(i)}
+                          className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                            i === activeIdx ? 'w-8' : 'w-2.5 bg-[#E3D7C5]'
+                          }`}
+                          style={{
+                            backgroundColor: i === activeIdx ? st.themeColor : undefined
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={() => handleStepTap(activeIdx < steps.length - 1 ? activeIdx + 1 : 0)}
+                      className="w-10 h-10 rounded-full bg-[#FAF6EE] border border-[#E3D7C5] text-[#8C3A16] font-extrabold flex items-center justify-center shadow-sm active:scale-95 cursor-pointer"
+                    >
+                      →
+                    </button>
                   </div>
-
-                  <button
-                    onClick={() => setCurrentFocus((prev) => (prev < steps.length - 1 ? prev + 1 : 0))}
-                    className="w-10 h-10 rounded-full bg-[#FAF6EE] border border-[#E3D7C5] text-[#8C3A16] font-extrabold flex items-center justify-center shadow-sm active:scale-95 cursor-pointer"
-                  >
-                    →
-                  </button>
                 </div>
               </div>
             );

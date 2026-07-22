@@ -68,32 +68,33 @@ export default function FAQs() {
 
 
         {/* FAQs Accordion */}
-        <div className="space-y-4">
+        <div className="space-y-3.5 sm:space-y-4">
           {faqData.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
               <div
                 key={idx}
-                className="rounded-2xl bg-white border border-brand-navy/10 overflow-hidden transition-all duration-300 shadow-card-shadow"
+                className="rounded-2xl bg-[#FFFDF7] border-2 border-[#E3D7C5] hover:border-[#8C3A16] overflow-hidden transition-all duration-300 shadow-xs"
               >
                 <button
                   onClick={() => toggleFAQ(idx)}
-                  className="w-full flex items-center justify-between p-5 text-left text-sm sm:text-base font-bold text-brand-navy hover:text-brand-blue transition-colors"
+                  className="w-full flex items-center justify-between p-4 sm:p-5 text-left text-xs sm:text-base font-black text-[#241708] hover:text-[#8C3A16] transition-colors cursor-pointer"
+                  style={{ fontFamily: "'Outfit', sans-serif" }}
                 >
-                  <span className="font-display tracking-wide">{faq.q}</span>
+                  <span className="tracking-tight leading-snug pr-2">{faq.q}</span>
                   {isOpen ? (
-                    <ChevronUp size={18} className="text-brand-blue shrink-0 ml-4" />
+                    <ChevronUp size={18} className="text-[#8C3A16] shrink-0 ml-2" />
                   ) : (
-                    <ChevronDown size={18} className="text-brand-gray shrink-0 ml-4" />
+                    <ChevronDown size={18} className="text-[#6B5B49] shrink-0 ml-2" />
                   )}
                 </button>
                 
                 <div
                   className={`transition-all duration-300 ${
-                    isOpen ? 'max-h-48 border-t border-brand-navy/5 p-5' : 'max-h-0'
-                  } overflow-hidden bg-brand-dark/40`}
+                    isOpen ? 'max-h-96 border-t border-[#E3D7C5] p-4 sm:p-5' : 'max-h-0'
+                  } overflow-hidden bg-[#FAF6EE]`}
                 >
-                  <p className="text-xs sm:text-sm text-brand-gray leading-relaxed font-normal">
+                  <p className="text-xs sm:text-sm text-[#6B5B49] leading-relaxed font-semibold">
                     {faq.a}
                   </p>
                 </div>
