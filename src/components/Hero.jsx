@@ -192,7 +192,7 @@ export default function Hero({ onRegisterClick, onViewChange }) {
                 </div>
                 <div className="text-left overflow-hidden">
                   <span className="block text-xl sm:text-2xl font-black text-[#8C3A16] font-display tracking-tight leading-none" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                    100+
+                    500+
                   </span>
                   <span className="block text-[9px] sm:text-[10px] font-extrabold text-[#6B5B49] tracking-wider uppercase mt-1 truncate">
                     Participants

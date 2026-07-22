@@ -14,13 +14,13 @@ export default function About({ isStandalone = false }) {
     },
     { 
       label: 'Total Prize Pool', 
-      value: '₹1,00,000+', 
+      value: '₹1 Lakh+', 
       description: 'Cash rewards & awards',
       icon: <Trophy className="w-5 h-5 text-brand-gold" />
     },
     { 
-      label: 'National Teams', 
-      value: '60+ Teams', 
+      label: 'Nationwide Teams', 
+      value: '100+ Teams', 
       description: 'Top talent from India',
       icon: <Users className="w-5 h-5 text-brand-pink" />
     }
@@ -61,38 +61,38 @@ export default function About({ isStandalone = false }) {
             </h2>
 
             
-            <div className="space-y-5">
-              <div className="flex items-start gap-4 p-4.5 rounded-2xl bg-brand-card/20 border border-white/5 hover:border-brand-gold/15 transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-brand-gold/10 text-brand-gold shrink-0 border border-brand-gold/20 flex items-center justify-center mt-0.5">
-                  <Sparkles size={20} />
+            <div className="space-y-6 pt-2">
+              <div className="flex items-start gap-4 pb-5 border-b border-[#E3D7C5]/60 group">
+                <div className="w-11 h-11 rounded-2xl bg-[#FFE8D6] text-[#8C3A16] shrink-0 border border-[#E3D7C5] flex items-center justify-center mt-0.5 shadow-2xs group-hover:scale-105 transition-transform duration-300">
+                  <Sparkles size={20} className="text-[#8C3A16]" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-base sm:text-lg font-bold text-white font-display">Product Innovation Platform</h4>
-                  <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
+                  <h4 className="text-base sm:text-lg font-black text-[#5C230C] font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>Product Innovation Platform</h4>
+                  <p className="text-[#6B5B49] text-xs sm:text-sm leading-relaxed font-medium">
                     SISTec Innovation Hackathon is a nationwide initiative to provide a platform for students to solve pressing real-world problems.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4 p-4.5 rounded-2xl bg-brand-card/20 border border-white/5 hover:border-brand-gold/15 transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-brand-gold/10 text-brand-gold shrink-0 border border-brand-gold/20 flex items-center justify-center mt-0.5">
-                  <Trophy size={20} />
+              <div className="flex items-start gap-4 pb-5 border-b border-[#E3D7C5]/60 group">
+                <div className="w-11 h-11 rounded-2xl bg-[#FFE8D6] text-[#8C3A16] shrink-0 border border-[#E3D7C5] flex items-center justify-center mt-0.5 shadow-2xs group-hover:scale-105 transition-transform duration-300">
+                  <Trophy size={20} className="text-[#8C3A16]" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-base sm:text-lg font-bold text-white font-display">Problem-Solving Culture</h4>
-                  <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
+                  <h4 className="text-base sm:text-lg font-black text-[#5C230C] font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>Problem-Solving Culture</h4>
+                  <p className="text-[#6B5B49] text-xs sm:text-sm leading-relaxed font-medium">
                     Inculcates a culture of product innovation, out-of-the-box thinking, and a coding/building mindset.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4 p-4.5 rounded-2xl bg-brand-card/20 border border-white/5 hover:border-brand-gold/15 transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-brand-gold/10 text-brand-gold shrink-0 border border-brand-gold/20 flex items-center justify-center mt-0.5">
-                  <Users size={20} />
+              <div className="flex items-start gap-4 group">
+                <div className="w-11 h-11 rounded-2xl bg-[#FFE8D6] text-[#8C3A16] shrink-0 border border-[#E3D7C5] flex items-center justify-center mt-0.5 shadow-2xs group-hover:scale-105 transition-transform duration-300">
+                  <Users size={20} className="text-[#8C3A16]" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-base sm:text-lg font-bold text-white font-display">Idea to Viable Prototypes</h4>
-                  <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
+                  <h4 className="text-base sm:text-lg font-black text-[#5C230C] font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>Idea to Viable Prototypes</h4>
+                  <p className="text-[#6B5B49] text-xs sm:text-sm leading-relaxed font-medium">
                     Empowering young engineering minds across India to turn bold ideas into real-world technology prototypes.
                   </p>
                 </div>
