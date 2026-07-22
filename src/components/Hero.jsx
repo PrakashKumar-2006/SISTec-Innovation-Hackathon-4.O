@@ -169,18 +169,18 @@ export default function Hero({ onRegisterClick, onViewChange }) {
               {/* Register Now Button Pill */}
               <button
                 onClick={onRegisterClick}
-                className="flex items-center justify-between gap-3 sm:gap-4 px-5 py-3 sm:px-6 sm:py-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] hover:from-[#6B3213] hover:to-[#A64B1E] transition-all duration-300 shadow-lg sm:shadow-xl hover:shadow-2xl group cursor-pointer border border-[#C97F1B]/40 hover:scale-[1.02] active:scale-95 text-left w-full sm:w-64 shrink-0 mt-1 sm:mt-4"
+                className="flex items-center justify-between gap-3 px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] hover:from-[#6B3213] hover:to-[#A64B1E] transition-all duration-300 shadow-md sm:shadow-lg hover:shadow-xl group cursor-pointer border border-[#C97F1B]/40 hover:scale-[1.02] active:scale-95 text-left w-fit shrink-0 mt-1 sm:mt-2"
               >
                 <div className="flex flex-col">
-                  <span className="text-sm sm:text-base font-black tracking-wider uppercase text-white leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+                  <span className="text-xs sm:text-sm font-black tracking-wider uppercase text-white leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
                     Register now
                   </span>
-                  <span className="text-[9px] sm:text-[10px] font-bold text-white/90 bg-black/25 px-2.5 py-0.5 rounded-full border border-white/20 mt-1 sm:mt-1.5 w-fit">
+                  <span className="text-[9px] sm:text-[9.5px] font-bold text-white/95 bg-black/25 px-2 py-0.5 rounded-full border border-white/20 mt-0.5 w-fit">
                     Team Size: 4 Members
                   </span>
                 </div>
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white text-[#8C3A16] flex items-center justify-center shrink-0 shadow-md group-hover:translate-x-1.5 transition-transform duration-300">
-                  <ArrowRight size={16} className="sm:w-[18px] sm:h-[18px]" strokeWidth={2.5} />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white text-[#8C3A16] flex items-center justify-center shrink-0 shadow-sm group-hover:translate-x-1 transition-transform duration-300 ml-1">
+                  <ArrowRight size={14} className="sm:w-[16px] sm:h-[16px]" strokeWidth={2.5} />
                 </div>
               </button>
             </div>
@@ -238,59 +238,81 @@ export default function Hero({ onRegisterClick, onViewChange }) {
 
           </div>
 
-          {/* ── RIGHT COLUMN: Student Collage Graphic ── */}
+          {/* ── RIGHT COLUMN: Student Photo & Dedicated Live Announcement Cards ── */}
           <div className="lg:col-span-6 relative w-full flex flex-col justify-center items-center">
             
-            {/* Collage Image Container */}
-            <div className="relative w-full max-w-lg lg:max-w-none aspect-[4/3] rounded-[1.5rem] sm:rounded-[2.5rem] p-1 sm:p-1.5 bg-[#FAF6F0] border border-[var(--line)] shadow-[0_15px_40px_rgba(43,26,19,0.08)] my-2 sm:mt-6 lg:mt-0 select-none">
-              <div className="w-full h-full rounded-[1.3rem] sm:rounded-[2.2rem] overflow-hidden relative">
+            {/* 1. Clean Student Photo Container (100% Unobstructed Image) */}
+            <div className="relative w-full max-w-lg lg:max-w-none aspect-[4/3] rounded-[1.5rem] sm:rounded-[2.2rem] p-1.5 bg-gradient-to-tr from-[#FAF6F0] via-[#FFFDF7] to-[#FAF6EE] border border-[#E3D7C5] shadow-xl select-none overflow-hidden group">
+              <div className="w-full h-full rounded-[1.2rem] sm:rounded-[2rem] overflow-hidden relative">
                 <img 
                   src="/home_page_image.jpg" 
                   alt="Students Collaborating at Hackathon" 
                   loading="eager"
                   fetchPriority="high"
                   decoding="async"
-                  className="w-full h-full object-cover opacity-95"
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 />
                 {/* Soft gradient bottom vignette */}
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/10 via-transparent to-transparent pointer-events-none"></div>
-              </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none"></div>
 
-              {/* Overlapping Badges */}
+                {/* Live Campus Event Badge */}
+                <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full border border-white/20 text-[9px] sm:text-[10px] font-bold flex items-center gap-1.5 shadow-md">
+                  <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                  <span>SIH 4.0 SISTec-R</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Dedicated Live Announcements Grid (Placed Cleanly Below Image) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full max-w-lg lg:max-w-none mt-3.5 sm:mt-4 font-sans">
               
-              {/* Badge 1: Registrations Open */}
-              <div className="absolute -top-3 xs:-top-4 sm:-top-6 left-1 xs:left-2 sm:-left-6 z-20 animate-float-2 flex items-center gap-1.5 sm:gap-3 bg-[var(--paper)] border border-[var(--line-strong)] rounded-xl sm:rounded-2xl p-1.5 xs:p-2 sm:p-4 shadow-lg max-w-[160px] xs:max-w-[190px] sm:max-w-[280px]">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-[var(--vermilion)] text-white flex items-center justify-center shrink-0">
-                  <Megaphone size={13} className="sm:w-[15px] sm:h-[15px]" />
+              {/* Announcement 1: Registrations Open */}
+              <div 
+                onClick={onRegisterClick}
+                className="group/ann bg-[#FFFDF7] border border-[#E3D7C5] hover:border-[#8C3A16] p-3 sm:p-3.5 rounded-2xl flex items-center justify-between gap-3 shadow-xs hover:shadow-md transition-all duration-300 cursor-pointer text-left"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="relative w-9 h-9 rounded-xl bg-[#8C3A16] text-white flex items-center justify-center shrink-0 shadow-2xs group-hover/ann:scale-105 transition-transform">
+                    <Megaphone size={17} className="text-white" />
+                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white animate-ping"></span>
+                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></span>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-black text-[#241708] leading-tight font-display truncate" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                      Registrations Open!
+                    </p>
+                    <p className="text-[10px] font-bold text-[#6B5B49] truncate mt-0.5">
+                      Join 500+ Innovators
+                    </p>
+                  </div>
                 </div>
-                <div className="text-left">
-                  <p className="text-[8px] xs:text-[9px] sm:text-xs font-bold text-brand-navy leading-snug">
-                    Registrations are open.
-                  </p>
-                  <button 
-                    onClick={onRegisterClick}
-                    className="text-[7.5px] xs:text-[8px] sm:text-[10px] font-black text-[var(--vermilion)] hover:underline uppercase mt-0.5 block border-none bg-transparent cursor-pointer p-0"
-                  >
-                    Register
-                  </button>
+                <div className="shrink-0 text-[#8C3A16] group-hover/ann:translate-x-1 transition-transform">
+                  <ArrowRight size={16} strokeWidth={2.5} />
                 </div>
               </div>
 
-              {/* Badge 2: Problem Statements Released */}
-              <div className="absolute -bottom-3 xs:-bottom-4 sm:-bottom-6 right-1 xs:right-2 sm:-right-6 z-20 animate-float-3 flex items-center gap-1.5 sm:gap-3 bg-[var(--paper)] border border-[var(--line-strong)] rounded-xl sm:rounded-2xl p-1.5 xs:p-2 sm:p-4 shadow-lg max-w-[160px] xs:max-w-[190px] sm:max-w-[280px]">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-[var(--vermilion)] text-white flex items-center justify-center shrink-0">
-                  <Bell size={13} className="sm:w-[15px] sm:h-[15px]" />
+              {/* Announcement 2: Problem Statements Out */}
+              <div 
+                onClick={() => onViewChange && onViewChange('problem-statements')}
+                className="group/ann bg-[#FFFDF7] border border-[#E3D7C5] hover:border-[#C97F1B] p-3 sm:p-3.5 rounded-2xl flex items-center justify-between gap-3 shadow-xs hover:shadow-md transition-all duration-300 cursor-pointer text-left"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="relative w-9 h-9 rounded-xl bg-[#C97F1B] text-white flex items-center justify-center shrink-0 shadow-2xs group-hover/ann:scale-105 transition-transform">
+                    <Bell size={17} className="text-white" />
+                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-400 rounded-full border-2 border-white animate-ping"></span>
+                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-400 rounded-full border-2 border-white"></span>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-black text-[#241708] leading-tight font-display truncate" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                      Problem Statements
+                    </p>
+                    <p className="text-[10px] font-bold text-[#6B5B49] truncate mt-0.5">
+                      20+ Statements Out
+                    </p>
+                  </div>
                 </div>
-                <div className="text-left">
-                  <p className="text-[8px] xs:text-[9px] sm:text-xs font-bold text-brand-navy leading-snug">
-                    Problem statements released.
-                  </p>
-                  <button 
-                    onClick={() => onViewChange && onViewChange('problem-statements')}
-                    className="text-[7.5px] xs:text-[8px] sm:text-[10px] font-black text-[var(--vermilion)] hover:underline uppercase mt-0.5 block border-none bg-transparent cursor-pointer p-0"
-                  >
-                    Check it
-                  </button>
+                <div className="shrink-0 text-[#C97F1B] group-hover/ann:translate-x-1 transition-transform">
+                  <ArrowRight size={16} strokeWidth={2.5} />
                 </div>
               </div>
 
