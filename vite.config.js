@@ -30,6 +30,14 @@ try {
     fs.copyFileSync(ideaTemplate, path.join(destDir, 'Idea-Sumission Format SIH 4.0.pptx'));
     console.log('Idea template PPTX copied successfully!');
   }
+
+  // 4. Copy uploaded contact illustration image
+  const contactMedia = 'C:/Users/maury/.gemini/antigravity-ide/brain/11d949aa-bb2a-43df-9f93-8f852b9d8c75/media__1784754445234.png';
+  if (fs.existsSync(contactMedia)) {
+    fs.copyFileSync(contactMedia, './contact image.png');
+    fs.copyFileSync(contactMedia, path.join(destDir, 'contact image.png'));
+    console.log('New Contact image copied successfully!');
+  }
 } catch (err) {
   console.error('Failed to copy assets:', err);
 }

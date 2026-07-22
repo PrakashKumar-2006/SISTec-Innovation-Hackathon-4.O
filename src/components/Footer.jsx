@@ -27,43 +27,46 @@ export default function Footer({ onViewChange }) {
               Fostering technical innovation and out-of-the-box engineering problem solving among students across India.
             </p>
 
-            {/* Social Icons */}
+            {/* Social Icons with Official Brand App Badge Styles */}
             <div className="flex gap-3 pt-2">
-              {[
-                { 
-                  icon: <Linkedin size={16} />, 
-                  href: '#',
-                  hoverClass: 'hover:bg-[#0077b5] hover:border-[#0077b5] hover:text-white' 
-                },
-                { 
-                  icon: <Facebook size={16} />, 
-                  href: '#',
-                  hoverClass: 'hover:bg-[#1877f2] hover:border-[#1877f2] hover:text-white' 
-                },
-                { 
-                  icon: <Instagram size={16} />, 
-                  href: '#',
-                  hoverClass: 'hover:bg-gradient-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] hover:border-transparent hover:text-white' 
-                },
-                { 
-                  icon: (
-                    <svg viewBox="0 0 24 24" className="w-[15px] h-[15px]" fill="currentColor">
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                    </svg>
-                  ), 
-                  href: '#',
-                  hoverClass: 'hover:bg-white hover:border-white hover:text-black' 
-                }
-              ].map((soc, index) => (
-                <a
-                  key={index}
-                  href={soc.href}
-                  onClick={(e) => { if (soc.href === '#') e.preventDefault(); }}
-                  className={`p-2 rounded-xl bg-brand-dark border border-brand-navy/10 text-brand-gray transition-all ${soc.hoverClass}`}
-                >
-                  {soc.icon}
-                </a>
-              ))}
+              {/* LinkedIn (Real App Badge Style matching user image) */}
+              <a
+                href="https://www.linkedin.com/school/sagar-institute-of-science-technology-research-sistec-r/posts/?feedView=all"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="w-10 h-10 rounded-2xl bg-[#0066c8] flex items-center justify-center shadow-md shadow-[#0066c8]/30 hover:scale-110 transition-all duration-300 group cursor-pointer"
+              >
+                <div className="w-5 h-5 bg-white rounded-[4px] flex items-center justify-center p-[2px] shadow-2xs group-hover:scale-105 transition-transform">
+                  <svg viewBox="0 0 24 24" className="w-full h-full fill-[#0066c8]">
+                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.78a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2z"/>
+                  </svg>
+                </div>
+              </a>
+
+              {/* Instagram */}
+              <a
+                href="https://www.instagram.com/sistecratibad?igsh=ZXQ5ZWtlbDNlcm94"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] flex items-center justify-center shadow-md shadow-[#ee2a7b]/30 hover:scale-110 transition-all duration-300 group cursor-pointer"
+              >
+                <Instagram size={20} className="text-white group-hover:scale-105 transition-transform" />
+              </a>
+
+              {/* Twitter / X */}
+              <a
+                href="https://x.com/SISTecRatibad?s=20"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Twitter X"
+                className="w-10 h-10 rounded-2xl bg-black border border-white/20 flex items-center justify-center shadow-md shadow-black/40 hover:scale-110 transition-all duration-300 group cursor-pointer"
+              >
+                <svg viewBox="0 0 24 24" className="w-[16px] h-[16px] fill-white group-hover:scale-105 transition-transform">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              </a>
             </div>
           </div>
 

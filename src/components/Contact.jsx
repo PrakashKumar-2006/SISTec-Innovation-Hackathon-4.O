@@ -165,15 +165,15 @@ export default function Contact({ onViewChange }) {
   };
 
   return (
-    <section id="contact" className="relative bg-brand-darker pt-32 pb-24 px-4 sm:px-6 lg:px-8 text-white select-none overflow-hidden border-t border-white/5">
+    <section id="contact" className="relative bg-brand-darker pt-24 sm:pt-28 pb-10 sm:pb-14 px-4 sm:px-6 lg:px-8 text-white select-none overflow-hidden border-t border-white/5">
       {/* Background glow elements */}
       <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-brand-gold/5 rounded-full blur-[120px] pointer-events-none -z-10 animate-pulse-slow"></div>
       <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[150px] pointer-events-none -z-10"></div>
 
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
-        <div className="text-center space-y-3 mb-12 font-sans">
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-[var(--clay)] uppercase font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+        <div className="text-center space-y-1.5 mb-5 sm:mb-6 font-sans">
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-[var(--clay)] uppercase font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
             Help &amp; Support Center
           </h2>
           <p className="text-[var(--ink-soft)] text-xs sm:text-sm font-medium max-w-xl mx-auto">
@@ -182,17 +182,16 @@ export default function Contact({ onViewChange }) {
         </div>
 
         {/* ── Top 3 Contact Cards ── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4 mb-6 sm:mb-8 font-sans">
           {/* Helpline Card */}
-          <div className="group p-6 rounded-3xl bg-[#FFFDF7] border border-[#E3D7C5] hover:border-[#8C3A16] shadow-md hover:shadow-xl transition-all duration-300 text-center flex flex-col items-center">
-            <div className="w-14 h-14 rounded-2xl bg-[#FFE8D6] text-[#8C3A16] mb-5 border border-[#E3D7C5] flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xs">
-              <Phone size={24} className="text-[#8C3A16]" />
+          <div className="group p-3.5 sm:p-4 rounded-2xl bg-[#FFFDF7] border border-[#E3D7C5] hover:border-[#8C3A16] shadow-xs hover:shadow-md transition-all duration-300 text-center flex flex-col items-center">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#FFE8D6] text-[#8C3A16] mb-2 border border-[#E3D7C5] flex items-center justify-center group-hover:scale-105 transition-transform shadow-2xs">
+              <Phone size={17} className="text-[#8C3A16]" />
             </div>
-            <h3 className="text-lg font-black text-[#5C230C] mb-3 font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>Helpline Number</h3>
-            <div className="space-y-1 font-mono text-xs sm:text-sm text-[#6B5B49] font-bold">
+            <h3 className="text-xs sm:text-sm font-black text-[#5C230C] mb-1 font-display uppercase tracking-wider" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>Helpline Number</h3>
+            <div className="space-y-0.5 font-mono text-xs text-[#6B5B49] font-bold">
               <p className="hover:text-[#8C3A16] transition-colors">+91 9827102062</p>
               <p className="hover:text-[#8C3A16] transition-colors">+91 9827666677</p>
-              <p className="hover:text-[#8C3A16] transition-colors">+91 7879261234</p>
             </div>
           </div>
 
@@ -201,93 +200,95 @@ export default function Contact({ onViewChange }) {
             href="https://www.google.com/maps/place/Sagar+Institute+of+Science,+Technology+%26+Research,+Ratibad/@23.1806836,77.2995781,18.42z/data=!4m6!3m5!1s0x397c5c3c7b0aa7e1:0xf4798e9656dfb029!8m2!3d23.1814693!4d77.3016453!16s%2Fm%2F0t_fqww?entry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3D"
             target="_blank"
             rel="noopener noreferrer"
-            className="group p-6 rounded-3xl bg-[#FFFDF7] border border-[#E3D7C5] hover:border-[#8C3A16] shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 text-center flex flex-col items-center cursor-pointer"
+            className="group p-3.5 sm:p-4 rounded-2xl bg-[#FFFDF7] border border-[#E3D7C5] hover:border-[#8C3A16] shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 text-center flex flex-col items-center cursor-pointer"
           >
-            <div className="w-14 h-14 rounded-2xl bg-[#FFE8D6] text-[#8C3A16] mb-5 border border-[#E3D7C5] flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xs">
-              <MapPin size={24} className="text-[#8C3A16]" />
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#FFE8D6] text-[#8C3A16] mb-2 border border-[#E3D7C5] flex items-center justify-center group-hover:scale-105 transition-transform shadow-2xs">
+              <MapPin size={17} className="text-[#8C3A16]" />
             </div>
-            <h3 className="text-lg font-black text-[#5C230C] mb-3 font-display group-hover:text-[#8C3A16] transition-colors" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>Address</h3>
-            <p className="text-xs sm:text-sm text-[#6B5B49] leading-relaxed max-w-xs font-bold group-hover:text-[#241708] transition-colors">
-              SISTec-R Sikandrabad, Ratibad, Bhopal, Madhya Pradesh 462044
+            <h3 className="text-xs sm:text-sm font-black text-[#5C230C] mb-1 font-display uppercase tracking-wider group-hover:text-[#8C3A16] transition-colors" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>Address</h3>
+            <p className="text-xs text-[#6B5B49] leading-snug max-w-xs font-bold group-hover:text-[#241708] transition-colors">
+              SISTec-R Sikandrabad, Ratibad, Bhopal, MP 462044
             </p>
           </a>
 
           {/* Email Card */}
-          <div className="group p-6 rounded-3xl bg-[#FFFDF7] border border-[#E3D7C5] hover:border-[#8C3A16] shadow-md hover:shadow-xl transition-all duration-300 text-center flex flex-col items-center">
-            <div className="w-14 h-14 rounded-2xl bg-[#FFE8D6] text-[#8C3A16] mb-5 border border-[#E3D7C5] flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xs">
-              <Mail size={24} className="text-[#8C3A16]" />
+          <div className="group p-3.5 sm:p-4 rounded-2xl bg-[#FFFDF7] border border-[#E3D7C5] hover:border-[#8C3A16] shadow-xs hover:shadow-md transition-all duration-300 text-center flex flex-col items-center">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#FFE8D6] text-[#8C3A16] mb-2 border border-[#E3D7C5] flex items-center justify-center group-hover:scale-105 transition-transform shadow-2xs">
+              <Mail size={17} className="text-[#8C3A16]" />
             </div>
-            <h3 className="text-lg font-black text-[#5C230C] mb-3 font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>Email</h3>
-            <div className="space-y-1 text-xs sm:text-sm text-[#6B5B49] font-bold break-all">
+            <h3 className="text-xs sm:text-sm font-black text-[#5C230C] mb-1 font-display uppercase tracking-wider" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>Support Email</h3>
+            <div className="space-y-0.5 text-xs text-[#6B5B49] font-bold break-all">
               <p className="hover:text-[#8C3A16] transition-colors">support@sistec.ac.in</p>
               <p className="hover:text-[#8C3A16] transition-colors">sih4.0@sistec.ac.in</p>
             </div>
           </div>
         </div>
 
-        {/* ── Form Section ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-7xl mx-auto">
-          {/* Contact Image Illustration */}
-          <div className="lg:col-span-5 flex justify-center">
-            <div className="relative group w-full max-w-md lg:max-w-full rounded-3xl overflow-hidden border border-[#E3D7C5] bg-[#FFFDF7] p-3 shadow-xl">
+        {/* ── Form & Image Section ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch max-w-7xl mx-auto">
+          {/* Contact Image Illustration Card */}
+          <div className="lg:col-span-5 flex flex-col h-full">
+            <div className="relative group w-full h-full flex flex-col items-center justify-center rounded-2xl sm:rounded-3xl overflow-hidden border border-[#E3D7C5] bg-[#FFFDF7] p-3 sm:p-4 shadow-lg hover:shadow-xl transition-all duration-300">
               <img 
                 src={contactImg} 
-                alt="Support &amp; Contact" 
-                className="w-full h-auto object-contain rounded-2xl transform group-hover:scale-105 transition-transform duration-500"
+                alt="Contact Us - We're Here to Help" 
+                loading="eager"
+                decoding="async"
+                className="w-full h-full object-contain rounded-xl sm:rounded-2xl transform group-hover:scale-[1.02] transition-transform duration-500 max-h-[300px] sm:max-h-[360px]"
               />
             </div>
           </div>
 
           {/* Form Card */}
-          <div className="lg:col-span-7">
-            <div className="w-full p-6 sm:p-10 rounded-3xl bg-[#FFFDF7] border border-[#E3D7C5] shadow-xl relative backdrop-blur-sm">
+          <div className="lg:col-span-7 flex flex-col h-full">
+            <div className="w-full h-full p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-[#FFFDF7] border border-[#E3D7C5] shadow-lg relative backdrop-blur-sm">
 
             {isSent ? (
-              <div className="py-16 flex flex-col items-center justify-center text-center space-y-6 animate-fade-in">
-                <div className="w-20 h-20 rounded-full bg-[#FFE8D6] border border-[#E3D7C5] flex items-center justify-center text-[#8C3A16] shadow-lg">
-                  <CheckCircle2 size={40} className="text-[#8C3A16]" />
+              <div className="py-10 flex flex-col items-center justify-center text-center space-y-4 animate-fade-in">
+                <div className="w-16 h-16 rounded-full bg-[#FFE8D6] border border-[#E3D7C5] flex items-center justify-center text-[#8C3A16] shadow-md">
+                  <CheckCircle2 size={32} className="text-[#8C3A16]" />
                 </div>
-                <div className="space-y-2 max-w-md">
-                  <h4 className="text-2xl font-black text-[#5C230C] font-display">Request Received!</h4>
-                  <p className="text-[#6B5B49] font-sans font-medium">
+                <div className="space-y-1 max-w-md">
+                  <h4 className="text-xl font-black text-[#5C230C] font-display">Request Received!</h4>
+                  <p className="text-[#6B5B49] text-xs sm:text-sm font-sans font-medium">
                     Your request has been successfully submitted. We have sent a confirmation email to you.
                   </p>
                 </div>
                 
-                <div className="bg-[#FAF6EE] border border-[#E3D7C5] rounded-xl p-6 w-full max-w-md space-y-4">
+                <div className="bg-[#FAF6EE] border border-[#E3D7C5] rounded-xl p-4 w-full max-w-md space-y-3">
                   <div>
-                    <p className="text-xs text-[#8C3A16] uppercase tracking-widest font-black mb-1 font-sans">Reference ID</p>
-                    <p className="font-mono text-lg text-[#8C3A16] font-bold">{referenceId}</p>
+                    <p className="text-[10px] text-[#8C3A16] uppercase tracking-widest font-black mb-0.5 font-sans">Reference ID</p>
+                    <p className="font-mono text-base text-[#8C3A16] font-bold">{referenceId}</p>
                   </div>
-                  <div className="flex items-center gap-3 text-sm text-[#6B5B49] justify-center border-t border-[#E3D7C5] pt-4 font-sans font-bold">
-                    <Clock size={16} className="text-[#8C3A16]" />
+                  <div className="flex items-center gap-2 text-xs text-[#6B5B49] justify-center border-t border-[#E3D7C5] pt-3 font-sans font-bold">
+                    <Clock size={14} className="text-[#8C3A16]" />
                     <span>Expected response time: 24–48 business hours</span>
                   </div>
                 </div>
 
                 <button
                   onClick={resetForm}
-                  className="mt-4 px-6 py-2.5 bg-[#FAF6EE] hover:bg-[#8C3A16] hover:!text-white text-[#8C3A16] font-extrabold rounded-xl transition-all flex items-center gap-2 border border-[#E3D7C5] text-xs cursor-pointer shadow-2xs"
+                  className="mt-2 px-5 py-2 bg-[#FAF6EE] hover:bg-[#8C3A16] hover:!text-white text-[#8C3A16] font-extrabold rounded-xl transition-all flex items-center gap-2 border border-[#E3D7C5] text-xs cursor-pointer shadow-2xs"
                 >
-                  <ArrowLeft size={16} /> Submit Another Request
+                  <ArrowLeft size={14} /> Submit Another Request
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6 text-left">
+              <form onSubmit={handleSubmit} className="space-y-3.5 text-left">
                 {submitError && (
-                  <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-600 text-sm flex items-start gap-3 font-bold">
-                    <AlertCircle size={18} className="shrink-0 mt-0.5" />
+                  <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-600 text-xs flex items-start gap-2.5 font-bold">
+                    <AlertCircle size={16} className="shrink-0 mt-0.5" />
                     <p>{submitError}</p>
                   </div>
                 )}
                 {/* Category Selection */}
-                <div className="space-y-2 font-sans">
-                  <label className="text-xs font-black text-[#8C3A16] uppercase tracking-wider">Select Support Category</label>
+                <div className="space-y-1 font-sans">
+                  <label className="text-[11px] sm:text-xs font-black text-[#8C3A16] uppercase tracking-wider">Select Support Category</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-5 py-3.5 rounded-2xl bg-[#FAF6EE] border border-[#E3D7C5] focus:border-[#8C3A16] focus:bg-[#FFFDF7] focus:ring-2 focus:ring-[#8C3A16]/10 focus:outline-none text-[#241708] font-bold text-sm transition-all appearance-none cursor-pointer"
-                    style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%238C3A16\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2.5\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.2em' }}
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#FAF6EE] border border-[#E3D7C5] focus:border-[#8C3A16] focus:bg-[#FFFDF7] focus:ring-2 focus:ring-[#8C3A16]/10 focus:outline-none text-[#241708] font-bold text-xs sm:text-sm transition-all appearance-none cursor-pointer"
+                    style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%238C3A16\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2.5\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.85rem center', backgroundSize: '1.1em' }}
                   >
                     {CATEGORIES.map(cat => (
                       <option key={cat} value={cat} className="bg-[#FFFDF7] text-[#241708] font-bold">{cat}</option>
@@ -297,55 +298,55 @@ export default function Contact({ onViewChange }) {
 
                 {/* Verification Block for certain categories */}
                 {['Registration Support', 'Payment Related Query', 'Problem Statement Change Request', 'Certificate / Result Query', 'Technical Issue'].includes(category) && (
-                  <div className="bg-[#FAF6EE] border border-[#E3D7C5] rounded-2xl p-5 sm:p-6 space-y-4 font-sans">
-                    <label className="text-sm font-black text-[#8C3A16] flex items-center gap-2">
-                      <Search size={16} /> Registration Code Verification 
-                      {category === 'Technical Issue' && <span className="text-[#6B5B49] text-xs font-semibold">(Optional)</span>}
+                  <div className="bg-[#FAF6EE] border border-[#E3D7C5] rounded-xl p-3.5 sm:p-4 space-y-3 font-sans">
+                    <label className="text-xs font-black text-[#8C3A16] flex items-center gap-2">
+                      <Search size={15} /> Registration Code Verification 
+                      {category === 'Technical Issue' && <span className="text-[#6B5B49] text-[11px] font-semibold">(Optional)</span>}
                     </label>
-                    <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="flex flex-col sm:flex-row gap-2.5">
                       <input
                         type="text"
                         value={form.registrationCode}
                         onChange={(e) => setForm({ ...form, registrationCode: e.target.value })}
                         placeholder="e.g. REG-123456"
-                        className="flex-1 px-5 py-3 rounded-xl bg-[#FFFDF7] border border-[#E3D7C5] focus:border-[#8C3A16] focus:outline-none text-sm text-[#241708] font-bold font-mono placeholder-[#6B5B49] transition-all"
+                        className="flex-1 px-4 py-2 rounded-xl bg-[#FFFDF7] border border-[#E3D7C5] focus:border-[#8C3A16] focus:outline-none text-xs sm:text-sm text-[#241708] font-bold font-mono placeholder-[#6B5B49] transition-all"
                       />
                       <button
                         type="button"
                         onClick={handleVerify}
                         disabled={!form.registrationCode || isVerifying}
-                        className="px-6 py-3 bg-[#8C3A16] hover:bg-[#6B3213] text-white font-black text-xs uppercase tracking-wider rounded-xl transition-all disabled:opacity-50 whitespace-nowrap cursor-pointer shadow-md border-none"
+                        className="px-5 py-2 bg-[#8C3A16] hover:bg-[#6B3213] text-white font-black text-xs uppercase tracking-wider rounded-xl transition-all disabled:opacity-50 whitespace-nowrap cursor-pointer shadow-sm border-none"
                       >
                         {isVerifying ? 'Verifying...' : 'Verify'}
                       </button>
                     </div>
-                    {verifyError && <p className="text-red-600 text-xs mt-2 font-bold">{verifyError}</p>}
+                    {verifyError && <p className="text-red-600 text-xs mt-1 font-bold">{verifyError}</p>}
                     
                     {/* Fetched Data Display */}
                     {teamData && (
-                      <div className="mt-4 bg-[#FFFDF7] border border-[#E3D7C5] rounded-xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm animate-fade-in shadow-2xs">
+                      <div className="mt-3 bg-[#FFFDF7] border border-[#E3D7C5] rounded-xl p-3 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs animate-fade-in shadow-2xs">
                         <div>
-                          <p className="text-[#6B5B49] text-xs font-bold mb-1">Team Name</p>
+                          <p className="text-[#6B5B49] text-[10px] font-bold mb-0.5">Team Name</p>
                           <p className="text-[#241708] font-black">{teamData.teamName}</p>
                         </div>
                         <div>
-                          <p className="text-[#6B5B49] text-xs font-bold mb-1">Team Leader</p>
+                          <p className="text-[#6B5B49] text-[10px] font-bold mb-0.5">Team Leader</p>
                           <p className="text-[#241708] font-black">{teamData.leaderName}</p>
                         </div>
                         <div>
-                          <p className="text-[#6B5B49] text-xs font-bold mb-1">Institute</p>
+                          <p className="text-[#6B5B49] text-[10px] font-bold mb-0.5">Institute</p>
                           <p className="text-[#241708] font-black">{teamData.instituteName}</p>
                         </div>
                         {category === 'Problem Statement Change Request' && (
                           <div>
-                            <p className="text-[#6B5B49] text-xs font-bold mb-1">Current Problem Statement</p>
+                            <p className="text-[#6B5B49] text-[10px] font-bold mb-0.5">Current Problem Statement</p>
                             <p className="text-[#8C3A16] font-black line-clamp-1" title={teamData.psTitle}>{teamData.psid} - {teamData.psTitle}</p>
                           </div>
                         )}
                         {category === 'Payment Related Query' && (
                           <div>
-                            <p className="text-[#6B5B49] text-xs font-bold mb-1">Payment Status</p>
-                            <span className={`px-2 py-0.5 rounded text-xs font-black ${
+                            <p className="text-[#6B5B49] text-[10px] font-bold mb-0.5">Payment Status</p>
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-black ${
                               teamData.paymentStatus === 'Completed' ? 'bg-green-100 text-green-700 border border-green-300' :
                               teamData.paymentStatus === 'Failed' ? 'bg-red-100 text-red-700 border border-red-300' :
                               'bg-amber-100 text-amber-700 border border-amber-300'
@@ -359,12 +360,12 @@ export default function Contact({ onViewChange }) {
                   </div>
                 )}
 
-                {/* Basic Details (For all except Change Request) */}
+                {/* Basic Details & Subject (Restructured 2-Column Grid) */}
                 {category !== 'Problem Statement Change Request' && (
                   <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 font-sans">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 font-sans">
                       <div className="space-y-1">
-                        <label className="text-xs font-black text-[#8C3A16] ml-1">Full Name *</label>
+                        <label className="text-[11px] sm:text-xs font-black text-[#8C3A16] ml-1">Full Name *</label>
                         <input
                           type="text"
                           required
@@ -372,11 +373,11 @@ export default function Contact({ onViewChange }) {
                           onChange={(e) => setForm({ ...form, name: e.target.value })}
                           placeholder="Name"
                           readOnly={!!teamData}
-                          className="w-full px-5 py-3 rounded-xl bg-[#FAF6EE] border border-[#E3D7C5] focus:border-[#8C3A16] focus:bg-[#FFFDF7] focus:outline-none text-sm text-[#241708] font-bold placeholder-[#6B5B49] transition-all read-only:opacity-60"
+                          className="w-full px-4 py-2.5 rounded-xl bg-[#FAF6EE] border border-[#E3D7C5] focus:border-[#8C3A16] focus:bg-[#FFFDF7] focus:outline-none text-xs sm:text-sm text-[#241708] font-bold placeholder-[#6B5B49] transition-all read-only:opacity-60"
                         />
                       </div>
                       <div className="space-y-1">
-                        <label className="text-xs font-black text-[#8C3A16] ml-1">Email Address *</label>
+                        <label className="text-[11px] sm:text-xs font-black text-[#8C3A16] ml-1">Email Address *</label>
                         <input
                           type="email"
                           required
@@ -384,51 +385,47 @@ export default function Contact({ onViewChange }) {
                           onChange={(e) => setForm({ ...form, email: e.target.value })}
                           placeholder="Email"
                           readOnly={!!teamData}
-                          className="w-full px-5 py-3 rounded-xl bg-[#FAF6EE] border border-[#E3D7C5] focus:border-[#8C3A16] focus:bg-[#FFFDF7] focus:outline-none text-sm text-[#241708] font-bold placeholder-[#6B5B49] transition-all read-only:opacity-60"
+                          className="w-full px-4 py-2.5 rounded-xl bg-[#FAF6EE] border border-[#E3D7C5] focus:border-[#8C3A16] focus:bg-[#FFFDF7] focus:outline-none text-xs sm:text-sm text-[#241708] font-bold placeholder-[#6B5B49] transition-all read-only:opacity-60"
                         />
                       </div>
                     </div>
-                    
-                    {['General Inquiry', 'Registration Support', 'Other'].includes(category) && (
-                      <div className="space-y-1 font-sans">
-                        <label className="text-xs font-black text-[#8C3A16] ml-1">Phone Number (Optional)</label>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 font-sans">
+                      {['General Inquiry', 'Registration Support', 'Other'].includes(category) && (
+                        <div className="space-y-1">
+                          <label className="text-[11px] sm:text-xs font-black text-[#8C3A16] ml-1">Phone Number (Optional)</label>
+                          <input
+                            type="tel"
+                            value={form.phone}
+                            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                            placeholder="Phone Number"
+                            readOnly={!!teamData}
+                            className="w-full px-4 py-2.5 rounded-xl bg-[#FAF6EE] border border-[#E3D7C5] focus:border-[#8C3A16] focus:bg-[#FFFDF7] focus:outline-none text-xs sm:text-sm text-[#241708] font-bold placeholder-[#6B5B49] transition-all read-only:opacity-60"
+                          />
+                        </div>
+                      )}
+                      <div className={`space-y-1 ${['General Inquiry', 'Registration Support', 'Other'].includes(category) ? '' : 'sm:col-span-2'}`}>
+                        <label className="text-[11px] sm:text-xs font-black text-[#8C3A16] ml-1">Subject *</label>
                         <input
-                          type="tel"
-                          value={form.phone}
-                          onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                          placeholder="Phone Number"
-                          readOnly={!!teamData}
-                          className="w-full px-5 py-3 rounded-xl bg-[#FAF6EE] border border-[#E3D7C5] focus:border-[#8C3A16] focus:bg-[#FFFDF7] focus:outline-none text-sm text-[#241708] font-bold placeholder-[#6B5B49] transition-all read-only:opacity-60"
+                          type="text"
+                          required
+                          value={form.subject}
+                          onChange={(e) => setForm({ ...form, subject: e.target.value })}
+                          placeholder="Brief subject of your query"
+                          className="w-full px-4 py-2.5 rounded-xl bg-[#FAF6EE] border border-[#E3D7C5] focus:border-[#8C3A16] focus:bg-[#FFFDF7] focus:outline-none text-xs sm:text-sm text-[#241708] font-bold placeholder-[#6B5B49] transition-all"
                         />
                       </div>
-                    )}
-                  </>
-                )}
-
-                {/* Subject & Message (For all except Change Request) */}
-                {category !== 'Problem Statement Change Request' && (
-                  <>
-                    <div className="space-y-1 font-sans">
-                      <label className="text-xs font-black text-[#8C3A16] ml-1">Subject *</label>
-                      <input
-                        type="text"
-                        required
-                        value={form.subject}
-                        onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                        placeholder="Brief subject of your query"
-                        className="w-full px-5 py-3 rounded-xl bg-[#FAF6EE] border border-[#E3D7C5] focus:border-[#8C3A16] focus:bg-[#FFFDF7] focus:outline-none text-sm text-[#241708] font-bold placeholder-[#6B5B49] transition-all"
-                      />
                     </div>
 
                     <div className="space-y-1 font-sans">
-                      <label className="text-xs font-black text-[#8C3A16] ml-1">Detailed Message *</label>
+                      <label className="text-[11px] sm:text-xs font-black text-[#8C3A16] ml-1">Detailed Message *</label>
                       <textarea
-                        rows="5"
+                        rows="3"
                         required
                         value={form.message}
                         onChange={(e) => setForm({ ...form, message: e.target.value })}
                         placeholder="Describe your issue or query in detail..."
-                        className="w-full px-5 py-3 rounded-xl bg-[#FAF6EE] border border-[#E3D7C5] focus:border-[#8C3A16] focus:bg-[#FFFDF7] focus:outline-none text-sm text-[#241708] font-bold placeholder-[#6B5B49] transition-all resize-y custom-scrollbar"
+                        className="w-full px-4 py-2.5 rounded-xl bg-[#FAF6EE] border border-[#E3D7C5] focus:border-[#8C3A16] focus:bg-[#FFFDF7] focus:outline-none text-xs sm:text-sm text-[#241708] font-bold placeholder-[#6B5B49] transition-all resize-y custom-scrollbar"
                       ></textarea>
                     </div>
                   </>
@@ -574,17 +571,17 @@ export default function Contact({ onViewChange }) {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] hover:from-[#6B3213] hover:to-[#A64B1E] text-sm font-black text-white uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-xl active:scale-95 transition-all border-none disabled:opacity-50 disabled:cursor-not-allowed mt-6 font-sans"
+                  className="w-full py-3 sm:py-3.5 rounded-xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] hover:from-[#6B3213] hover:to-[#A64B1E] text-xs sm:text-sm font-black text-white uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-95 transition-all border-none disabled:opacity-50 disabled:cursor-not-allowed mt-4 font-sans"
                 >
                   {isSubmitting ? (
                     <>
-                      <div className="w-5 h-5 rounded-full border-2 border-white/30 border-t-white animate-spin"></div>
+                      <div className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin"></div>
                       <span>Submitting Request...</span>
                     </>
                   ) : (
                     <>
                       <span>Submit Support Request</span>
-                      <Send size={18} />
+                      <Send size={16} />
                     </>
                   )}
                 </button>
