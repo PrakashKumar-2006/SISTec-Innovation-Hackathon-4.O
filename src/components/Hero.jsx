@@ -112,13 +112,24 @@ export default function Hero({ onRegisterClick, onViewChange }) {
                 <div className="w-[2px] flex-1 bg-gradient-to-b from-transparent via-[var(--marigold)] to-transparent" />
               </div>
 
-              {/* SISTec Innovation Hackathon 4.0 Stacked Heading */}
+              {/* SISTec Innovation Hackathon 4.0 Stacked Heading (SIH Acrostic Style) */}
               <div className="flex flex-col items-center sm:items-start justify-center flex-1 min-w-0">
-                <h1 className="leading-[0.88] tracking-tight" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
-                  <span className="block text-4xl sm:text-5xl lg:text-6xl text-[var(--clay)]">SISTec</span>
-                  <span className="block text-3xl sm:text-4xl lg:text-5xl text-[var(--clay)]/70">Innovation</span>
-                  <span className="block text-3xl sm:text-4xl lg:text-5xl text-[var(--clay)]/70">Hackathon</span>
-                  <span className="block text-5xl sm:text-6xl lg:text-7xl text-[var(--marigold)] mt-1">4.0</span>
+                <h1 className="leading-[1.02] tracking-tight text-left select-none" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+                  <div className="flex items-baseline">
+                    <span className="text-[#D97B33] font-black text-5xl sm:text-6xl lg:text-7xl leading-none">S</span>
+                    <span className="text-[#3D2210] font-black text-4xl sm:text-5xl lg:text-6xl">ISTec</span>
+                  </div>
+                  <div className="flex items-baseline -mt-1 sm:-mt-2">
+                    <span className="text-[#D97B33] font-black text-5xl sm:text-6xl lg:text-7xl leading-none">I</span>
+                    <span className="text-[#3D2210] font-black text-4xl sm:text-5xl lg:text-6xl">nnovation</span>
+                  </div>
+                  <div className="flex items-baseline -mt-1 sm:-mt-2">
+                    <span className="text-[#D97B33] font-black text-5xl sm:text-6xl lg:text-7xl leading-none">H</span>
+                    <span className="text-[#3D2210] font-black text-4xl sm:text-5xl lg:text-6xl">ackathon</span>
+                  </div>
+                  <div className="text-5xl sm:text-6xl lg:text-7xl text-[#D97B33] font-black mt-1 sm:mt-2">
+                    4.0
+                  </div>
                 </h1>
               </div>
 
