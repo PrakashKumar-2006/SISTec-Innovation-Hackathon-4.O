@@ -210,7 +210,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
               <div className="hidden lg:block">
                 <button
                   onClick={onRegisterClick}
-                  className="px-6 py-2.5 rounded-xl bg-btn-gradient text-sm font-bold tracking-wide text-white shadow-[0_8px_20px_rgba(216,171,85,0.15)] hover:shadow-[0_12px_24px_rgba(216,171,85,0.4)] hover:-translate-y-0.5 active:translate-y-0 hover:scale-[1.03] active:scale-95 transition-all duration-300 cursor-pointer border-none btn-premium-animate"
+                  className="px-6 py-2.5 rounded-xl bg-btn-gradient text-sm font-bold tracking-wide text-white shadow-[0_4px_16px_rgba(140,58,22,0.25)] hover:shadow-[0_8px_24px_rgba(140,58,22,0.4)] hover:-translate-y-0.5 active:translate-y-0 hover:scale-[1.03] active:scale-95 transition-all duration-300 cursor-pointer border border-[#C97F1B]/40 btn-premium-animate"
                 >
                   Register Now
                 </button>
@@ -220,7 +220,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
               <div className="lg:hidden flex items-center gap-2">
                 <button
                   onClick={onRegisterClick}
-                  className="px-3.5 py-1.5 rounded-xl bg-btn-gradient text-xs font-bold text-white shadow-md active:scale-95 transition-all border-none cursor-pointer hover:shadow-[0_0_15px_rgba(216,171,85,0.3)] btn-premium-animate"
+                  className="px-3.5 py-1.5 rounded-xl bg-btn-gradient text-xs font-bold text-white shadow-md border border-[#C97F1B]/40 active:scale-95 transition-all cursor-pointer hover:shadow-[0_0_15px_rgba(140,58,22,0.3)] btn-premium-animate"
                 >
                   Register
                 </button>
@@ -365,7 +365,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                   setIsOpen(false);
                   onRegisterClick();
                 }}
-                className="w-full mt-2 py-2.5 rounded-xl bg-btn-gradient text-sm font-bold tracking-wide text-white text-center hover:opacity-90 active:scale-98 transition-all border-none cursor-pointer shadow-[0_4px_10px_rgba(216,171,85,0.2)] btn-premium-animate"
+                className="w-full mt-2 py-2.5 rounded-xl bg-btn-gradient text-sm font-bold tracking-wide text-white text-center hover:opacity-90 active:scale-98 transition-all border border-[#C97F1B]/40 cursor-pointer shadow-[0_4px_14px_rgba(140,58,22,0.3)] btn-premium-animate"
               >
                 Register Now
               </button>

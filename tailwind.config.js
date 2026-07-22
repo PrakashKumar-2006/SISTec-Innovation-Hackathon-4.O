@@ -96,7 +96,7 @@ export default {
       backgroundImage: {
         'sih-gradient': 'linear-gradient(135deg, var(--paper) 0%, var(--marigold) 100%)', 
         'bg-gradient': 'linear-gradient(180deg, var(--paper) 0%, #FAF5EE 100%)',
-        'btn-gradient': 'linear-gradient(90deg, var(--vermilion) 0%, var(--marigold) 100%)', 
+        'btn-gradient': 'linear-gradient(135deg, #8C3A16 0%, #A64B1E 50%, #C97F1B 100%)', 
         'wave-gradient': 'linear-gradient(135deg, var(--paper) 0%, #FAF5EE 100%)',
       },
       boxShadow: {
