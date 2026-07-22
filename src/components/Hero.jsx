@@ -77,8 +77,8 @@ export default function Hero({ onRegisterClick, onViewChange }) {
             
             {/* Department Full-Width Header — above the banner */}
             <div className="w-full">
-              <p
-                className="text-xs sm:text-base md:text-lg lg:text-xl font-black uppercase tracking-normal sm:tracking-wider text-[var(--clay)] flex items-center justify-center sm:justify-between border-b border-[var(--line)]/60 pb-2.5 select-none gap-2 whitespace-nowrap"
+              <div
+                className="flex items-center justify-center sm:justify-between border-b border-[var(--line)]/60 pb-2.5 select-none gap-2 whitespace-nowrap"
                 style={{ fontFamily: "'Outfit', sans-serif" }}
               >
                 <span className="hidden lg:flex gap-1.5 shrink-0">
@@ -86,13 +86,16 @@ export default function Hero({ onRegisterClick, onViewChange }) {
                     <span key={i} className="w-2 h-2 rounded-full bg-[var(--marigold)] inline-block" />
                   ))}
                 </span>
-                <span className="whitespace-nowrap">Department of CSE | AI &amp; ML | IOT</span>
+                <span className="whitespace-nowrap flex items-baseline gap-2">
+                  <span className="text-xs sm:text-sm md:text-base font-bold text-[#6B5B49] uppercase tracking-normal">Department of</span>
+                  <span className="text-base sm:text-2xl md:text-3xl font-black text-[#8C3A16] uppercase tracking-wider font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>CSE | AI &amp; ML | IOT</span>
+                </span>
                 <span className="hidden lg:flex gap-1.5 shrink-0">
                   {[...Array(3)].map((_, i) => (
                     <span key={i} className="w-2 h-2 rounded-full bg-[var(--marigold)] inline-block" />
                   ))}
                 </span>
-              </p>
+              </div>
             </div>
 
             {/* ── Banner Branding Block: Logo | Divider | Text ── */}

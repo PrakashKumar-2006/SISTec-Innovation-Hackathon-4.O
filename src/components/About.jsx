@@ -48,8 +48,9 @@ export default function About({ isStandalone = false }) {
             
             {/* Top Dot Accent & CSE Dept Title (unboxed to match hero banner) */}
             <div className="space-y-3">
-              <p className="text-[9px] sm:text-sm md:text-base lg:text-lg font-black tracking-[0.18em] sm:tracking-[0.28em] text-brand-gold font-cinzel uppercase whitespace-nowrap">
-                Department of CSE | AI & ML | IOT
+              <p className="flex items-baseline gap-2 whitespace-nowrap">
+                <span className="text-xs sm:text-sm md:text-base font-bold text-[#6B5B49] uppercase tracking-normal">Department of</span>
+                <span className="text-base sm:text-2xl md:text-3xl font-black text-[#8C3A16] font-display uppercase tracking-wider" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>CSE | AI &amp; ML | IOT</span>
               </p>
             </div>
             
