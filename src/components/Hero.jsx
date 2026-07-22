@@ -55,7 +55,7 @@ export default function Hero({ onRegisterClick, onViewChange }) {
             {display}
           </span>
         </div>
-        <span className="text-[9px] sm:text-[10px] font-black text-[#6B5B49] tracking-[0.18em] uppercase mt-1.5 font-sans bg-[#8C3A16]/10 px-2.5 py-0.5 rounded-full border border-[#8C3A16]/20 shrink-0">
+        <span className="text-[9px] sm:text-[10px] font-black !text-white tracking-[0.18em] uppercase mt-1.5 font-sans bg-[#8C3A16] px-2.5 py-0.5 rounded-full border border-[#8C3A16] shrink-0 shadow-xs">
           {label}
         </span>
       </div>
@@ -78,18 +78,18 @@ export default function Hero({ onRegisterClick, onViewChange }) {
             {/* Department Full-Width Header — above the banner */}
             <div className="w-full">
               <p
-                className="text-[9px] sm:text-xs font-black uppercase tracking-[0.2em] text-[var(--clay)]/80 flex items-center justify-center sm:justify-between border-b border-[var(--line)]/50 pb-2 select-none gap-2"
+                className="text-xs sm:text-base md:text-lg lg:text-xl font-black uppercase tracking-normal sm:tracking-wider text-[var(--clay)] flex items-center justify-center sm:justify-between border-b border-[var(--line)]/60 pb-2.5 select-none gap-2 whitespace-nowrap"
                 style={{ fontFamily: "'Outfit', sans-serif" }}
               >
-                <span className="hidden sm:flex gap-1">
-                  {[...Array(4)].map((_, i) => (
-                    <span key={i} className="w-1.5 h-1.5 rounded-full bg-[var(--marigold)]/60 inline-block" />
+                <span className="hidden lg:flex gap-1.5 shrink-0">
+                  {[...Array(3)].map((_, i) => (
+                    <span key={i} className="w-2 h-2 rounded-full bg-[var(--marigold)] inline-block" />
                   ))}
                 </span>
-                Department of CSE | AI &amp; ML | IOT
-                <span className="hidden sm:flex gap-1">
-                  {[...Array(4)].map((_, i) => (
-                    <span key={i} className="w-1.5 h-1.5 rounded-full bg-[var(--marigold)]/60 inline-block" />
+                <span className="whitespace-nowrap">Department of CSE | AI &amp; ML | IOT</span>
+                <span className="hidden lg:flex gap-1.5 shrink-0">
+                  {[...Array(3)].map((_, i) => (
+                    <span key={i} className="w-2 h-2 rounded-full bg-[var(--marigold)] inline-block" />
                   ))}
                 </span>
               </p>
@@ -130,12 +130,12 @@ export default function Hero({ onRegisterClick, onViewChange }) {
               {/* Countdown — Unit Cards */}
               <div className="flex flex-col items-center sm:items-start gap-2 relative z-10 w-full sm:w-auto">
                 {/* Live badge */}
-                <div className="flex items-center gap-2 select-none">
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#8C3A16] opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#8C3A16]"></span>
+                <div className="flex items-center gap-2 select-none bg-[#8C3A16] px-3 py-1 rounded-full shadow-xs border border-[#8C3A16]">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
                   </span>
-                  <span className="text-[10px] font-black uppercase tracking-[0.22em] text-[#8C3A16] font-sans">Live Countdown</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] !text-white font-sans">Live Countdown</span>
                 </div>
 
                 {/* Units row with colons */}
@@ -175,9 +175,9 @@ export default function Hero({ onRegisterClick, onViewChange }) {
             {/* Stats Row (Redesigned Modern Cards) */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 w-full relative z-10 pt-2">
               {/* Card 1: Participants */}
-              <div className="flex items-center gap-3 p-3.5 sm:p-4 rounded-2xl bg-[#FAF6EE] border border-[#E3D7C5] hover:border-[#8C3A16]/50 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 group">
-                <div className="w-10 h-10 rounded-xl bg-[#8C3A16]/10 text-[#8C3A16] flex items-center justify-center shrink-0 group-hover:bg-[#8C3A16] group-hover:text-white transition-colors duration-300">
-                  <Users size={20} />
+              <div className="flex items-center gap-3 p-3.5 sm:p-4 rounded-2xl bg-[#FAF6EE] border border-[#E3D7C5] hover:border-[#8C3A16] transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 group cursor-pointer">
+                <div className="w-10 h-10 rounded-xl bg-[#8C3A16]/10 flex items-center justify-center shrink-0 group-hover:bg-[#8C3A16] transition-all duration-300">
+                  <Users size={20} className="text-[#8C3A16] group-hover:text-white-force stroke-[#8C3A16] group-hover:stroke-white-force stroke-[2.2] transition-all duration-300" />
                 </div>
                 <div className="text-left overflow-hidden">
                   <span className="block text-xl sm:text-2xl font-black text-[#8C3A16] font-display tracking-tight leading-none" style={{ fontFamily: "'Outfit', sans-serif" }}>
@@ -190,9 +190,9 @@ export default function Hero({ onRegisterClick, onViewChange }) {
               </div>
 
               {/* Card 2: Problem Statements */}
-              <div className="flex items-center gap-3 p-3.5 sm:p-4 rounded-2xl bg-[#FAF6EE] border border-[#E3D7C5] hover:border-[#8C3A16]/50 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 group">
-                <div className="w-10 h-10 rounded-xl bg-[#C97F1B]/10 text-[#C97F1B] flex items-center justify-center shrink-0 group-hover:bg-[#C97F1B] group-hover:text-white transition-colors duration-300">
-                  <FileText size={20} />
+              <div className="flex items-center gap-3 p-3.5 sm:p-4 rounded-2xl bg-[#FAF6EE] border border-[#E3D7C5] hover:border-[#C97F1B] transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 group cursor-pointer">
+                <div className="w-10 h-10 rounded-xl bg-[#C97F1B]/10 flex items-center justify-center shrink-0 group-hover:bg-[#C97F1B] transition-all duration-300">
+                  <FileText size={20} className="text-[#C97F1B] group-hover:text-white-force stroke-[#C97F1B] group-hover:stroke-white-force stroke-[2.2] transition-all duration-300" />
                 </div>
                 <div className="text-left overflow-hidden">
                   <span className="block text-xl sm:text-2xl font-black text-[#8C3A16] font-display tracking-tight leading-none" style={{ fontFamily: "'Outfit', sans-serif" }}>
@@ -205,9 +205,9 @@ export default function Hero({ onRegisterClick, onViewChange }) {
               </div>
 
               {/* Card 3: Prize Pool */}
-              <div className="flex items-center gap-3 p-3.5 sm:p-4 rounded-2xl bg-[#FAF6EE] border border-[#E3D7C5] hover:border-[#8C3A16]/50 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 group">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center shrink-0 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300">
-                  <Trophy size={20} />
+              <div className="flex items-center gap-3 p-3.5 sm:p-4 rounded-2xl bg-[#FAF6EE] border border-[#E3D7C5] hover:border-[#E6491E] transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 group cursor-pointer">
+                <div className="w-10 h-10 rounded-xl bg-[#E6491E]/10 flex items-center justify-center shrink-0 group-hover:bg-[#E6491E] transition-all duration-300">
+                  <Trophy size={20} className="text-[#E6491E] group-hover:text-white-force stroke-[#E6491E] group-hover:stroke-white-force stroke-[2.2] transition-all duration-300" />
                 </div>
                 <div className="text-left overflow-hidden">
                   <span className="block text-xl sm:text-2xl font-black text-[#8C3A16] font-display tracking-tight leading-none" style={{ fontFamily: "'Outfit', sans-serif" }}>

@@ -430,14 +430,24 @@ h6.text-white {
   color: var(--ink-soft) !important;
 }
 
+/* Force white text utility for badges and filled dark containers */
+.text-white-force,
+.text-white-force *,
+.group:hover .group-hover\:text-white-force,
+.group:hover .group-hover\:stroke-white-force {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+}
+
 /* Prevent hover texts from turning white and becoming invisible on cream background */
-.bg-brand-darker .hover\:text-white:hover,
-.bg-brand-dark .hover\:text-white:hover {
+.bg-brand-darker .hover\:text-white:hover:not(.text-white-force),
+.bg-brand-dark .hover\:text-white:hover:not(.text-white-force) {
   color: var(--clay) !important;
 }
 
-.bg-brand-darker .group:hover .group-hover\:text-white,
-.bg-brand-dark .group:hover .group-hover\:text-white {
+.bg-brand-darker .group:hover .group-hover\:text-white:not(.group-hover\:text-white-force),
+.bg-brand-dark .group:hover .group-hover\:text-white:not(.group-hover\:text-white-force) {
   color: var(--clay) !important;
 }
 

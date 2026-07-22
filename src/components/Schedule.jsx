@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, Coffee, Utensils, Lightbulb, Users, Trophy, Sparkles, CheckCircle, ArrowRight, Bell, ChevronDown, Zap, MapPin } from 'lucide-react';
+import { Calendar, Clock, Coffee, Utensils, Lightbulb, Users, Trophy, Sparkles, CheckCircle, Mic, FileText, Award } from 'lucide-react';
+import lampImg from '../../Lamp.png';
+import round1Img from '../../Round 1.png';
+import lunchImg from '../../Lunch image.png';
+import teaImg from '../../Tea Brake Image.png';
+import round2Img from '../../Round 2.png';
+import round3Img from '../../Round 3 image.png';
+import yogaImg from '../../yoga session image.png';
+import breakfastImg from '../../morning Breakfast.png';
+import dinnerImg from '../../Dinner image.png';
 
 // Custom Category Inline SVGs
 
@@ -15,14 +24,14 @@ const JudgementBadgeSVG = ({ className = "w-4 h-4" }) => (
     <path d="M12 3V21" />
     <path d="M4 7H20" />
     <path d="M7 7L4 13C4 14.1 4.9 15 6 15C7.1 15 8 14.1 8 13L7 7Z" />
-    <path d="M17 7L14 13C14 14.1 14.9 15 16 15C17.1 15 18 14.1 18 13L17 7Z" />
+    <path d="M17 7L14 13C14 14.1 14.9 15 18 14.1 18 13L17 7Z" />
     <path d="M9 21H15" />
   </svg>
 );
 
 const FoodMealSVG = ({ className = "w-4 h-4" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M18 8C18 6.9 17.1 6 16 6H8C6.9 6 6 6.9 6 8V12C6 15.3 8.7 18 12 18C15.3 18 18 15.3 18 12V8Z" />
+    <path d="M18 8C18 6.9 17.1 6 16 6H8C6.9 6 6 6.9 6 8V12C6 15.3 18 15.3 18 12V8Z" />
     <path d="M12 18V21" />
     <path d="M8 21H16" />
     <path d="M12 3V6" strokeDasharray="2 2" />
@@ -49,271 +58,237 @@ const TrophyAwardSVG = ({ className = "w-4 h-4" }) => (
 export default function Schedule({ isStandalone = false }) {
   const [activeDay, setActiveDay] = useState(1);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [expandedId, setExpandedId] = useState('d1-1');
-  const [isHovered, setIsHovered] = useState(false);
-  const [toastNotification, setToastNotification] = useState(null);
+  const [isPaused, setIsPaused] = useState(false);
 
-  // Timeline Page-Inspired Colors & Themes per Event Type
   const day1Schedule = [
     {
       id: 'd1-1',
       time: '10:00 AM - 11:30 AM',
-      title: 'Inauguration Ceremony',
-      desc: 'Official inauguration of SISTec SIH 4.0 Hackathon with chief guest welcome, lamp lighting, and keynote briefing.',
-      category: 'Inauguration',
-      location: 'Main Auditorium',
+      title: 'Inauguration',
+      desc: 'Official inauguration of SIH 4.0 Hackathon by distinguished chief guests, traditional lamp lighting ceremony, and keynote briefing.',
+      category: 'INAUGURATION',
+      shortTag: 'Inauguration',
       icon: Users,
       badgeSVG: InaugurationBadgeSVG,
-      cardBg: 'bg-gradient-to-br from-amber-500/10 via-[#FFFDF7] to-amber-500/5',
-      activeCardBg: 'bg-gradient-to-br from-amber-500/20 via-[#FFFDF7] to-orange-500/10 border-amber-500/60 shadow-[0_0_25px_rgba(245,158,11,0.25)]',
-      borderColor: 'border-amber-500/30',
-      iconBg: 'bg-amber-500/15 text-amber-600 border-amber-500/30',
-      iconColor: 'text-amber-600',
-      badgeColor: 'bg-amber-500/10 text-amber-700 border-amber-500/30',
-      accentStripe: 'from-amber-500 to-orange-500',
-      highlights: ['Chief Guests Welcome & Lamp Lighting', 'Keynote Speeches by Industry Experts', 'Event Rules & Marking Guidelines Briefing']
+      image: lampImg,
+      badgeColor: 'bg-[#8C3A16] text-white-force border-[#8C3A16]',
+      accentStripe: 'from-[#8C3A16] via-[#C97F1B] to-[#F2A93B]',
+      highlights: [
+        { text: 'Chief Guests Welcome & Lamp Lighting', icon: Users },
+        { text: 'Keynote Speeches by Industry Experts', icon: Mic },
+        { text: 'Event Rules & Marking Guidelines Briefing', icon: FileText }
+      ]
     },
     {
       id: 'd1-2',
-      time: '11:30 AM - 01:00 PM',
-      title: 'Round 1 Evaluation',
-      desc: 'Expert panel visits all team bays to review initial problem statements, architecture plans, and technology stacks.',
-      category: 'Judgement 1',
-      location: 'Innovation Labs',
+      time: '11:30 AM',
+      title: 'First Round Of SIH 4.0',
+      desc: 'Start of First Round Judgement by various Judges. Teams present initial ideas, technology architecture, and can start making corrections/updations.',
+      category: 'FIRST ROUND',
+      shortTag: 'First Round',
       icon: Lightbulb,
       badgeSVG: JudgementBadgeSVG,
-      cardBg: 'bg-gradient-to-br from-rose-500/10 via-[#FFFDF7] to-red-600/5',
-      activeCardBg: 'bg-gradient-to-br from-rose-500/20 via-[#FFFDF7] to-red-500/10 border-rose-500/60 shadow-[0_0_25px_rgba(244,63,94,0.25)]',
-      borderColor: 'border-rose-500/30',
-      iconBg: 'bg-rose-500/15 text-rose-600 border-rose-500/30',
-      iconColor: 'text-rose-600',
-      badgeColor: 'bg-rose-500/10 text-rose-700 border-rose-500/30',
-      accentStripe: 'from-rose-500 to-red-500',
-      highlights: ['1-on-1 Judges Pitching Session', 'Architectural Feedback Collection', 'Immediate Refinement Sprint Starts']
+      image: round1Img,
+      badgeColor: 'bg-[#E6491E] text-white-force border-[#E6491E]',
+      accentStripe: 'from-[#E6491E] via-[#C97F1B] to-[#F2A93B]',
+      highlights: [
+        { text: '1-on-1 Judges Pitching & Evaluation', icon: Mic },
+        { text: 'Architectural & Tech Stack Review', icon: Lightbulb },
+        { text: 'Immediate Feedback & Refinement Sprint', icon: Sparkles }
+      ]
     },
     {
       id: 'd1-3',
-      time: '01:00 PM - 02:00 PM',
-      title: 'Networking Buffet Lunch',
-      desc: 'Recharge with a catered buffet lunch, connect with mentors, and collaborate across participating teams.',
-      category: 'Lunch Break',
-      location: 'Dining Hall',
+      time: '01:00 PM',
+      title: 'Lunch',
+      desc: 'Refuel during lunch, fostering camaraderie and providing an opportunity for participants to recharge for the upcoming coding tasks.',
+      category: 'LUNCH BREAK',
+      shortTag: 'Lunch',
       icon: Utensils,
       badgeSVG: FoodMealSVG,
-      cardBg: 'bg-gradient-to-br from-purple-500/10 via-[#FFFDF7] to-indigo-600/5',
-      activeCardBg: 'bg-gradient-to-br from-purple-500/20 via-[#FFFDF7] to-indigo-500/10 border-purple-500/60 shadow-[0_0_25px_rgba(139,92,246,0.25)]',
-      borderColor: 'border-purple-500/30',
-      iconBg: 'bg-purple-500/15 text-purple-600 border-purple-500/30',
-      iconColor: 'text-purple-600',
-      badgeColor: 'bg-purple-500/10 text-purple-700 border-purple-500/30',
-      accentStripe: 'from-purple-500 to-indigo-500',
-      highlights: ['Catered Buffet Lunch', 'Cross-Team & Mentor Networking', 'Informal Technical Q&A']
+      image: lunchImg,
+      badgeColor: 'bg-[#C97F1B] text-white-force border-[#C97F1B]',
+      accentStripe: 'from-[#C97F1B] via-[#F2A93B] to-[#8C3A16]',
+      highlights: [
+        { text: 'Catered Buffet Lunch Spread', icon: Utensils },
+        { text: 'Cross-Team & Mentor Networking', icon: Users },
+        { text: 'Informal Technical Discussion', icon: Mic }
+      ]
     },
     {
       id: 'd1-4',
-      time: '05:00 PM - 05:30 PM',
-      title: 'High-Tea & Snacks Break',
-      desc: 'Recharge with hot tea, snacks, and refreshing energy drinks to power through the evening development sprint.',
-      category: 'High-Tea',
-      location: 'Cafeteria Lawn',
+      time: '05:00 PM',
+      title: 'Tea Break',
+      desc: 'Recharge with tea, providing a boost of energy and creating a dynamic environment for the continuation of coding.',
+      category: 'TEA BREAK',
+      shortTag: 'Tea Break',
       icon: Coffee,
       badgeSVG: FoodMealSVG,
-      cardBg: 'bg-gradient-to-br from-cyan-500/10 via-[#FFFDF7] to-blue-600/5',
-      activeCardBg: 'bg-gradient-to-br from-cyan-500/20 via-[#FFFDF7] to-blue-500/10 border-cyan-500/60 shadow-[0_0_25px_rgba(6,182,212,0.25)]',
-      borderColor: 'border-cyan-500/30',
-      iconBg: 'bg-cyan-500/15 text-cyan-600 border-cyan-500/30',
-      iconColor: 'text-cyan-600',
-      badgeColor: 'bg-cyan-500/10 text-cyan-700 border-cyan-500/30',
-      accentStripe: 'from-cyan-500 to-blue-500',
-      highlights: ['Hot Tea & Fresh Refreshments', 'Relaxation Lounge Access', 'Tech Support Desk Active']
+      image: teaImg,
+      badgeColor: 'bg-teal-700 text-white-force border-teal-700',
+      accentStripe: 'from-teal-600 via-emerald-500 to-[#C97F1B]',
+      highlights: [
+        { text: 'Hot Tea & Energy Refreshments', icon: Coffee },
+        { text: 'Relaxation & Stretch Pause', icon: Sparkles },
+        { text: 'Technical Support Desk Active', icon: FileText }
+      ]
     },
     {
       id: 'd1-5',
-      time: '05:30 PM - 07:30 PM',
-      title: 'Round 2 Evaluation',
-      desc: 'Judges assess progress on suggestions offered in Round 1, inspecting live code repositories and working prototypes.',
-      category: 'Judgement 2',
-      location: 'Innovation Labs',
+      time: '05:30 PM',
+      title: 'Second Round Of Judgement',
+      desc: 'Start the Second Round of Judgement based on suggestion corrections and feedback given by the judges in the first round.',
+      category: 'SECOND ROUND',
+      shortTag: 'Second Round',
       icon: Clock,
       badgeSVG: JudgementBadgeSVG,
-      cardBg: 'bg-gradient-to-br from-rose-500/10 via-[#FFFDF7] to-red-600/5',
-      activeCardBg: 'bg-gradient-to-br from-rose-500/20 via-[#FFFDF7] to-red-500/10 border-rose-500/60 shadow-[0_0_25px_rgba(244,63,94,0.25)]',
-      borderColor: 'border-rose-500/30',
-      iconBg: 'bg-rose-500/15 text-rose-600 border-rose-500/30',
-      iconColor: 'text-rose-600',
-      badgeColor: 'bg-rose-500/10 text-rose-700 border-rose-500/30',
-      accentStripe: 'from-rose-500 to-red-500',
-      highlights: ['Working Prototype Demo', 'Codebase & API Inspection', 'Midway Score Card Logging']
+      image: round2Img,
+      badgeColor: 'bg-[#E6491E] text-white-force border-[#E6491E]',
+      accentStripe: 'from-[#E6491E] via-[#8C3A16] to-[#C97F1B]',
+      highlights: [
+        { text: 'Working Prototype Demonstration', icon: Lightbulb },
+        { text: 'Review of Implemented Feedback', icon: FileText },
+        { text: 'Midway Score Card Logging by Jury', icon: Award }
+      ]
     },
     {
       id: 'd1-6',
-      time: '08:00 PM Onwards',
-      title: 'Dinner & Midnight Hackathon',
-      desc: 'Hearty evening dinner and kick-off for the midnight coding marathon with non-stop coffee and mentor support.',
-      category: 'Night Hack',
-      location: 'Overnight Labs',
+      time: '08:00 PM',
+      title: 'Dinner',
+      desc: 'Conclude the day with a hearty evening meal, providing a relaxed setting for participants to unwind and reflect on their achievements.',
+      category: 'DINNER',
+      shortTag: 'Dinner',
       icon: Utensils,
       badgeSVG: FoodMealSVG,
-      cardBg: 'bg-gradient-to-br from-emerald-500/10 via-[#FFFDF7] to-teal-600/5',
-      activeCardBg: 'bg-gradient-to-br from-emerald-500/20 via-[#FFFDF7] to-teal-500/10 border-emerald-500/60 shadow-[0_0_25px_rgba(16,185,129,0.25)]',
-      borderColor: 'border-emerald-500/30',
-      iconBg: 'bg-emerald-500/15 text-emerald-600 border-emerald-500/30',
-      iconColor: 'text-emerald-600',
-      badgeColor: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/30',
-      accentStripe: 'from-emerald-500 to-teal-500',
-      highlights: ['Nutritious Dinner Spread', 'Midnight Coffee & Energy Bar Desk', 'Overnight Lab Access & Hardware Desk']
+      image: dinnerImg,
+      badgeColor: 'bg-[#241708] text-white-force border-[#241708]',
+      accentStripe: 'from-[#241708] via-[#8C3A16] to-[#C97F1B]',
+      highlights: [
+        { text: 'Nutritious Evening Buffet Meal', icon: Utensils },
+        { text: 'Overnight Development Marathon Prep', icon: Coffee },
+        { text: 'Non-stop Mentor & Lab Support Desk', icon: Sparkles }
+      ]
     }
   ];
 
   const day2Schedule = [
     {
       id: 'd2-1',
-      time: '03:30 AM - 05:00 AM',
-      title: 'Round 3 Evaluation (Final Pitch)',
-      desc: 'Crucial third round of evaluation reviewing deployment readiness, live hosting, UI/UX polish, and final pitch deck.',
-      category: 'Final Judgement',
-      location: 'Main Stage',
+      time: '03:30 AM',
+      title: 'Third Round Of Judgement',
+      desc: 'Third Round of Judgement based on Suggestion correction given by the judges in first round and second round.',
+      category: 'THIRD ROUND',
+      shortTag: 'Third Round',
       icon: Clock,
       badgeSVG: JudgementBadgeSVG,
-      cardBg: 'bg-gradient-to-br from-rose-500/10 via-[#FFFDF7] to-red-600/5',
-      activeCardBg: 'bg-gradient-to-br from-rose-500/20 via-[#FFFDF7] to-red-500/10 border-rose-500/60 shadow-[0_0_25px_rgba(244,63,94,0.25)]',
-      borderColor: 'border-rose-500/30',
-      iconBg: 'bg-rose-500/15 text-rose-600 border-rose-500/30',
-      iconColor: 'text-rose-600',
-      badgeColor: 'bg-rose-500/10 text-rose-700 border-rose-500/30',
-      accentStripe: 'from-rose-500 to-red-500',
-      highlights: ['Final Prototype Polish', 'Live Cloud Hosting Verification', 'Pitch Deck & Presentation Sync']
+      image: round3Img,
+      badgeColor: 'bg-[#E6491E] text-white-force border-[#E6491E]',
+      accentStripe: 'from-[#E6491E] via-[#8C3A16] to-[#C97F1B]',
+      highlights: [
+        { text: 'Final Codebase & Hosting Pitch', icon: Lightbulb },
+        { text: 'Review of Cumulative Improvements', icon: FileText },
+        { text: 'Final Scoring & Evaluation Sync', icon: Award }
+      ]
     },
     {
       id: 'd2-2',
-      time: '05:00 AM - 06:00 AM',
-      title: 'Sunrise Yoga & Wellness',
-      desc: 'Refresh your mind and body with an invigorating morning yoga & breathing exercise session at sunrise.',
-      category: 'Wellness',
-      location: 'Green Lawns',
+      time: '05:00 AM',
+      title: 'Yoga Session',
+      desc: 'Refresh with a morning yoga session, promoting physical and mental well-being to enhance focus and creativity.',
+      category: 'WELLNESS',
+      shortTag: 'Yoga Session',
       icon: Sparkles,
       badgeSVG: YogaLotusSVG,
-      cardBg: 'bg-gradient-to-br from-cyan-500/10 via-[#FFFDF7] to-blue-600/5',
-      activeCardBg: 'bg-gradient-to-br from-cyan-500/20 via-[#FFFDF7] to-blue-500/10 border-cyan-500/60 shadow-[0_0_25px_rgba(6,182,212,0.25)]',
-      borderColor: 'border-cyan-500/30',
-      iconBg: 'bg-cyan-500/15 text-cyan-600 border-cyan-500/30',
-      iconColor: 'text-cyan-600',
-      badgeColor: 'bg-cyan-500/10 text-cyan-700 border-cyan-500/30',
-      accentStripe: 'from-cyan-500 to-blue-500',
-      highlights: ['Guided Breathing Exercises', 'Mental Wellness Stretch', 'Sunrise Energy Recharge']
+      image: yogaImg,
+      badgeColor: 'bg-teal-700 text-white-force border-teal-700',
+      accentStripe: 'from-teal-600 via-emerald-500 to-[#C97F1B]',
+      highlights: [
+        { text: 'Guided Breathing & Meditation', icon: Sparkles },
+        { text: 'Physical Stretch & Energy Wellness', icon: Users },
+        { text: 'Morning Focus & Mind Refresh', icon: Coffee }
+      ]
     },
     {
       id: 'd2-3',
-      time: '09:00 AM - 10:00 AM',
-      title: 'Grand Breakfast Served',
-      desc: 'Wholesome breakfast buffet to fuel participants before the grand valedictory and final results announcement.',
-      category: 'Breakfast',
-      location: 'Dining Hall',
+      time: '09:00 AM',
+      title: 'Breakfast Served',
+      desc: 'Begin the day with a wholesome breakfast, setting the tone for the final round of evaluations and activities.',
+      category: 'BREAKFAST',
+      shortTag: 'Breakfast',
       icon: Coffee,
       badgeSVG: FoodMealSVG,
-      cardBg: 'bg-gradient-to-br from-purple-500/10 via-[#FFFDF7] to-indigo-600/5',
-      activeCardBg: 'bg-gradient-to-br from-purple-500/20 via-[#FFFDF7] to-indigo-500/10 border-purple-500/60 shadow-[0_0_25px_rgba(139,92,246,0.25)]',
-      borderColor: 'border-purple-500/30',
-      iconBg: 'bg-purple-500/15 text-purple-600 border-purple-500/30',
-      iconColor: 'text-purple-600',
-      badgeColor: 'bg-purple-500/10 text-purple-700 border-purple-500/30',
-      accentStripe: 'from-purple-500 to-indigo-500',
-      highlights: ['Wholesome Breakfast Buffet', 'Fresh Juice & Coffee Counter', 'Day 2 Final Setup Wrap-Up']
+      image: breakfastImg,
+      badgeColor: 'bg-[#C97F1B] text-white-force border-[#C97F1B]',
+      accentStripe: 'from-[#C97F1B] via-[#F2A93B] to-[#8C3A16]',
+      highlights: [
+        { text: 'Wholesome Morning Buffet', icon: FoodMealSVG },
+        { text: 'Fresh Juice & Coffee Counter', icon: Coffee },
+        { text: 'Grand Finale Wrap-Up Prep', icon: FileText }
+      ]
     },
     {
       id: 'd2-4',
-      time: '10:00 AM - 01:00 PM',
-      title: 'Valedictory & Prize Distribution',
-      desc: 'Grand closing ceremony celebrating outstanding innovations, distribution of cash prizes, trophies, and certificates.',
-      category: 'Valedictory',
-      location: 'Main Auditorium',
+      time: '10:00 AM',
+      title: 'Valedictory Function And Prize Distribution',
+      desc: 'Celebrate the conclusion of the event with a valedictory function, recognizing outstanding contributions and distributing prizes to deserving participants.',
+      category: 'VALEDICTORY',
+      shortTag: 'Prize Ceremony',
       icon: Trophy,
       badgeSVG: TrophyAwardSVG,
-      cardBg: 'bg-gradient-to-br from-amber-500/10 via-[#FFFDF7] to-orange-600/5',
-      activeCardBg: 'bg-gradient-to-br from-amber-500/20 via-[#FFFDF7] to-orange-500/10 border-amber-500/60 shadow-[0_0_25px_rgba(245,158,11,0.25)]',
-      borderColor: 'border-amber-500/30',
-      iconBg: 'bg-amber-500/15 text-amber-600 border-amber-500/30',
-      iconColor: 'text-amber-600',
-      badgeColor: 'bg-amber-500/10 text-amber-700 border-amber-500/30',
-      accentStripe: 'from-amber-500 to-orange-500',
-      highlights: ['Winner Trophy & Cash Prize Ceremony', 'Chief Guests Closing Address', 'Official Certificate Distribution']
+      image: lampImg,
+      badgeColor: 'bg-[#8C3A16] text-white-force border-[#8C3A16]',
+      accentStripe: 'from-[#8C3A16] via-[#C97F1B] to-[#F2A93B]',
+      highlights: [
+        { text: 'Trophy & Cash Prize Awarding', icon: Trophy },
+        { text: 'Valedictory Keynote Address', icon: Mic },
+        { text: 'Certificate Distribution Ceremony', icon: Award }
+      ]
     }
   ];
 
   const currentSchedule = activeDay === 1 ? day1Schedule : day2Schedule;
+  const currentItem = currentSchedule[activeIndex] || currentSchedule[0];
+  const ItemBadgeSVG = currentItem.badgeSVG || InaugurationBadgeSVG;
 
-  // Reset active index when day changes
+  // Reset active index & resume loop when day changes
   useEffect(() => {
     setActiveIndex(0);
-    if (currentSchedule.length > 0) {
-      setExpandedId(currentSchedule[0].id);
-    }
+    setIsPaused(false);
   }, [activeDay]);
 
-  // Sync expandedId with activeIndex
+  // 🔄 Autoplay Loop: Cycle session every 3.5 seconds. Pauses when user taps an icon.
   useEffect(() => {
-    if (currentSchedule[activeIndex]) {
-      setExpandedId(currentSchedule[activeIndex].id);
-    }
-  }, [activeIndex, currentSchedule]);
-
-  // 🔄 Autoplay Animation: Step by step item expansion. Pauses when isHovered = true, Resumes when isHovered = false
-  useEffect(() => {
-    if (isHovered) return;
+    if (isPaused) return;
 
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % currentSchedule.length);
-    }, 3200); // Shift active expanding card every 3.2 seconds
+    }, 3500);
 
     return () => clearInterval(interval);
-  }, [isHovered, currentSchedule.length]);
+  }, [isPaused, currentSchedule.length]);
 
-  const handleReminder = (item) => {
-    setToastNotification({
-      title: item.title,
-      time: item.time
-    });
-    setTimeout(() => {
-      setToastNotification(null);
-    }, 4000);
+  const handleNodeTap = (index) => {
+    setActiveIndex(index);
+    setIsPaused(true); // Pause auto-loop on manual tap
   };
 
   return (
     <section id="schedule" className="relative py-16 sm:py-24 bg-[var(--paper)] text-[#241708] overflow-hidden border-t border-[#EBDAB9]">
-      
-      {/* Toast Notification */}
-      {toastNotification && (
-        <div className="fixed bottom-6 right-4 sm:right-6 z-50 animate-bounce flex items-center gap-3.5 bg-[#2B1607] text-[#FFFDF7] border-2 border-[#F2A93B] px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md max-w-[90vw]">
-          <div className="w-8 h-8 rounded-full bg-[#8C3A16] text-[#FFFDF7] flex items-center justify-center font-bold shrink-0">
-            <Bell className="w-4 h-4 text-[#F2A93B] animate-pulse" />
-          </div>
-          <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-[#F2A93B]">Session Reminder Set! 🔔</p>
-            <p className="text-xs font-bold text-[#FFFDF7]">{toastNotification.title} ({toastNotification.time})</p>
-          </div>
-        </div>
-      )}
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
         
         {/* Header */}
         <div className="text-center mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FAF6EE] border border-[#E3D7C5] text-xs font-mono font-bold text-[#8C3A16] mb-3 shadow-xs">
-            <Zap className="w-3.5 h-3.5 text-[#E6491E]" />
-            <span>SIH 4.0 OFFICIAL EVENT SCHEDULE</span>
-          </div>
-          
-          <h2 className="text-3.5xl sm:text-5xl font-black tracking-tight text-[#241708] leading-tight font-display">
+          <h2 className="text-3.5xl sm:text-5xl font-black tracking-tight text-[#241708] leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
             Event <span className="text-[#8C3A16]">Schedule</span>
           </h2>
           
           <p className="mt-2.5 text-xs sm:text-sm text-[#6B5B49] max-w-lg mx-auto font-medium leading-relaxed">
-            Auto-cycling timeline schedule. Hover over any card to pause auto-play, unhover to resume.
+            Interactive schedule. Tap any vertical step node on the left to inspect session details.
           </p>
         </div>
 
         {/* Day Switcher Buttons */}
-        <div className="grid grid-cols-2 gap-3 mb-8 max-w-md mx-auto">
+        <div className="grid grid-cols-2 gap-4 mb-10 max-w-md mx-auto">
           {[
             { id: 1, label: 'DAY 1', sub: '30 Sep • 6 Sessions' },
             { id: 2, label: 'DAY 2', sub: '01 Oct • 4 Sessions' }
@@ -323,152 +298,162 @@ export default function Schedule({ isStandalone = false }) {
               onClick={() => setActiveDay(day.id)}
               className={`py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-black tracking-wider transition-all duration-300 cursor-pointer flex flex-col items-center justify-center border text-center ${
                 activeDay === day.id
-                  ? 'bg-[#8C3A16] text-[#FFFDF7] border-[#8C3A16] shadow-md scale-[1.02]'
+                  ? 'bg-[#8C3A16] text-white-force border-[#8C3A16] shadow-md'
                   : 'bg-[#FAF6EE] text-[#6B5B49] border-[#E3D7C5] hover:border-[#8C3A16]/40 hover:text-[#241708]'
               }`}
             >
               <div className="flex items-center gap-1.5 mb-0.5">
                 <Calendar className={`w-3.5 h-3.5 ${activeDay === day.id ? 'text-[#F2A93B]' : 'text-[#8C3A16]'}`} />
-                <span>{day.label}</span>
+                <span className={activeDay === day.id ? 'text-white-force font-bold' : 'text-[#241708] font-bold'}>{day.label}</span>
               </div>
-              <span className={`text-[9px] font-mono font-medium ${activeDay === day.id ? 'text-[#FFFDF7]/80' : 'text-[#6B5B49]'}`}>
+              <span className={`text-[10px] font-semibold ${activeDay === day.id ? 'text-white-force/90' : 'text-[#6B5B49]'}`}>
                 {day.sub}
               </span>
             </button>
           ))}
         </div>
 
-        {/* ── AUTOPLAY STEP-BY-STEP ANIMATION CARDS LIST (HOVER TO PAUSE, UNHOVER TO RESUME) ── */}
-        <div 
-          className="space-y-4"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          {currentSchedule.map((item, idx) => {
-            const ItemIcon = item.icon;
-            const ItemBadgeSVG = item.badgeSVG || InaugurationBadgeSVG;
-            const isExpanded = expandedId === item.id;
+        {/* ── 2-COLUMN FIXED-DIMENSION STABLE LAYOUT: LEFT VERTICAL ICON BAR & RIGHT ROCK-SOLID SINGLE CARD ── */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch min-h-[480px]">
+          
+          {/* ── LEFT COLUMN: VERTICAL CONNECTED ICON NODES (TOP TO BOTTOM) ── */}
+          <div className="md:col-span-4 relative pl-4 sm:pl-6 bg-[#FAF6EE] p-5 sm:p-6 rounded-3xl border border-[#E3D7C5] flex flex-col justify-between shadow-sm shrink-0">
+            {/* Connecting Vertical Line */}
+            <div className="absolute left-[2.4rem] sm:left-[2.9rem] top-8 bottom-8 w-1 bg-gradient-to-b from-[#8C3A16] via-[#C97F1B] to-[#F2A93B] rounded-full shadow-xs" />
 
-            return (
-              <div
-                key={item.id}
-                onMouseEnter={() => {
-                  setIsHovered(true);
-                  setActiveIndex(idx);
-                }}
-                onMouseLeave={() => setIsHovered(false)}
-                className={`rounded-2xl transition-all duration-500 border overflow-hidden relative ${
-                  isExpanded ? `${item.activeCardBg} scale-[1.01]` : `${item.cardBg} ${item.borderColor} hover:border-[#8C3A16]/50`
-                }`}
-              >
-                {/* Top Accent Gradient Line */}
-                <div className={`h-1 w-full bg-gradient-to-r ${item.accentStripe}`} />
+            <div className="space-y-4 sm:space-y-5 relative z-10 flex-1 flex flex-col justify-between">
+              {currentSchedule.map((item, idx) => {
+                const NodeIcon = item.icon;
+                const isSelected = activeIndex === idx;
 
-                {/* Clickable Header Bar */}
-                <button
-                  onClick={() => {
-                    setIsHovered(true);
-                    setActiveIndex(idx);
-                    setExpandedId(isExpanded ? null : item.id);
-                  }}
-                  className="w-full p-4 sm:p-5 flex items-center justify-between gap-3 text-left cursor-pointer"
-                >
-                  <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                    
-                    {/* Icon Circle Box with Step Index */}
-                    <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center shrink-0 border text-xs sm:text-sm font-black font-mono transition-all ${item.iconBg}`}>
-                      <ItemIcon className="w-5 h-5" />
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNodeTap(idx)}
+                    className={`flex items-center gap-3.5 group cursor-pointer w-full text-left transition-colors duration-200 p-2 rounded-2xl ${
+                      isSelected ? 'bg-[#8C3A16]/10 border border-[#8C3A16]/20' : 'hover:bg-[#8C3A16]/5 border border-transparent'
+                    }`}
+                  >
+                    {/* Vertical Icon Node Box */}
+                    <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center border-2 shrink-0 transition-colors duration-200 shadow-sm ${
+                      isSelected
+                        ? 'bg-[#8C3A16] border-[#8C3A16] text-white-force shadow-md'
+                        : 'bg-[#FFFDF7] border-[#E3D7C5] text-[#8C3A16] group-hover:border-[#8C3A16]'
+                    }`}>
+                      <NodeIcon className={`w-4 h-4 sm:w-5 sm:h-5 ${isSelected ? 'text-white-force' : 'text-[#8C3A16]'}`} />
                     </div>
 
+                    {/* Step Tag & Label */}
                     <div className="min-w-0 flex-1">
-                      {/* Top Time Pill & Category Tag */}
-                      <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <span className="text-[10px] font-mono font-black text-[#241708] bg-[#FFFDF7] px-2.5 py-0.5 rounded border border-[#E3D7C5] flex items-center gap-1 shadow-2xs">
-                          <Clock className="w-3 h-3 text-[#8C3A16]" />
-                          <span>{item.time}</span>
-                        </span>
-                        
-                        <span className={`inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${item.badgeColor}`}>
-                          <ItemBadgeSVG className="w-3 h-3" />
-                          <span>{item.category}</span>
-                        </span>
-
-                        {isExpanded && (
-                          <span className="text-[8px] font-black uppercase tracking-widest text-[#E6491E] bg-[#E6491E]/10 px-2 py-0.5 rounded-full border border-[#E6491E]/20 animate-pulse">
-                            ACTIVE
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Main Title */}
-                      <h3 className="text-sm sm:text-base font-black text-[#241708] leading-tight font-display">
-                        {item.title}
-                      </h3>
-                    </div>
-                  </div>
-
-                  {/* Expand Chevron Icon */}
-                  <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-transform duration-300 shrink-0 ${
-                    isExpanded ? 'rotate-180 bg-[#8C3A16] text-[#FFFDF7]' : 'bg-[#FFFDF7] text-[#8C3A16] border border-[#E3D7C5]'
-                  }`}>
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
-                </button>
-
-                {/* Expanded Details Section */}
-                {isExpanded && (
-                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-1 border-t border-[#E3D7C5]/60 bg-[#FFFDF7]/90 backdrop-blur-xs animate-fadeIn">
-                    
-                    {/* Location Badge */}
-                    <div className="mb-3">
-                      <span className="text-[10px] font-bold text-[#6B5B49] bg-[#FAF6EE] px-2.5 py-1 rounded-md border border-[#E3D7C5] inline-flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-[#8C3A16]" />
-                        <span>Venue: {item.location}</span>
+                      <span className={`block text-xs font-bold tracking-tight truncate transition-colors ${
+                        isSelected ? 'text-[#8C3A16] font-extrabold' : 'text-[#241708] group-hover:text-[#8C3A16]'
+                      }`}>
+                        {item.shortTag}
+                      </span>
+                      <span className="block text-[11px] text-[#6B5B49] font-medium truncate">
+                        {item.time}
                       </span>
                     </div>
 
-                    {/* Description */}
-                    <p className="text-xs sm:text-sm text-[#6B5B49] font-medium leading-relaxed mb-4">
-                      {item.desc}
-                    </p>
+                    {/* Active Indicator Dot */}
+                    {isSelected && (
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#8C3A16] shrink-0" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
-                    {/* Agenda Highlights Checklist */}
-                    <div className="bg-[#FAF6EE] p-4 rounded-xl border border-[#E3D7C5] mb-4 space-y-2">
-                      <h4 className="text-[9px] font-black tracking-widest uppercase text-[#8C3A16]">
-                        SESSION AGENDA HIGHLIGHTS:
-                      </h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-bold text-[#241708]">
-                        {item.highlights.map((hl, hIdx) => (
-                          <div key={hIdx} className="flex items-center gap-2">
-                            <CheckCircle className={`w-3.5 h-3.5 ${item.iconColor} shrink-0`} />
-                            <span>{hl}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Footer Action Button */}
-                    <div className="flex items-center justify-between pt-2 border-t border-[#E3D7C5]/60">
-                      <span className="text-[10px] font-mono text-[#6B5B49] font-semibold">
-                        SIH 4.0 Official Track
-                      </span>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleReminder(item);
-                        }}
-                        className="px-4 py-2 rounded-xl bg-[#8C3A16] text-[#FFFDF7] text-xs font-black uppercase tracking-wider hover:bg-[#6B3213] transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <Bell className="w-3.5 h-3.5 text-[#F2A93B]" />
-                        <span>Set Reminder 🔔</span>
-                      </button>
-                    </div>
-
-                  </div>
-                )}
+          {/* ── RIGHT COLUMN: ROCK-SOLID SINGLE ACTIVE CARD (STABLE DIMENSIONS, NO WOBBLE) ── */}
+          <div className="md:col-span-8 flex flex-col">
+            <div className="w-full h-full rounded-[32px] border-2 transition-all duration-300 overflow-hidden flex flex-col justify-between relative bg-[#FFFDF7] border-[#EBDAB9] shadow-xl">
+              
+              {/* Top Corner Ribbon Decor Overlay */}
+              <div className="absolute top-0 right-0 overflow-hidden w-28 h-28 pointer-events-none z-20">
+                <div className="bg-gradient-to-br from-[#5C230C] via-[#8C3A16] to-[#C97F1B] w-36 h-36 transform rotate-45 translate-x-16 -translate-y-20 shadow-md flex items-end justify-center pb-2">
+                  <Sparkles className="w-4 h-4 text-amber-300 transform -rotate-45 translate-y-8" />
+                </div>
               </div>
-            );
-          })}
+
+              {/* Main Card Inner Body with key prop for smooth fade without reflow wobble */}
+              <div key={currentItem.id} className="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-6 animate-fadeIn">
+                
+                {/* Header Bar: Time Badge + Category Tag */}
+                <div className="flex items-center gap-3 flex-wrap shrink-0">
+                  <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-[#E3D7C5] bg-[#FAF6EE] text-[#8C3A16] font-bold text-xs shadow-2xs">
+                    <Clock className="w-3.5 h-3.5 text-[#8C3A16]" />
+                    <span>{currentItem.time}</span>
+                  </span>
+
+                  <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#8C3A16] text-white-force font-extrabold text-xs tracking-wider shadow-xs">
+                    <ItemBadgeSVG className="w-3.5 h-3.5 text-white-force" />
+                    <span className="text-white-force">{currentItem.category}</span>
+                  </span>
+                </div>
+
+                {/* 2-Column Content Layout: Title + Description on Left | Fixed-Size Image Box on Right */}
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center flex-1">
+                  
+                  {/* Left Text Block */}
+                  <div className="sm:col-span-8 space-y-2">
+                    <h3 className="text-2.5xl sm:text-3.5xl font-black text-[#5C230C] font-display leading-tight min-h-[40px] flex items-center" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+                      {currentItem.title}
+                    </h3>
+                    
+                    {/* Stylish Underline Accent Bar */}
+                    <div className="w-14 h-1 bg-gradient-to-r from-[#C97F1B] to-[#F2A93B] rounded-full my-2.5" />
+
+                    <p className="text-xs sm:text-sm text-[#6B5B49] font-medium leading-relaxed min-h-[48px]">
+                      {currentItem.desc}
+                    </p>
+                  </div>
+
+                  {/* Right Session Specific Illustration Image (FIXED CONTAINER DIMENSIONS PREVENTS LAYOUT SHIFT) */}
+                  <div className="sm:col-span-4 flex justify-center items-center py-2 sm:py-0 shrink-0">
+                    <div className="w-36 sm:w-44 h-40 sm:h-44 flex items-center justify-center relative relative">
+                      <div className="absolute inset-0 bg-[#F2A93B]/15 rounded-full blur-xl pointer-events-none -z-10" />
+                      <img 
+                        src={currentItem.image} 
+                        alt={currentItem.title} 
+                        className="max-w-full max-h-full object-contain drop-shadow-xl transition-transform duration-300" 
+                      />
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* ── SESSION AGENDA HIGHLIGHTS CONTAINER (FIXED STABLE GRID) ── */}
+                <div className="bg-[#FAF6EE] p-5 sm:p-6 rounded-2xl border border-[#E3D7C5] space-y-4 shrink-0">
+                  <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#8C3A16]">
+                    <Calendar className="w-4 h-4 text-[#8C3A16]" />
+                    <span>SESSION AGENDA HIGHLIGHTS</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                    {currentItem.highlights.map((hl, hIdx) => {
+                      const HlIcon = hl.icon || CheckCircle;
+                      return (
+                        <div key={hIdx} className="flex items-start gap-3 bg-[#FFFDF7] p-3 rounded-xl border border-[#E3D7C5]/60 shadow-2xs min-h-[64px]">
+                          <div className="w-8 h-8 rounded-full bg-[#FFE8D6] text-[#8C3A16] flex items-center justify-center shrink-0 border border-[#E3D7C5]">
+                            <HlIcon className="w-4 h-4 text-[#8C3A16]" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-extrabold text-[#241708] leading-snug">
+                              {hl.text}
+                            </p>
+                            <div className="w-6 h-0.5 bg-[#C97F1B] rounded-full mt-1.5" />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
         </div>
 
       </div>

@@ -167,7 +167,7 @@ export default function Objectives({ isStandalone = false }) {
 
                       {/* Top Badge */}
                       <div className="absolute top-3 left-3">
-                        <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#8C3A16] text-white shadow-sm">
+                        <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#8C3A16] !text-white shadow-sm">
                           {image.badge}
                         </span>
                       </div>

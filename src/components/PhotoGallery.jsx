@@ -219,7 +219,7 @@ export default function PhotoGallery() {
 
           {/* ── Active Slide Details Card ── */}
           <div className="w-full max-w-2xl bg-brand-card/90 backdrop-blur-xl border border-white/10 rounded-2xl p-5 sm:p-6 mt-8 sm:mt-10 shadow-2xl text-center">
-            <span className="text-[10px] font-black tracking-widest text-brand-gold bg-brand-gold/10 px-3.5 py-1 rounded-full border border-brand-gold/20 uppercase font-sans">
+            <span className="text-[10px] font-black tracking-widest text-white bg-[#8C3A16] px-3.5 py-1 rounded-full border border-[#8C3A16] uppercase font-sans shadow-sm">
               {galleryImages[currentIndex].category}
             </span>
             

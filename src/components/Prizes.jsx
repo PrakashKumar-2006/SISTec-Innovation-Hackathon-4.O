@@ -35,7 +35,7 @@ export default function Prizes({ isStandalone = false }) {
       themeColor: 'bg-[#FAF6EE]',
       borderColor: 'border-[#E3D7C5] hover:border-[#8C3A16]/60',
       glow: 'shadow-md hover:shadow-xl hover:-translate-y-1',
-      badgeBg: 'bg-[#8C3A16] text-white font-extrabold shadow-sm',
+      badgeBg: 'bg-[#8C3A16] !text-white border-[#8C3A16] font-extrabold shadow-sm',
       titleColor: 'text-[#C97F1B]',
       amountColor: 'text-[#8C3A16]',
       descColor: 'text-[#241708]',
@@ -53,7 +53,7 @@ export default function Prizes({ isStandalone = false }) {
       themeColor: 'bg-[#FAF6EE]',
       borderColor: 'border-[#E3D7C5] hover:border-[#C97F1B]/60',
       glow: 'shadow-md hover:shadow-xl hover:-translate-y-1',
-      badgeBg: 'bg-[#C97F1B] text-white font-extrabold shadow-sm',
+      badgeBg: 'bg-[#C97F1B] !text-white border-[#C97F1B] font-extrabold shadow-sm',
       titleColor: 'text-[#C97F1B]',
       amountColor: 'text-[#8C3A16]',
       descColor: 'text-[#241708]',
@@ -184,8 +184,12 @@ export default function Prizes({ isStandalone = false }) {
                 <div className="space-y-6 pt-2 relative z-10">
                   {/* Header Badge & Icon */}
                   <div className="flex items-center justify-between">
-                    <div className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-xs font-black uppercase tracking-wider ${prize.badgeBg}`}>
-                      {prize.badge}
+                    <div 
+                      className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-xs font-black uppercase tracking-wider text-white-force ${prize.badgeBg}`}
+                    >
+                      <span className="text-white-force font-extrabold">
+                        {prize.badge}
+                      </span>
                     </div>
                     {prize.icon}
                   </div>
