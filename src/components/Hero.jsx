@@ -174,7 +174,7 @@ export default function Hero({ onRegisterClick, onViewChange }) {
                     Register now
                   </span>
                   <span className="text-[9px] sm:text-[10px] font-bold text-white/90 bg-black/25 px-2.5 py-0.5 rounded-full border border-white/20 mt-1.5 w-fit">
-                    Team of 2-6 · Free Entry
+                    Team Size: 4 Members
                   </span>
                 </div>
                 <div className="w-9 h-9 rounded-full bg-white text-[#8C3A16] flex items-center justify-center shrink-0 shadow-md group-hover:translate-x-1.5 transition-transform duration-300">

@@ -21,7 +21,7 @@ export default function Instructions({ onViewChange, onRegisterClick }) {
     {
       id: 1,
       title: "Team Formation Rules",
-      desc: "Form a team of 2 to 6 members from the same institution.",
+      desc: "Form a team of 4 members from the same institution.",
       icon: Users,
       badge: "Mandatory",
       colorTheme: {
@@ -33,7 +33,7 @@ export default function Instructions({ onViewChange, onRegisterClick }) {
         checkColor: "text-[#8C3A16]"
       },
       bullets: [
-        "2 to 6 members per team from the same college (No inter-college teams)",
+        "4 members per team from the same college (No inter-college teams)",
         "At least one female member is highly recommended in each team",
         "Each student can participate in only one team"
       ]

@@ -512,16 +512,16 @@ export default function RegisterModal({ onClose }) {
             {/* Stats Boxes */}
             <div className="flex gap-2.5 mb-10 shrink-0">
               <div className="flex-1 border border-white/5 rounded-2xl py-3 px-2 flex flex-col items-center justify-center text-center bg-white/5">
-                <span className="text-sm font-black text-[var(--gold)] mb-0.5">2-6</span>
+                <span className="text-sm font-black text-[var(--gold)] mb-0.5">4</span>
                 <span className="text-[9px] font-bold uppercase tracking-wider text-[var(--panel-fact-label)]">TEAM SIZE</span>
               </div>
               <div className="flex-1 border border-white/5 rounded-2xl py-3 px-2 flex flex-col items-center justify-center text-center bg-white/5">
-                <span className="text-sm font-black text-[var(--gold)] mb-0.5">₹1L</span>
+                <span className="text-sm font-black text-[var(--gold)] mb-0.5">₹1L+</span>
                 <span className="text-[9px] font-bold uppercase tracking-wider text-[var(--panel-fact-label)]">PRIZE POOL</span>
               </div>
               <div className="flex-1 border border-white/5 rounded-2xl py-3 px-2 flex flex-col items-center justify-center text-center bg-white/5">
-                <span className="text-sm font-black text-[var(--gold)] mb-0.5">Free</span>
-                <span className="text-[9px] font-bold uppercase tracking-wider text-[var(--panel-fact-label)]">ENTRY</span>
+                <span className="text-sm font-black text-[var(--gold)] mb-0.5">24 Hours</span>
+                <span className="text-[9px] font-bold uppercase tracking-wider text-[var(--panel-fact-label)]">HACKATHON</span>
               </div>
             </div>
 
