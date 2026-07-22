@@ -585,6 +585,8 @@ app.post('/api/register', registrationLimiter, upload.fields([
     let consentLetterUrl = '';
     let paymentScreenshotUrl = '';
 
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+
     // Upload to Cloudinary if configured
     if (isCloudinaryConfigured) {
       console.log('Uploading files to Cloudinary...');
@@ -596,15 +598,15 @@ app.post('/api/register', registrationLimiter, upload.fields([
       } catch (uploadErr) {
         console.error('Cloudinary upload failed, falling back to local files:', uploadErr);
         // Fallback to local files
-        ideaPptUrl = `http://localhost:${PORT}/uploads/${ideaPptFile.filename}`;
-        consentLetterUrl = `http://localhost:${PORT}/uploads/${consentLetterFile.filename}`;
-        paymentScreenshotUrl = `http://localhost:${PORT}/uploads/${paymentScreenshotFile.filename}`;
+        ideaPptUrl = `${baseUrl}/uploads/${ideaPptFile.filename}`;
+        consentLetterUrl = `${baseUrl}/uploads/${consentLetterFile.filename}`;
+        paymentScreenshotUrl = `${baseUrl}/uploads/${paymentScreenshotFile.filename}`;
       }
     } else {
       // Local fallback URLs
-      ideaPptUrl = `http://localhost:${PORT}/uploads/${ideaPptFile.filename}`;
-      consentLetterUrl = `http://localhost:${PORT}/uploads/${consentLetterFile.filename}`;
-      paymentScreenshotUrl = `http://localhost:${PORT}/uploads/${paymentScreenshotFile.filename}`;
+      ideaPptUrl = `${baseUrl}/uploads/${ideaPptFile.filename}`;
+      consentLetterUrl = `${baseUrl}/uploads/${consentLetterFile.filename}`;
+      paymentScreenshotUrl = `${baseUrl}/uploads/${paymentScreenshotFile.filename}`;
     }
 
     // 2. Order Locking / Reuse existing pending registration if it exists

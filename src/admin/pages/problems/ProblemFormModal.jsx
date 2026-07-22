@@ -80,7 +80,15 @@ export default function ProblemFormModal({ isOpen, onClose, onSubmit, initialDat
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-brand-card border-brand-purple/20 text-brand-text max-w-2xl max-h-[90vh] overflow-y-auto">
+      <style>{`
+        body .modal-center-override,
+        body .modal-center-override:hover {
+          transform: translate(-50%, -50%) !important;
+          top: 50% !important;
+          left: 50% !important;
+        }
+      `}</style>
+      <DialogContent className="bg-brand-card modal-center-override border-brand-purple/20 text-brand-text max-w-2xl max-h-[90vh] overflow-y-auto z-[9999]">
         <DialogHeader>
           <DialogTitle className="text-brand-gold">{isEditing ? 'Edit Problem Statement' : 'New Problem Statement'}</DialogTitle>
           <DialogDescription className="text-brand-gray">

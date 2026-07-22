@@ -191,6 +191,59 @@ router.patch('/:id/status', roleMiddleware(['Super Admin', 'Admin', 'Moderator']
       );
     }
     
+    // Optional Automatic Team -> Selection Management Synchronization
+    if (team.verificationStatus === 'verified' && team.registrationStatus === 'approved') {
+      try {
+        const AdminAuditLog = mongoose.model('AdminAuditLog');
+        const Selection = mongoose.model('Selection');
+        
+        // Check if Selection record already exists
+        const existingSelection = await Selection.findOne({ registrationId: team.registrationId });
+        
+        if (!existingSelection) {
+          // CASE 1: No Selection record exists. Automatically create one.
+          const newSelection = new Selection({
+            registrationReference: team._id,
+            registrationId: team.registrationId,
+            teamName: team.teamName,
+            leaderName: team.leaderName,
+            leaderEmail: team.leaderEmail,
+            instituteName: team.instituteName,
+            psNumber: team.psid,
+            psTitle: team.psTitle,
+            theme: team.theme,
+            evaluationRound: 'PPT Evaluation',
+            selectionStatus: 'Shortlisted',
+            isPublished: false,
+            internalNotes: team.adminRemarks || '',
+            createdBy: req.admin.id,
+            updatedBy: req.admin.id
+          });
+          
+          await newSelection.save();
+          
+          // Log creation
+          await AdminAuditLog.create({
+            adminId: req.admin.id,
+            action: 'Selection Synchronization',
+            details: { outcome: 'Automatically Created', registrationId: team.registrationId },
+            ipAddress: req.ip || req.connection.remoteAddress
+          });
+        } else {
+          // CASE 2: Selection record already exists. Skip creation.
+          await AdminAuditLog.create({
+            adminId: req.admin.id,
+            action: 'Selection Synchronization',
+            details: { outcome: 'Skipped (Already Exists)', registrationId: team.registrationId },
+            ipAddress: req.ip || req.connection.remoteAddress
+          });
+        }
+      } catch (syncError) {
+        console.error('Error during automatic Selection synchronization:', syncError);
+        // Do not fail the overall status update request if sync fails
+      }
+    }
+    
     res.json({ success: true, data: team });
   } catch (error) {
     console.error('Error updating team status:', error);

@@ -83,9 +83,17 @@ export function AdminUserFormModal({ isOpen, onClose, user, isEditMode }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[500px] bg-[#131316] border-brand-purple/20 text-brand-text">
+      <style>{`
+        body .modal-center-override,
+        body .modal-center-override:hover {
+          transform: translate(-50%, -50%) !important;
+          top: 50% !important;
+          left: 50% !important;
+        }
+      `}</style>
+      <DialogContent className="sm:max-w-[500px] bg-brand-card modal-center-override border-brand-purple/20 text-brand-text max-h-[90vh] overflow-y-auto z-[9999]">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-brand-gold">
+          <DialogTitle className="text-xl font-bold text-brand-text">
             {isEditMode ? 'Edit Administrator' : 'Create Administrator'}
           </DialogTitle>
         </DialogHeader>
@@ -95,14 +103,14 @@ export function AdminUserFormModal({ isOpen, onClose, user, isEditMode }) {
             <div className="bg-brand-teal/10 border border-brand-teal/30 p-4 rounded-md">
               <h3 className="text-brand-teal font-semibold mb-2">Account Created!</h3>
               <p className="text-sm text-brand-text mb-4">Please copy the temporary password and send it securely to the user.</p>
-              <div className="bg-[#1A1A24] p-3 rounded-md font-mono text-center text-lg tracking-wider border border-brand-purple/20">
+              <div className="bg-brand-dark/50 p-3 rounded-md font-mono text-center text-lg tracking-wider border border-brand-purple/20 text-brand-text">
                 {tempPassword}
               </div>
             </div>
             <div className="flex justify-end">
               <button
                 onClick={onClose}
-                className="px-6 py-2 bg-brand-gold text-[#131316] font-bold rounded-md hover:bg-[#c2984a] transition-colors"
+                className="px-6 py-2 bg-brand-gold text-brand-card font-bold rounded-md hover:bg-brand-teal transition-colors"
               >
                 Done
               </button>
@@ -177,33 +185,28 @@ export function AdminUserFormModal({ isOpen, onClose, user, isEditMode }) {
                   {...register('sendEmail')}
                   type="checkbox"
                   id="sendEmail"
-                  className="rounded border-brand-purple/30 bg-brand-dark text-brand-gold focus:ring-brand-gold focus:ring-offset-[#131316]"
+                  className="rounded border-gray-300 bg-white text-brand-gold focus:ring-brand-gold"
                 />
-                <label htmlFor="sendEmail" className="text-sm text-brand-gray">
+                <label htmlFor="sendEmail" className="text-sm text-brand-gray cursor-pointer">
                   Send welcome email with credentials
                 </label>
               </div>
             )}
 
-            <div className="flex justify-end gap-3 pt-6 border-t border-brand-purple/20">
+            <div className="flex justify-end gap-3 mt-6">
               <button
                 type="button"
                 onClick={onClose}
-                disabled={mutation.isLoading}
-                className="px-4 py-2 text-brand-gray hover:text-brand-text font-medium transition-colors disabled:opacity-50"
+                className="px-4 py-2 text-brand-gray hover:text-brand-text transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={mutation.isLoading}
-                className="px-6 py-2 bg-brand-gold text-[#131316] font-bold rounded-md hover:bg-[#c2984a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-6 py-2 bg-brand-gold hover:bg-brand-teal text-white rounded-md font-medium transition-colors disabled:opacity-50"
               >
-                {mutation.isLoading ? (
-                  <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#131316]"></span>
-                ) : (
-                  <>{isEditMode ? 'Save Changes' : 'Create Admin'}</>
-                )}
+                {mutation.isLoading ? 'Saving...' : isEditMode ? 'Save Changes' : 'Create Admin'}
               </button>
             </div>
           </form>

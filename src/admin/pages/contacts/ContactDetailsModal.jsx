@@ -75,7 +75,7 @@ export function ContactDetailsModal({ isOpen, onClose, contactId, initialReplyMo
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl bg-[#131316] border-brand-purple/20 text-brand-text">
+      <DialogContent className="max-w-3xl bg-brand-darker border-brand-purple/20 text-brand-text">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-brand-text">
             {isReplyMode ? 'Reply to Contact' : 'Contact Details'}
@@ -228,7 +228,7 @@ export function ContactDetailsModal({ isOpen, onClose, contactId, initialReplyMo
                               {format(new Date(reply.sentAt), 'MMM d, h:mm a')}
                             </span>
                           </div>
-                          <div className="text-brand-text text-sm leading-relaxed whitespace-pre-wrap mt-3 bg-[#1A1A24] p-3 rounded-md">
+                          <div className="text-brand-text text-sm leading-relaxed whitespace-pre-wrap mt-3 bg-brand-card border border-brand-purple/10 p-3 rounded-md shadow-sm">
                             {reply.message}
                           </div>
                         </div>

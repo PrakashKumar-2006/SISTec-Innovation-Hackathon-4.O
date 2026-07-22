@@ -164,7 +164,7 @@ const SelectionsList = () => {
           type="checkbox" 
           onChange={toggleSelectAll}
           checked={selectionsData?.data?.data?.length > 0 && selectedIds.length === selectionsData?.data?.data?.length}
-          className="rounded border-gray-600 bg-gray-700 text-yellow-500 focus:ring-yellow-500/20"
+          className="rounded border-brand-purple/30 bg-brand-dark text-brand-gold focus:ring-brand-gold/20"
         />
       ),
       render: (item) => (
@@ -172,7 +172,7 @@ const SelectionsList = () => {
           type="checkbox" 
           checked={selectedIds.includes(item._id)}
           onChange={() => toggleSelect(item._id)}
-          className="rounded border-gray-600 bg-gray-700 text-yellow-500 focus:ring-yellow-500/20"
+          className="rounded border-brand-purple/30 bg-brand-dark text-brand-gold focus:ring-brand-gold/20"
         />
       )
     },
@@ -181,8 +181,8 @@ const SelectionsList = () => {
       label: 'Team Info',
       render: (item) => (
         <div>
-          <div className="font-medium text-white">{item.teamName}</div>
-          <div className="text-xs text-gray-400">{item.registrationId}</div>
+          <div className="font-medium text-brand-text">{item.teamName}</div>
+          <div className="text-xs text-brand-gray">{item.registrationId}</div>
         </div>
       )
     },
@@ -191,8 +191,8 @@ const SelectionsList = () => {
       label: 'Leader',
       render: (item) => (
         <div>
-          <div className="text-gray-300">{item.leaderName}</div>
-          <div className="text-xs text-gray-500">{item.leaderEmail}</div>
+          <div className="text-brand-text">{item.leaderName}</div>
+          <div className="text-xs text-brand-gray">{item.leaderEmail}</div>
         </div>
       )
     },
@@ -201,15 +201,15 @@ const SelectionsList = () => {
       label: 'Problem Statement',
       render: (item) => (
         <div>
-          <div className="text-gray-300">{item.psNumber}</div>
-          <div className="text-xs text-gray-500 max-w-[200px] truncate" title={item.psTitle}>{item.psTitle}</div>
+          <div className="text-brand-text">{item.psNumber}</div>
+          <div className="text-xs text-brand-gray max-w-[200px] truncate" title={item.psTitle}>{item.psTitle}</div>
         </div>
       )
     },
     {
       key: 'round',
       label: 'Round',
-      render: (item) => <span className="text-gray-300 text-sm">{item.evaluationRound}</span>
+      render: (item) => <span className="text-brand-text text-sm">{item.evaluationRound}</span>
     },
     {
       key: 'status',
@@ -238,7 +238,7 @@ const SelectionsList = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => { setSelectedItem(item); setIsDetailsOpen(true); }}
-            className="p-1 hover:text-yellow-500 transition-colors"
+            className="p-1 hover:text-brand-gold transition-colors text-brand-gray"
             title="View Details"
           >
             <Eye className="w-4 h-4" />
@@ -247,7 +247,7 @@ const SelectionsList = () => {
           {canManage && (
             <button
               onClick={() => { setSelectedItem(item); setIsFormOpen(true); }}
-              className="p-1 hover:text-blue-500 transition-colors"
+              className="p-1 hover:text-brand-teal transition-colors text-brand-gray"
               title="Edit Selection"
             >
               <Edit className="w-4 h-4" />
@@ -261,7 +261,7 @@ const SelectionsList = () => {
                   deleteMutation.mutate(item._id);
                 }
               }}
-              className="p-1 hover:text-red-500 transition-colors"
+              className="p-1 hover:text-red-500 transition-colors text-brand-gray"
               title="Delete Selection"
             >
               <Trash2 className="w-4 h-4" />
@@ -277,11 +277,11 @@ const SelectionsList = () => {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            <Users className="w-6 h-6 text-yellow-500" />
+          <h1 className="text-2xl font-bold text-brand-text flex items-center gap-2">
+            <Users className="w-6 h-6 text-brand-orange" />
             Selection Management
           </h1>
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="text-brand-gray text-sm mt-1">
             Manage shortlisted teams, import evaluations, and publish results.
           </p>
         </div>
@@ -290,7 +290,7 @@ const SelectionsList = () => {
           <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={handleDownloadTemplate}
-              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors flex items-center gap-2 text-sm"
+              className="px-4 py-2 bg-brand-dark border border-brand-purple/20 hover:bg-brand-dark/80 text-brand-text rounded-lg transition-colors flex items-center gap-2 text-sm"
             >
               <Download className="w-4 h-4" />
               Template
@@ -307,7 +307,7 @@ const SelectionsList = () => {
               />
               <label 
                 htmlFor="excel-upload"
-                className={`cursor-pointer px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors flex items-center gap-2 text-sm ${isImporting ? 'opacity-50' : ''}`}
+                className={`cursor-pointer px-4 py-2 bg-brand-dark border border-brand-purple/20 hover:bg-brand-dark/80 text-brand-text rounded-lg transition-colors flex items-center gap-2 text-sm ${isImporting ? 'opacity-50' : ''}`}
               >
                 <Upload className="w-4 h-4" />
                 {isImporting ? 'Importing...' : 'Import'}
@@ -316,7 +316,7 @@ const SelectionsList = () => {
 
             <button
               onClick={() => { setSelectedItem(null); setIsFormOpen(true); }}
-              className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
+              className="px-4 py-2 bg-brand-orange hover:bg-brand-orange/90 text-white rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
             >
               <Plus className="w-4 h-4" />
               Add Manual
@@ -326,16 +326,16 @@ const SelectionsList = () => {
       </div>
 
       {/* Toolbar */}
-      <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+      <div className="bg-brand-card rounded-2xl p-4 border border-brand-purple/20 shadow-card-shadow">
         <div className="flex flex-col lg:flex-row gap-4 justify-between">
           <div className="flex-1 max-w-md relative">
-            <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-5 h-5 text-brand-gray absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search by Team, ID, Institute..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-gray-900 border border-gray-700 rounded-lg pl-10 pr-4 py-2 text-white focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500 transition-colors"
+              className="w-full bg-brand-dark border border-brand-purple/30 rounded-lg pl-10 pr-4 py-2 text-brand-text placeholder-brand-gray focus:ring-2 focus:ring-brand-gold/20 focus:border-brand-gold transition-colors"
             />
           </div>
 
@@ -343,39 +343,39 @@ const SelectionsList = () => {
             <select
               value={filters.evaluationRound}
               onChange={(e) => setFilters(prev => ({ ...prev, evaluationRound: e.target.value }))}
-              className="bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:ring-2 focus:ring-yellow-500/20"
+              className="bg-brand-dark border border-brand-purple/30 rounded-lg px-3 py-2 text-brand-text text-sm focus:ring-2 focus:ring-brand-gold/20"
             >
               <option value="All">All Rounds</option>
               <option value="PPT Evaluation">PPT Evaluation</option>
               <option value="Offline Round">Offline Round</option>
-              <option value="Grand Finale">Grand Finale</option>
+              <option value="Finals">Finals</option>
             </select>
 
             <select
               value={filters.selectionStatus}
               onChange={(e) => setFilters(prev => ({ ...prev, selectionStatus: e.target.value }))}
-              className="bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:ring-2 focus:ring-yellow-500/20"
+              className="bg-brand-dark border border-brand-purple/30 rounded-lg px-3 py-2 text-brand-text text-sm focus:ring-2 focus:ring-brand-gold/20"
             >
               <option value="All">All Statuses</option>
-              <option value="Draft">Draft</option>
               <option value="Shortlisted">Shortlisted</option>
+              <option value="Waitlisted">Waitlisted</option>
               <option value="Not Shortlisted">Not Shortlisted</option>
             </select>
             
             <select
               value={filters.isPublished}
               onChange={(e) => setFilters(prev => ({ ...prev, isPublished: e.target.value }))}
-              className="bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:ring-2 focus:ring-yellow-500/20"
+              className="bg-brand-dark border border-brand-purple/30 rounded-lg px-3 py-2 text-brand-text text-sm focus:ring-2 focus:ring-brand-gold/20"
             >
               <option value="All">Published Status</option>
               <option value="true">Published</option>
-              <option value="false">Draft / Hidden</option>
+              <option value="false">Draft</option>
             </select>
 
             <button
               onClick={handleExport}
-              className="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-gray-300 hover:text-white"
-              title="Export filtered data"
+              className="p-2 bg-brand-dark border border-brand-purple/20 hover:bg-brand-dark/80 text-brand-text rounded-lg transition-colors"
+              title="Export Current View"
             >
               <Download className="w-5 h-5" />
             </button>

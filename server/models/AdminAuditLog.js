@@ -9,7 +9,7 @@ const adminAuditLogSchema = new mongoose.Schema({
   action: {
     type: String,
     required: true,
-    enum: ['Login', 'Account Creation', 'Role Change', 'Password Reset', 'Status Change', 'Account Deletion']
+    enum: ['Login', 'Account Creation', 'Role Change', 'Password Reset', 'Status Change', 'Account Deletion', 'Selection Synchronization']
   },
   targetAdminId: {
     type: mongoose.Schema.Types.ObjectId,
