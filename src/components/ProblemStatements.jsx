@@ -73,21 +73,120 @@ const getDomainTheme = (domain) => {
   };
 };
 
+// Default Fallback Problem Statements
+const fallbackProblemStatements = [
+  {
+    sNo: 1,
+    psNumber: 'WE-01',
+    org: 'Ministry of Women and Child Development',
+    title: 'Women Safety & Emergency Response Platform',
+    statement: 'AI-driven real-time emergency alert and geo-tracking safety platform for women in urban and rural environments.',
+    category: 'Software',
+    domain: 'Women Empowerment',
+    detailedDescription: 'Develop an intelligent mobile & web application with offline SOS capability, automated audio recording, and live route safety score analysis.',
+    techStack: 'React Native, Node.js, TensorFlow, WebSockets, MongoDB'
+  },
+  {
+    sNo: 2,
+    psNumber: 'PS001',
+    org: 'Ministry of Education',
+    title: 'AI-based Smart Attendance & Engagement System',
+    statement: 'Automated facial recognition & emotion-tracking attendance system for schools and colleges.',
+    category: 'Software',
+    domain: 'Artificial Intelligence',
+    detailedDescription: 'Build an automated classroom attendance monitoring system with fraud prevention and attendance analytics dashboard for faculty.',
+    techStack: 'Python, OpenCV, PyTorch, React, FastApi'
+  },
+  {
+    sNo: 3,
+    psNumber: 'PS004',
+    org: 'Ministry of Health and Family Welfare',
+    title: 'Real-time Disease Outbreak Prediction Platform',
+    statement: 'Predictive analytics portal for early detection of vector-borne disease outbreaks using epidemic models.',
+    category: 'Software',
+    domain: 'Healthcare',
+    detailedDescription: 'Integrate hospital data feeds, weather data, and geographical indicators to generate early warning heatmaps for municipal authorities.',
+    techStack: 'Python, SciPy, Leaflet.js, PostgreSQL, Docker'
+  },
+  {
+    sNo: 4,
+    psNumber: 'PS006',
+    org: 'Municipal Corporation of Bhopal',
+    title: 'Smart Waste Segregation and Collection System',
+    statement: 'IoT-enabled smart bin monitoring & automated route optimization for municipal garbage collectors.',
+    category: 'Hardware/Software',
+    domain: 'Environment',
+    detailedDescription: 'Ultrasonic sensor-based bin fill-level monitoring with real-time route optimization software for municipal garbage trucks.',
+    techStack: 'ESP32, Arduino, MQTT, Node.js, React, Google Maps API'
+  },
+  {
+    sNo: 5,
+    psNumber: 'PS008',
+    org: 'Smart City Mission',
+    title: 'Digital Twin for Traffic Management',
+    statement: 'Computer vision-based adaptive traffic signal control system for high-density junctions.',
+    category: 'Software',
+    domain: 'Urban Planning',
+    detailedDescription: 'Dynamically adjust signal timings based on real-time vehicle density detected through traffic surveillance cameras.',
+    techStack: 'YOLOv8, OpenCV, Python, Redis, React Dashboard'
+  },
+  {
+    sNo: 6,
+    psNumber: 'PS007',
+    org: 'Ministry of Electronics and IT (MeitY)',
+    title: 'Cybersecurity Threat Detection for Government Portals',
+    statement: 'Automated vulnerability scanner and intrusion detection system for public infrastructure APIs.',
+    category: 'Software',
+    domain: 'Cybersecurity',
+    detailedDescription: 'Real-time anomaly detection engine to identify SQL injection, DDoS attempts, and unauthorized API data extraction.',
+    techStack: 'Go, ELK Stack, Snort, React, GraphQL'
+  },
+  {
+    sNo: 7,
+    psNumber: 'PS009',
+    org: 'Department of Agriculture & Farmers Welfare',
+    title: 'AI Crop Disease Diagnosis & Soil Health Assistant',
+    statement: 'Mobile image analysis app for instant crop pest/disease identification and fertilizer recommendation.',
+    category: 'Software',
+    domain: 'Agriculture',
+    detailedDescription: 'Allows farmers to take a picture of infected crop leaves to receive instant AI diagnosis in regional languages with treatment steps.',
+    techStack: 'Flutter, TensorFlow Lite, Python, AWS Lambda'
+  },
+  {
+    sNo: 8,
+    psNumber: 'PS010',
+    org: 'Ministry of Power & Renewable Energy',
+    title: 'Smart Microgrid Power Distribution & Solar Optimization',
+    statement: 'Grid load balancing and rooftop solar energy trading marketplace for residential communities.',
+    category: 'Hardware/Software',
+    domain: 'Smart Grid',
+    detailedDescription: 'Peer-to-peer energy trading platform connecting solar panel owners with local grid consumers using smart meters.',
+    techStack: 'Solidity, Web3.js, Node.js, React, Raspberry Pi'
+  }
+];
+
 export default function ProblemStatements() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedDomain, setSelectedDomain] = useState('All');
   const [activeModalItem, setActiveModalItem] = useState(null);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['publicProblemStatements'],
     queryFn: async () => {
-      const response = await axios.get(`${backendUrl}/api/public/problem-statements`);
-      return response.data.data;
+      try {
+        const response = await axios.get(`${backendUrl}/api/public/problem-statements`, { timeout: 3000 });
+        if (response.data && response.data.data && response.data.data.length > 0) {
+          return response.data.data;
+        }
+      } catch (e) {
+        console.warn('API offline or empty, using fallback problem statements', e);
+      }
+      return fallbackProblemStatements;
     }
   });
 
-  const problemStatements = data || [];
+  const problemStatements = data && data.length > 0 ? data : fallbackProblemStatements;
   // Unique domains for select options
   const uniqueDomains = ['All', ...new Set(problemStatements.map(item => item.domain).filter(Boolean))];
 
@@ -128,80 +227,74 @@ export default function ProblemStatements() {
           </p>
         </div>
 
-        {/* Loading / Error States */}
+        {/* Loading State */}
         {isLoading && (
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-gold"></div>
-          </div>
-        )}
-
-        {isError && (
-          <div className="text-center py-20">
-            <p className="text-red-400">Failed to load problem statements. Please try again later.</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8C3A16]"></div>
           </div>
         )}
 
         {/* Filters and Grid */}
-        {!isLoading && !isError && (
+        {!isLoading && (
           <>
             {/* Uniform Filters Dashboard */}
             <div 
               style={{ animationDelay: '100ms' }}
-              className="p-6 rounded-[2rem] bg-[var(--panel)] border border-[var(--marigold)]/20 shadow-xl mb-10 animate-fade-in opacity-0"
+              className="p-6 rounded-[2rem] bg-[#FAF6EE] border border-[#E3D7C5] shadow-md mb-10"
             >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Search Input Box */}
             <div className="flex flex-col gap-2 text-left">
-              <label className="text-[10px] font-bold text-[var(--marigold)] tracking-wider uppercase pl-1 flex items-center gap-1 font-sans">
-                <Search size={10} /> Search Challenges
+              <label className="text-xs font-black text-[#8C3A16] tracking-wider uppercase pl-1 flex items-center gap-1.5 font-sans">
+                <Search size={14} className="text-[#8C3A16]" /> Search Challenges
               </label>
-              <div className="relative h-12 rounded-2xl bg-[var(--panel-soft)] border border-[var(--marigold)]/30 flex items-center px-4 transition-all focus-within:border-[var(--marigold)]">
-                <Search className="text-[var(--ink-faint)] mr-2.5 shrink-0" size={16} />
+              <div className="relative h-12 rounded-2xl bg-[#FFFDF7] border border-[#E3D7C5] flex items-center px-4 transition-all focus-within:border-[#8C3A16] focus-within:ring-2 focus-within:ring-[#8C3A16]/10 shadow-2xs">
+                <Search className="text-[#8C3A16] mr-2.5 shrink-0" size={16} />
                 <input
                   type="text"
                   placeholder="PS number, keyword, organization..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-transparent border-none text-xs sm:text-sm text-white placeholder-[var(--ink-faint)] focus:outline-none"
+                  className="w-full bg-transparent border-none text-xs sm:text-sm text-[#241708] font-bold placeholder-[#6B5B49] focus:outline-none"
                 />
               </div>
             </div>
 
             {/* Category Select Dropdown */}
             <div className="flex flex-col gap-2 text-left">
-              <label className="text-[10px] font-bold text-[var(--marigold)] tracking-wider uppercase pl-1 flex items-center gap-1 font-sans">
-                <Tag size={10} /> Category Type
+              <label className="text-xs font-black text-[#8C3A16] tracking-wider uppercase pl-1 flex items-center gap-1.5 font-sans">
+                <Tag size={14} className="text-[#8C3A16]" /> Category Type
               </label>
-              <div className="relative h-12 rounded-2xl bg-[var(--panel-soft)] border border-[var(--marigold)]/30 flex items-center px-4 transition-all focus-within:border-[var(--marigold)]">
-                <Filter className="text-[var(--ink-faint)] mr-2.5 shrink-0" size={14} />
+              <div className="relative h-12 rounded-2xl bg-[#FFFDF7] border border-[#E3D7C5] flex items-center px-4 transition-all focus-within:border-[#8C3A16] focus-within:ring-2 focus-within:ring-[#8C3A16]/10 shadow-2xs">
+                <Filter className="text-[#8C3A16] mr-2.5 shrink-0" size={14} />
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full bg-transparent border-none text-xs sm:text-sm text-white focus:outline-none cursor-pointer"
+                  className="w-full bg-transparent border-none text-xs sm:text-sm text-[#241708] font-extrabold focus:outline-none cursor-pointer"
                 >
-                  <option value="All" className="bg-[var(--panel)] text-white">All Categories</option>
-                  <option value="Software" className="bg-[var(--panel)] text-white">Software</option>
-                  <option value="Hardware" className="bg-[var(--panel)] text-white">Hardware</option>
-                  <option value="Hardware/Software" className="bg-[var(--panel)] text-white">Hardware/Software</option>
+                  <option value="All" className="bg-[#FFFDF7] text-[#241708]">All Categories</option>
+                  <option value="Software" className="bg-[#FFFDF7] text-[#241708]">Software</option>
+                  <option value="Hardware" className="bg-[#FFFDF7] text-[#241708]">Hardware</option>
+                  <option value="Hardware/Software" className="bg-[#FFFDF7] text-[#241708]">Hardware/Software</option>
                 </select>
               </div>
             </div>
 
             {/* Domain Dropdown Select */}
             <div className="flex flex-col gap-2 text-left">
-              <label className="text-[10px] font-bold text-[var(--marigold)] tracking-wider uppercase pl-1 flex items-center gap-1 font-sans">
-                <Cpu size={10} /> Domain Bucket
+              <label className="text-xs font-black text-[#8C3A16] tracking-wider uppercase pl-1 flex items-center gap-1.5 font-sans">
+                <Cpu size={14} className="text-[#8C3A16]" /> Domain Bucket
               </label>
-              <div className="relative h-12 rounded-2xl bg-[var(--panel-soft)] border border-[var(--marigold)]/30 flex items-center px-4 transition-all focus-within:border-[var(--marigold)]">
-                <Cpu className="text-[var(--ink-faint)] mr-2.5 shrink-0" size={14} />
+              <div className="relative h-12 rounded-2xl bg-[#FFFDF7] border border-[#E3D7C5] flex items-center px-4 transition-all focus-within:border-[#8C3A16] focus-within:ring-2 focus-within:ring-[#8C3A16]/10 shadow-2xs">
+                <Cpu className="text-[#8C3A16] mr-2.5 shrink-0" size={14} />
                 <select
                   value={selectedDomain}
                   onChange={(e) => setSelectedDomain(e.target.value)}
-                  className="w-full bg-transparent border-none text-xs sm:text-sm text-white focus:outline-none cursor-pointer"
+                  className="w-full bg-transparent border-none text-xs sm:text-sm text-[#241708] font-extrabold focus:outline-none cursor-pointer"
                 >
                   {uniqueDomains.map((dom, dIdx) => (
-                    <option key={dIdx} value={dom} className="bg-[var(--panel)] text-white">
+                    <option key={dIdx} value={dom} className="bg-[#FFFDF7] text-[#241708]">
                       {dom === 'All' ? 'All Domains' : dom}
                     </option>
                   ))}
@@ -214,72 +307,73 @@ export default function ProblemStatements() {
 
 
         {/* Desktop Table View */}
-        <div className="hidden md:block rounded-[2rem] bg-[var(--panel)] border border-[var(--marigold)]/20 overflow-hidden shadow-2xl">
+        <div className="hidden md:block rounded-[2rem] bg-[#FFFDF7] border border-[#E3D7C5] overflow-hidden shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[1000px]">
               <thead>
-                <tr className="border-b border-[var(--marigold)]/20 bg-[var(--panel-soft)]">
-                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-20 text-[var(--marigold)] font-sans">
+                <tr className="border-b border-[#E3D7C5] bg-[#FAF6EE]">
+                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-20 text-[#8C3A16] font-display">
                     S. No.
                   </th>
-                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-64 text-[var(--marigold)] font-sans">
+                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-64 text-[#8C3A16] font-display">
                     Organization
                   </th>
-                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider max-w-sm text-[var(--marigold)] font-sans">
+                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider max-w-sm text-[#8C3A16] font-display">
                     Problem Statement
                   </th>
-                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-32 text-[var(--marigold)] font-sans">
+                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-32 text-[#8C3A16] font-display">
                     PS Number
                   </th>
-                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-44 text-[var(--marigold)] font-sans">
+                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-44 text-[#8C3A16] font-display">
                     Category
                   </th>
-                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-48 text-[var(--marigold)] font-sans">
+                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-48 text-[#8C3A16] font-display">
                     Domain Bucket
                   </th>
-                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-44 text-center text-[var(--marigold)] font-sans">
+                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-44 text-center text-[#8C3A16] font-display">
                     Description
                   </th>
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-[#EBDAB9]">
                 {filteredStatements.length > 0 ? (
                   filteredStatements.map((item, idx) => (
                     <tr 
                       key={idx}
-                      style={{ animationDelay: `${idx * 40}ms` }}
-                      className="hover:bg-white/[0.02] transition-colors duration-200 group animate-fade-in opacity-0"
+                      className="hover:bg-[#8C3A16]/5 transition-colors duration-200 group"
                     >
                       {/* S.No */}
-                      <td className="px-6 py-5 text-sm font-bold text-white/90 font-mono">
+                      <td className="px-6 py-5 text-sm font-black text-[#8C3A16] font-mono">
                         {idx + 1}
                       </td>
 
                       {/* Sponsoring Organization */}
-                      <td className="px-6 py-5 text-xs text-brand-gray font-medium leading-relaxed max-w-[240px]">
+                      <td className="px-6 py-5 text-xs text-[#241708] font-extrabold leading-relaxed max-w-[240px]">
                         {item.org}
                       </td>
 
                       {/* Problem Statement */}
-                      <td className="px-6 py-5 text-xs text-white font-medium leading-relaxed max-w-md">
-                        <span className="block border-l-2 border-brand-gold pl-3">
+                      <td className="px-6 py-5 text-xs text-[#5C230C] font-semibold leading-relaxed max-w-md">
+                        <span className="block border-l-2 border-[#C97F1B] pl-3">
                           {item.title || item.statement}
                         </span>
                       </td>
 
                       {/* PS Number */}
-                      <td className="px-6 py-5 text-xs font-bold text-white/90 font-mono">
-                        {item.psNumber}
+                      <td className="px-6 py-5 text-xs font-mono">
+                        <span className="bg-[#FFE8D6] text-[#8C3A16] px-2.5 py-1 rounded-md border border-[#E3D7C5] font-black inline-block shadow-2xs">
+                          {item.psNumber}
+                        </span>
                       </td>
 
                       {/* Category */}
-                      <td className="px-6 py-5 text-xs text-brand-gray font-medium">
+                      <td className="px-6 py-5 text-xs text-[#6B5B49] font-bold">
                         {item.category}
                       </td>
 
                       {/* Domain Bucket */}
-                      <td className="px-6 py-5 text-xs text-brand-gray font-medium">
+                      <td className="px-6 py-5 text-xs text-[#8C3A16] font-black">
                         {item.domain}
                       </td>
 
@@ -287,7 +381,7 @@ export default function ProblemStatements() {
                       <td className="px-6 py-5 text-center">
                         <button
                           onClick={() => setActiveModalItem(item)}
-                          className="text-xs font-bold text-brand-gold hover:text-white transition-colors duration-300 bg-transparent border-none cursor-pointer hover:underline"
+                          className="px-3.5 py-1.5 rounded-xl bg-[#FFE8D6] text-[#8C3A16] hover:bg-[#8C3A16] hover:!text-white font-black text-xs border border-[#E3D7C5] transition-all cursor-pointer shadow-2xs hover:scale-105"
                         >
                           View Description
                         </button>
@@ -297,9 +391,9 @@ export default function ProblemStatements() {
                 ) : (
                   <tr>
                     <td colSpan="7" className="py-20 text-center">
-                      <div className="flex flex-col items-center gap-3 text-brand-gray">
-                        <AlertCircle size={32} className="text-brand-orange animate-bounce" />
-                        <p className="font-mono text-sm">No matching problem statements found.</p>
+                      <div className="flex flex-col items-center gap-3 text-[#6B5B49]">
+                        <AlertCircle size={32} className="text-[#8C3A16] animate-bounce" />
+                        <p className="font-mono text-sm font-bold text-[#8C3A16]">No matching problem statements found.</p>
                       </div>
                     </td>
                   </tr>
@@ -313,45 +407,43 @@ export default function ProblemStatements() {
         <div className="md:hidden flex flex-col gap-5">
           {filteredStatements.length > 0 ? (
             filteredStatements.map((item, idx) => {
-              const theme = getDomainTheme(item.domain);
               return (
                 <div 
                   key={idx}
-                  style={{ animationDelay: `${idx * 40}ms` }}
-                  className={`p-5 rounded-2xl bg-gradient-to-br ${theme.bg} backdrop-blur-md border ${theme.borderColor} ${theme.glow} flex flex-col gap-3.5 relative overflow-hidden shadow-xl hover:-translate-y-2 hover:scale-[1.02] transition-all duration-300 text-left animate-fade-in opacity-0 group`}
+                  className="p-5 rounded-2xl bg-[#FFFDF7] border border-[#E3D7C5] shadow-md hover:shadow-lg flex flex-col gap-3.5 relative overflow-hidden transition-all text-left group"
                 >
                   {/* Header: S.No & PS Number badge */}
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-white/35">#{item.sNo}</span>
-                    <span className={`px-2.5 py-1 rounded-lg border font-mono text-[9px] font-bold tracking-wider ${theme.psBadge}`}>
+                    <span className="text-xs font-mono font-extrabold text-[#6B5B49]">#{item.sNo}</span>
+                    <span className="px-2.5 py-1 rounded-lg bg-[#FFE8D6] border border-[#E3D7C5] font-mono text-[10px] font-black text-[#8C3A16] tracking-wider">
                       {item.psNumber}
                     </span>
                   </div>
 
                   {/* Sponsoring Org */}
                   <div className="space-y-1">
-                    <span className="text-[9px] font-black tracking-widest text-slate-500 uppercase">Sponsoring Org</span>
-                    <h3 className="text-sm font-extrabold text-white leading-snug group-hover:text-brand-gold transition-colors">{item.org}</h3>
+                    <span className="text-[9px] font-black tracking-widest text-[#8C3A16] uppercase">Sponsoring Org</span>
+                    <h3 className="text-sm font-extrabold text-[#5C230C] leading-snug group-hover:text-[#8C3A16] transition-colors">{item.org}</h3>
                   </div>
 
                   {/* Problem Statement Preview */}
-                  <div className="space-y-1.5 pt-2 border-t border-white/5">
-                    <span className="text-[9px] font-black tracking-widest text-brand-gold uppercase flex items-center gap-1">
-                      <Sparkles size={10} className="text-brand-gold shrink-0 animate-pulse" /> Problem Statement
+                  <div className="space-y-1.5 pt-2 border-t border-[#E3D7C5]/60">
+                    <span className="text-[9px] font-black tracking-widest text-[#8C3A16] uppercase flex items-center gap-1">
+                      <Sparkles size={10} className="text-[#8C3A16] shrink-0 animate-pulse" /> Problem Statement
                     </span>
-                    <div className="pl-3 border-l-2 border-brand-gold bg-white/5 p-2.5 rounded-r-xl">
-                      <p className="text-xs text-white font-medium leading-relaxed break-words text-justify line-clamp-3">
+                    <div className="pl-3 border-l-2 border-[#C97F1B] bg-[#FAF6EE] p-2.5 rounded-r-xl">
+                      <p className="text-xs text-[#241708] font-medium leading-relaxed break-words text-justify line-clamp-3">
                         {item.statement}
                       </p>
                     </div>
                   </div>
 
                   {/* Categories / Info Row */}
-                  <div className="flex flex-wrap items-center gap-2 pt-2.5 border-t border-white/5">
-                    <span className="px-2.5 py-0.5 rounded-full border border-white/10 bg-white/5 text-brand-gray text-[9px] font-black uppercase tracking-wider">
+                  <div className="flex flex-wrap items-center gap-2 pt-2.5 border-t border-[#E3D7C5]/60">
+                    <span className="px-2.5 py-0.5 rounded-full border border-[#E3D7C5] bg-[#FAF6EE] text-[#6B5B49] text-[9px] font-black uppercase tracking-wider">
                       {item.category}
                     </span>
-                    <span className={`px-2.5 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-wider ${theme.badge}`}>
+                    <span className="px-2.5 py-0.5 rounded-full border border-[#E3D7C5] bg-[#FFE8D6] text-[#8C3A16] text-[9px] font-black uppercase tracking-wider">
                       {item.domain}
                     </span>
                   </div>
@@ -359,7 +451,7 @@ export default function ProblemStatements() {
                   {/* Action button */}
                   <button
                     onClick={() => setActiveModalItem(item)}
-                    className="w-full mt-2 py-2.5 rounded-xl bg-brand-dark border border-white/10 hover:border-brand-gold hover:text-brand-gold text-xs font-extrabold text-slate-300 transition-all text-center cursor-pointer active:scale-[0.98] shadow-md"
+                    className="w-full mt-2 py-2.5 rounded-xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] hover:from-[#6B3213] hover:to-[#A64B1E] text-xs font-black text-white transition-all text-center cursor-pointer active:scale-[0.98] shadow-md border-none"
                   >
                     View Details & Tech Stack
                   </button>
@@ -367,10 +459,10 @@ export default function ProblemStatements() {
               );
             })
           ) : (
-            <div className="py-14 text-center rounded-2xl bg-brand-card/25 border border-dashed border-white/5">
-              <div className="flex flex-col items-center gap-3 text-brand-gray">
-                <AlertCircle size={28} className="text-brand-orange animate-bounce" />
-                <p className="font-mono text-xs">No matching problem statements found.</p>
+            <div className="py-14 text-center rounded-2xl bg-[#FFFDF7] border border-dashed border-[#E3D7C5]">
+              <div className="flex flex-col items-center gap-3 text-[#6B5B49]">
+                <AlertCircle size={28} className="text-[#8C3A16] animate-bounce" />
+                <p className="font-mono text-xs font-bold text-[#8C3A16]">No matching problem statements found.</p>
               </div>
             </div>
           )}
@@ -380,59 +472,59 @@ export default function ProblemStatements() {
         {activeModalItem && createPortal(
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             <div 
-              className="absolute inset-0 bg-brand-darker/80 backdrop-blur-md"
+              className="absolute inset-0 bg-[#FFFDF7]/92 backdrop-blur-lg"
               onClick={() => setActiveModalItem(null)}
             ></div>
             
-            <div className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-3xl bg-brand-card/95 border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.5)] p-6 md:p-8 z-10 text-left animate-fade-in custom-scrollbar">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-orange via-brand-pink to-brand-blue"></div>
+            <div className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-3xl bg-[#FFFDF7] border-2 border-[#8C3A16] shadow-2xl p-6 md:p-8 z-10 text-left animate-fade-in custom-scrollbar">
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#8C3A16] via-[#C97F1B] to-[#F2A93B]"></div>
 
               <button 
                 onClick={() => setActiveModalItem(null)}
-                className="absolute top-5 right-5 p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 text-brand-gray hover:text-white transition-all cursor-pointer"
+                className="absolute top-5 right-5 p-2 rounded-xl bg-[#FFE8D6] hover:bg-[#8C3A16] hover:!text-white border border-[#E3D7C5] text-[#8C3A16] transition-all cursor-pointer group shadow-2xs hover:scale-105"
               >
-                <X size={18} />
+                <X size={18} className="text-[#8C3A16] group-hover:!text-white transition-colors" />
               </button>
 
               <div className="flex flex-wrap items-center gap-2 mb-6 mt-2">
-                <span className="px-3 py-1 rounded-lg bg-brand-dark border border-white/5 font-mono text-xs font-bold text-brand-blue tracking-wide">
+                <span className="px-3 py-1 rounded-lg bg-[#FFE8D6] border border-[#E3D7C5] font-mono text-xs font-black text-[#8C3A16] tracking-wide">
                   PS Number: {activeModalItem.psNumber}
                 </span>
-                <span className="px-3 py-0.5 rounded-full border border-white/10 bg-white/5 text-brand-gray text-[10px] font-bold uppercase">
+                <span className="px-3 py-0.5 rounded-full border border-[#E3D7C5] bg-[#FAF6EE] text-[#6B5B49] text-[10px] font-black uppercase">
                   {activeModalItem.category}
                 </span>
-                <span className="px-3 py-0.5 rounded-full border border-brand-pink/20 bg-brand-pink/10 text-brand-pink text-[10px] font-bold uppercase">
+                <span className="px-3 py-0.5 rounded-full border border-[#E3D7C5] bg-[#FFE8D6] text-[#8C3A16] text-[10px] font-black uppercase">
                   {activeModalItem.domain}
                 </span>
               </div>
 
               <div className="space-y-6">
                 <div className="space-y-1.5">
-                  <h4 className="text-[10px] font-bold tracking-widest text-brand-gray uppercase">Sponsoring Organization</h4>
-                  <div className="flex items-center gap-2.5 text-base font-bold text-white">
+                  <h4 className="text-[10px] font-black tracking-widest text-[#8C3A16] uppercase">Sponsoring Organization</h4>
+                  <div className="flex items-center gap-2.5 text-base font-extrabold text-[#5C230C]">
                     <span>{activeModalItem.org}</span>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <h4 className="text-[10px] font-bold tracking-widest text-brand-gold uppercase flex items-center gap-1">
-                    <Sparkles size={10} className="text-brand-gold shrink-0" /> Problem Statement Summary
+                  <h4 className="text-[10px] font-black tracking-widest text-[#8C3A16] uppercase flex items-center gap-1">
+                    <Sparkles size={10} className="text-[#8C3A16] shrink-0" /> Problem Statement Summary
                   </h4>
-                  <p className="text-xs sm:text-sm text-white font-medium leading-relaxed bg-brand-dark/45 p-4 rounded-2xl border-l-4 border-brand-gold border-y border-r border-white/5">
+                  <p className="text-xs sm:text-sm text-[#241708] font-semibold leading-relaxed bg-[#FAF6EE] p-4 rounded-2xl border-l-4 border-[#C97F1B] border-y border-r border-[#E3D7C5]">
                     {activeModalItem.title || activeModalItem.statement}
                   </p>
                 </div>
 
                 <div className="space-y-1.5">
-                  <h4 className="text-[10px] font-bold tracking-widest text-brand-gray uppercase">Detailed Scope & Requirements</h4>
-                  <p className="text-xs sm:text-sm text-brand-gray leading-relaxed font-normal">
+                  <h4 className="text-[10px] font-black tracking-widest text-[#8C3A16] uppercase">Detailed Scope & Requirements</h4>
+                  <p className="text-xs sm:text-sm text-[#6B5B49] leading-relaxed font-medium">
                     {activeModalItem.detailedDescription}
                   </p>
                 </div>
 
-                <div className="space-y-1.5 pt-4 border-t border-white/5">
-                  <h4 className="text-[10px] font-bold tracking-widest text-brand-gray uppercase">Suggested Technologies</h4>
-                  <p className="text-xs font-mono font-bold text-brand-gold tracking-wide">
+                <div className="space-y-1.5 pt-4 border-t border-[#E3D7C5]/60">
+                  <h4 className="text-[10px] font-black tracking-widest text-[#8C3A16] uppercase">Suggested Technologies</h4>
+                  <p className="text-xs font-mono font-extrabold text-[#8C3A16] tracking-wide">
                     {activeModalItem.techStack}
                   </p>
                 </div>
@@ -441,7 +533,7 @@ export default function ProblemStatements() {
               <div className="mt-8 flex justify-end">
                 <button
                   onClick={() => setActiveModalItem(null)}
-                  className="px-6 py-2.5 rounded-xl bg-btn-gradient text-sm font-bold text-white shadow-lg active:scale-95 transition-all cursor-pointer border-none"
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] text-sm font-black text-white shadow-lg active:scale-95 transition-all cursor-pointer border-none"
                 >
                   Close Details
                 </button>

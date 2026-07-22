@@ -240,9 +240,9 @@ export default function Objectives({ isStandalone = false }) {
               </div>
               <button 
                 onClick={() => setSelectedPhoto(null)}
-                className="w-8 h-8 rounded-full bg-[#8C3A16]/10 text-[#8C3A16] hover:bg-[#8C3A16] hover:text-white transition-colors flex items-center justify-center cursor-pointer"
+                className="w-8 h-8 rounded-full bg-[#8C3A16]/10 text-[#8C3A16] hover:bg-[#8C3A16] hover:!text-white transition-colors flex items-center justify-center cursor-pointer group"
               >
-                <X size={16} />
+                <X size={16} className="text-[#8C3A16] group-hover:!text-white transition-colors" />
               </button>
             </div>
             <div className="p-2 max-h-[75vh] overflow-hidden flex justify-center items-center bg-[#FAF6EE] rounded-2xl border border-[#E3D7C5]">

@@ -165,10 +165,12 @@ export default function ShortlistedTeams({ onViewChange }) {
             <p className="text-[var(--ink-soft)] font-sans">{error}</p>
           </div>
         ) : data.length === 0 ? (
-          <div className="py-24 text-center bg-[var(--panel)] border border-[var(--marigold)]/20 rounded-2xl">
-            <Award className="w-16 h-16 text-[var(--marigold)] mx-auto mb-6 opacity-70" />
-            <h3 className="text-2xl font-black text-white mb-3 font-display">Results Are Coming Soon!</h3>
-            <p className="text-[var(--ink-faint)] max-w-lg mx-auto text-base font-sans">
+          <div className="py-20 text-center bg-[#FFFDF7] border border-[#E3D7C5] rounded-[2rem] shadow-xl p-8 sm:p-12">
+            <div className="w-20 h-20 rounded-3xl bg-[#FFE8D6] text-[#8C3A16] border border-[#E3D7C5] flex items-center justify-center mx-auto mb-6 shadow-2xs">
+              <Award className="w-10 h-10 text-[#8C3A16]" />
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-black text-[#5C230C] mb-3 font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>Results Are Coming Soon!</h3>
+            <p className="text-[#6B5B49] max-w-lg mx-auto text-sm sm:text-base font-medium leading-relaxed">
               The evaluation process is currently underway. Please check back later for the official list of shortlisted teams.
             </p>
           </div>
