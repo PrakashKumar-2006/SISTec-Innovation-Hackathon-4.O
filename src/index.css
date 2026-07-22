@@ -579,6 +579,201 @@ h6.text-white {
   border: 1px solid var(--line-strong) !important;
 }
 
+.animate-float-3 {
+  animation: float-3 6.0s ease-in-out infinite 1.5s;
+}
+.animate-float-bubble {
+  animation: float-bubble 3.5s ease-in-out infinite;
+}
+
+/* Light Theme Text Color Adjustments */
+h1.text-white,
+h2.text-white,
+h3.text-white,
+h4.text-white,
+h5.text-white,
+h6.text-white {
+  color: var(--clay) !important;
+}
+
+.bg-brand-darker .text-white:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not(button):not(.btn-premium-animate):not(.bg-btn-gradient):not(.bg-brand-orange):not(.text-gold-metallic):not(.absolute):not(.shadow-inner):not(.countdown-number):not(.toast-icon):not(.text-white-force),
+.bg-brand-dark .text-white:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not(button):not(.btn-premium-animate):not(.bg-btn-gradient):not(.bg-brand-orange):not(.text-gold-metallic):not(.absolute):not(.shadow-inner):not(.countdown-number):not(.toast-icon):not(.text-white-force) {
+  color: var(--ink) !important;
+}
+
+.bg-brand-darker h1, .bg-brand-darker h2, .bg-brand-darker h3, .bg-brand-darker h4,
+.bg-brand-dark h1, .bg-brand-dark h2, .bg-brand-dark h3, .bg-brand-dark h4 {
+  color: var(--clay) !important;
+}
+
+.bg-brand-darker .text-slate-300, .bg-brand-dark .text-slate-300 {
+  color: var(--ink-soft) !important;
+}
+.bg-brand-darker .text-slate-200, .bg-brand-dark .text-slate-200 {
+  color: var(--ink-soft) !important;
+}
+.bg-brand-darker .text-slate-400, .bg-brand-dark .text-slate-400 {
+  color: var(--ink-faint) !important;
+}
+.bg-brand-darker .text-slate-100:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6), .bg-brand-dark .text-slate-100:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) {
+  color: var(--ink) !important;
+}
+.bg-brand-darker .text-slate-500, .bg-brand-dark .text-slate-500 {
+  color: var(--ink-soft) !important;
+}
+.bg-brand-darker .text-slate-600, .bg-brand-dark .text-slate-600 {
+  color: var(--ink-soft) !important;
+}
+
+/* Force white text utility for badges and filled dark containers */
+.text-white-force,
+.text-white-force *,
+.group:hover .group-hover\:text-white-force,
+.group:hover .group-hover\:stroke-white-force {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+}
+
+/* Prevent hover texts from turning white and becoming invisible on cream background */
+.bg-brand-darker .hover\:text-white:hover:not(.text-white-force),
+.bg-brand-dark .hover\:text-white:hover:not(.text-white-force) {
+  color: var(--clay) !important;
+}
+
+.bg-brand-darker .group:hover .group-hover\:text-white:not(.group-hover\:text-white-force),
+.bg-brand-dark .group:hover .group-hover\:text-white:not(.group-hover\:text-white-force) {
+  color: var(--clay) !important;
+}
+
+/* Custom Text Selection Highlight */
+::selection {
+  background-color: var(--marigold);
+  color: var(--panel) !important;
+}
+
+/* Make all cards frosted glass with warm borders and high-end blur for excellent readability */
+[class*="bg-brand-card"] {
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(220, 193, 144, 0.35);
+  box-shadow: 0 12px 35px rgba(43, 26, 19, 0.03);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Base brand card background (excluding gradient cards) */
+[class*="bg-brand-card"]:not([class*="bg-gradient-"]) {
+  background-color: rgba(250, 245, 238, 0.95) !important;
+}
+
+/* Hover effects for cards - TranslateY only (no scale/rotate) to prevent browser text blur */
+[class*="bg-brand-card"]:hover {
+  transform: translateY(-6px) translateZ(0) !important;
+}
+[class*="bg-brand-card"]:not([class*="bg-gradient-"]):hover {
+  background-color: #FAF5EE !important;
+}
+
+/* Convert all dark-mode white borders inside light sections to subtle warm gold outlines */
+.bg-brand-darker .border-white\/5,
+.bg-brand-darker .border-white\/10,
+.bg-brand-dark .border-white\/5,
+.bg-brand-dark .border-white\/10 {
+  border-color: rgba(220, 193, 144, 0.35) !important;
+}
+
+[class*="bg-brand-card"] h3,
+[class*="bg-brand-card"] h4,
+[class*="bg-brand-card"] h5,
+[class*="bg-brand-card"] h6,
+[class*="bg-brand-card"] p,
+[class*="bg-brand-card"] span,
+[class*="bg-brand-card"] li {
+  text-shadow: none !important;
+}
+
+[class*="bg-brand-card"] p {
+  color: var(--ink-soft) !important; /* Highly readable body text inside cards */
+}
+
+[class*="bg-brand-card"] h3,
+[class*="bg-brand-card"] h4 {
+  color: var(--clay) !important; /* Beautiful clay color headings inside cards */
+}
+
+/* Overriding other arbitrary dark background containers and tabs */
+.bg-\[\#07070a\]\/75,
+.bg-\[\#07070a\] {
+  background-color: #FFFFFF !important;
+  border-color: var(--line) !important;
+}
+
+.bg-\[\#0E0E12\]\/50,
+.bg-\[\#0E0E12\] {
+  background-color: var(--paper) !important;
+  border-color: var(--line) !important;
+}
+
+.bg-\[\#0C0C0F\]\/95,
+.bg-\[\#0C0C0F\] {
+  background-color: var(--paper) !important;
+  border-color: var(--line-strong) !important;
+}
+
+.bg-\[\#13131A\] {
+  background-color: var(--paper) !important;
+  border-color: var(--line) !important;
+}
+
+.bg-brand-darker button[class*="bg-[#0E0E12]"],
+.bg-brand-dark button[class*="bg-[#0E0E12]"] {
+  color: var(--ink-soft) !important;
+}
+
+/* RegisterModal Light Theme Overrides */
+.fixed.bg-\[\#080809\] {
+  background-color: var(--paper) !important;
+  color: var(--ink) !important;
+}
+
+.fixed.bg-\[\#080809\] h1,
+.fixed.bg-\[\#080809\] h2,
+.fixed.bg-\[\#080809\] h3,
+.fixed.bg-\[\#080809\] h4,
+.fixed.bg-\[\#080809\] label,
+.fixed.bg-\[\#080809\] p,
+.fixed.bg-\[\#080809\] span {
+  color: var(--ink) !important;
+}
+
+.fixed.bg-\[\#080809\] .text-brand-gold {
+  color: var(--clay) !important;
+}
+
+.fixed.bg-\[\#080809\] .bg-\[\#0D0D0F\]\/85 {
+  background-color: var(--paper) !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+
+.fixed.bg-\[\#080809\] .bg-\[\#0F0F11\] {
+  background-color: #FFFFFF !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: 0 20px 50px rgba(43, 26, 19, 0.08) !important;
+}
+
+.fixed.bg-\[\#080809\] input,
+.fixed.bg-\[\#080809\] select,
+.fixed.bg-\[\#080809\] option {
+  background-color: #FFFFFF !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--line-strong) !important;
+}
+
 .fixed.bg-\[\#080809\] .bg-\[\#080809\]\/40 {
   background-color: var(--paper) !important;
   border: 1px solid var(--line) !important;
@@ -595,174 +790,6 @@ h6.text-white {
 
 .animate-progressBar {
   animation: progressBar linear forwards;
-}
-=======
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  html {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: 'Outfit', sans-serif !important;
-  }
-
-  /* Custom Scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: var(--paper);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: var(--marigold);
-    border-radius: 4px;
-    border: 2px solid var(--paper);
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--marigold-deep);
-  }
-}
-
-@layer base {
-  :root {
-    /* User's Exact Color Palette Variables */
-    --paper: #FFFDF7;
-    --panel: #2B1607;
-    --panel-soft: #3B2110;
-    --marigold: #F2A93B;
-    --marigold-deep: #C97F1B;
-    --vermilion: #E6491E;
-    --clay: #8C3A16;
-    --ink: #241708;
-    --ink-soft: #6B5B49;
-    --ink-faint: #B4A28C;
-    --line: #EBDAB9;
-    --line-strong: #DCC190;
-
-    /* Shadcn/Standard Tailwind CSS Variables mapped to User's Palette */
-    --background: 36 67% 99%;
-    --foreground: 33 64% 9%;
-    --card: 36 67% 99%;
-    --card-foreground: 33 64% 9%;
-    --popover: 36 67% 99%;
-    --popover-foreground: 33 64% 9%;
-    --primary: 12 84% 51%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 35 59% 85%;
-    --secondary-foreground: 33 64% 9%;
-    --muted: 35 25% 63%;
-    --muted-foreground: 34 19% 35%;
-    --accent: 35 59% 85%;
-    --accent-foreground: 33 64% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 35 59% 85%;
-    --input: 35 59% 85%;
-    --ring: 12 84% 51%;
-    --radius: 0.5rem;
-  }
-}
-
-/* Background grid patterns */
-.tech-grid {
-  background-image:
-    linear-gradient(rgba(43, 22, 7, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(43, 22, 7, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-  background-position: center;
-}
-
-.tech-grid-dense {
-  background-image:
-    linear-gradient(rgba(230, 73, 30, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(230, 73, 30, 0.025) 1px, transparent 1px);
-  background-size: 32px 32px;
-  background-position: center;
-}
-
-/* Custom animations */
-@keyframes float {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-12px);
-  }
-}
-
-@keyframes pulse-slow {
-
-  0%,
-  100% {
-    opacity: 0.2;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 0.4;
-    transform: scale(1.05);
-  }
-}
-
-@keyframes draw-line {
-  0% {
-    stroke-dashoffset: 100;
-  }
-
-  100% {
-    stroke-dashoffset: 0;
-  }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-float-delayed {
-  animation: float 6s ease-in-out infinite;
-  animation-delay: 3s;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 8s ease-in-out infinite;
-}
-
-/* Glassmorphic border glow */
-.glass-border-glow {
-  position: relative;
-}
-
-.glass-border-glow::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1.5px;
-  background: linear-gradient(135deg, rgba(24, 215, 230, 0.3), rgba(123, 63, 242, 0.1), rgba(18, 200, 165, 0.3));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-.glass-border-glow-hover:hover::before {
-  background: linear-gradient(135deg, rgba(24, 215, 230, 0.8), rgba(123, 63, 242, 0.5), rgba(18, 200, 165, 0.8));
 }
 
 @keyframes fadeIn {
@@ -1332,4 +1359,3 @@ h6.text-white {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(217, 123, 51, 0.5);
 }
->>>>>>> f1e627a (refactor(ui): enhance Registration Modal, custom select dropdowns, step layouts and mobile stepper)
