@@ -64,7 +64,8 @@ export default function Contact({ onViewChange }) {
     setVerifyError('');
     try {
       const cleanCode = form.registrationCode.trim();
-      const res = await axios.get(`/api/public/support/verify-registration/${cleanCode}`);
+      const backendUrl = import.meta.env.VITE_API_URL || '';
+      const res = await axios.get(`${backendUrl}/api/public/support/verify-registration/${cleanCode}`);
       if (res.data.success) {
         setTeamData(res.data.data);
         // Pre-fill some fields based on verified data
@@ -133,7 +134,8 @@ export default function Contact({ onViewChange }) {
     });
 
     try {
-      const res = await axios.post('/api/public/support/submit', formData, {
+      const backendUrl = import.meta.env.VITE_API_URL || '';
+      const res = await axios.post(`${backendUrl}/api/public/support/submit`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

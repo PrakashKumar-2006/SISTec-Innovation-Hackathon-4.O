@@ -22,7 +22,8 @@ export default function ShortlistedTeams({ onViewChange }) {
   const fetchData = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch('/api/public/shortlisted-teams');
+      const backendUrl = import.meta.env.VITE_API_URL || '';
+      const res = await fetch(`${backendUrl}/api/public/shortlisted-teams`);
       const json = await res.json();
       if (json.success) {
         setData(json.data);
