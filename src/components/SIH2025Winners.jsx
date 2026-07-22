@@ -170,6 +170,8 @@ export default function SIH2025Winners({ onViewChange, hideHeader = false }) {
                   <img
                     src={winner.image}
                     alt={winner.team}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover pointer-events-none"
                   />
                   

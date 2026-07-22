@@ -106,6 +106,9 @@ export default function Hero({ onRegisterClick, onViewChange }) {
                 <img
                   src={hackathonLogo}
                   alt="SISTec Innovation Hackathon Logo"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
                   className="w-28 h-28 xs:w-34 xs:h-34 sm:w-44 sm:h-44 lg:w-60 lg:h-60 object-contain select-none transition-all duration-300"
                 />
               </div>
@@ -244,6 +247,9 @@ export default function Hero({ onRegisterClick, onViewChange }) {
                 <img 
                   src="/home_page_image.jpg" 
                   alt="Students Collaborating at Hackathon" 
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
                   className="w-full h-full object-cover opacity-95"
                 />
                 {/* Soft gradient bottom vignette */}
