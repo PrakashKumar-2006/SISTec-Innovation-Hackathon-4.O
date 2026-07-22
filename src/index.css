@@ -579,6 +579,201 @@ h6.text-white {
   border: 1px solid var(--line-strong) !important;
 }
 
+.animate-float-3 {
+  animation: float-3 6.0s ease-in-out infinite 1.5s;
+}
+.animate-float-bubble {
+  animation: float-bubble 3.5s ease-in-out infinite;
+}
+
+/* Light Theme Text Color Adjustments */
+h1.text-white,
+h2.text-white,
+h3.text-white,
+h4.text-white,
+h5.text-white,
+h6.text-white {
+  color: var(--clay) !important;
+}
+
+.bg-brand-darker .text-white:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not(button):not(.btn-premium-animate):not(.bg-btn-gradient):not(.bg-brand-orange):not(.text-gold-metallic):not(.absolute):not(.shadow-inner):not(.countdown-number):not(.toast-icon):not(.text-white-force),
+.bg-brand-dark .text-white:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not(button):not(.btn-premium-animate):not(.bg-btn-gradient):not(.bg-brand-orange):not(.text-gold-metallic):not(.absolute):not(.shadow-inner):not(.countdown-number):not(.toast-icon):not(.text-white-force) {
+  color: var(--ink) !important;
+}
+
+.bg-brand-darker h1, .bg-brand-darker h2, .bg-brand-darker h3, .bg-brand-darker h4,
+.bg-brand-dark h1, .bg-brand-dark h2, .bg-brand-dark h3, .bg-brand-dark h4 {
+  color: var(--clay) !important;
+}
+
+.bg-brand-darker .text-slate-300, .bg-brand-dark .text-slate-300 {
+  color: var(--ink-soft) !important;
+}
+.bg-brand-darker .text-slate-200, .bg-brand-dark .text-slate-200 {
+  color: var(--ink-soft) !important;
+}
+.bg-brand-darker .text-slate-400, .bg-brand-dark .text-slate-400 {
+  color: var(--ink-faint) !important;
+}
+.bg-brand-darker .text-slate-100:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6), .bg-brand-dark .text-slate-100:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) {
+  color: var(--ink) !important;
+}
+.bg-brand-darker .text-slate-500, .bg-brand-dark .text-slate-500 {
+  color: var(--ink-soft) !important;
+}
+.bg-brand-darker .text-slate-600, .bg-brand-dark .text-slate-600 {
+  color: var(--ink-soft) !important;
+}
+
+/* Force white text utility for badges and filled dark containers */
+.text-white-force,
+.text-white-force *,
+.group:hover .group-hover\:text-white-force,
+.group:hover .group-hover\:stroke-white-force {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+}
+
+/* Prevent hover texts from turning white and becoming invisible on cream background */
+.bg-brand-darker .hover\:text-white:hover:not(.text-white-force),
+.bg-brand-dark .hover\:text-white:hover:not(.text-white-force) {
+  color: var(--clay) !important;
+}
+
+.bg-brand-darker .group:hover .group-hover\:text-white:not(.group-hover\:text-white-force),
+.bg-brand-dark .group:hover .group-hover\:text-white:not(.group-hover\:text-white-force) {
+  color: var(--clay) !important;
+}
+
+/* Custom Text Selection Highlight */
+::selection {
+  background-color: var(--marigold);
+  color: var(--panel) !important;
+}
+
+/* Make all cards frosted glass with warm borders and high-end blur for excellent readability */
+[class*="bg-brand-card"] {
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(220, 193, 144, 0.35);
+  box-shadow: 0 12px 35px rgba(43, 26, 19, 0.03);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Base brand card background (excluding gradient cards) */
+[class*="bg-brand-card"]:not([class*="bg-gradient-"]) {
+  background-color: rgba(250, 245, 238, 0.95) !important;
+}
+
+/* Hover effects for cards - TranslateY only (no scale/rotate) to prevent browser text blur */
+[class*="bg-brand-card"]:hover {
+  transform: translateY(-6px) translateZ(0) !important;
+}
+[class*="bg-brand-card"]:not([class*="bg-gradient-"]):hover {
+  background-color: #FAF5EE !important;
+}
+
+/* Convert all dark-mode white borders inside light sections to subtle warm gold outlines */
+.bg-brand-darker .border-white\/5,
+.bg-brand-darker .border-white\/10,
+.bg-brand-dark .border-white\/5,
+.bg-brand-dark .border-white\/10 {
+  border-color: rgba(220, 193, 144, 0.35) !important;
+}
+
+[class*="bg-brand-card"] h3,
+[class*="bg-brand-card"] h4,
+[class*="bg-brand-card"] h5,
+[class*="bg-brand-card"] h6,
+[class*="bg-brand-card"] p,
+[class*="bg-brand-card"] span,
+[class*="bg-brand-card"] li {
+  text-shadow: none !important;
+}
+
+[class*="bg-brand-card"] p {
+  color: var(--ink-soft) !important; /* Highly readable body text inside cards */
+}
+
+[class*="bg-brand-card"] h3,
+[class*="bg-brand-card"] h4 {
+  color: var(--clay) !important; /* Beautiful clay color headings inside cards */
+}
+
+/* Overriding other arbitrary dark background containers and tabs */
+.bg-\[\#07070a\]\/75,
+.bg-\[\#07070a\] {
+  background-color: #FFFFFF !important;
+  border-color: var(--line) !important;
+}
+
+.bg-\[\#0E0E12\]\/50,
+.bg-\[\#0E0E12\] {
+  background-color: var(--paper) !important;
+  border-color: var(--line) !important;
+}
+
+.bg-\[\#0C0C0F\]\/95,
+.bg-\[\#0C0C0F\] {
+  background-color: var(--paper) !important;
+  border-color: var(--line-strong) !important;
+}
+
+.bg-\[\#13131A\] {
+  background-color: var(--paper) !important;
+  border-color: var(--line) !important;
+}
+
+.bg-brand-darker button[class*="bg-[#0E0E12]"],
+.bg-brand-dark button[class*="bg-[#0E0E12]"] {
+  color: var(--ink-soft) !important;
+}
+
+/* RegisterModal Light Theme Overrides */
+.fixed.bg-\[\#080809\] {
+  background-color: var(--paper) !important;
+  color: var(--ink) !important;
+}
+
+.fixed.bg-\[\#080809\] h1,
+.fixed.bg-\[\#080809\] h2,
+.fixed.bg-\[\#080809\] h3,
+.fixed.bg-\[\#080809\] h4,
+.fixed.bg-\[\#080809\] label,
+.fixed.bg-\[\#080809\] p,
+.fixed.bg-\[\#080809\] span {
+  color: var(--ink) !important;
+}
+
+.fixed.bg-\[\#080809\] .text-brand-gold {
+  color: var(--clay) !important;
+}
+
+.fixed.bg-\[\#080809\] .bg-\[\#0D0D0F\]\/85 {
+  background-color: var(--paper) !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+
+.fixed.bg-\[\#080809\] .bg-\[\#0F0F11\] {
+  background-color: #FFFFFF !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: 0 20px 50px rgba(43, 26, 19, 0.08) !important;
+}
+
+.fixed.bg-\[\#080809\] input,
+.fixed.bg-\[\#080809\] select,
+.fixed.bg-\[\#080809\] option {
+  background-color: #FFFFFF !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--line-strong) !important;
+}
+
 .fixed.bg-\[\#080809\] .bg-\[\#080809\]\/40 {
   background-color: var(--paper) !important;
   border: 1px solid var(--line) !important;
@@ -595,4 +790,572 @@ h6.text-white {
 
 .animate-progressBar {
   animation: progressBar linear forwards;
-}
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom Dual-Color Text Combination Utilities */
+.text-gold-metallic {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: var(--marigold) !important;
+  background-clip: unset !important;
+  color: var(--marigold) !important;
+  filter: none !important;
+  display: inline-block;
+}
+
+.text-dual-combo {
+  color: var(--clay) !important;
+}
+
+.text-dual-combo span,
+.text-dual-combo .highlight {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: var(--marigold) !important;
+  background-clip: unset !important;
+  color: var(--marigold) !important;
+  filter: none !important;
+  display: inline-block;
+}
+
+.text-dual-combo-reverse {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: var(--marigold) !important;
+  background-clip: unset !important;
+  color: var(--marigold) !important;
+  filter: none !important;
+  display: inline-block;
+}
+
+.text-dual-combo-reverse span,
+.text-dual-combo-reverse .highlight {
+  color: var(--clay) !important;
+  -webkit-text-fill-color: var(--clay) !important;
+}
+
+/* Scroll Reveal Animations (AOS-like smooth effects) */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Diagonal Clip-Path for Hero Image Slant */
+.clip-path-hero-slant {
+  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+@media (max-width: 1023px) {
+  .clip-path-hero-slant {
+    clip-path: none;
+  }
+}
+
+/* Premium CTA Button Shimmer & Glow Animation */
+.btn-premium-animate {
+  position: relative;
+  overflow: hidden;
+  animation: pulse-glow-btn 3s infinite ease-in-out;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.btn-premium-animate::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.25) 50%,
+      rgba(255, 255, 255, 0) 100%);
+  transform: skewX(-25deg);
+  animation: shimmer-sweep-btn 4s infinite ease-in-out;
+}
+
+.btn-premium-animate:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 25px rgba(216, 171, 85, 0.6), 0 0 10px rgba(216, 171, 85, 0.3);
+}
+
+.btn-premium-animate:hover::after {
+  animation: shimmer-sweep-btn 1.5s infinite linear;
+}
+
+@keyframes shimmer-sweep-btn {
+  0% {
+    left: -150%;
+  }
+
+  35% {
+    left: 180%;
+  }
+
+  100% {
+    left: 180%;
+  }
+}
+
+@keyframes pulse-glow-btn {
+
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(216, 171, 85, 0.25), 0 0 4px rgba(216, 171, 85, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 0 22px rgba(216, 171, 85, 0.45), 0 0 10px rgba(216, 171, 85, 0.2);
+  }
+}
+
+/* Toast slide-in animation */
+@keyframes toast-slide-in {
+  0% {
+    transform: translateX(120%) scale(0.9);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: toast-slide-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Bobbing/floating animation for bubble */
+@keyframes float-bob {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float-bob {
+  animation: float-bob 3s ease-in-out infinite;
+}
+
+/* Toast slide-in from left animation */
+@keyframes toast-slide-in-left {
+  0% {
+    transform: translateX(-120%) scale(0.9);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-left {
+  animation: toast-slide-in-left 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Staggered bobbing for left and right elements */
+@keyframes bob-left {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes bob-right {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.animate-float-left {
+  animation: bob-left 3.5s ease-in-out infinite;
+}
+
+.animate-float-right {
+  animation: bob-right 4s ease-in-out infinite;
+}
+
+/* Staggered Floating/Bobbing animations for stacked notification elements */
+@keyframes float-1 {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(0.4deg);
+  }
+}
+
+@keyframes float-2 {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-13px) rotate(-0.4deg);
+  }
+}
+
+@keyframes float-3 {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-10px) rotate(0.3deg);
+  }
+}
+
+@keyframes float-bubble {
+
+  0%,
+  100% {
+    transform: translateY(0px) scale(1);
+  }
+
+  50% {
+    transform: translateY(-7px) scale(1.03);
+  }
+}
+
+.animate-float-1 {
+  animation: float-1 4.2s ease-in-out infinite;
+}
+
+.animate-float-2 {
+  animation: float-2 5.2s ease-in-out infinite;
+}
+
+.animate-float-3 {
+  animation: float-3 6.0s ease-in-out infinite 1.5s;
+}
+
+.animate-float-bubble {
+  animation: float-bubble 3.5s ease-in-out infinite;
+}
+
+/* Light Theme Text Color Adjustments */
+h1.text-white,
+h2.text-white,
+h3.text-white,
+h4.text-white,
+h5.text-white,
+h6.text-white {
+  color: var(--clay) !important;
+}
+
+.bg-brand-darker .text-white:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not(button):not(.btn-premium-animate):not(.bg-btn-gradient):not(.bg-brand-orange):not(.text-gold-metallic):not(.absolute):not(.shadow-inner):not(.countdown-number):not(.toast-icon):not(.text-white-force),
+.bg-brand-dark .text-white:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not(button):not(.btn-premium-animate):not(.bg-btn-gradient):not(.bg-brand-orange):not(.text-gold-metallic):not(.absolute):not(.shadow-inner):not(.countdown-number):not(.toast-icon):not(.text-white-force) {
+  color: var(--ink) !important;
+}
+
+.bg-brand-darker h1,
+.bg-brand-darker h2,
+.bg-brand-darker h3,
+.bg-brand-darker h4,
+.bg-brand-dark h1,
+.bg-brand-dark h2,
+.bg-brand-dark h3,
+.bg-brand-dark h4 {
+  color: var(--clay) !important;
+}
+
+.bg-brand-darker .text-slate-300,
+.bg-brand-dark .text-slate-300 {
+  color: var(--ink-soft) !important;
+}
+
+.bg-brand-darker .text-slate-200,
+.bg-brand-dark .text-slate-200 {
+  color: var(--ink-soft) !important;
+}
+
+.bg-brand-darker .text-slate-400,
+.bg-brand-dark .text-slate-400 {
+  color: var(--ink-faint) !important;
+}
+
+.bg-brand-darker .text-slate-100:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6),
+.bg-brand-dark .text-slate-100:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) {
+  color: var(--ink) !important;
+}
+
+.bg-brand-darker .text-slate-500,
+.bg-brand-dark .text-slate-500 {
+  color: var(--ink-soft) !important;
+}
+
+.bg-brand-darker .text-slate-600,
+.bg-brand-dark .text-slate-600 {
+  color: var(--ink-soft) !important;
+}
+
+/* Prevent hover texts from turning white and becoming invisible on cream background */
+.bg-brand-darker .hover\:text-white:hover,
+.bg-brand-dark .hover\:text-white:hover {
+  color: var(--clay) !important;
+}
+
+.bg-brand-darker .group:hover .group-hover\:text-white,
+.bg-brand-dark .group:hover .group-hover\:text-white {
+  color: var(--clay) !important;
+}
+
+/* Custom Text Selection Highlight */
+::selection {
+  background-color: var(--marigold);
+  color: var(--panel) !important;
+}
+
+/* Make all cards frosted glass with warm borders and high-end blur for excellent readability */
+[class*="bg-brand-card"] {
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(220, 193, 144, 0.35);
+  box-shadow: 0 12px 35px rgba(43, 26, 19, 0.03);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Base brand card background (excluding gradient cards) */
+[class*="bg-brand-card"]:not([class*="bg-gradient-"]) {
+  background-color: rgba(250, 245, 238, 0.95) !important;
+}
+
+/* Hover effects for cards - TranslateY only (no scale/rotate) to prevent browser text blur */
+[class*="bg-brand-card"]:hover {
+  transform: translateY(-6px) translateZ(0) !important;
+}
+
+[class*="bg-brand-card"]:not([class*="bg-gradient-"]):hover {
+  background-color: #FAF5EE !important;
+}
+
+/* Convert all dark-mode white borders inside light sections to subtle warm gold outlines */
+.bg-brand-darker .border-white\/5,
+.bg-brand-darker .border-white\/10,
+.bg-brand-dark .border-white\/5,
+.bg-brand-dark .border-white\/10 {
+  border-color: rgba(220, 193, 144, 0.35) !important;
+}
+
+[class*="bg-brand-card"] h3,
+[class*="bg-brand-card"] h4,
+[class*="bg-brand-card"] h5,
+[class*="bg-brand-card"] h6,
+[class*="bg-brand-card"] p,
+[class*="bg-brand-card"] span,
+[class*="bg-brand-card"] li {
+  text-shadow: none !important;
+}
+
+[class*="bg-brand-card"] p {
+  color: var(--ink-soft) !important;
+  /* Highly readable body text inside cards */
+}
+
+[class*="bg-brand-card"] h3,
+[class*="bg-brand-card"] h4 {
+  color: var(--clay) !important;
+  /* Beautiful clay color headings inside cards */
+}
+
+/* Overriding other arbitrary dark background containers and tabs */
+.bg-\[\#07070a\]\/75,
+.bg-\[\#07070a\] {
+  background-color: #FFFFFF !important;
+  border-color: var(--line) !important;
+}
+
+.bg-\[\#0E0E12\]\/50,
+.bg-\[\#0E0E12\] {
+  background-color: var(--paper) !important;
+  border-color: var(--line) !important;
+}
+
+.bg-\[\#0C0C0F\]\/95,
+.bg-\[\#0C0C0F\] {
+  background-color: var(--paper) !important;
+  border-color: var(--line-strong) !important;
+}
+
+.bg-\[\#13131A\] {
+  background-color: var(--paper) !important;
+  border-color: var(--line) !important;
+}
+
+.bg-brand-darker button[class*="bg-[#0E0E12]"],
+.bg-brand-dark button[class*="bg-[#0E0E12]"] {
+  color: var(--ink-soft) !important;
+}
+
+/* RegisterModal Light Theme Overrides */
+.fixed.bg-\[\#080809\] {
+  background-color: var(--paper) !important;
+  color: var(--ink) !important;
+}
+
+.fixed.bg-\[\#080809\] h1,
+.fixed.bg-\[\#080809\] h2,
+.fixed.bg-\[\#080809\] h3,
+.fixed.bg-\[\#080809\] h4,
+.fixed.bg-\[\#080809\] label,
+.fixed.bg-\[\#080809\] p,
+.fixed.bg-\[\#080809\] span {
+  color: var(--ink) !important;
+}
+
+.fixed.bg-\[\#080809\] .text-brand-gold {
+  color: var(--clay) !important;
+}
+
+.fixed.bg-\[\#080809\] .bg-\[\#0D0D0F\]\/85 {
+  background-color: var(--paper) !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+
+.fixed.bg-\[\#080809\] .bg-\[\#0F0F11\] {
+  background-color: #FFFFFF !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: 0 20px 50px rgba(43, 26, 19, 0.08) !important;
+}
+
+.fixed.bg-\[\#080809\] input,
+.fixed.bg-\[\#080809\] select,
+.fixed.bg-\[\#080809\] option {
+  background-color: #FFFFFF !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--line-strong) !important;
+}
+
+.fixed.bg-\[\#080809\] .bg-\[\#080809\]\/40 {
+  background-color: var(--paper) !important;
+  border: 1px solid var(--line) !important;
+}
+
+:root {
+  /* Core brand tokens */
+  --cream: #FBF6EE;         /* page background */
+  --card: #FFFFFF;          /* form card */
+  --ink: #4A2A14;           /* headings, labels */
+  --ink-soft: #7A5A44;      /* sub-text, hints */
+  --line: #EBE0D0;          /* input borders, dividers */
+  --orange: #D97B33;        /* primary accent, focus ring */
+  --orange-deep: #B85C1E;   /* button gradient end, pill text */
+  --gold: #F0A93C;          /* highlight accent ("4.0", sidebar) */
+  --green: #2E7D42;         /* success states, track-selected */
+  --danger: #C2452E;        /* error states */
+  --shadow: 0 20px 50px -20px rgba(74,42,20,0.25);
+
+  /* Side panel (dark) */
+  --panel-start: #3D2210;   /* side panel bg gradient start */
+  --panel-end: #23140A;     /* side panel bg gradient end */
+  --panel-text: #F6EEE1;    /* body text on dark panel */
+  --panel-eyebrow: #E0B278; /* "DEPARTMENT OF CSE..." label */
+  --panel-sub: #D8C3AC;     /* tagline under title */
+  --panel-fact-label: #C9B49C; /* "TEAM SIZE" / "PRIZE POOL" labels */
+  --step-dot-off: #33200F;  /* inactive step dot bg */
+  --step-label-off: #EFE2D0;/* inactive step title */
+  --step-desc: #B69A80;     /* step description text */
+
+  /* Form surfaces */
+  --input-bg: #FCFAF6;      /* default input fill */
+  --input-placeholder: #B9A78F;
+  --input-err-bg: #FCF3F0;  /* invalid field background */
+  --member-card-bg: #FEFCFA;
+  --add-member-bg: #FFF8ED;
+  --add-member-border: #E0C6A0;
+  --add-member-hover: #FDEFD9;
+  --track-selected-bg: #F1F8F3;
+  --pill-bg: #FBE7D3;
+  --pill-border: #F2D2A9;
+  --success-badge-end: #1F5D30;
+}
+
+/* ── Register Modal: Prevent border/outline flash on focus ─────────────────── */
+/* transition-all animates every property including the browser's built-in
+   outline, causing a visible "blink". Scope the transition to only the
+   properties we actually change (border-color & box-shadow). */
+.register-input,
+.register-select {
+  outline: none !important;
+  transition: border-color 150ms ease, box-shadow 150ms ease !important;
+}
+
+.register-input:focus,
+.register-select:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(217, 123, 51, 0.18) !important;
+}
+
+.register-input.error:focus,
+.register-select.error:focus {
+  box-shadow: 0 0 0 3px rgba(194, 69, 46, 0.15) !important;
+}
+
+/* Thin scrollbar for register form body */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(217, 123, 51, 0.25);
+  border-radius: 999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(217, 123, 51, 0.5);
+}
