@@ -1,8 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Rocket, ArrowRight, Bell, Megaphone, Users, FileText, Trophy } from 'lucide-react';
+import { Rocket, ArrowRight, Bell, Megaphone, Users, FileText, Trophy, ChevronLeft, ChevronRight } from 'lucide-react';
 import hackathonLogo from '../../NEW HACKTHON LOGO TRANSPARENT.png';
 
 export default function Hero({ onRegisterClick, onViewChange }) {
+
+  // ── Hero Auto Slider Images ──
+  const SLIDER_IMAGES = [
+    { src: '/home_page_image.jpg', title: 'Students Collaborating' },
+    { src: '/winner_group.jpg', title: 'SIH Hackathon Champions' },
+    { src: '/winner_theme_1.jpg', title: 'Project Presentations & Pitching' },
+    { src: '/winner_theme_2.jpg', title: 'Grand Finale Award Ceremony' },
+    { src: '/hackathon_students.png', title: 'Engineering Problem Solvers' }
+  ];
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Auto slide effect (changes every 3.5s unless hovered)
+  useEffect(() => {
+    if (isHovered) return;
+    const slideTimer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % SLIDER_IMAGES.length);
+    }, 3500);
+    return () => clearInterval(slideTimer);
+  }, [isHovered]);
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev === 0 ? SLIDER_IMAGES.length - 1 : prev - 1));
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % SLIDER_IMAGES.length);
+  };
 
   // Countdown Timer Logic
   const [timeLeft, setTimeLeft] = useState({
@@ -241,24 +270,71 @@ export default function Hero({ onRegisterClick, onViewChange }) {
           {/* ── RIGHT COLUMN: Student Photo & Dedicated Live Announcement Cards ── */}
           <div className="lg:col-span-6 relative w-full flex flex-col justify-center items-center">
             
-            {/* 1. Clean Student Photo Container (100% Unobstructed Image) */}
-            <div className="relative w-full max-w-lg lg:max-w-none aspect-[4/3] rounded-[1.5rem] sm:rounded-[2.2rem] p-1.5 bg-gradient-to-tr from-[#FAF6F0] via-[#FFFDF7] to-[#FAF6EE] border border-[#E3D7C5] shadow-xl select-none overflow-hidden group">
+            {/* 1. Student Photo Auto-Sliding Carousel Container */}
+            <div 
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              className="relative w-full max-w-lg lg:max-w-none aspect-[4/3] rounded-[1.5rem] sm:rounded-[2.2rem] p-1.5 bg-gradient-to-tr from-[#FAF6F0] via-[#FFFDF7] to-[#FAF6EE] border border-[#E3D7C5] shadow-xl select-none overflow-hidden group"
+            >
               <div className="w-full h-full rounded-[1.2rem] sm:rounded-[2rem] overflow-hidden relative">
-                <img 
-                  src="/home_page_image.jpg" 
-                  alt="Students Collaborating at Hackathon" 
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
-                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                />
+                {/* Images Stack with Smooth Opacity & Scale Slide Transition */}
+                {SLIDER_IMAGES.map((img, idx) => (
+                  <img 
+                    key={idx}
+                    src={img.src} 
+                    alt={img.title} 
+                    loading={idx === 0 ? "eager" : "lazy"}
+                    decoding="async"
+                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${
+                      idx === currentSlide ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 z-0'
+                    }`}
+                  />
+                ))}
+
                 {/* Soft gradient bottom vignette */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none z-10"></div>
 
                 {/* Live Campus Event Badge */}
-                <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full border border-white/20 text-[9px] sm:text-[10px] font-bold flex items-center gap-1.5 shadow-md">
+                <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full border border-white/20 text-[9px] sm:text-[10px] font-bold flex items-center gap-1.5 shadow-md z-20">
                   <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
                   <span>SIH 4.0 SISTec-R</span>
+                </div>
+
+                {/* Active Slide Title Badge */}
+                <div className="absolute bottom-3 left-3 bg-black/65 backdrop-blur-md text-white px-3 py-1 rounded-xl border border-white/15 text-[10px] sm:text-xs font-bold z-20 flex items-center gap-1.5 shadow-md">
+                  <span className="text-[#C97F1B] font-mono font-black">{currentSlide + 1}/{SLIDER_IMAGES.length}</span>
+                  <span className="text-white/40">|</span>
+                  <span className="truncate max-w-[160px] sm:max-w-[230px] font-sans">{SLIDER_IMAGES[currentSlide].title}</span>
+                </div>
+
+                {/* Previous & Next Navigation Arrows (Visible on hover) */}
+                <button
+                  onClick={prevSlide}
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 hover:bg-[#8C3A16] text-white flex items-center justify-center backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 cursor-pointer shadow-md border border-white/20"
+                  aria-label="Previous Slide"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <button
+                  onClick={nextSlide}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 hover:bg-[#8C3A16] text-white flex items-center justify-center backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 cursor-pointer shadow-md border border-white/20"
+                  aria-label="Next Slide"
+                >
+                  <ChevronRight size={18} />
+                </button>
+
+                {/* Bottom Slide Indicators (Dots / Pills) */}
+                <div className="absolute bottom-3.5 right-3.5 z-20 flex items-center gap-1.5">
+                  {SLIDER_IMAGES.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentSlide(idx)}
+                      aria-label={`Slide ${idx + 1}`}
+                      className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                        idx === currentSlide ? 'w-5 bg-[#C97F1B]' : 'w-1.5 bg-white/50 hover:bg-white'
+                      }`}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
