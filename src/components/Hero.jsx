@@ -45,17 +45,17 @@ export default function Hero({ onRegisterClick, onViewChange }) {
   const renderUnit = (value, label) => {
     const display = formatNumber(value);
     return (
-      <div className="flex flex-col items-center">
-        <div className="bg-[#FFFDF7] border-2 border-[#E3D7C5] shadow-lg rounded-2xl px-3.5 py-2.5 sm:px-5 sm:py-3.5 min-w-[64px] sm:min-w-[76px] flex items-center justify-center relative overflow-hidden group hover:border-[#8C3A16] hover:shadow-xl transition-all duration-300">
+      <div className="flex flex-col items-center shrink-0">
+        <div className="bg-[#FFFDF7] border-2 border-[#E3D7C5] shadow-lg rounded-2xl w-[68px] sm:w-[84px] h-[68px] sm:h-[84px] flex items-center justify-center relative overflow-hidden group hover:border-[#8C3A16] hover:shadow-xl transition-all duration-300 shrink-0">
           <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#8C3A16] to-[#C97F1B] opacity-90" />
           <span
-            className="text-3xl sm:text-4xl lg:text-5xl text-[#8C3A16] leading-none select-none tracking-tight font-black"
-            style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}
+            className="text-3xl sm:text-4xl text-[#8C3A16] leading-none select-none tracking-tight font-black tabular-nums text-center"
+            style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900, fontVariantNumeric: 'tabular-nums' }}
           >
             {display}
           </span>
         </div>
-        <span className="text-[9px] sm:text-[10px] font-black text-[#6B5B49] tracking-[0.18em] uppercase mt-1.5 font-sans bg-[#8C3A16]/10 px-2.5 py-0.5 rounded-full border border-[#8C3A16]/20">
+        <span className="text-[9px] sm:text-[10px] font-black text-[#6B5B49] tracking-[0.18em] uppercase mt-1.5 font-sans bg-[#8C3A16]/10 px-2.5 py-0.5 rounded-full border border-[#8C3A16]/20 shrink-0">
           {label}
         </span>
       </div>

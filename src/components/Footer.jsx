@@ -19,7 +19,7 @@ export default function Footer({ onViewChange }) {
               <img 
                 src="/logo.png" 
                 alt="SISTec Logo" 
-                className="h-10 sm:h-12 w-auto object-contain bg-white px-3 py-0.5 rounded-xl border border-brand-navy/10 shadow-sm"
+                className="h-10 sm:h-12 w-auto object-contain bg-white px-3.5 py-1.5 rounded-2xl border border-[#E3D7C5] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
               />
             </div>
             

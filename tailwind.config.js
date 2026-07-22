@@ -14,7 +14,7 @@ try {
   }
   
   // Copy logo
-  const srcLogo = 'C:/Users/maury/.gemini/antigravity-ide/brain/cbbc2073-e3d3-4b21-a502-612be00a29b5/media__1784228731805.png';
+  const srcLogo = 'c:/SHIVAM UI WORK/SISTec-R HACKTHON WEBSITE/SISTec Rb-03-01.png';
   if (fs.existsSync(srcLogo)) {
     fs.copyFileSync(srcLogo, destLogo);
     console.log('SUCCESS: Logo copied in Tailwind execution block!');

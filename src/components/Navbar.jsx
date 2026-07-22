@@ -89,7 +89,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                 <img
                   src="/logo.png"
                   alt="SISTec Logo"
-                  className="h-10 sm:h-12 w-auto object-contain bg-white/90 px-3 py-1 rounded-xl border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.05)] transition-all duration-300 group-hover/logo:scale-105 group-hover/logo:shadow-[0_0_20px_rgba(216,171,85,0.2)]"
+                  className="h-10 sm:h-12 w-auto object-contain bg-white px-3.5 py-1.5 rounded-2xl border border-[#E3D7C5] shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-300 group-hover/logo:scale-105 group-hover/logo:shadow-[0_4px_16px_rgba(216,171,85,0.2)]"
                 />
               </div>
 
