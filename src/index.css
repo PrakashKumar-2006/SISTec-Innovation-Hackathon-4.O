@@ -583,3 +583,16 @@ h6.text-white {
   background-color: var(--paper) !important;
   border: 1px solid var(--line) !important;
 }
+
+@keyframes progressBar {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-progressBar {
+  animation: progressBar linear forwards;
+}

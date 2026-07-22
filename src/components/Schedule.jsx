@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Calendar, Clock, Coffee, Utensils, Lightbulb, Users, Trophy, Sparkles, CheckCircle, Mic, FileText, Award } from 'lucide-react';
 import lampImg from '../../Lamp.png';
 import round1Img from '../../Round 1.png';
@@ -24,7 +24,7 @@ const JudgementBadgeSVG = ({ className = "w-4 h-4" }) => (
     <path d="M12 3V21" />
     <path d="M4 7H20" />
     <path d="M7 7L4 13C4 14.1 4.9 15 6 15C7.1 15 8 14.1 8 13L7 7Z" />
-    <path d="M17 7L14 13C14 14.1 14.9 15 18 14.1 18 13L17 7Z" />
+    <path d="M17 7L14 13C14 14.1 14.9 15 16 15C17.1 15 18 14.1 18 13L17 7Z" />
     <path d="M9 21H15" />
   </svg>
 );
@@ -59,6 +59,8 @@ export default function Schedule({ isStandalone = false }) {
   const [activeDay, setActiveDay] = useState(1);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [animating, setAnimating] = useState(false);
+  const containerRef = useRef(null);
 
   const day1Schedule = [
     {
@@ -71,8 +73,6 @@ export default function Schedule({ isStandalone = false }) {
       icon: Users,
       badgeSVG: InaugurationBadgeSVG,
       image: lampImg,
-      badgeColor: 'bg-[#8C3A16] text-white-force border-[#8C3A16]',
-      accentStripe: 'from-[#8C3A16] via-[#C97F1B] to-[#F2A93B]',
       highlights: [
         { text: 'Chief Guests Welcome & Lamp Lighting', icon: Users },
         { text: 'Keynote Speeches by Industry Experts', icon: Mic },
@@ -89,8 +89,6 @@ export default function Schedule({ isStandalone = false }) {
       icon: Lightbulb,
       badgeSVG: JudgementBadgeSVG,
       image: round1Img,
-      badgeColor: 'bg-[#E6491E] text-white-force border-[#E6491E]',
-      accentStripe: 'from-[#E6491E] via-[#C97F1B] to-[#F2A93B]',
       highlights: [
         { text: '1-on-1 Judges Pitching & Evaluation', icon: Mic },
         { text: 'Architectural & Tech Stack Review', icon: Lightbulb },
@@ -107,8 +105,6 @@ export default function Schedule({ isStandalone = false }) {
       icon: Utensils,
       badgeSVG: FoodMealSVG,
       image: lunchImg,
-      badgeColor: 'bg-[#C97F1B] text-white-force border-[#C97F1B]',
-      accentStripe: 'from-[#C97F1B] via-[#F2A93B] to-[#8C3A16]',
       highlights: [
         { text: 'Catered Buffet Lunch Spread', icon: Utensils },
         { text: 'Cross-Team & Mentor Networking', icon: Users },
@@ -125,8 +121,6 @@ export default function Schedule({ isStandalone = false }) {
       icon: Coffee,
       badgeSVG: FoodMealSVG,
       image: teaImg,
-      badgeColor: 'bg-teal-700 text-white-force border-teal-700',
-      accentStripe: 'from-teal-600 via-emerald-500 to-[#C97F1B]',
       highlights: [
         { text: 'Hot Tea & Energy Refreshments', icon: Coffee },
         { text: 'Relaxation & Stretch Pause', icon: Sparkles },
@@ -143,8 +137,6 @@ export default function Schedule({ isStandalone = false }) {
       icon: Clock,
       badgeSVG: JudgementBadgeSVG,
       image: round2Img,
-      badgeColor: 'bg-[#E6491E] text-white-force border-[#E6491E]',
-      accentStripe: 'from-[#E6491E] via-[#8C3A16] to-[#C97F1B]',
       highlights: [
         { text: 'Working Prototype Demonstration', icon: Lightbulb },
         { text: 'Review of Implemented Feedback', icon: FileText },
@@ -161,8 +153,6 @@ export default function Schedule({ isStandalone = false }) {
       icon: Utensils,
       badgeSVG: FoodMealSVG,
       image: dinnerImg,
-      badgeColor: 'bg-[#241708] text-white-force border-[#241708]',
-      accentStripe: 'from-[#241708] via-[#8C3A16] to-[#C97F1B]',
       highlights: [
         { text: 'Nutritious Evening Buffet Meal', icon: Utensils },
         { text: 'Overnight Development Marathon Prep', icon: Coffee },
@@ -182,8 +172,6 @@ export default function Schedule({ isStandalone = false }) {
       icon: Clock,
       badgeSVG: JudgementBadgeSVG,
       image: round3Img,
-      badgeColor: 'bg-[#E6491E] text-white-force border-[#E6491E]',
-      accentStripe: 'from-[#E6491E] via-[#8C3A16] to-[#C97F1B]',
       highlights: [
         { text: 'Final Codebase & Hosting Pitch', icon: Lightbulb },
         { text: 'Review of Cumulative Improvements', icon: FileText },
@@ -200,8 +188,6 @@ export default function Schedule({ isStandalone = false }) {
       icon: Sparkles,
       badgeSVG: YogaLotusSVG,
       image: yogaImg,
-      badgeColor: 'bg-teal-700 text-white-force border-teal-700',
-      accentStripe: 'from-teal-600 via-emerald-500 to-[#C97F1B]',
       highlights: [
         { text: 'Guided Breathing & Meditation', icon: Sparkles },
         { text: 'Physical Stretch & Energy Wellness', icon: Users },
@@ -218,8 +204,6 @@ export default function Schedule({ isStandalone = false }) {
       icon: Coffee,
       badgeSVG: FoodMealSVG,
       image: breakfastImg,
-      badgeColor: 'bg-[#C97F1B] text-white-force border-[#C97F1B]',
-      accentStripe: 'from-[#C97F1B] via-[#F2A93B] to-[#8C3A16]',
       highlights: [
         { text: 'Wholesome Morning Buffet', icon: FoodMealSVG },
         { text: 'Fresh Juice & Coffee Counter', icon: Coffee },
@@ -236,8 +220,6 @@ export default function Schedule({ isStandalone = false }) {
       icon: Trophy,
       badgeSVG: TrophyAwardSVG,
       image: lampImg,
-      badgeColor: 'bg-[#8C3A16] text-white-force border-[#8C3A16]',
-      accentStripe: 'from-[#8C3A16] via-[#C97F1B] to-[#F2A93B]',
       highlights: [
         { text: 'Trophy & Cash Prize Awarding', icon: Trophy },
         { text: 'Valedictory Keynote Address', icon: Mic },
@@ -256,20 +238,57 @@ export default function Schedule({ isStandalone = false }) {
     setIsPaused(false);
   }, [activeDay]);
 
-  // 🔄 Autoplay Loop: Cycle session every 3.5 seconds. Pauses when user taps an icon.
+  // 🎯 Global Click Listener: Tapping outside the schedule container resumes loop automatically!
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setIsPaused(false); // Resume autoplay loop
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, []);
+
+  // Helper function for ultra-smooth slide transitions
+  const transitionToSlide = (newIndex) => {
+    if (animating) return;
+    setAnimating(true);
+    
+    // Step 1: Smooth fade out over 300ms
+    setTimeout(() => {
+      setActiveIndex(newIndex);
+      // Step 2: Smooth fade in after index updates
+      setTimeout(() => {
+        setAnimating(false);
+      }, 50);
+    }, 300);
+  };
+
+  // 🔄 Autoplay Loop: Cycle session every 5.5 seconds with silky smooth transition
   useEffect(() => {
     if (isPaused) return;
 
     const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % currentSchedule.length);
-    }, 3500);
+      const nextIndex = (activeIndex + 1) % currentSchedule.length;
+      transitionToSlide(nextIndex);
+    }, 5500);
 
     return () => clearInterval(interval);
-  }, [isPaused, currentSchedule.length]);
+  }, [isPaused, activeIndex, currentSchedule.length, animating]);
 
   const handleNodeTap = (index) => {
-    setActiveIndex(index);
-    setIsPaused(true); // Pause auto-loop on manual tap
+    if (index === activeIndex) {
+      setIsPaused(true);
+      return;
+    }
+    transitionToSlide(index);
+    setIsPaused(true); // Pause auto-loop on manual tab/node tap
   };
 
   return (
@@ -283,7 +302,7 @@ export default function Schedule({ isStandalone = false }) {
           </h2>
           
           <p className="mt-2.5 text-xs sm:text-sm text-[#6B5B49] max-w-lg mx-auto font-medium leading-relaxed">
-            Interactive schedule. Tap any vertical step node on the left to inspect session details.
+            Interactive schedule. Tap any vertical step node to inspect details. Tap outside anytime to resume auto-loop.
           </p>
         </div>
 
@@ -296,7 +315,7 @@ export default function Schedule({ isStandalone = false }) {
             <button
               key={day.id}
               onClick={() => setActiveDay(day.id)}
-              className={`py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-black tracking-wider transition-all duration-300 cursor-pointer flex flex-col items-center justify-center border text-center ${
+              className={`py-3.5 px-4 rounded-2xl text-xs sm:text-sm font-black tracking-wider transition-all duration-500 ease-out cursor-pointer flex flex-col items-center justify-center border text-center ${
                 activeDay === day.id
                   ? 'bg-[#8C3A16] text-white-force border-[#8C3A16] shadow-md'
                   : 'bg-[#FAF6EE] text-[#6B5B49] border-[#E3D7C5] hover:border-[#8C3A16]/40 hover:text-[#241708]'
@@ -313,8 +332,8 @@ export default function Schedule({ isStandalone = false }) {
           ))}
         </div>
 
-        {/* ── 2-COLUMN FIXED-DIMENSION STABLE LAYOUT: LEFT VERTICAL ICON BAR & RIGHT ROCK-SOLID SINGLE CARD ── */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch min-h-[480px]">
+        {/* ── 2-COLUMN FIXED-DIMENSION STABLE LAYOUT WITH CONTAINER REF FOR OUTSIDE CLICK RESUME ── */}
+        <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch min-h-[480px]">
           
           {/* ── LEFT COLUMN: VERTICAL CONNECTED ICON NODES (TOP TO BOTTOM) ── */}
           <div className="md:col-span-4 relative pl-4 sm:pl-6 bg-[#FAF6EE] p-5 sm:p-6 rounded-3xl border border-[#E3D7C5] flex flex-col justify-between shadow-sm shrink-0">
@@ -330,22 +349,22 @@ export default function Schedule({ isStandalone = false }) {
                   <button
                     key={item.id}
                     onClick={() => handleNodeTap(idx)}
-                    className={`flex items-center gap-3.5 group cursor-pointer w-full text-left transition-colors duration-200 p-2 rounded-2xl ${
+                    className={`flex items-center gap-3.5 group cursor-pointer w-full text-left transition-all duration-500 ease-in-out p-2 rounded-2xl ${
                       isSelected ? 'bg-[#8C3A16]/10 border border-[#8C3A16]/20' : 'hover:bg-[#8C3A16]/5 border border-transparent'
                     }`}
                   >
                     {/* Vertical Icon Node Box */}
-                    <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center border-2 shrink-0 transition-colors duration-200 shadow-sm ${
+                    <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center border-2 shrink-0 transition-all duration-500 ease-in-out shadow-sm ${
                       isSelected
-                        ? 'bg-[#8C3A16] border-[#8C3A16] text-white-force shadow-md'
+                        ? 'bg-[#8C3A16] border-[#8C3A16] text-white-force shadow-md scale-105'
                         : 'bg-[#FFFDF7] border-[#E3D7C5] text-[#8C3A16] group-hover:border-[#8C3A16]'
                     }`}>
-                      <NodeIcon className={`w-4 h-4 sm:w-5 sm:h-5 ${isSelected ? 'text-white-force' : 'text-[#8C3A16]'}`} />
+                      <NodeIcon className={`w-4 h-4 sm:w-5 sm:h-5 transition-colors duration-500 ${isSelected ? 'text-white-force' : 'text-[#8C3A16]'}`} />
                     </div>
 
                     {/* Step Tag & Label */}
                     <div className="min-w-0 flex-1">
-                      <span className={`block text-xs font-bold tracking-tight truncate transition-colors ${
+                      <span className={`block text-xs font-bold tracking-tight truncate transition-colors duration-500 ${
                         isSelected ? 'text-[#8C3A16] font-extrabold' : 'text-[#241708] group-hover:text-[#8C3A16]'
                       }`}>
                         {item.shortTag}
@@ -357,7 +376,7 @@ export default function Schedule({ isStandalone = false }) {
 
                     {/* Active Indicator Dot */}
                     {isSelected && (
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#8C3A16] shrink-0" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#8C3A16] shrink-0 transition-all duration-500 animate-pulse" />
                     )}
                   </button>
                 );
@@ -365,9 +384,12 @@ export default function Schedule({ isStandalone = false }) {
             </div>
           </div>
 
-          {/* ── RIGHT COLUMN: ROCK-SOLID SINGLE ACTIVE CARD (STABLE DIMENSIONS, NO WOBBLE) ── */}
+          {/* ── RIGHT COLUMN: ROCK-SOLID SINGLE ACTIVE CARD (LUXURIOUS SILKY CROSS-FADE TRANSITION) ── */}
           <div className="md:col-span-8 flex flex-col">
-            <div className="w-full h-full rounded-[32px] border-2 transition-all duration-300 overflow-hidden flex flex-col justify-between relative bg-[#FFFDF7] border-[#EBDAB9] shadow-xl">
+            <div 
+              onClick={() => setIsPaused(true)}
+              className="w-full h-full rounded-[32px] border-2 overflow-hidden flex flex-col justify-between relative bg-[#FFFDF7] border-[#EBDAB9] shadow-xl cursor-pointer"
+            >
               
               {/* Top Corner Ribbon Decor Overlay */}
               <div className="absolute top-0 right-0 overflow-hidden w-28 h-28 pointer-events-none z-20">
@@ -376,8 +398,12 @@ export default function Schedule({ isStandalone = false }) {
                 </div>
               </div>
 
-              {/* Main Card Inner Body with key prop for smooth fade without reflow wobble */}
-              <div key={currentItem.id} className="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-6 animate-fadeIn">
+              {/* Main Card Inner Body with 2-Stage Silky Smooth Cross-Fade & Glide Transition */}
+              <div className={`p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-6 transition-all duration-500 ease-in-out transform ${
+                animating 
+                  ? 'opacity-0 scale-[0.99] translate-y-1' 
+                  : 'opacity-100 scale-100 translate-y-0'
+              }`}>
                 
                 {/* Header Bar: Time Badge + Category Tag */}
                 <div className="flex items-center gap-3 flex-wrap shrink-0">
@@ -411,12 +437,12 @@ export default function Schedule({ isStandalone = false }) {
 
                   {/* Right Session Specific Illustration Image (FIXED CONTAINER DIMENSIONS PREVENTS LAYOUT SHIFT) */}
                   <div className="sm:col-span-4 flex justify-center items-center py-2 sm:py-0 shrink-0">
-                    <div className="w-36 sm:w-44 h-40 sm:h-44 flex items-center justify-center relative relative">
+                    <div className="w-36 sm:w-44 h-40 sm:h-44 flex items-center justify-center relative">
                       <div className="absolute inset-0 bg-[#F2A93B]/15 rounded-full blur-xl pointer-events-none -z-10" />
                       <img 
                         src={currentItem.image} 
                         alt={currentItem.title} 
-                        className="max-w-full max-h-full object-contain drop-shadow-xl transition-transform duration-300" 
+                        className="max-w-full max-h-full object-contain drop-shadow-xl transition-all duration-700 ease-out hover:scale-105" 
                       />
                     </div>
                   </div>
@@ -451,6 +477,18 @@ export default function Schedule({ isStandalone = false }) {
                 </div>
 
               </div>
+
+              {/* Smooth Animated Loop Progress Bar at the Bottom */}
+              {!isPaused && (
+                <div className="w-full bg-[#FAF6EE] h-1.5 overflow-hidden border-t border-[#E3D7C5]">
+                  <div 
+                    key={`${activeDay}-${activeIndex}`}
+                    className="h-full bg-gradient-to-r from-[#8C3A16] via-[#C97F1B] to-[#F2A93B] animate-progressBar"
+                    style={{ animationDuration: '5.5s' }}
+                  />
+                </div>
+              )}
+
             </div>
           </div>
 
