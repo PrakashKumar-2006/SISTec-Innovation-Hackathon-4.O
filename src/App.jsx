@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
+import PartnerMarquee from './components/PartnerMarquee';
 import Prizes from './components/Prizes';
 import Objectives from './components/Objectives';
 import Themes from './components/Themes';
@@ -91,6 +92,7 @@ export default function App() {
           <>
             <Hero onRegisterClick={() => setShowRegister(true)} onViewChange={handleViewChange} />
             <div className="reveal-on-scroll"><About /></div>
+            <div className="reveal-on-scroll"><PartnerMarquee /></div>
             <div className="reveal-on-scroll"><Prizes /></div>
             <div className="reveal-on-scroll"><Objectives /></div>
             <div className="reveal-on-scroll"><Themes onViewChange={handleViewChange} /></div>

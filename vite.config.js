@@ -38,6 +38,24 @@ try {
     fs.copyFileSync(contactMedia, path.join(destDir, 'contact image.png'));
     console.log('New Contact image copied successfully!');
   }
+
+  // 5. Copy uploaded Partner Logos
+  const brainPath = 'C:/Users/maury/.gemini/antigravity-ide/brain/11d949aa-bb2a-43df-9f93-8f852b9d8c75';
+  const partnerLogos = [
+    { src: 'media__1784757032670.jpg', dest: 'logo_mpsedc.jpg' },
+    { src: 'media__1784757044280.png', dest: 'logo_mp_police.png' },
+    { src: 'media__1784757054029.jpg', dest: 'logo_cyber_police.jpg' },
+    { src: 'media__1784757061522.jpg', dest: 'logo_rgpv.jpg' },
+    { src: 'media__1784757073520.jpg', dest: 'logo_csi.jpg' },
+  ];
+
+  partnerLogos.forEach(({ src, dest }) => {
+    const fullSrc = path.join(brainPath, src);
+    if (fs.existsSync(fullSrc)) {
+      fs.copyFileSync(fullSrc, path.join(destDir, dest));
+      console.log(`Partner logo ${dest} copied successfully!`);
+    }
+  });
 } catch (err) {
   console.error('Failed to copy assets:', err);
 }
