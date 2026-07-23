@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { createPortal } from 'react-dom';
 import axios from 'axios';
-import { Search, X, Building2, Cpu, Sparkles, AlertCircle, Filter, Tag } from 'lucide-react';
+import { Search, X, Building2, Cpu, Sparkles, AlertCircle, Filter, Tag, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, LayoutGrid, ListFilter } from 'lucide-react';
 import ClickRipple from './ClickRipple';
 
 // Configuration
@@ -170,6 +170,9 @@ export default function ProblemStatements() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedDomain, setSelectedDomain] = useState('All');
   const [activeModalItem, setActiveModalItem] = useState(null);
+  const [mobileViewMode, setMobileViewMode] = useState('slider'); // 'slider' | 'compact'
+  const [mobileIndex, setMobileIndex] = useState(0);
+  const [expandedRow, setExpandedRow] = useState(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ['publicProblemStatements'],
@@ -350,13 +353,13 @@ export default function ProblemStatements() {
 
                       {/* Sponsoring Organization */}
                       <td className="px-6 py-5 text-xs text-[#241708] font-extrabold leading-relaxed max-w-[240px]">
-                        {item.org}
+                        {item.org || item.sponsoringOrg || item.organization || 'N/A'}
                       </td>
 
                       {/* Problem Statement */}
                       <td className="px-6 py-5 text-xs text-[#5C230C] font-semibold leading-relaxed max-w-md">
                         <span className="block border-l-2 border-[#C97F1B] pl-3">
-                          {item.title || item.statement}
+                          {item.title || item.statement || item.problemStatement || item.description || item.detailedDescription || 'N/A'}
                         </span>
                       </td>
 
@@ -403,61 +406,230 @@ export default function ProblemStatements() {
           </div>
         </div>
 
-        {/* Mobile Card View */}
-        <div className="md:hidden flex flex-col gap-5">
+        {/* Mobile View Section (Optimized to eliminate long vertical scrolling) */}
+        <div className="md:hidden flex flex-col gap-4">
+          
+          {/* Mobile View Controls & Mode Switcher Bar */}
+          <div className="flex items-center justify-between gap-2 px-1">
+            <div className="flex items-center gap-1 bg-[#FAF6EE] border border-[#E3D7C5] p-1 rounded-xl shadow-2xs">
+              <button
+                type="button"
+                onClick={() => setMobileViewMode('slider')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 cursor-pointer ${
+                  mobileViewMode === 'slider'
+                    ? 'bg-[#8C3A16] text-white shadow-sm'
+                    : 'text-[#6B5B49] hover:text-[#241708]'
+                }`}
+              >
+                <LayoutGrid size={13} /> Card Slider
+              </button>
+              <button
+                type="button"
+                onClick={() => setMobileViewMode('compact')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 cursor-pointer ${
+                  mobileViewMode === 'compact'
+                    ? 'bg-[#8C3A16] text-white shadow-sm'
+                    : 'text-[#6B5B49] hover:text-[#241708]'
+                }`}
+              >
+                <ListFilter size={13} /> Compact List
+              </button>
+            </div>
+
+            {filteredStatements.length > 0 && (
+              <span className="text-xs font-mono font-extrabold text-[#8C3A16] bg-[#FFE8D6] px-2.5 py-1 rounded-lg border border-[#E3D7C5] shadow-2xs">
+                {mobileViewMode === 'slider' ? `${Math.min(mobileIndex + 1, filteredStatements.length)} / ${filteredStatements.length}` : `${filteredStatements.length} Total`}
+              </span>
+            )}
+          </div>
+
+          {/* Conditional Mobile View Content */}
           {filteredStatements.length > 0 ? (
-            filteredStatements.map((item, idx) => {
-              return (
-                <div 
-                  key={idx}
-                  className="p-5 rounded-2xl bg-[#FFFDF7] border border-[#E3D7C5] shadow-md hover:shadow-lg flex flex-col gap-3.5 relative overflow-hidden transition-all text-left group"
-                >
-                  {/* Header: S.No & PS Number badge */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-extrabold text-[#6B5B49]">#{item.sNo}</span>
-                    <span className="px-2.5 py-1 rounded-lg bg-[#FFE8D6] border border-[#E3D7C5] font-mono text-[10px] font-black text-[#8C3A16] tracking-wider">
-                      {item.psNumber}
-                    </span>
-                  </div>
+            mobileViewMode === 'slider' ? (
+              /* Option 1: Card Slider View (1 card at a time, zero vertical scrolling) */
+              <div className="flex flex-col gap-3.5">
+                {(() => {
+                  const activeIdx = Math.max(0, Math.min(filteredStatements.length - 1, mobileIndex));
+                  const item = filteredStatements[activeIdx];
+                  if (!item) return null;
 
-                  {/* Sponsoring Org */}
-                  <div className="space-y-1">
-                    <span className="text-[9px] font-black tracking-widest text-[#8C3A16] uppercase">Sponsoring Org</span>
-                    <h3 className="text-sm font-extrabold text-[#5C230C] leading-snug group-hover:text-[#8C3A16] transition-colors">{item.org}</h3>
-                  </div>
+                  return (
+                    <div 
+                      key={activeIdx}
+                      className="p-5 rounded-2xl bg-[#FFFDF7] border-2 border-[#8C3A16]/30 shadow-xl flex flex-col gap-3.5 relative overflow-hidden transition-all text-left animate-fade-in"
+                    >
+                      {/* Header: S.No & PS Number badge */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-mono font-extrabold text-[#6B5B49]">#{item.sNo || activeIdx + 1}</span>
+                        <span className="px-3 py-1 rounded-lg bg-[#FFE8D6] border border-[#E3D7C5] font-mono text-xs font-black text-[#8C3A16] tracking-wider shadow-2xs">
+                          {item.psNumber || item.ps_number || item.code}
+                        </span>
+                      </div>
 
-                  {/* Problem Statement Preview */}
-                  <div className="space-y-1.5 pt-2 border-t border-[#E3D7C5]/60">
-                    <span className="text-[9px] font-black tracking-widest text-[#8C3A16] uppercase flex items-center gap-1">
-                      <Sparkles size={10} className="text-[#8C3A16] shrink-0 animate-pulse" /> Problem Statement
-                    </span>
-                    <div className="pl-3 border-l-2 border-[#C97F1B] bg-[#FAF6EE] p-2.5 rounded-r-xl">
-                      <p className="text-xs text-[#241708] font-medium leading-relaxed break-words text-justify line-clamp-3">
-                        {item.statement}
-                      </p>
+                      {/* Sponsoring Org */}
+                      <div className="space-y-1">
+                        <span className="text-[9px] font-black tracking-widest text-[#8C3A16] uppercase">Sponsoring Org</span>
+                        <h3 className="text-sm font-extrabold text-[#5C230C] leading-snug">
+                          {item.org || item.sponsoringOrg || item.organization || 'N/A'}
+                        </h3>
+                      </div>
+
+                      {/* Problem Statement Preview */}
+                      <div className="space-y-1.5 pt-2 border-t border-[#E3D7C5]/60">
+                        <span className="text-[9px] font-black tracking-widest text-[#8C3A16] uppercase flex items-center gap-1">
+                          <Sparkles size={10} className="text-[#8C3A16] shrink-0 animate-pulse" /> Problem Statement
+                        </span>
+                        <div className="pl-3 border-l-2 border-[#C97F1B] bg-[#FAF6EE] p-3 rounded-r-xl">
+                          <p className="text-xs text-[#241708] font-extrabold leading-relaxed break-words text-left">
+                            {item.title || item.statement || item.problemStatement || item.description || item.detailedDescription || 'Problem Statement Details Available'}
+                          </p>
+                          {item.title && item.statement && item.title !== item.statement && (
+                            <p className="text-[11px] text-[#6B5B49] font-medium leading-relaxed mt-1 break-words text-left">
+                              {item.statement}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Categories / Info Row */}
+                      <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[#E3D7C5]/60">
+                        <span className="px-2.5 py-0.5 rounded-full border border-[#E3D7C5] bg-[#FAF6EE] text-[#6B5B49] text-[9px] font-black uppercase tracking-wider">
+                          {item.category}
+                        </span>
+                        <span className="px-2.5 py-0.5 rounded-full border border-[#E3D7C5] bg-[#FFE8D6] text-[#8C3A16] text-[9px] font-black uppercase tracking-wider">
+                          {item.domain}
+                        </span>
+                      </div>
+
+                      {/* Action button */}
+                      <button
+                        type="button"
+                        onClick={() => setActiveModalItem(item)}
+                        className="w-full mt-1 py-2.5 rounded-xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] text-xs font-black text-white transition-all text-center cursor-pointer active:scale-[0.98] shadow-md border-none"
+                      >
+                        View Details & Tech Stack →
+                      </button>
                     </div>
-                  </div>
+                  );
+                })()}
 
-                  {/* Categories / Info Row */}
-                  <div className="flex flex-wrap items-center gap-2 pt-2.5 border-t border-[#E3D7C5]/60">
-                    <span className="px-2.5 py-0.5 rounded-full border border-[#E3D7C5] bg-[#FAF6EE] text-[#6B5B49] text-[9px] font-black uppercase tracking-wider">
-                      {item.category}
-                    </span>
-                    <span className="px-2.5 py-0.5 rounded-full border border-[#E3D7C5] bg-[#FFE8D6] text-[#8C3A16] text-[9px] font-black uppercase tracking-wider">
-                      {item.domain}
-                    </span>
-                  </div>
-
-                  {/* Action button */}
+                {/* Slider Navigation Controls & Indicator Dots */}
+                <div className="flex items-center justify-between gap-3 px-1 pt-1">
                   <button
-                    onClick={() => setActiveModalItem(item)}
-                    className="w-full mt-2 py-2.5 rounded-xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] hover:from-[#6B3213] hover:to-[#A64B1E] text-xs font-black text-white transition-all text-center cursor-pointer active:scale-[0.98] shadow-md border-none"
+                    type="button"
+                    onClick={() => setMobileIndex(prev => Math.max(0, prev - 1))}
+                    disabled={mobileIndex === 0}
+                    className="flex-1 py-2.5 px-3 rounded-xl bg-[#FAF6EE] border border-[#E3D7C5] text-[#8C3A16] disabled:opacity-40 disabled:cursor-not-allowed font-extrabold text-xs flex items-center justify-center gap-1 shadow-2xs active:scale-95 transition-all cursor-pointer"
                   >
-                    View Details & Tech Stack
+                    <ChevronLeft size={16} /> Prev
+                  </button>
+
+                  <div className="flex items-center gap-1.5 overflow-x-auto max-w-[140px] px-1 no-scrollbar">
+                    {filteredStatements.map((_, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setMobileIndex(i)}
+                        className={`h-2 rounded-full transition-all cursor-pointer ${
+                          i === mobileIndex ? 'w-6 bg-[#8C3A16]' : 'w-2 bg-[#E3D7C5]'
+                        }`}
+                      />
+                    ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setMobileIndex(prev => Math.min(filteredStatements.length - 1, prev + 1))}
+                    disabled={mobileIndex >= filteredStatements.length - 1}
+                    className="flex-1 py-2.5 px-3 rounded-xl bg-[#FAF6EE] border border-[#E3D7C5] text-[#8C3A16] disabled:opacity-40 disabled:cursor-not-allowed font-extrabold text-xs flex items-center justify-center gap-1 shadow-2xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    Next <ChevronRight size={16} />
                   </button>
                 </div>
-              );
-            })
+              </div>
+            ) : (
+              /* Option 2: Compact Accordion List View (Ultra compact rows) */
+              <div className="flex flex-col gap-2.5">
+                {filteredStatements.map((item, idx) => {
+                  const isExpanded = expandedRow === idx;
+                  return (
+                    <div
+                      key={idx}
+                      className="rounded-2xl bg-[#FFFDF7] border border-[#E3D7C5] shadow-2xs overflow-hidden transition-all text-left"
+                    >
+                      {/* Compact Header Row */}
+                      <div
+                        onClick={() => setExpandedRow(isExpanded ? null : idx)}
+                        className="p-3.5 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#FAF6EE] transition-colors"
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <span className="px-2 py-0.5 rounded bg-[#FFE8D6] border border-[#E3D7C5] font-mono text-[10px] font-black text-[#8C3A16] shrink-0">
+                            {item.psNumber || item.ps_number || item.code}
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <h4 className="text-xs font-extrabold text-[#241708] truncate">
+                              {item.title || item.statement || item.problemStatement}
+                            </h4>
+                            <p className="text-[10px] text-[#6B5B49] font-medium truncate mt-0.5">
+                              {item.org || item.sponsoringOrg}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="hidden sm:inline-block px-2 py-0.5 rounded-full border border-[#E3D7C5] bg-[#FAF6EE] text-[#8C3A16] text-[9px] font-black uppercase">
+                            {item.category}
+                          </span>
+                          {isExpanded ? (
+                            <ChevronUp size={18} className="text-[#8C3A16]" />
+                          ) : (
+                            <ChevronDown size={18} className="text-[#8C3A16]" />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Expanded Details */}
+                      {isExpanded && (
+                        <div className="p-4 border-t border-[#E3D7C5]/60 bg-[#FAF6EE]/50 flex flex-col gap-3 animate-fade-in">
+                          <div className="space-y-1">
+                            <span className="text-[9px] font-black tracking-widest text-[#8C3A16] uppercase">Sponsoring Organization</span>
+                            <p className="text-xs font-bold text-[#5C230C]">{item.org || item.sponsoringOrg}</p>
+                          </div>
+
+                          <div className="space-y-1">
+                            <span className="text-[9px] font-black tracking-widest text-[#8C3A16] uppercase">Problem Statement</span>
+                            <p className="text-xs text-[#241708] font-semibold leading-relaxed bg-[#FFFDF7] p-2.5 rounded-xl border-l-2 border-[#C97F1B]">
+                              {item.statement || item.title || item.detailedDescription}
+                            </p>
+                          </div>
+
+                          <div className="flex items-center justify-between pt-1">
+                            <div className="flex gap-1.5">
+                              <span className="px-2 py-0.5 rounded-full border border-[#E3D7C5] bg-[#FAF6EE] text-[#6B5B49] text-[9px] font-black uppercase">
+                                {item.category}
+                              </span>
+                              <span className="px-2 py-0.5 rounded-full border border-[#E3D7C5] bg-[#FFE8D6] text-[#8C3A16] text-[9px] font-black uppercase">
+                                {item.domain}
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveModalItem(item);
+                              }}
+                              className="px-3 py-1.5 rounded-lg bg-[#8C3A16] text-white text-xs font-black cursor-pointer shadow-2xs hover:bg-[#6B3213]"
+                            >
+                              View Details →
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )
           ) : (
             <div className="py-14 text-center rounded-2xl bg-[#FFFDF7] border border-dashed border-[#E3D7C5]">
               <div className="flex flex-col items-center gap-3 text-[#6B5B49]">
@@ -502,7 +674,7 @@ export default function ProblemStatements() {
                 <div className="space-y-1.5">
                   <h4 className="text-[10px] font-black tracking-widest text-[#8C3A16] uppercase">Sponsoring Organization</h4>
                   <div className="flex items-center gap-2.5 text-base font-extrabold text-[#5C230C]">
-                    <span>{activeModalItem.org}</span>
+                    <span>{activeModalItem.org || activeModalItem.sponsoringOrg || activeModalItem.organization || 'N/A'}</span>
                   </div>
                 </div>
 
@@ -511,7 +683,7 @@ export default function ProblemStatements() {
                     <Sparkles size={10} className="text-[#8C3A16] shrink-0" /> Problem Statement Summary
                   </h4>
                   <p className="text-xs sm:text-sm text-[#241708] font-semibold leading-relaxed bg-[#FAF6EE] p-4 rounded-2xl border-l-4 border-[#C97F1B] border-y border-r border-[#E3D7C5]">
-                    {activeModalItem.title || activeModalItem.statement}
+                    {activeModalItem.title || activeModalItem.statement || activeModalItem.problemStatement || activeModalItem.description || activeModalItem.detailedDescription || 'N/A'}
                   </p>
                 </div>
 
