@@ -6,10 +6,10 @@ export default function Hero({ onRegisterClick, onViewChange }) {
 
   // ── Hero Auto Slider Images ──
   const SLIDER_IMAGES = [
-    { src: '/home_page_image.jpg', title: 'Students Collaborating' },
-    { src: '/winner_group.jpg', title: 'SIH Hackathon Champions' },
-    { src: '/winner_theme_1.jpg', title: 'Project Presentations & Pitching' },
-    { src: '/winner_theme_2.jpg', title: 'Grand Finale Award Ceremony' },
+    { src: '/home_page.webp', title: 'Students Collaborating' },
+    { src: '/winner_group.webp', title: 'SIH Hackathon Champions' },
+    { src: '/winner_theme_1.webp', title: 'Project Presentations & Pitching' },
+    { src: '/winner_theme_2.webp', title: 'Grand Finale Award Ceremony' },
     { src: '/hackathon_students.png', title: 'Engineering Problem Solvers' }
   ];
 

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react';
 
-// Import the winner images directly
-import winner1st from '../../2025  1st prize winer.JPG';
-import winner2nd from '../../2025 2nd Prize winer.JPG';
-import winner3rd from '../../2025 3nd Prize winer.JPG';
+// Winner image assets served from public directory (.webp)
+const winner1st = '/winner_2025_1st.webp';
+const winner2nd = '/winner_2025_2nd.webp';
+const winner3rd = '/winner_2025_3rd.webp';
 
 const winnersData = [
   {

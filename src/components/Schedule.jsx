@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Calendar, Clock, Coffee, Utensils, Lightbulb, Users, Trophy, Sparkles, CheckCircle, Mic, FileText, Award } from 'lucide-react';
-import lampImg from '../../Lamp.png';
+const lampImg = '/lamp.webp';
 import round1Img from '../../Round 1.png';
 import lunchImg from '../../Lunch image.png';
 import teaImg from '../../Tea Brake Image.png';

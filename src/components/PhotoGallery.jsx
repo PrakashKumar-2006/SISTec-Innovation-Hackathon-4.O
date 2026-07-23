@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ImageIcon, Sparkles, Play, Pause } from 'lucide-react';
 
-// Import images directly from root via relative paths (Vite will package them)
-import winnerGroup from '../../winer group image.JPG';
-import winner1st from '../../2025  1st prize winer.JPG';
-import winner2nd from '../../2025 2nd Prize winer.JPG';
-import winner3rd from '../../2025 3nd Prize winer.JPG';
-import winnerTheme1 from '../../Themes Prize winer 1.JPG';
-import winnerTheme2 from '../../Themes Prize winer 2.JPG';
+// Winner image assets served from public directory (.webp)
+const winnerGroup = '/winner_group.webp';
+const winner1st = '/winner_2025_1st.webp';
+const winner2nd = '/winner_2025_2nd.webp';
+const winner3rd = '/winner_2025_3rd.webp';
+const winnerTheme1 = '/winner_theme_1.webp';
+const winnerTheme2 = '/winner_theme_2.webp';
 
 const galleryImages = [
   {
