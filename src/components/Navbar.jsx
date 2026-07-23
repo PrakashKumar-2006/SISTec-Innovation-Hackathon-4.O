@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
+import { Menu, X, ChevronDown, ChevronRight, Download } from 'lucide-react';
 
 export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -167,9 +167,12 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                       onViewChange && onViewChange('landing', sub.href);
                                     }
                                   }}
-                                  className="block px-4 py-2.5 text-xs font-bold rounded-xl text-[#241708] hover:text-[#8C3A16] hover:bg-[#8C3A16]/10 transition-colors duration-200 text-left"
+                                  className="flex items-center justify-between px-4 py-2.5 text-xs font-bold rounded-xl text-[#241708] hover:text-[#8C3A16] hover:bg-[#8C3A16]/10 transition-colors duration-200 text-left group/subitem"
                                 >
-                                  {sub.name}
+                                  <span>{sub.name}</span>
+                                  {sub.name === 'Idea Template' && (
+                                    <Download size={14} className="text-[#8C3A16]/70 group-hover/subitem:text-[#8C3A16] group-hover/subitem:translate-y-0.5 transition-all duration-200 shrink-0 ml-2" />
+                                  )}
                                 </a>
                               )}
 
@@ -324,10 +327,15 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                         onViewChange && onViewChange('landing', sub.href);
                                       }
                                     }}
-                                    className="py-2 px-3 text-xs font-semibold text-[#6B5B49] hover:text-[#8C3A16] hover:bg-[#8C3A16]/10 rounded-lg active:scale-[0.97] transition-all text-left flex items-center gap-2 block"
+                                    className="py-2 px-3 text-xs font-semibold text-[#6B5B49] hover:text-[#8C3A16] hover:bg-[#8C3A16]/10 rounded-lg active:scale-[0.97] transition-all text-left flex items-center justify-between block group/mobilesub"
                                   >
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#8C3A16]/60 shrink-0"></span>
-                                    {sub.name}
+                                    <div className="flex items-center gap-2">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#8C3A16]/60 shrink-0"></span>
+                                      <span>{sub.name}</span>
+                                    </div>
+                                    {sub.name === 'Idea Template' && (
+                                      <Download size={14} className="text-[#8C3A16]/80 group-hover/mobilesub:text-[#8C3A16] group-hover/mobilesub:translate-y-0.5 transition-all shrink-0 ml-2" />
+                                    )}
                                   </a>
                                 )}
                               </div>
