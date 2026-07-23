@@ -80,8 +80,9 @@ export default function ShortlistedTeams({ onViewChange }) {
                 <Award className="w-4 h-4 text-[var(--vermilion)]" />
                 SIH 4.0 Selection Results
               </div>
-              <h1 className="text-4xl md:text-5xl font-black text-[var(--clay)] mb-4 font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
-                Shortlisted Teams
+              <h1 className="text-4xl md:text-5xl font-black uppercase mb-4 font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+                <span className="text-[#8C3A16]">Shortlisted </span>
+                <span className="text-[#C97F1B]">Teams</span>
               </h1>
               <p className="text-[var(--ink-soft)] text-base max-w-2xl font-sans font-medium">
                 Congratulations to all the selected teams! Find your team below using the search or filter options.

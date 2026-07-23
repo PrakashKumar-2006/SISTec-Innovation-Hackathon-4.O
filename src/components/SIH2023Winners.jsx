@@ -38,7 +38,7 @@ const winnersData = [
 function ProblemCell({ text }) {
   const [expanded, setExpanded] = useState(false);
   const isLong = text.length > 120;
-  
+
   return (
     <div className="max-w-md text-xs leading-relaxed text-[#241708] font-medium">
       <span>
@@ -99,7 +99,7 @@ export default function SIH2023Winners({ onViewChange, hideHeader = false }) {
       <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[150px] pointer-events-none -z-10"></div>
 
       <div className="max-w-7xl mx-auto">
-        
+
         {/* Header Section */}
         {!hideHeader && (
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 text-left">
@@ -114,7 +114,7 @@ export default function SIH2023Winners({ onViewChange, hideHeader = false }) {
                 Celebrating the brilliant minds and innovative prototypes of SIH 1.0 (2023).
               </p>
             </div>
-            
+
             <button
               onClick={() => onViewChange && onViewChange('landing')}
               className="flex items-center gap-2 px-5 py-2 rounded-full bg-[var(--panel)] border border-[var(--marigold)]/30 text-xs font-bold text-[var(--marigold)] hover:text-white transition-all duration-300 cursor-pointer shadow-md active:scale-95 shrink-0"
@@ -126,7 +126,7 @@ export default function SIH2023Winners({ onViewChange, hideHeader = false }) {
 
         {/* ── Slide-Transition Carousel (Adjusted Padding & Layout) ── */}
         <div className="w-full max-w-5xl mx-auto mb-12 relative rounded-3xl overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-brand-card h-[340px] sm:h-[400px] md:h-[440px]">
-          
+
           <div className="w-full h-full relative overflow-hidden">
             {slides.map((slide, sIdx) => {
               const isActive = sIdx === activeSlide;
@@ -136,23 +136,23 @@ export default function SIH2023Winners({ onViewChange, hideHeader = false }) {
                   key={sIdx}
                   className="absolute inset-0 w-full h-full transition-transform duration-700 ease-in-out"
                   style={{
-                    transform: isActive 
-                      ? 'translateX(0%)' 
+                    transform: isActive
+                      ? 'translateX(0%)'
                       : sIdx === (activeSlide - 1 + slides.length) % slides.length
-                      ? 'translateX(-100%)'
-                      : 'translateX(100%)'
+                        ? 'translateX(-100%)'
+                        : 'translateX(100%)'
                   }}
                 >
                   {slide.type === 'image' ? (
                     <div className="w-full h-full relative">
-                      <img 
-                        src={slide.url} 
-                        alt={slide.title} 
-                        className="w-full h-full object-cover opacity-85" 
+                      <img
+                        src={slide.url}
+                        alt={slide.title}
+                        className="w-full h-full object-cover opacity-85"
                       />
                       {/* Dark overlay at bottom for text readability */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent"></div>
-                      
+
                       <div className="absolute bottom-6 left-6 right-6 sm:bottom-10 sm:left-10 sm:right-10 text-left space-y-2">
                         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-gold/20 border border-brand-gold/30 text-brand-gold text-[9px] font-black uppercase tracking-widest">
                           <Sparkles size={10} className="animate-pulse" /> Event Highlight
@@ -165,17 +165,17 @@ export default function SIH2023Winners({ onViewChange, hideHeader = false }) {
                     <div className="w-full h-full bg-[#0D0D11]/90 flex flex-col justify-center items-center px-4 py-6 sm:p-8 text-center relative overflow-hidden">
                       {/* Sunburst background effect */}
                       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(216,171,85,0.05),transparent_60%)] pointer-events-none"></div>
-                      
+
                       <div className="relative z-10 w-full max-w-3xl mx-auto space-y-4 sm:space-y-6">
                         <div className="flex flex-col items-center gap-1.5">
                           <Trophy className="text-brand-gold animate-bounce" size={36} />
                           <h3 className="text-xl sm:text-2xl font-black text-white tracking-wide">{slide.title}</h3>
                           <p className="text-[11px] sm:text-xs text-slate-400 font-semibold">{slide.desc}</p>
                         </div>
- 
+
                         {/* Interactive 3D Podium Block Visualizer inside Carousel */}
                         <div className="grid grid-cols-3 gap-3.5 sm:gap-6 items-end w-full max-w-lg mx-auto pt-2 select-none">
-                          
+
                           {/* 2nd Place */}
                           <div className="flex flex-col items-center gap-1.5 sm:gap-2">
                             <span className="text-[9px] font-black text-slate-400 tracking-wider">2ND PLACE</span>
@@ -235,9 +235,8 @@ export default function SIH2023Winners({ onViewChange, hideHeader = false }) {
               <button
                 key={sIdx}
                 onClick={() => setActiveSlide(sIdx)}
-                className={`h-2 rounded-full transition-all cursor-pointer ${
-                  sIdx === activeSlide ? 'bg-brand-gold w-6 shadow-[0_0_6px_rgba(216,171,85,0.4)]' : 'bg-white/30 hover:bg-white/60 w-2'
-                }`}
+                className={`h-2 rounded-full transition-all cursor-pointer ${sIdx === activeSlide ? 'bg-brand-gold w-6 shadow-[0_0_6px_rgba(216,171,85,0.4)]' : 'bg-white/30 hover:bg-white/60 w-2'
+                  }`}
               />
             ))}
           </div>
@@ -273,11 +272,10 @@ export default function SIH2023Winners({ onViewChange, hideHeader = false }) {
                 {winnersData.map((winner, index) => (
                   <tr key={index} className="hover:bg-[#FAF6EE] transition-colors duration-200">
                     <td className="px-5 py-4">
-                      <span className={`inline-block px-2.5 py-0.5 rounded-full border text-[10px] font-black uppercase ${
-                        winner.position === 1 ? 'border-[#C97F1B]/40 bg-[#F2A93B]/15 text-[#8C3A16]' :
+                      <span className={`inline-block px-2.5 py-0.5 rounded-full border text-[10px] font-black uppercase ${winner.position === 1 ? 'border-[#C97F1B]/40 bg-[#F2A93B]/15 text-[#8C3A16]' :
                         winner.position === 2 ? 'border-slate-300 bg-slate-100 text-slate-700' :
-                        'border-amber-300 bg-amber-100 text-amber-900'
-                      }`}>
+                          'border-amber-300 bg-amber-100 text-amber-900'
+                        }`}>
                         {winner.position === 1 ? '1st Place' : winner.position === 2 ? '2nd Place' : '3rd Place'}
                       </span>
                     </td>
@@ -313,16 +311,15 @@ export default function SIH2023Winners({ onViewChange, hideHeader = false }) {
         <div className="grid grid-cols-1 gap-4 md:hidden">
           {winnersData.map((winner, index) => (
             <div key={index} className="rounded-2xl bg-[#FFFDF7] border border-[#E3D7C5] p-5 space-y-4 text-left relative shadow-sm">
-              
+
               <div className="flex justify-between items-center">
-                <span className={`inline-block px-2.5 py-0.5 rounded-full border text-[9px] font-black uppercase ${
-                  winner.position === 1 ? 'border-[#C97F1B]/40 bg-[#F2A93B]/15 text-[#8C3A16]' :
+                <span className={`inline-block px-2.5 py-0.5 rounded-full border text-[9px] font-black uppercase ${winner.position === 1 ? 'border-[#C97F1B]/40 bg-[#F2A93B]/15 text-[#8C3A16]' :
                   winner.position === 2 ? 'border-slate-300 bg-slate-100 text-slate-700' :
-                  'border-amber-300 bg-amber-100 text-amber-900'
-                }`}>
+                    'border-amber-300 bg-amber-100 text-amber-900'
+                  }`}>
                   {winner.position === 1 ? '1st Place' : winner.position === 2 ? '2nd Place' : '3rd Place'}
                 </span>
-                
+
                 <span className="font-mono text-xs text-[#C97F1B] font-black">{winner.prize}</span>
               </div>
 
