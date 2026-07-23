@@ -23,7 +23,7 @@ export default function Timeline({ isStandalone = false }) {
           }
         });
       },
-      { threshold: 0.15 } // Trigger when 15% of the timeline is visible
+      { threshold: 0.05 } // Fast trigger when 5% of timeline enters viewport
     );
 
     const currentRef = sectionRef.current;
@@ -42,14 +42,14 @@ export default function Timeline({ isStandalone = false }) {
   useEffect(() => {
     if (!hasEnteredViewport) return;
 
-    // Phase 1: Smooth, balanced entrance sequence with path drawing & step activation
+    // Fast, responsive entrance sequence
     const timers = [
-      setTimeout(() => { setActiveStep(1); setCurrentFocus(0); }, 200),   // Draw Step 1, highlight Step 1
-      setTimeout(() => { setActiveStep(2); setCurrentFocus(1); }, 1200),  // Draw Step 2, highlight Step 2
-      setTimeout(() => { setActiveStep(3); setCurrentFocus(2); }, 2200),  // Draw Step 3, highlight Step 3
-      setTimeout(() => { setActiveStep(4); setCurrentFocus(3); }, 3200),  // Draw Step 4, highlight Step 4
-      setTimeout(() => { setActiveStep(5); setCurrentFocus(4); }, 4200),  // Draw Step 5, highlight Step 5
-      setTimeout(() => { setActiveStep(6); }, 5200)                      // All steps loaded
+      setTimeout(() => { setActiveStep(1); setCurrentFocus(0); }, 150),   // Draw Step 1
+      setTimeout(() => { setActiveStep(2); setCurrentFocus(1); }, 450),   // Draw Step 2
+      setTimeout(() => { setActiveStep(3); setCurrentFocus(2); }, 750),   // Draw Step 3
+      setTimeout(() => { setActiveStep(4); setCurrentFocus(3); }, 1050),  // Draw Step 4
+      setTimeout(() => { setActiveStep(5); setCurrentFocus(4); }, 1350),  // Draw Step 5
+      setTimeout(() => { setActiveStep(6); }, 1650)                       // All steps active
     ];
     return () => timers.forEach(clearTimeout);
   }, [hasEnteredViewport]);

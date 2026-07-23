@@ -23,7 +23,7 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
           }
         });
       },
-      { threshold: 0.15 } // Trigger when 15% of the timeline is visible
+      { threshold: 0.05 } // Fast trigger when 5% of section enters viewport
     );
 
     const currentRef = sectionRef.current;
@@ -42,13 +42,13 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
   useEffect(() => {
     if (!hasEnteredViewport) return;
 
-    // Smooth, balanced entrance sequence with path drawing & step activation
+    // Fast, responsive entrance sequence
     const timers = [
-      setTimeout(() => { setActiveStep(1); setCurrentFocus(0); }, 200),   // Highlight Step 1
-      setTimeout(() => { setActiveStep(2); setCurrentFocus(1); }, 1200),  // Highlight Step 2
-      setTimeout(() => { setActiveStep(3); setCurrentFocus(2); }, 2200),  // Highlight Step 3
-      setTimeout(() => { setActiveStep(4); setCurrentFocus(3); }, 3200),  // Highlight Step 4
-      setTimeout(() => { setActiveStep(5); }, 4200)                      // All steps loaded
+      setTimeout(() => { setActiveStep(1); setCurrentFocus(0); }, 150),   // Step 1
+      setTimeout(() => { setActiveStep(2); setCurrentFocus(1); }, 450),   // Step 2
+      setTimeout(() => { setActiveStep(3); setCurrentFocus(2); }, 750),   // Step 3
+      setTimeout(() => { setActiveStep(4); setCurrentFocus(3); }, 1050),  // Step 4
+      setTimeout(() => { setActiveStep(5); }, 1350)                       // All steps active
     ];
     return () => timers.forEach(clearTimeout);
   }, [hasEnteredViewport]);
