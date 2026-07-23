@@ -5,39 +5,12 @@ export default function Timeline({ isStandalone = false }) {
   const sectionRef = useRef(null);
   const [activeStep, setActiveStep] = useState(0);
   const [currentFocus, setCurrentFocus] = useState(-1);
-  const [hasEnteredViewport, setHasEnteredViewport] = useState(isStandalone);
+  const [hasEnteredViewport, setHasEnteredViewport] = useState(true);
 
-  // Intersection Observer to trigger entrance sequence when scrolled into view
+  // Trigger entrance sequence immediately on website load
   useEffect(() => {
-    if (isStandalone) {
-      setHasEnteredViewport(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setHasEnteredViewport(true);
-            observer.disconnect(); // Trigger once and disconnect
-          }
-        });
-      },
-      { threshold: 0.15 } // Trigger when 15% of the timeline is visible
-    );
-
-    const currentRef = sectionRef.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-      observer.disconnect();
-    };
-  }, [isStandalone]);
+    setHasEnteredViewport(true);
+  }, []);
 
   useEffect(() => {
     if (!hasEnteredViewport) return;
