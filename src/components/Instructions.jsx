@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { 
-  ArrowLeft,
   ClipboardList, 
   Download, 
   Users, 
@@ -162,16 +161,7 @@ export default function Instructions({ onViewChange, onRegisterClick }) {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0 self-start sm:self-center">
-            <button
-              onClick={() => onViewChange && onViewChange('landing')}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#8C3A16] hover:bg-[#6B3213] !text-white text-xs font-bold transition-all cursor-pointer active:scale-95 shadow-sm border-none"
-              style={{ color: '#ffffff' }}
-            >
-              <ArrowLeft size={14} style={{ color: '#ffffff' }} />
-              <span style={{ color: '#ffffff' }}>Back to Home</span>
-            </button>
-          </div>
+          {/* Removed Back to Home button */}
         </div>
 
         {/* ── Quick Resources Banner ── */}
