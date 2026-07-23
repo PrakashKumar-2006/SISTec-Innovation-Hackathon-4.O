@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Calendar, Clock, Coffee, Utensils, Lightbulb, Users, Trophy, Sparkles, CheckCircle, Mic, FileText, Award } from 'lucide-react';
 const lampImg = '/lamp.webp';
-import round1Img from '../../Round 1.png';
-import lunchImg from '../../Lunch image.png';
-import teaImg from '../../Tea Brake Image.png';
-import round2Img from '../../Round 2.png';
-import round3Img from '../../Round 3 image.png';
-import yogaImg from '../../yoga session image.png';
-import breakfastImg from '../../morning Breakfast.png';
-import dinnerImg from '../../Dinner image.png';
-import trophyImg from '../../Trophy image.png';
+const round1Img = '/round_1.webp';
+const lunchImg = '/lunch_image.webp';
+const teaImg = '/tea_break_image.webp';
+const round2Img = '/round_2.webp';
+const round3Img = '/round_3.webp';
+const yogaImg = '/yoga_session_image.webp';
+const breakfastImg = '/morning_breakfast.webp';
+const dinnerImg = '/dinner_image.webp';
+const trophyImg = '/trophy_image.webp';
 
 // Custom Category Inline SVGs
 

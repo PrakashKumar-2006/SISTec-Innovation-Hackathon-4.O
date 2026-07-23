@@ -1,10 +1,10 @@
 import React from 'react';
 import { Code2, Linkedin, Github } from 'lucide-react';
-import shubhamImg from '../../Shubham Pawar.jpg';
-import shivamImg from '../../Shivam Kumar Maurya.png';
-import shivanshImg from '../../Shivansh Mehra.jpg';
-import prakashImg from '../../Prakash Kumar Biswal.jpg';
-import tusharImg from '../../Tushar Das.jpg';
+const shubhamImg = '/shubham_pawar.webp';
+const shivamImg = '/shivam_maurya.jpg';
+const shivanshImg = '/shivansh_mehra.webp';
+const prakashImg = '/prakash_biswal.webp';
+const tusharImg = '/tushar_das.webp';
 
 export default function Developers() {
   const devs = [

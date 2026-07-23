@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Rocket, ArrowRight, Bell, Megaphone, Users, FileText, Trophy, ChevronLeft, ChevronRight } from 'lucide-react';
-import hackathonLogo from '../../NEW HACKTHON LOGO TRANSPARENT.png';
+const hackathonLogo = '/hackathon_logo_transparent.webp';
 
 export default function Hero({ onRegisterClick, onViewChange }) {
 
