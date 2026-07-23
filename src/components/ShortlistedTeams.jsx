@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Award, Search, AlertCircle, ArrowLeft, Loader } from 'lucide-react';
+import { Award, Search, AlertCircle, Loader } from 'lucide-react';
 
 const getThemeStyle = () => 'text-brand-gold bg-brand-gold/10 border-brand-gold/20';
 
@@ -72,16 +72,8 @@ export default function ShortlistedTeams({ onViewChange }) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Navigation & Header */}
+        {/* Header */}
         <div className="mb-12 text-left">
-          <button 
-            onClick={() => onViewChange('landing')}
-            className="flex items-center text-[var(--marigold-deep)] hover:text-[var(--clay)] transition-colors mb-6 group w-fit font-bold text-sm"
-          >
-            <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-            Back to Home
-          </button>
-
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--marigold)]/15 border border-[var(--marigold)]/30 text-[var(--clay)] text-xs font-black uppercase tracking-widest mb-4 font-sans">
