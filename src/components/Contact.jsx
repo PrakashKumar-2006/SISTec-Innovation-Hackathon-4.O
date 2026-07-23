@@ -261,7 +261,19 @@ export default function Contact({ onViewChange }) {
                 <div className="bg-[#FAF6EE] border border-[#E3D7C5] rounded-xl p-4 w-full max-w-md space-y-3">
                   <div>
                     <p className="text-[10px] text-[#8C3A16] uppercase tracking-widest font-black mb-0.5 font-sans">Reference ID</p>
-                    <p className="font-mono text-base text-[#8C3A16] font-bold">{referenceId}</p>
+                    <div className="flex items-center justify-center gap-2">
+                      <p className="font-mono text-base text-[#8C3A16] font-bold">{referenceId}</p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(referenceId);
+                          alert('Reference ID copied to clipboard!');
+                        }}
+                        className="text-[11px] text-[#8C3A16] hover:text-white bg-[#8C3A16]/10 hover:bg-[#8C3A16] px-2 py-0.5 rounded-md font-bold transition-all border-none cursor-pointer"
+                      >
+                        Copy
+                      </button>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-[#6B5B49] justify-center border-t border-[#E3D7C5] pt-3 font-sans font-bold">
                     <Clock size={14} className="text-[#8C3A16]" />

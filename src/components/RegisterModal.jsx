@@ -610,7 +610,15 @@ export default function RegisterModal({ onClose }) {
           {/* RIGHT PANE (FORM CONTENT) */}
           <div className="flex flex-col flex-grow w-full relative bg-white rounded-3xl shadow-[var(--shadow)] border border-[var(--line)] overflow-hidden h-full">
             <button
-              onClick={() => onClose()}
+              onClick={() => {
+                if (formData.teamName || formData.leaderName || formData.leaderEmail) {
+                  if (window.confirm("Are you sure you want to close? Your entered details will be lost.")) {
+                    onClose();
+                  }
+                } else {
+                  onClose();
+                }
+              }}
               className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center justify-center w-8 h-8 rounded-full bg-[var(--input-bg)] border border-[#E3D7C5] text-[#8C3A16] hover:bg-[#F3EAD9] transition-all cursor-pointer shadow-sm z-20"
             >
               <X size={16} />

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ChevronUp } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -31,6 +32,23 @@ import PreviousSIH from './components/PreviousSIH';
 export default function App() {
   const [showRegister, setShowRegister] = useState(false);
   const [currentView, setCurrentView] = useState('landing'); // 'landing' or 'problem-statements'
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 400) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Intersection Observer for Reveal-on-Scroll entry animations
   useEffect(() => {
@@ -147,6 +165,17 @@ export default function App() {
       {/* Registration Modal Overlay */}
       {showRegister && (
         <RegisterModal onClose={() => setShowRegister(false)} />
+      )}
+
+      {/* Floating Back-to-Top Button */}
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          aria-label="Back to top"
+          className="fixed bottom-6 right-6 z-50 p-3 rounded-2xl bg-[#8C3A16] hover:bg-[#6B3213] text-white shadow-[0_8px_24px_rgba(140,58,22,0.4)] border border-[#C97F1B]/40 active:scale-95 transition-all duration-300 cursor-pointer animate-fade-in"
+        >
+          <ChevronUp size={20} className="stroke-[2.5]" />
+        </button>
       )}
 
     </div>

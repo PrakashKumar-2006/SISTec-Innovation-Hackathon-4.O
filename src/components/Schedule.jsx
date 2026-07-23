@@ -389,7 +389,7 @@ export default function Schedule({ isStandalone = false }) {
           <div className="md:col-span-8 flex flex-col">
             <div 
               onClick={() => setIsPaused(true)}
-              className="w-full h-full rounded-[32px] border-2 overflow-hidden flex flex-col justify-between relative bg-[#FFFDF7] border-[#EBDAB9] shadow-xl cursor-pointer"
+              className="w-full h-full min-h-[460px] rounded-[32px] border-2 overflow-hidden flex flex-col justify-between relative bg-[#FFFDF7] border-[#EBDAB9] shadow-xl cursor-pointer"
             >
               
               {/* Top Corner Ribbon Decor Overlay */}

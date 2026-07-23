@@ -75,6 +75,19 @@ export default function PhotoGallery() {
     return () => clearInterval(interval);
   }, [currentIndex, isPlaying]);
 
+  // Keyboard Arrow Key Navigation
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowLeft') {
+        handlePrev();
+      } else if (e.key === 'ArrowRight') {
+        handleNext();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
   };
