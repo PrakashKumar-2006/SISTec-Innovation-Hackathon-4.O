@@ -5,24 +5,51 @@ export default function Timeline({ isStandalone = false }) {
   const sectionRef = useRef(null);
   const [activeStep, setActiveStep] = useState(0);
   const [currentFocus, setCurrentFocus] = useState(-1);
-  const [hasEnteredViewport, setHasEnteredViewport] = useState(true);
+  const [hasEnteredViewport, setHasEnteredViewport] = useState(isStandalone);
 
-  // Trigger entrance sequence immediately on website load
+  // Intersection Observer to trigger entrance sequence when scrolled into view
   useEffect(() => {
-    setHasEnteredViewport(true);
-  }, []);
+    if (isStandalone) {
+      setHasEnteredViewport(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setHasEnteredViewport(true);
+            observer.disconnect(); // Trigger once and disconnect
+          }
+        });
+      },
+      { threshold: 0.15 } // Trigger when 15% of the timeline is visible
+    );
+
+    const currentRef = sectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+      observer.disconnect();
+    };
+  }, [isStandalone]);
 
   useEffect(() => {
     if (!hasEnteredViewport) return;
 
-    // Phase 1: Slow, elegant entrance sequence with path drawing & step activation
+    // Phase 1: Smooth, balanced entrance sequence with path drawing & step activation
     const timers = [
-      setTimeout(() => { setActiveStep(1); setCurrentFocus(0); }, 300),   // Draw Step 1, highlight Step 1
-      setTimeout(() => { setActiveStep(2); setCurrentFocus(1); }, 2500),  // Draw Step 2, highlight Step 2
-      setTimeout(() => { setActiveStep(3); setCurrentFocus(2); }, 4700),  // Draw Step 3, highlight Step 3
-      setTimeout(() => { setActiveStep(4); setCurrentFocus(3); }, 6900),  // Draw Step 4, highlight Step 4
-      setTimeout(() => { setActiveStep(5); setCurrentFocus(4); }, 9110),  // Draw Step 5, highlight Step 5
-      setTimeout(() => { setActiveStep(6); }, 11300)                     // All steps loaded
+      setTimeout(() => { setActiveStep(1); setCurrentFocus(0); }, 200),   // Draw Step 1, highlight Step 1
+      setTimeout(() => { setActiveStep(2); setCurrentFocus(1); }, 1200),  // Draw Step 2, highlight Step 2
+      setTimeout(() => { setActiveStep(3); setCurrentFocus(2); }, 2200),  // Draw Step 3, highlight Step 3
+      setTimeout(() => { setActiveStep(4); setCurrentFocus(3); }, 3200),  // Draw Step 4, highlight Step 4
+      setTimeout(() => { setActiveStep(5); setCurrentFocus(4); }, 4200),  // Draw Step 5, highlight Step 5
+      setTimeout(() => { setActiveStep(6); }, 5200)                      // All steps loaded
     ];
     return () => timers.forEach(clearTimeout);
   }, [hasEnteredViewport]);
@@ -172,7 +199,7 @@ export default function Timeline({ isStandalone = false }) {
         }
         .animate-draw-path {
           stroke-dasharray: 120;
-          animation: draw-path 2.0s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          animation: draw-path 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         @keyframes node-pop {
@@ -181,7 +208,7 @@ export default function Timeline({ isStandalone = false }) {
           100% { transform: scale(1); opacity: 1; }
         }
         .animate-node-pop {
-          animation: node-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+          animation: node-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
       `}} />
 
@@ -283,7 +310,7 @@ export default function Timeline({ isStandalone = false }) {
                     {!isLeftNode && (
                       /* Card on Left side (Step 2, 4) */
                       <div
-                        className={`w-full max-w-[460px] transform transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) ${isCardActive
+                        className={`w-full max-w-[460px] transform transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) ${isCardActive
                             ? `opacity-100 translate-y-0 ${isFocused ? 'scale-[1.03] sm:scale-[1.05] z-30' : 'scale-100 opacity-90 z-20'} ${ev.floatClass}`
                             : 'opacity-0 translate-y-12 scale-95 pointer-events-none'
                           } relative group bg-gradient-to-br ${isFocused ? ev.activeColor : `${ev.color} border ${ev.borderColor} ${ev.glow}`
@@ -316,7 +343,7 @@ export default function Timeline({ isStandalone = false }) {
                     {isLeftNode && (
                       /* Card on Right side (Step 1, 3, 5) */
                       <div
-                        className={`w-full max-w-[460px] transform transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) ${isCardActive
+                        className={`w-full max-w-[460px] transform transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) ${isCardActive
                             ? `opacity-100 translate-y-0 ${isFocused ? 'scale-[1.03] sm:scale-[1.05] z-30' : 'scale-100 opacity-90 z-20'} ${ev.floatClass}`
                             : 'opacity-0 translate-y-12 scale-95 pointer-events-none'
                           } relative group bg-gradient-to-br ${isFocused ? ev.activeColor : `${ev.color} border ${ev.borderColor} ${ev.glow}`

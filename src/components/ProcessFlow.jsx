@@ -5,23 +5,50 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
   const sectionRef = useRef(null);
   const [activeStep, setActiveStep] = useState(0);
   const [currentFocus, setCurrentFocus] = useState(-1);
-  const [hasEnteredViewport, setHasEnteredViewport] = useState(true);
+  const [hasEnteredViewport, setHasEnteredViewport] = useState(isStandalone);
 
-  // Trigger entrance sequence immediately on website load
+  // Intersection Observer to trigger entrance sequence when scrolled into view
   useEffect(() => {
-    setHasEnteredViewport(true);
-  }, []);
+    if (isStandalone) {
+      setHasEnteredViewport(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setHasEnteredViewport(true);
+            observer.disconnect(); // Trigger once and disconnect
+          }
+        });
+      },
+      { threshold: 0.15 } // Trigger when 15% of the timeline is visible
+    );
+
+    const currentRef = sectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+      observer.disconnect();
+    };
+  }, [isStandalone]);
 
   useEffect(() => {
     if (!hasEnteredViewport) return;
 
-    // Slow, elegant entrance sequence with path drawing & step activation
+    // Smooth, balanced entrance sequence with path drawing & step activation
     const timers = [
-      setTimeout(() => { setActiveStep(1); setCurrentFocus(0); }, 300),   // Highlight Step 1
-      setTimeout(() => { setActiveStep(2); setCurrentFocus(1); }, 2500),  // Highlight Step 2
-      setTimeout(() => { setActiveStep(3); setCurrentFocus(2); }, 4700),  // Highlight Step 3
-      setTimeout(() => { setActiveStep(4); setCurrentFocus(3); }, 6900),  // Highlight Step 4
-      setTimeout(() => { setActiveStep(5); }, 9100)                     // All steps loaded
+      setTimeout(() => { setActiveStep(1); setCurrentFocus(0); }, 200),   // Highlight Step 1
+      setTimeout(() => { setActiveStep(2); setCurrentFocus(1); }, 1200),  // Highlight Step 2
+      setTimeout(() => { setActiveStep(3); setCurrentFocus(2); }, 2200),  // Highlight Step 3
+      setTimeout(() => { setActiveStep(4); setCurrentFocus(3); }, 3200),  // Highlight Step 4
+      setTimeout(() => { setActiveStep(5); }, 4200)                      // All steps loaded
     ];
     return () => timers.forEach(clearTimeout);
   }, [hasEnteredViewport]);
@@ -154,7 +181,7 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
         }
         .animate-process-draw-path {
           stroke-dasharray: 100;
-          animation: process-draw-path 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          animation: process-draw-path 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         @keyframes process-node-pop {
@@ -163,7 +190,7 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
           100% { transform: scale(1); opacity: 1; }
         }
         .animate-process-node-pop {
-          animation: process-node-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+          animation: process-node-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
       `}} />
 
@@ -268,7 +295,7 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
                       /* Card on Left side (Step 1, 3) */
                       <div 
                         onClick={() => handleStepTap(idx)}
-                        className={`w-full max-w-[460px] transform transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) cursor-pointer ${
+                        className={`w-full max-w-[460px] transform transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) cursor-pointer ${
                           isCardActive 
                             ? `opacity-100 translate-y-0 ${isFocused ? 'scale-[1.03] z-30' : 'scale-100 opacity-90 z-20'} ${ev.floatClass}` 
                             : 'opacity-0 translate-y-8 scale-95 pointer-events-none'
@@ -299,7 +326,7 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
                       /* Card on Right side (Step 2, 4) */
                       <div 
                         onClick={() => handleStepTap(idx)}
-                        className={`w-full max-w-[460px] transform transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) cursor-pointer ${
+                        className={`w-full max-w-[460px] transform transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) cursor-pointer ${
                           isCardActive 
                             ? `opacity-100 translate-y-0 ${isFocused ? 'scale-[1.03] z-30' : 'scale-100 opacity-90 z-20'} ${ev.floatClass}` 
                             : 'opacity-0 translate-y-8 scale-95 pointer-events-none'
