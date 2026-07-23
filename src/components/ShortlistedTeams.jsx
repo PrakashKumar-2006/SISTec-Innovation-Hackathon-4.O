@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Award, Search, AlertCircle, ArrowLeft, Loader } from 'lucide-react';
+import { Award, Search, AlertCircle, Loader } from 'lucide-react';
 
 const getThemeStyle = () => 'text-brand-gold bg-brand-gold/10 border-brand-gold/20';
 
@@ -22,7 +22,8 @@ export default function ShortlistedTeams({ onViewChange }) {
   const fetchData = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch('/api/public/shortlisted-teams');
+      const backendUrl = import.meta.env.VITE_API_URL || '';
+      const res = await fetch(`${backendUrl}/api/public/shortlisted-teams`);
       const json = await res.json();
       if (json.success) {
         setData(json.data);
@@ -71,24 +72,17 @@ export default function ShortlistedTeams({ onViewChange }) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Navigation & Header */}
+        {/* Header */}
         <div className="mb-12 text-left">
-          <button 
-            onClick={() => onViewChange('landing')}
-            className="flex items-center text-[var(--marigold-deep)] hover:text-[var(--clay)] transition-colors mb-6 group w-fit font-bold text-sm"
-          >
-            <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-            Back to Home
-          </button>
-
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--marigold)]/15 border border-[var(--marigold)]/30 text-[var(--clay)] text-xs font-black uppercase tracking-widest mb-4 font-sans">
                 <Award className="w-4 h-4 text-[var(--vermilion)]" />
                 SIH 4.0 Selection Results
               </div>
-              <h1 className="text-4xl md:text-5xl font-black text-[var(--clay)] mb-4 font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
-                Shortlisted Teams
+              <h1 className="text-4xl md:text-5xl font-black uppercase mb-4 font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+                <span className="text-[#8C3A16]">Shortlisted </span>
+                <span className="text-[#C97F1B]">Teams</span>
               </h1>
               <p className="text-[var(--ink-soft)] text-base max-w-2xl font-sans font-medium">
                 Congratulations to all the selected teams! Find your team below using the search or filter options.

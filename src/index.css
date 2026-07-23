@@ -1299,16 +1299,16 @@ h6.text-white {
   --danger: #C2452E;        /* error states */
   --shadow: 0 20px 50px -20px rgba(74,42,20,0.25);
 
-  /* Side panel (dark) */
-  --panel-start: #3D2210;   /* side panel bg gradient start */
-  --panel-end: #23140A;     /* side panel bg gradient end */
-  --panel-text: #F6EEE1;    /* body text on dark panel */
-  --panel-eyebrow: #E0B278; /* "DEPARTMENT OF CSE..." label */
-  --panel-sub: #D8C3AC;     /* tagline under title */
-  --panel-fact-label: #C9B49C; /* "TEAM SIZE" / "PRIZE POOL" labels */
-  --step-dot-off: #33200F;  /* inactive step dot bg */
-  --step-label-off: #EFE2D0;/* inactive step title */
-  --step-desc: #B69A80;     /* step description text */
+  /* Side panel (rich warm terracotta mahogany) */
+  --panel-start: #6B2D12;   /* side panel bg gradient start */
+  --panel-end: #3E1809;     /* side panel bg gradient end */
+  --panel-text: #FFFDF7;    /* body text on dark panel */
+  --panel-eyebrow: #F0A93C; /* "DEPARTMENT OF CSE..." label */
+  --panel-sub: #FDE68A;     /* tagline under title */
+  --panel-fact-label: rgba(255,255,255,0.75); /* "TEAM SIZE" / "PRIZE POOL" labels */
+  --step-dot-off: rgba(255,255,255,0.12);  /* inactive step dot bg */
+  --step-label-off: rgba(255,255,255,0.85);/* inactive step title */
+  --step-desc: rgba(255,255,255,0.5);     /* step description text */
 
   /* Form surfaces */
   --input-bg: #FCFAF6;      /* default input fill */

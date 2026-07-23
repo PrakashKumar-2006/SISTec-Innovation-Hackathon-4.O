@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Trophy, ArrowLeft } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 import SIH2023Winners from './SIH2023Winners';
 import SIH2024Winners from './SIH2024Winners';
 import SIH2025Winners from './SIH2025Winners';
@@ -39,16 +39,6 @@ export default function PreviousSIH({ onViewChange }) {
 
       <div className="max-w-7xl mx-auto relative z-10">
         
-        {/* Top Navigation Row */}
-        <div className="flex items-center justify-between mb-8">
-          <button 
-            onClick={() => onViewChange && onViewChange('landing')}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FAF6EE] border border-[#E3D7C5] text-xs font-black text-[#8C3A16] hover:bg-[#8C3A16] hover:text-white transition-all shadow-sm cursor-pointer"
-          >
-            <ArrowLeft size={14} /> Back to Home
-          </button>
-        </div>
-
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-[#241708] font-display mb-3" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>

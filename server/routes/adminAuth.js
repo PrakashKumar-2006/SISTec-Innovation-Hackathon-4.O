@@ -4,15 +4,19 @@ const Admin = require('../models/Admin');
 const AdminAuditLog = require('../models/AdminAuditLog');
 const { authMiddleware } = require('../middleware/auth');
 
+const { z } = require('zod');
+const { validateBody } = require('../middleware/validate');
+
 const router = express.Router();
 
-router.post('/login', async (req, res) => {
+const loginSchema = z.object({
+  email: z.string().email('Invalid email format').trim(),
+  password: z.string().min(1, 'Password is required')
+});
+
+router.post('/login', validateBody(loginSchema), async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ success: false, message: 'Invalid credentials' });
-    }
 
     const admin = await Admin.findOne({ email });
     if (!admin) {

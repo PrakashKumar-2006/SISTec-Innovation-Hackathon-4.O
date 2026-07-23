@@ -1,16 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ArrowLeft,
   ClipboardList, 
   Download, 
   FileCheck,
-  ShieldCheck
+  ShieldCheck,
+  AlertCircle
 } from 'lucide-react';
 
 export default function Instructions({ onViewChange }) {
+  const [toastMessage, setToastMessage] = useState(null);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
+
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 4500);
+  };
 
   const leftInstructions = [
     "All members of a team should be from same institute.",
@@ -33,6 +43,16 @@ export default function Instructions({ onViewChange }) {
     <section className="relative min-h-screen bg-[var(--paper,#FFFDF7)] pt-20 sm:pt-24 pb-12 px-4 sm:px-6 lg:px-8 text-[#241708] select-none font-sans">
       {/* Background Subtle Pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(#8C3A16_0.75px,transparent_0.75px)] [background-size:24px_24px] opacity-[0.03] pointer-events-none -z-10" />
+
+      {/* Toast Alert Component */}
+      {toastMessage && (
+        <div className="fixed top-20 sm:top-24 left-3 right-3 sm:left-auto sm:right-5 z-[100] animate-bounce-in max-w-md mx-auto sm:mx-0">
+          <div className="bg-[#241708] text-[#FAF6EE] border border-[#C97F1B] px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl shadow-2xl flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-[#C97F1B] shrink-0" />
+            <span className="text-xs font-bold font-sans">{toastMessage}</span>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-6xl mx-auto w-full space-y-6">
         
@@ -90,14 +110,13 @@ export default function Instructions({ onViewChange }) {
               <span style={{ color: '#ffffff' }}>PPT Template</span>
             </a>
 
-            <a 
-              href="#process" 
-              onClick={(e) => { e.preventDefault(); onViewChange && onViewChange('landing', '#process'); }}
+            <button 
+              onClick={() => showToast('Consent Letter format will be uploaded soon!')}
               className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#FFFDF7] border-2 border-[#8C3A16] text-[#8C3A16] hover:bg-[#FAF0DD] text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-2xs"
             >
               <FileCheck size={14} />
               <span>Consent Format</span>
-            </a>
+            </button>
           </div>
         </div>
 

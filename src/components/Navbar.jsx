@@ -1,11 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
+import { Menu, X, ChevronDown, ChevronRight, Download, AlertCircle, Check } from 'lucide-react';
 
 export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [activeMobileSubDropdown, setActiveMobileSubDropdown] = useState(null);
+  const [toastMessage, setToastMessage] = useState(null);
+
+  const showUnavailableToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 4500);
+  };
+
+  const isSubItemActive = (sub) => {
+    if (!currentView) return false;
+    if (sub.view && currentView === sub.view) return true;
+    if (sub.name === 'About SIH' && currentView === 'about-sih') return true;
+    if (sub.name === 'Timeline' && currentView === 'timeline') return true;
+    if (sub.name === 'Program Schedule' && currentView === 'schedule') return true;
+    if (sub.name === 'Previous SIH' && currentView === 'previous-sih') return true;
+    if (sub.name === 'Instructions' && currentView === 'instructions') return true;
+    if (sub.name === 'Shortlisted Teams' && currentView === 'shortlisted-teams') return true;
+    if (sub.name === 'Winner of SIH 2026' && currentView === 'sih-2026-winners') return true;
+    if (sub.name === 'Grand Finale Teams' && currentView === 'sih-2026-finalists') return true;
+    return false;
+  };
+
+  const isNavItemActive = (item) => {
+    if (!currentView) return false;
+    if (item.name === 'Home') return currentView === 'landing';
+    if (item.name === 'Problem Statements') return currentView === 'problem-statements';
+    if (item.name === 'Contact Us') return currentView === 'contact-us';
+    if (item.dropdown) {
+      return item.dropdown.some(sub => isSubItemActive(sub));
+    }
+    return false;
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -100,10 +133,19 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                     {item.dropdown ? (
                       <button
                         onClick={() => toggleDropdown(idx)}
-                        className="flex items-center gap-1.5 text-sm font-semibold text-brand-navy/80 hover:text-brand-gold hover:bg-white/5 px-3.5 py-2 rounded-xl active:scale-95 transition-all duration-200 cursor-pointer border-none bg-transparent relative"
+                        className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 transition-colors duration-200 cursor-pointer border-none bg-transparent relative ${isNavItemActive(item)
+                          ? 'text-[#8C3A16] font-bold'
+                          : 'text-[#241708]/80 hover:text-[#8C3A16]'
+                          }`}
                       >
-                        {item.name}
-                        <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300 text-brand-navy/60 group-hover:text-brand-gold" />
+                        <span className="relative py-0.5">
+                          {item.name}
+                          {isNavItemActive(item) && (
+                            <span className="absolute -bottom-1 left-0 right-0 h-[1.5px] bg-[#8C3A16] rounded-full"></span>
+                          )}
+                        </span>
+                        <ChevronDown size={14} className={`transition-transform duration-300 ${isNavItemActive(item) ? 'text-[#8C3A16]' : 'text-[#6B5B49] group-hover:text-[#8C3A16]'
+                          } group-hover:rotate-180`} />
                       </button>
                     ) : (
                       <a
@@ -118,12 +160,17 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                             onViewChange && onViewChange('landing', item.href);
                           }
                         }}
-                        className={`inline-block text-sm font-semibold px-3.5 py-2 rounded-xl active:scale-95 transition-all duration-200 relative ${(item.name === 'Problem Statements' && currentView === 'problem-statements') || (item.name === 'Home' && currentView === 'landing') || (item.name === 'Contact Us' && currentView === 'contact-us')
-                          ? 'text-brand-gold bg-brand-gold/10 border border-brand-gold/20'
-                          : 'text-brand-navy/80 hover:text-brand-gold hover:bg-white/5'
+                        className={`inline-block text-sm font-semibold px-3 py-1.5 transition-colors duration-200 relative ${isNavItemActive(item)
+                          ? 'text-[#8C3A16] font-bold'
+                          : 'text-[#241708]/80 hover:text-[#8C3A16]'
                           }`}
                       >
-                        {item.name}
+                        <span className="relative py-0.5">
+                          {item.name}
+                          {isNavItemActive(item) && (
+                            <span className="absolute -bottom-1 left-0 right-0 h-[1.5px] bg-[#8C3A16] rounded-full"></span>
+                          )}
+                        </span>
                       </a>
                     )}
 
@@ -163,13 +210,26 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                       link.href = '/Idea-Sumission Format SIH 4.0.pptx';
                                       link.download = 'Idea-Submission-Format-SIH-4.0.pptx';
                                       link.click();
+                                    } else if (sub.name === 'Consent Letter') {
+                                      showUnavailableToast('Consent Letter is currently unavailable. It will be uploaded soon!');
                                     } else {
                                       onViewChange && onViewChange('landing', sub.href);
                                     }
                                   }}
-                                  className="block px-4 py-2.5 text-xs font-bold rounded-xl text-[#241708] hover:text-[#8C3A16] hover:bg-[#8C3A16]/10 transition-colors duration-200 text-left"
+                                  className={`flex items-center justify-between px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors duration-200 text-left group/subitem ${isSubItemActive(sub)
+                                      ? 'text-[#8C3A16] font-bold bg-[#8C3A16]/5'
+                                      : 'text-[#241708] hover:text-[#8C3A16] hover:bg-[#8C3A16]/5'
+                                    }`}
                                 >
-                                  {sub.name}
+                                  <span>{sub.name}</span>
+                                  <div className="flex items-center gap-2">
+                                    {['Idea Template', 'Consent Letter'].includes(sub.name) && (
+                                      <Download size={14} className="text-[#8C3A16]/70 group-hover/subitem:text-[#8C3A16] group-hover/subitem:translate-y-0.5 transition-all duration-200 shrink-0" />
+                                    )}
+                                    {isSubItemActive(sub) && (
+                                      <Check size={14} className="text-[#8C3A16] shrink-0" />
+                                    )}
+                                  </div>
                                 </a>
                               )}
 
@@ -244,10 +304,13 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                     <>
                       <button
                         onClick={() => toggleDropdown(idx)}
-                        className="flex items-center justify-between text-left py-2 px-3 text-sm font-bold text-[#241708] hover:text-[#8C3A16] rounded-lg hover:bg-[#8C3A16]/10 active:scale-[0.97] transition-all bg-transparent border-none cursor-pointer"
+                        className={`flex items-center justify-between text-left py-2 px-3 text-sm font-semibold rounded-lg transition-colors bg-transparent border-none cursor-pointer ${isNavItemActive(item)
+                          ? 'text-[#8C3A16] font-bold bg-[#8C3A16]/5'
+                          : 'text-[#241708] hover:text-[#8C3A16]'
+                          }`}
                       >
                         {item.name}
-                        <ChevronDown size={16} className={`transition-transform duration-200 ${activeDropdown === idx ? 'rotate-180 text-[#8C3A16]' : 'text-[#6B5B49]'}`} />
+                        <ChevronDown size={16} className={`transition-transform duration-200 ${activeDropdown === idx ? 'rotate-180 text-[#8C3A16]' : isNavItemActive(item) ? 'text-[#8C3A16]' : 'text-[#6B5B49]'}`} />
                       </button>
                       {activeDropdown === idx && (
                         <div className="pl-4 pr-2 py-2 flex flex-col gap-1.5 mt-1 bg-[#FAF6EE] border border-[#E3D7C5] rounded-xl ml-2 space-y-0.5">
@@ -320,14 +383,26 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                                         link.href = '/Idea-Sumission Format SIH 4.0.pptx';
                                         link.download = 'Idea-Submission-Format-SIH-4.0.pptx';
                                         link.click();
+                                      } else if (sub.name === 'Consent Letter') {
+                                        showUnavailableToast('Consent Letter is currently unavailable. It will be uploaded soon!');
                                       } else {
                                         onViewChange && onViewChange('landing', sub.href);
                                       }
                                     }}
-                                    className="py-2 px-3 text-xs font-semibold text-[#6B5B49] hover:text-[#8C3A16] hover:bg-[#8C3A16]/10 rounded-lg active:scale-[0.97] transition-all text-left flex items-center gap-2 block"
+                                    className={`py-2 px-3 text-xs font-semibold rounded-lg transition-colors text-left flex items-center justify-between block group/mobilesub ${isSubItemActive(sub)
+                                        ? 'text-[#8C3A16] font-bold bg-[#8C3A16]/5'
+                                        : 'text-[#6B5B49] hover:text-[#8C3A16]'
+                                      }`}
                                   >
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#8C3A16]/60 shrink-0"></span>
-                                    {sub.name}
+                                    <span>{sub.name}</span>
+                                    <div className="flex items-center gap-2">
+                                      {['Idea Template', 'Consent Letter'].includes(sub.name) && (
+                                        <Download size={14} className="text-[#8C3A16]/80 group-hover/mobilesub:text-[#8C3A16] group-hover/mobilesub:translate-y-0.5 transition-all shrink-0" />
+                                      )}
+                                      {isSubItemActive(sub) && (
+                                        <Check size={14} className="text-[#8C3A16] shrink-0" />
+                                      )}
+                                    </div>
                                   </a>
                                 )}
                               </div>
@@ -373,6 +448,20 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
           )}
         </nav>
       </div>
+
+      {/* Floating Toast Notification for Unavailable Files */}
+      {toastMessage && (
+        <div className="fixed top-24 right-4 sm:right-8 z-[100] flex items-center gap-3 px-4 py-3 rounded-2xl bg-[#241708] border border-[#E3D7C5]/40 text-[#FFFDF7] shadow-[0_12px_36px_rgba(0,0,0,0.5)] animate-fade-in max-w-sm font-sans">
+          <AlertCircle size={20} className="text-[#F2A93B] shrink-0" />
+          <span className="text-xs font-semibold text-[#F6EEE1] leading-snug">{toastMessage}</span>
+          <button
+            onClick={() => setToastMessage(null)}
+            className="ml-auto text-[#D8C3AC] hover:text-white transition-colors border-none bg-transparent cursor-pointer p-1 rounded-lg"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
     </>
   );
 }

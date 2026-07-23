@@ -504,32 +504,35 @@ export default function RegisterModal({ onClose }) {
         <div className="relative w-full max-w-[1050px] mx-auto z-10 text-left flex flex-col md:flex-row gap-6 md:gap-8 items-stretch" style={{ height: '85vh' }}>
 
           {/* LEFT PANE (SIDEBAR) */}
-          <div className="hidden md:flex flex-col w-[320px] lg:w-[350px] bg-gradient-to-b from-[var(--panel-start)] to-[var(--panel-end)] text-[#FFFDF7] p-8 rounded-3xl shadow-[var(--shadow)] shrink-0 relative">
-            <div className="text-[10px] font-black text-[var(--gold)] tracking-widest uppercase mb-2">DEPARTMENT OF CSE | AI & ML | IOT</div>
-            <h2 className="text-[28px] lg:text-[32px] font-black leading-[1.1] mb-2 tracking-tight" style={{ color: '#F6EEE1' }}>SISTec Innovation<br />Hackathon <span style={{ color: 'var(--gold)' }}>4.0</span></h2>
-            <p className="text-xs text-[var(--panel-sub)] mb-10 font-medium">Team registration — takes about 3 minutes.</p>
+          <div className="hidden md:flex flex-col w-[320px] lg:w-[350px] bg-gradient-to-b from-[var(--panel-start)] to-[var(--panel-end)] text-[#FFFDF7] p-8 rounded-3xl shadow-[var(--shadow)] shrink-0 relative overflow-hidden">
+            {/* Ambient Warm Glow */}
+            <div className="absolute -top-16 -left-16 w-48 h-48 bg-amber-400/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div className="text-[10px] font-black text-[var(--gold)] tracking-widest uppercase mb-2 relative z-10">DEPARTMENT OF CSE | AI & ML | IOT</div>
+            <h2 className="text-[28px] lg:text-[32px] font-black leading-[1.1] mb-2 tracking-tight relative z-10"><span style={{ color: '#FFFFFF' }}>SISTec Innovation<br />Hackathon </span><span style={{ color: 'var(--gold)' }}>4.0</span></h2>
+            <p className="text-xs text-amber-100/90 mb-10 font-medium relative z-10">Team registration — takes about 3 minutes.</p>
 
             {/* Stats Boxes */}
-            <div className="flex gap-2.5 mb-10 shrink-0">
-              <div className="flex-1 border border-white/5 rounded-2xl py-3 px-2 flex flex-col items-center justify-center text-center bg-white/5">
+            <div className="flex gap-2.5 mb-10 shrink-0 relative z-10">
+              <div className="flex-1 border border-white/20 rounded-2xl py-3 px-2 flex flex-col items-center justify-center text-center bg-white/10 backdrop-blur-sm">
                 <span className="text-sm font-black text-[var(--gold)] mb-0.5">4</span>
-                <span className="text-[9px] font-bold uppercase tracking-wider text-[var(--panel-fact-label)]">TEAM SIZE</span>
+                <span className="text-[9px] font-bold uppercase tracking-wider text-white/80">TEAM SIZE</span>
               </div>
-              <div className="flex-1 border border-white/5 rounded-2xl py-3 px-2 flex flex-col items-center justify-center text-center bg-white/5">
+              <div className="flex-1 border border-white/20 rounded-2xl py-3 px-2 flex flex-col items-center justify-center text-center bg-white/10 backdrop-blur-sm">
                 <span className="text-sm font-black text-[var(--gold)] mb-0.5">₹1L+</span>
-                <span className="text-[9px] font-bold uppercase tracking-wider text-[var(--panel-fact-label)]">PRIZE POOL</span>
+                <span className="text-[9px] font-bold uppercase tracking-wider text-white/80">PRIZE POOL</span>
               </div>
-              <div className="flex-1 border border-white/5 rounded-2xl py-3 px-2 flex flex-col items-center justify-center text-center bg-white/5">
+              <div className="flex-1 border border-white/20 rounded-2xl py-3 px-2 flex flex-col items-center justify-center text-center bg-white/10 backdrop-blur-sm">
                 <span className="text-sm font-black text-[var(--gold)] mb-0.5">24 Hours</span>
-                <span className="text-[9px] font-bold uppercase tracking-wider text-[var(--panel-fact-label)]">HACKATHON</span>
+                <span className="text-[9px] font-bold uppercase tracking-wider text-white/80">HACKATHON</span>
               </div>
             </div>
 
             {/* Vertical Stepper */}
-            <div className="flex flex-col justify-between relative flex-grow">
+            <div className="flex flex-col justify-between relative flex-grow z-10">
               {/* Connecting line — rendered behind all dots */}
               <div className="absolute top-4 bottom-4 left-[17px] w-[2px] z-0"
-                style={{ background: 'linear-gradient(to bottom, rgba(240,169,60,0.5), rgba(240,169,60,0.05))' }}
+                style={{ background: 'linear-gradient(to bottom, #F5C05A, rgba(240,169,60,0.25))' }}
               />
               {stepLabels.map((lbl) => {
                 const isDone = step > lbl.num;
@@ -537,34 +540,37 @@ export default function RegisterModal({ onClose }) {
                 const isFuture = step < lbl.num;
                 return (
                   <div key={lbl.num} className="flex items-center gap-4 relative z-10">
-                    {/* Step dot */}
-                    <div
-                      className={`shrink-0 rounded-full flex items-center justify-center font-black transition-all duration-300
-                        ${isCurrent
-                          ? 'w-9 h-9 text-[13px] text-[#3D2210]'
-                          : isDone
-                            ? 'w-8 h-8 text-xs text-[#3D2210]'
-                            : 'w-8 h-8 text-xs'
-                        }`}
-                      style={
-                        isCurrent
-                          ? {
-                            background: 'linear-gradient(135deg, #F5C05A, #E89820)',
-                            boxShadow: '0 0 0 4px rgba(240,169,60,0.25), 0 0 16px rgba(240,169,60,0.35)',
-                          }
-                          : isDone
+                    {/* Step dot wrapper (fixed 36px width for line alignment & dot centering) */}
+                    <div className="w-9 h-9 flex items-center justify-center shrink-0 relative z-10">
+                      <div
+                        className={`rounded-full flex items-center justify-center font-black transition-all duration-300
+                          ${isCurrent
+                            ? 'w-9 h-9 text-[13px] text-[#3D2210]'
+                            : isDone
+                              ? 'w-8 h-8 text-xs text-[#3D2210]'
+                              : 'w-8 h-8 text-xs text-[#FDE68A]'
+                          }`}
+                        style={
+                          isCurrent
                             ? {
-                              background: 'linear-gradient(135deg, #D4A83A, #B8841C)',
-                              boxShadow: '0 2px 8px rgba(180,130,30,0.3)',
+                              background: 'linear-gradient(135deg, #F5C05A, #E89820)',
+                              boxShadow: '0 0 0 4px rgba(240,169,60,0.35), 0 0 20px rgba(240,169,60,0.45)',
                             }
-                            : {
-                              background: 'rgba(255,255,255,0.04)',
-                              border: '1.5px solid rgba(240,169,60,0.15)',
-                              color: 'rgba(239,226,208,0.4)',
-                            }
-                      }
-                    >
-                      {isDone ? <Check size={13} strokeWidth={3.5} /> : lbl.num}
+                            : isDone
+                              ? {
+                                background: 'linear-gradient(135deg, #F5C05A, #D4A83A)',
+                                boxShadow: '0 2px 8px rgba(240,169,60,0.3)',
+                              }
+                              : {
+                                background: 'linear-gradient(135deg, #4D1E0B, #3B1607)',
+                                border: '1.5px solid rgba(240,169,60,0.45)',
+                                color: '#FDE68A',
+                                boxShadow: '0 2px 6px rgba(0,0,0,0.25)',
+                              }
+                        }
+                      >
+                        {isDone ? <Check size={13} strokeWidth={3.5} /> : lbl.num}
+                      </div>
                     </div>
 
                     {/* Labels */}
@@ -574,10 +580,10 @@ export default function RegisterModal({ onClose }) {
                         style={{
                           fontSize: isCurrent ? '14px' : '13px',
                           color: isCurrent
-                            ? '#F6EEE1'
+                            ? '#FFFFFF'
                             : isDone
-                              ? 'rgba(246,238,225,0.75)'
-                              : 'rgba(246,238,225,0.35)',
+                              ? 'rgba(255,255,255,0.95)'
+                              : 'rgba(255,255,255,0.85)',
                         }}
                       >
                         {lbl.title}
@@ -586,10 +592,10 @@ export default function RegisterModal({ onClose }) {
                         className="text-[11px] transition-all duration-200 mt-0.5"
                         style={{
                           color: isCurrent
-                            ? '#C9B49C'
+                            ? '#FCD34D'
                             : isDone
-                              ? 'rgba(180,154,128,0.6)'
-                              : 'rgba(180,154,128,0.3)',
+                              ? 'rgba(253,230,138,0.85)'
+                              : 'rgba(255,255,255,0.6)',
                         }}
                       >
                         {lbl.desc}

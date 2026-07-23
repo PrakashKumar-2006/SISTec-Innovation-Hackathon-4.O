@@ -64,7 +64,8 @@ export default function Contact({ onViewChange }) {
     setVerifyError('');
     try {
       const cleanCode = form.registrationCode.trim();
-      const res = await axios.get(`/api/public/support/verify-registration/${cleanCode}`);
+      const backendUrl = import.meta.env.VITE_API_URL || '';
+      const res = await axios.get(`${backendUrl}/api/public/support/verify-registration/${cleanCode}`);
       if (res.data.success) {
         setTeamData(res.data.data);
         // Pre-fill some fields based on verified data
@@ -133,7 +134,8 @@ export default function Contact({ onViewChange }) {
     });
 
     try {
-      const res = await axios.post('/api/public/support/submit', formData, {
+      const backendUrl = import.meta.env.VITE_API_URL || '';
+      const res = await axios.post(`${backendUrl}/api/public/support/submit`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -173,8 +175,9 @@ export default function Contact({ onViewChange }) {
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="text-center space-y-1.5 mb-5 sm:mb-6 font-sans">
-          <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-[var(--clay)] uppercase font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
-            Help &amp; Support Center
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tight uppercase font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+            <span className="text-[#8C3A16]">Help &amp; Support </span>
+            <span className="text-[#C97F1B]">Center</span>
           </h2>
           <p className="text-[var(--ink-soft)] text-xs sm:text-sm font-medium max-w-xl mx-auto">
             Get instant resolution for registration, payment, technical, or problem statement inquiries.
