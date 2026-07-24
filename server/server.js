@@ -257,15 +257,16 @@ setInterval(processEmailQueue, 60 * 1000);
  */
 const generateNextRegistrationId = async () => {
   try {
+    // Strictly match numeric registration IDs (SIH4-001, SIH4-002...)
     const regs = await Registration.find(
-      { registrationId: { $regex: /^SIH4-\d+/ } },
+      { registrationId: { $regex: /^SIH4-\d+$/ } },
       { registrationId: 1 }
     );
 
     let maxNum = 0;
     regs.forEach(r => {
       if (r.registrationId) {
-        const match = r.registrationId.match(/^SIH4-(\d+)/);
+        const match = r.registrationId.match(/^SIH4-(\d+)$/);
         if (match) {
           const num = parseInt(match[1], 10);
           if (num > maxNum) maxNum = num;
@@ -273,8 +274,11 @@ const generateNextRegistrationId = async () => {
       }
     });
 
+    // If no numeric SIH4-001 format registration exists yet in DB
     if (maxNum === 0) {
-      const totalCount = await Registration.countDocuments({ paymentStatus: 'completed' });
+      const totalCount = await Registration.countDocuments({
+        $or: [{ paymentStatus: 'completed' }, { verificationStatus: 'verified' }]
+      });
       maxNum = totalCount;
     }
 
@@ -283,8 +287,7 @@ const generateNextRegistrationId = async () => {
     return `SIH4-${paddedNum}`;
   } catch (err) {
     console.error('Error generating registration ID:', err);
-    const randomHex = crypto.randomBytes(3).toString('hex').toUpperCase();
-    return `SIH4-${randomHex}`;
+    return `SIH4-001`;
   }
 };
 
