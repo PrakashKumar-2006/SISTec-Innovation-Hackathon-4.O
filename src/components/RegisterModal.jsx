@@ -351,7 +351,6 @@ const defaultFormData = {
   member1Name: '', member1Gender: '', member1Email: '', member1Phone: '',
   member2Name: '', member2Gender: '', member2Email: '', member2Phone: '',
   member3Name: '', member3Gender: '', member3Email: '', member3Phone: '',
-  member4Name: '', member4Gender: '', member4Email: '', member4Phone: '',
   psid: '',
   psTitle: '',
   ideaPpt: null,
@@ -533,7 +532,6 @@ export default function RegisterModal({ onClose }) {
       validateMember(1);
       validateMember(2);
       validateMember(3);
-      validateMember(4);
     }
 
     if (currentStep === 3) {
@@ -638,7 +636,7 @@ export default function RegisterModal({ onClose }) {
       submitData.append('instituteName', formData.instituteName);
 
       const members = [];
-      for (let i = 1; i <= 4; i++) {
+      for (let i = 1; i <= 3; i++) {
         const name = formData[`member${i}Name`]?.trim();
         if (name) {
           members.push({
@@ -708,7 +706,7 @@ export default function RegisterModal({ onClose }) {
 
   const stepLabels = [
     { num: 1, title: 'Team & Leader details', desc: 'Who\'s leading this team?' },
-    { num: 2, title: 'Team Members', desc: 'Add up to 6 members' },
+    { num: 2, title: 'Team Members', desc: 'Add up to 3 members (Max 4 Total)' },
     { num: 3, title: 'Track', desc: 'Pick a problem domain' },
     { num: 4, title: 'Review & Submit', desc: 'Confirm and lock it in' },
     { num: 5, title: 'Payment', desc: 'Complete your registration' },
@@ -1125,7 +1123,7 @@ export default function RegisterModal({ onClose }) {
                           </div>
 
                           <div className="space-y-2">
-                            {[1, 2, 3, 4].map((num) => (
+                            {[1, 2, 3].map((num) => (
                               <div key={num} className="p-2.5 rounded-2xl bg-[#FAF6EE] border border-[#EBE1D3] flex items-center gap-2.5 shadow-sm">
                                 <span className="w-7 h-7 rounded-xl bg-[var(--orange)]/15 text-[var(--orange-deep)] flex items-center justify-center text-[10px] font-black shrink-0">
                                   M{num}
@@ -1427,13 +1425,13 @@ export default function RegisterModal({ onClose }) {
                           </div>
 
                           {/* Team Members Card (if any) */}
-                          {[1, 2, 3, 4].some(n => formData[`member${n}Name`]?.trim()) && (
+                          {[1, 2, 3].some(n => formData[`member${n}Name`]?.trim()) && (
                             <div className="p-4 rounded-2xl bg-[#FAF6EE] border border-[#EBE1D3] space-y-3">
                               <div className="border-b border-[#EBE1D3] pb-2">
                                 <span className="text-[10px] font-black uppercase tracking-widest text-[#8C3A16]">Team Members</span>
                               </div>
-                              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                                {[1, 2, 3, 4].map(num => {
+                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                                {[1, 2, 3].map(num => {
                                   const name = formData[`member${num}Name`]?.trim();
                                   if (!name) return null;
                                   return (
