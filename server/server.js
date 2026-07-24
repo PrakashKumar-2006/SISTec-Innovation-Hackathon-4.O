@@ -252,6 +252,42 @@ module.exports = {
 // Start background cron-like interval polling the queue every 60 seconds
 setInterval(processEmailQueue, 60 * 1000);
 
+/**
+ * Generates an auto-incrementing Registration ID formatted as SIH4-XXX (e.g. SIH4-001, SIH4-002, SIH4-010, SIH4-100)
+ */
+const generateNextRegistrationId = async () => {
+  try {
+    const regs = await Registration.find(
+      { registrationId: { $regex: /^SIH4-\d+/ } },
+      { registrationId: 1 }
+    );
+
+    let maxNum = 0;
+    regs.forEach(r => {
+      if (r.registrationId) {
+        const match = r.registrationId.match(/^SIH4-(\d+)/);
+        if (match) {
+          const num = parseInt(match[1], 10);
+          if (num > maxNum) maxNum = num;
+        }
+      }
+    });
+
+    if (maxNum === 0) {
+      const totalCount = await Registration.countDocuments({ paymentStatus: 'completed' });
+      maxNum = totalCount;
+    }
+
+    const nextNum = maxNum + 1;
+    const paddedNum = String(nextNum).padStart(3, '0');
+    return `SIH4-${paddedNum}`;
+  } catch (err) {
+    console.error('Error generating registration ID:', err);
+    const randomHex = crypto.randomBytes(3).toString('hex').toUpperCase();
+    return `SIH4-${randomHex}`;
+  }
+};
+
 // Configure Cloudinary
 const isCloudinaryConfigured = 
   process.env.CLOUDINARY_CLOUD_NAME && 
@@ -637,8 +673,7 @@ app.post('/api/register', registrationLimiter, upload.fields([
 
       // If it doesn't have a registrationId yet
       if (!existingPending.registrationId) {
-        const randomHex = require('crypto').randomBytes(3).toString('hex').toUpperCase();
-        existingPending.registrationId = `SIH4-${randomHex}`;
+        existingPending.registrationId = await generateNextRegistrationId();
       }
 
       await existingPending.save();
@@ -670,9 +705,8 @@ app.post('/api/register', registrationLimiter, upload.fields([
       });
     }
 
-    // Generate unique Registration ID
-    const randomHex = require('crypto').randomBytes(3).toString('hex').toUpperCase(); // 6 chars hex
-    const registrationId = `SIH4-${randomHex}`;
+    // Generate unique Registration ID (SIH4-001, SIH4-002, SIH4-010...)
+    const registrationId = await generateNextRegistrationId();
     const amountInINR = isIeeeCsiMember === 'Yes' ? 1200 : 1500;
 
     const newRegistration = new Registration({
@@ -778,9 +812,8 @@ app.post('/api/payment/verify', async (req, res) => {
         });
       }
 
-      // 3. Generate a secure, unique Registration ID
-      const randomHex = crypto.randomBytes(3).toString('hex').toUpperCase(); // 6 chars hex
-      const registrationId = `SIH4-${randomHex}`;
+      // 3. Generate a secure, unique Registration ID (SIH4-001, SIH4-002...)
+      const registrationId = await generateNextRegistrationId();
 
       // 4. Update the pending registration document in MongoDB
       const updatedReg = await Registration.findOneAndUpdate(
@@ -871,10 +904,9 @@ app.post('/api/payment/webhook', async (req, res) => {
         if (orderId) {
           const reg = await Registration.findOne({ paymentOrderId: orderId });
           if (reg && reg.paymentStatus !== 'completed') {
-            const randomHex = crypto.randomBytes(3).toString('hex').toUpperCase();
             reg.paymentStatus = 'completed';
             reg.paymentId = paymentId;
-            reg.registrationId = `SIH4-${randomHex}`;
+            reg.registrationId = await generateNextRegistrationId();
             reg.expireAt = undefined; // Unsets the expireAt TTL index field in Mongoose/MongoDB
             const savedReg = await reg.save();
             console.log(`Webhook updated registration for order ${orderId} successfully.`);
