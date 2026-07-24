@@ -1345,19 +1345,15 @@ h6.text-white {
   box-shadow: 0 0 0 3px rgba(194, 69, 46, 0.15) !important;
 }
 
-/* Thin scrollbar for register form body */
+/* Hide scrollbars for register form body while preserving scrollability */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
+  width: 0px;
+  height: 0px;
+  display: none;
 }
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(217, 123, 51, 0.25);
-  border-radius: 999px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(217, 123, 51, 0.5);
+.custom-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 /* ── Infinite Marquee Slider Animations ── */

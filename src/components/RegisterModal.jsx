@@ -1,7 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Send, CheckCircle2, AlertCircle, Upload, ArrowLeft, ArrowRight, Check, Eye, CreditCard, RotateCcw, ChevronDown, User, Users, FileText, Target, Award, FileCheck } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { MP_COLLEGES_DATA } from '../data/mpColleges';
+
+// Helper to normalize strings for flexible matching (removes hyphens, dots, parentheses, extra spaces)
+function cleanStr(str) {
+  return (str || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 // ---------------------------------------------------------------------------
 // CustomSelect — native <select> replacement with controllable max-height
@@ -57,6 +68,213 @@ function CustomSelect({ value, onChange, options, placeholder, hasError, disable
             </button>
           ))}
         </div>
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// CollegeAutocomplete — searchable MP college suggestions dropdown (React Portal)
+// ---------------------------------------------------------------------------
+function CollegeAutocomplete({ value, onChange, hasError, name }) {
+  const [open, setOpen] = useState(false);
+  const [highlightIndex, setHighlightIndex] = useState(-1);
+  const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
+  const inputRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const listRef = useRef(null);
+
+  // Recalculate screen position of input box
+  const updateCoords = useCallback(() => {
+    if (inputRef.current) {
+      const rect = inputRef.current.getBoundingClientRect();
+      setCoords({
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
+      });
+    }
+  }, []);
+
+  // Recalculate coords on open, resize, scroll
+  useEffect(() => {
+    if (open) {
+      updateCoords();
+      window.addEventListener('resize', updateCoords);
+      window.addEventListener('scroll', updateCoords, true);
+    }
+    return () => {
+      window.removeEventListener('resize', updateCoords);
+      window.removeEventListener('scroll', updateCoords, true);
+    };
+  }, [open, updateCoords]);
+
+  // Close on outside click (checks both input wrapper and portaled dropdown)
+  useEffect(() => {
+    const handler = (e) => {
+      const inWrapper = wrapperRef.current && wrapperRef.current.contains(e.target);
+      const inList = listRef.current && listRef.current.contains(e.target);
+      if (!inWrapper && !inList) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const rawQuery = (value || '').trim();
+  const normalizedQuery = cleanStr(rawQuery);
+
+  // Filter & rank colleges based on user query (supports full name, short forms & acronyms)
+  const suggestions = useMemo(() => {
+    if (!normalizedQuery) {
+      return MP_COLLEGES_DATA.map((item) => item.name).slice(0, 35);
+    }
+
+    const queryTokens = normalizedQuery.split(' ').filter(Boolean);
+    const scoredResults = [];
+
+    for (const item of MP_COLLEGES_DATA) {
+      const nameClean = cleanStr(item.name);
+      const shortCleanList = (item.short || []).map((s) => cleanStr(s));
+
+      let score = 0;
+
+      // 1. Check short-form exact match or prefix match (highest priority)
+      const hasExactShortMatch = shortCleanList.some((s) => s === normalizedQuery);
+      const hasPrefixShortMatch = shortCleanList.some((s) => s.startsWith(normalizedQuery) || normalizedQuery.startsWith(s));
+
+      if (hasExactShortMatch) {
+        score += 100;
+      } else if (hasPrefixShortMatch) {
+        score += 70;
+      }
+
+      // 2. Check token matching in full name or short list
+      const matchesAllTokens = queryTokens.every((token) => {
+        return nameClean.includes(token) || shortCleanList.some((s) => s.includes(token));
+      });
+
+      if (matchesAllTokens) {
+        score += 40;
+        if (nameClean.startsWith(normalizedQuery)) {
+          score += 20;
+        }
+      }
+
+      if (score > 0) {
+        scoredResults.push({ name: item.name, score });
+      }
+    }
+
+    // Sort by score descending
+    scoredResults.sort((a, b) => b.score - a.score);
+
+    return scoredResults.map((r) => r.name).slice(0, 35);
+  }, [normalizedQuery]);
+
+  const handleKeyDown = (e) => {
+    if (!open) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        setOpen(true);
+        updateCoords();
+      }
+      return;
+    }
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightIndex((prev) => (prev + 1) % suggestions.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightIndex((prev) => (prev <= 0 ? suggestions.length - 1 : prev - 1));
+    } else if (e.key === 'Enter') {
+      if (highlightIndex >= 0 && highlightIndex < suggestions.length) {
+        e.preventDefault();
+        selectOption(suggestions[highlightIndex]);
+      }
+    } else if (e.key === 'Escape') {
+      setOpen(false);
+    }
+  };
+
+  const selectOption = (college) => {
+    onChange({ target: { name: name || 'instituteName', value: college } });
+    setOpen(false);
+    setHighlightIndex(-1);
+  };
+
+  // Scroll highlighted element into view automatically
+  useEffect(() => {
+    if (highlightIndex >= 0 && listRef.current) {
+      const activeEl = listRef.current.children[highlightIndex];
+      if (activeEl) {
+        activeEl.scrollIntoView({ block: 'nearest' });
+      }
+    }
+  }, [highlightIndex]);
+
+  return (
+    <div ref={wrapperRef} className="relative w-full">
+      <input
+        ref={inputRef}
+        type="text"
+        name={name || 'instituteName'}
+        value={value}
+        onChange={(e) => {
+          onChange(e);
+          setOpen(true);
+          setHighlightIndex(-1);
+          updateCoords();
+        }}
+        onFocus={() => {
+          setOpen(true);
+          updateCoords();
+        }}
+        onKeyDown={handleKeyDown}
+        placeholder="Type college or short form (e.g. SISTec, LNCT, MANIT, SGSITS, MITS...)"
+        className={`register-input w-full px-3 py-2.5 rounded-xl bg-[var(--input-bg)] border ${
+          hasError ? 'border-[var(--danger)] bg-[var(--input-err-bg)] error' : 'border-[var(--line)] focus:border-[var(--orange)]'
+        } focus:outline-none text-[13px] text-[var(--ink)] placeholder-[var(--input-placeholder)] shadow-sm`}
+        autoComplete="off"
+      />
+
+      {open && suggestions.length > 0 && createPortal(
+        <div
+          ref={listRef}
+          className="fixed rounded-xl border border-[var(--line)] bg-white shadow-2xl overflow-hidden py-1 animate-fade-in custom-scrollbar"
+          style={{
+            top: `${coords.top}px`,
+            left: `${coords.left}px`,
+            width: `${coords.width}px`,
+            maxHeight: `${Math.min(160, Math.max(110, window.innerHeight - coords.top - 25))}px`,
+            overflowY: 'auto',
+            zIndex: 999999,
+          }}
+        >
+          {suggestions.map((college, idx) => {
+            const isSelected = college === value;
+            const isHighlighted = idx === highlightIndex;
+            return (
+              <button
+                key={college}
+                type="button"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  selectOption(college);
+                }}
+                onMouseEnter={() => setHighlightIndex(idx)}
+                className={`w-full text-left px-3 py-2 text-xs transition-colors flex items-center justify-between gap-2 border-b border-gray-50 last:border-0 ${
+                  isHighlighted ? 'bg-amber-50 text-[var(--orange-deep)] font-semibold' : 'hover:bg-gray-50 text-[var(--ink)]'
+                } ${isSelected ? 'font-bold text-[var(--orange)] bg-orange-50/60' : ''}`}
+              >
+                <span className="truncate">{college}</span>
+                {isSelected && <Check size={12} className="text-[var(--orange)] shrink-0" />}
+              </button>
+            );
+          })}
+        </div>,
+        document.body
       )}
     </div>
   );
@@ -693,7 +911,7 @@ export default function RegisterModal({ onClose }) {
 
                 {/* Main Form Body */}
                 <div className="flex-1 min-h-0 overflow-hidden px-1 py-1 flex flex-col">
-                  <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar pr-2 flex flex-col">
+                  <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar flex flex-col">
                     <div className="my-auto py-4 w-full">
 
                       {errors.submit && (
@@ -749,20 +967,28 @@ export default function RegisterModal({ onClose }) {
 
                             <div>
                               <label className="block text-[13px] font-bold text-[var(--ink)] mb-1.5">
-                                College / Institution <span className="text-[var(--danger)]">*</span>
+                                IEEE/CSI Member <span className="text-[var(--danger)]">*</span>
                               </label>
-                              <input
-                                type="text"
-                                name="instituteName"
-                                value={formData.instituteName}
+                              <select
+                                name="isIeeeCsiMember"
+                                value={formData.isIeeeCsiMember}
                                 onChange={handleInputChange}
-                                placeholder="College name"
-                                className={`register-input w-full px-3 py-2.5 rounded-xl bg-[var(--input-bg)] border ${errors.instituteName ? 'border-[var(--danger)] bg-[var(--input-err-bg)] error' : 'border-[var(--line)] focus:border-[var(--orange)]'
-                                  } focus:outline-none text-[13px] text-[var(--ink)] placeholder-[var(--input-placeholder)] shadow-sm`}
-                              />
-                              {errors.instituteName && (
+                                className={`register-select w-full px-3 py-2.5 rounded-xl bg-[var(--input-bg)] border ${errors.isIeeeCsiMember ? 'border-[var(--danger)] bg-[var(--input-err-bg)] error' : 'border-[var(--line)] focus:border-[var(--orange)]'
+                                  } focus:outline-none text-[13px] text-[var(--ink)] cursor-pointer appearance-none shadow-sm`}
+                                style={{
+                                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238C3A16'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                                  backgroundRepeat: 'no-repeat',
+                                  backgroundPosition: 'right 0.85rem center',
+                                  backgroundSize: '1em'
+                                }}
+                              >
+                                <option value="" disabled className="text-[var(--input-placeholder)]">Select Membership Status</option>
+                                <option value="Yes" className="text-[var(--ink)]">Yes</option>
+                                <option value="No" className="text-[var(--ink)]">No</option>
+                              </select>
+                              {errors.isIeeeCsiMember && (
                                 <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
-                                  <AlertCircle size={10} /> {errors.instituteName}
+                                  <AlertCircle size={10} /> {errors.isIeeeCsiMember}
                                 </p>
                               )}
                             </div>
@@ -873,28 +1099,17 @@ export default function RegisterModal({ onClose }) {
 
                             <div className="md:col-span-2">
                               <label className="block text-[13px] font-bold text-[var(--ink)] mb-1.5">
-                                IEEE/CSI Member <span className="text-[var(--danger)]">*</span>
+                                College / Institution <span className="text-[var(--danger)]">*</span>
                               </label>
-                              <select
-                                name="isIeeeCsiMember"
-                                value={formData.isIeeeCsiMember}
+                              <CollegeAutocomplete
+                                name="instituteName"
+                                value={formData.instituteName}
                                 onChange={handleInputChange}
-                                className={`register-select w-full px-3 py-2.5 rounded-xl bg-[var(--input-bg)] border ${errors.isIeeeCsiMember ? 'border-[var(--danger)] bg-[var(--input-err-bg)] error' : 'border-[var(--line)] focus:border-[var(--orange)]'
-                                  } focus:outline-none text-[13px] text-[var(--ink)] cursor-pointer appearance-none shadow-sm`}
-                                style={{
-                                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238C3A16'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
-                                  backgroundRepeat: 'no-repeat',
-                                  backgroundPosition: 'right 0.85rem center',
-                                  backgroundSize: '1em'
-                                }}
-                              >
-                                <option value="" disabled className="text-[var(--input-placeholder)]">Select Membership Status</option>
-                                <option value="Yes" className="text-[var(--ink)]">Yes</option>
-                                <option value="No" className="text-[var(--ink)]">No</option>
-                              </select>
-                              {errors.isIeeeCsiMember && (
+                                hasError={!!errors.instituteName}
+                              />
+                              {errors.instituteName && (
                                 <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
-                                  <AlertCircle size={10} /> {errors.isIeeeCsiMember}
+                                  <AlertCircle size={10} /> {errors.instituteName}
                                 </p>
                               )}
                             </div>
