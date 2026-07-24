@@ -2,12 +2,16 @@ const express = require('express');
 const router = express.Router();
 const ProblemStatement = require('../models/ProblemStatement');
 const rateLimit = require('express-rate-limit');
+const { createRedisStore } = require('../utils/redisClient');
 
-// Public rate limiter to prevent abuse
+// PHASE 3: Public rate limiter backed by Redis so all instances share one counter
 const publicLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
+  windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,
-  message: { success: false, message: 'Too many requests. Please try again later.' }
+  store: createRedisStore('rl:pub:'), // Redis key: rl:pub:<IP>
+  message: { success: false, message: 'Too many requests. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
 // GET /api/public/problem-statements

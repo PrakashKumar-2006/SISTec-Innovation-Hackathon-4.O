@@ -102,4 +102,11 @@ const contactSchema = new mongoose.Schema({
   replyHistory: [replyHistorySchema]
 }, { timestamps: true });
 
+// PHASE 4: Query performance indexes
+// Admin dashboard queries contacts filtered by status and sorted by createdAt.
+// Without these indexes, every query does a full collection scan.
+contactSchema.index({ status: 1, createdAt: -1 });   // Dashboard list: filter by status, newest first
+contactSchema.index({ email: 1 });                    // Lookup by submitter email
+contactSchema.index({ createdAt: -1 });               // Recent submissions view
+
 module.exports = mongoose.model('Contact', contactSchema);

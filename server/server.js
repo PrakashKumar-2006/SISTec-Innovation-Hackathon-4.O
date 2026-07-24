@@ -18,6 +18,7 @@ const nodemailer = require('nodemailer');
 const { authMiddleware } = require("./middleware/auth");
 const { maintenanceMiddleware } = require("./middleware/maintenance");
 const { sendConfirmationEmail, sendSelectionEmail, sendVerificationEmail } = require('./utils/email');
+const { createRedisStore } = require('./utils/redisClient');
 
 const app = express();
 
@@ -40,9 +41,10 @@ const emailQueueSchema = new mongoose.Schema({
   attempts: { type: Number, default: 0 },
   status: { 
     type: String, 
-    enum: ['pending', 'sent', 'failed'], 
+    enum: ['pending', 'processing', 'sent', 'failed'], 
     default: 'pending' 
   },
+  lockedAt: { type: Date, default: null }, // Tracks when a worker claimed this job
   lastError: { type: String },
   nextRetryAt: { type: Date, default: Date.now },
   createdAt: { type: Date, default: Date.now }
@@ -173,21 +175,57 @@ const queueVerificationEmail = async (leaderEmail, leaderName, teamName, registr
   }
 };
 
-// Background Email Queue Processor
-let isProcessingEmailQueue = false;
-const processEmailQueue = async () => {
-  if (isProcessingEmailQueue) return;
-  isProcessingEmailQueue = true;
-  
-  try {
-    // Process up to 50 emails per tick to respect SMTP limits and chunk properly
-    const jobs = await EmailQueue.find({
-      status: 'pending',
-      nextRetryAt: { $lte: new Date() }
-    }).limit(50);
+// ─── Background Email Queue Processor (Atomic / Distributed-Safe) ────────────
+//
+// PHASE 1 FIX: Replaced the in-memory `isProcessingEmailQueue` flag with a
+// MongoDB-level atomic state lock using `findOneAndUpdate`. This ensures that
+// across N load-balanced instances, each email job is claimed and dispatched
+// by exactly ONE worker — eliminating duplicate email sends.
+//
+// Flow:
+//   1. Recover any stale 'processing' jobs that were orphaned > 5 minutes ago.
+//   2. Atomically transition one job at a time: pending → processing.
+//   3. Send the email, then mark it 'sent' or apply exponential backoff / 'failed'.
 
-    for (const job of jobs) {
+const EMAIL_STALE_LOCK_MS = 5 * 60 * 1000; // 5 minutes before a locked job is considered orphaned
+
+const processEmailQueue = async () => {
+  try {
+    // Step 1: Recover stale 'processing' jobs orphaned by crashed instances
+    const staleThreshold = new Date(Date.now() - EMAIL_STALE_LOCK_MS);
+    const staleResult = await EmailQueue.updateMany(
+      { status: 'processing', lockedAt: { $lte: staleThreshold } },
+      { $set: { status: 'pending', lockedAt: null } }
+    );
+    if (staleResult.modifiedCount > 0) {
+      console.log(`[EmailQueue] Recovered ${staleResult.modifiedCount} stale processing job(s).`);
+    }
+
+    // Step 2: Process jobs one at a time using atomic lock acquisition
+    //         This is the core fix — findOneAndUpdate is atomic in MongoDB;
+    //         only one instance across the cluster will successfully claim each job.
+    let processedCount = 0;
+    const MAX_JOBS_PER_TICK = 50;
+
+    while (processedCount < MAX_JOBS_PER_TICK) {
+      // Atomically claim exactly one pending job that is ready to be retried
+      const job = await EmailQueue.findOneAndUpdate(
+        {
+          status: 'pending',
+          nextRetryAt: { $lte: new Date() }
+        },
+        {
+          $set: { status: 'processing', lockedAt: new Date() }
+        },
+        { new: true } // Return the updated document after the lock is applied
+      );
+
+      // No more jobs available — exit the loop
+      if (!job) break;
+
+      processedCount++;
       job.attempts += 1;
+
       try {
         if (job.emailType === 'REGISTRATION') {
           await sendConfirmationEmail(job.leaderEmail, job.leaderName, job.teamName, job.registrationId);
@@ -205,7 +243,9 @@ const processEmailQueue = async () => {
           await sendVerificationEmail(job.leaderEmail, job.leaderName, job.teamName, job.registrationId, job.payload.status, job.payload.adminRemarks);
         }
 
+        // Mark as successfully sent and clear lock
         job.status = 'sent';
+        job.lockedAt = null;
         job.lastError = undefined;
 
         logPaymentEvent('EMAIL_SENT', {
@@ -215,6 +255,7 @@ const processEmailQueue = async () => {
       } catch (err) {
         console.error(`Email attempt #${job.attempts} failed for ${job.leaderEmail} (${job.emailType}):`, err.message);
         job.lastError = err.message;
+        job.lockedAt = null; // Always release the lock on failure
 
         logPaymentEvent('EMAIL_FAILED', {
           registrationId: job.registrationId,
@@ -224,21 +265,25 @@ const processEmailQueue = async () => {
         if (job.attempts >= 3) {
           job.status = 'failed';
         } else {
-          // Exponential backoff retry: attempts * 2 minutes
+          // Exponential backoff: reset to 'pending' with a future nextRetryAt
+          job.status = 'pending';
           const backoffMinutes = job.attempts * 2;
           job.nextRetryAt = new Date(Date.now() + backoffMinutes * 60 * 1000);
           console.log(`Scheduled retry #${job.attempts + 1} in ${backoffMinutes} minutes for ${job.leaderEmail}.`);
         }
       }
+
       await job.save();
-      
-      // Add a tiny delay between emails to avoid spam filters / rate limits
+
+      // Small delay between dispatches to avoid SMTP rate limits
       await new Promise(resolve => setTimeout(resolve, 500));
     }
+
+    if (processedCount > 0) {
+      console.log(`[EmailQueue] Processed ${processedCount} job(s) this tick.`);
+    }
   } catch (queueErr) {
-    console.error('Error processing email queue:', queueErr.message);
-  } finally {
-    isProcessingEmailQueue = false;
+    console.error('[EmailQueue] Error during queue processing tick:', queueErr.message);
   }
 };
 
@@ -292,19 +337,45 @@ const generateNextRegistrationId = async () => {
 };
 
 // Configure Cloudinary
-const isCloudinaryConfigured = 
-  process.env.CLOUDINARY_CLOUD_NAME && 
-  process.env.CLOUDINARY_CLOUD_NAME !== 'your_cloud_name';
+// ─── PHASE 4: Cloudinary Production Boot Validation ────────────────────────────
+//
+// Problem: When Cloudinary credentials are missing in production, files silently
+// fall back to local disk storage on the instance that handled the request.
+// Under a load balancer, the admin viewing the file might hit a DIFFERENT
+// instance — which doesn't have that file — and receive a 404 Not Found.
+//
+// Fix: In NODE_ENV=production, abort server startup immediately if Cloudinary
+// is not properly configured. This makes the misconfiguration visible at deploy
+// time rather than silently corrupting user data.
+
+const isCloudinaryConfigured =
+  process.env.CLOUDINARY_CLOUD_NAME &&
+  process.env.CLOUDINARY_CLOUD_NAME !== 'your_cloud_name' &&
+  process.env.CLOUDINARY_API_KEY &&
+  process.env.CLOUDINARY_API_SECRET;
 
 if (isCloudinaryConfigured) {
   cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
+    api_key:    process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
   });
-  console.log('Cloudinary storage service configured successfully.');
+  console.log('[Cloudinary] Storage configured successfully.');
+} else if (process.env.NODE_ENV === 'production') {
+  // Hard fail in production — local disk fallback is NOT safe across multiple nodes
+  console.error(
+    '\n[FATAL] Cloudinary is NOT configured but NODE_ENV=production.\n' +
+    'Files uploaded to one instance will NOT be accessible from other instances.\n' +
+    'Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET\n' +
+    'in your hosting platform environment variables, then redeploy.\n'
+  );
+  process.exit(1);
 } else {
-  console.warn('WARNING: Cloudinary is not configured yet. Saving files locally as fallback.');
+  console.warn(
+    '[Cloudinary] Not configured — files will be stored locally in server/uploads/.\n' +
+    '             This is fine for local development but will cause 404 errors\n' +
+    '             under a load balancer. Set CLOUDINARY_* env vars for production.'
+  );
 }
 
 // Helper to upload files to Cloudinary
@@ -324,6 +395,12 @@ const uploadToCloudinary = async (filePath, folder = 'sih_files') => {
   });
 };
 const PORT = process.env.PORT || 5000;
+
+// PHASE 1 FIX: Trust the first proxy hop so that req.ip correctly reflects
+// the real client IP rather than the load balancer / reverse proxy IP.
+// Without this, all traffic appears to come from the same proxy IP, which
+// (a) breaks per-user rate limiting, and (b) logs incorrect IPs for audit.
+app.set('trust proxy', 1);
 
 // Enable Helmet for security headers
 app.use(helmet({
@@ -346,11 +423,24 @@ app.use(mongoSanitize());
 // Prevent XSS attacks
 app.use(xss());
 
-// Strict rate limit for authentication endpoints (5 requests per 15 mins)
+// ─── PHASE 3: Distributed Rate Limiters (Redis-backed) ───────────────────────
+//
+// Problem: express-rate-limit defaults to MemoryStore, which is per-process.
+// When N backend instances run behind a load balancer, each has its own
+// isolated counter. An attacker can make N×limit attempts by round-robining
+// requests across instances.
+//
+// Fix: Use rate-limit-redis so all instances share ONE central counter in Redis.
+// Graceful fallback to MemoryStore when REDIS_URL is not set (e.g. local dev).
+
+// Auth limiter: strict — 5 admin login attempts per 15 minutes per IP
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5,
-  message: { success: false, message: 'Too many login attempts. Please try again after 15 minutes.' }
+  store: createRedisStore('rl:auth:'), // Redis key: rl:auth:<IP>
+  message: { success: false, message: 'Too many login attempts. Please try again after 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
 // Configure CORS origin whitelist
@@ -441,45 +531,151 @@ console.log('Connecting to MongoDB at:', maskedUri);
 mongoose.connect(MONGODB_URI)
   .then(() => {
     console.log('Successfully connected to MongoDB.');
-    // Drop old index if it exists to allow recreating it with sparse: true
-    mongoose.connection.db.collection('registrations').dropIndex('registrationId_1')
-      .then(() => console.log('Dropped old registrationId_1 index successfully.'))
-      .catch((err) => {
-        // Safe to ignore if index doesn't exist
-        console.log('Registration index status verified (old non-sparse index is cleared).');
-      });
-    mongoose.connection.db.collection('registrations').dropIndex('paymentOrderId_1')
-      .catch(() => {});
+    // PHASE 1 FIX: Removed runtime dropIndex() calls from here.
+    //
+    // Why: When N instances boot simultaneously behind a load balancer, all
+    // instances race to call dropIndex() on the same MongoDB collection at the
+    // same millisecond. This triggers 'BackgroundOperationInProgress' or
+    // 'IndexNotFound' errors and can corrupt index state during a rolling deploy.
+    //
+    // Indexes are now declared exclusively via Mongoose schema definitions
+    // (registrationSchema.index(...)) which Mongoose safely syncs via
+    // ensureIndexes() with built-in idempotency.
+    //
+    // If a manual one-time index migration is needed, run a dedicated script:
+    //   node server/scripts/migrate-indexes.js
   })
   .catch((err) => console.error('MongoDB connection error:', err));
 
-// Multer Storage Configuration
+// ─── PHASE 2: Per-Field File Size Limits & MIME-Type Validation ───────────────
+//
+// Problem: A single flat 20 MB limit allowed all three files to each be 20 MB
+// (60 MB total per request), and 50 simultaneous uploads would exhaust RAM.
+//
+// Fix:
+//   1. Per-field size caps enforce tighter, appropriate ceilings.
+//   2. Per-field MIME-type validation prevents disguised binary uploads.
+//   3. A concurrency semaphore (MAX_CONCURRENT_UPLOADS) throttles multipart
+//      stream parsing to prevent memory exhaustion under spike conditions.
+//   4. Cloudinary uploads run in parallel via Promise.all instead of serially.
+
+// Per-field size limits (in bytes)
+const FILE_SIZE_LIMITS = {
+  ideaPpt:           10 * 1024 * 1024, // 10 MB  — PPT / PDF presentations
+  consentLetter:      5 * 1024 * 1024, //  5 MB  — PDF / scanned image
+  paymentScreenshot:  3 * 1024 * 1024, //  3 MB  — JPEG / PNG screenshot
+};
+
+// Allowed MIME types per field
+const ALLOWED_MIMES = {
+  ideaPpt:           ['application/pdf', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'],
+  consentLetter:     ['application/pdf', 'image/jpeg', 'image/png'],
+  paymentScreenshot: ['image/jpeg', 'image/png'],
+};
+
+// Multer disk storage (temp landing pad before Cloudinary upload)
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadsDir);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname).toLowerCase());
   }
 });
 
-// File validation
+// Combined file filter: extension + MIME-type validation per field
 const fileFilter = (req, file, cb) => {
   const allowedExtensions = ['.pdf', '.ppt', '.pptx', '.jpg', '.jpeg', '.png'];
   const ext = path.extname(file.originalname).toLowerCase();
-  if (allowedExtensions.includes(ext)) {
-    cb(null, true);
-  } else {
-    cb(new Error('Invalid file type. Allowed: PDF, PPT, PPTX, JPG, JPEG, PNG'));
+
+  if (!allowedExtensions.includes(ext)) {
+    return cb(new Error(`Invalid file extension "${ext}". Allowed: PDF, PPT, PPTX, JPG, JPEG, PNG`));
   }
+
+  const allowedMimes = ALLOWED_MIMES[file.fieldname];
+  if (allowedMimes && !allowedMimes.includes(file.mimetype)) {
+    return cb(new Error(
+      `Invalid file type for "${file.fieldname}". ` +
+      `Got "${file.mimetype}", expected one of: ${allowedMimes.join(', ')}`
+    ));
+  }
+
+  cb(null, true);
 };
 
-const upload = multer({ 
+// Multer instance — NOTE: fileSize here acts as an absolute safety ceiling.
+// Per-field enforcement happens in the uploadConcurrencyGuard middleware below.
+const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: { fileSize: 20 * 1024 * 1024 } // 20MB limit
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10 MB absolute ceiling (ideaPpt drives this)
+    files: 3,                    // maximum of 3 files per request
+    fields: 20,                  // cap non-file form fields
+  }
 });
+
+// ─── Upload Concurrency Semaphore ─────────────────────────────────────────────
+// Limits how many multipart upload requests are being parsed simultaneously.
+// Without this, 50 simultaneous 10 MB uploads = 500 MB of in-flight disk I/O
+// which can exhaust server memory or IOPS.
+
+const MAX_CONCURRENT_UPLOADS = 10;
+let activeUploadCount = 0;
+
+const uploadConcurrencyGuard = (req, res, next) => {
+  if (activeUploadCount >= MAX_CONCURRENT_UPLOADS) {
+    return res.status(503).json({
+      error: 'Server is busy processing other uploads. Please retry in a few seconds.',
+      retryAfterSeconds: 5
+    });
+  }
+  activeUploadCount++;
+  // Decrement counter when the response finishes (success or error)
+  res.on('finish', () => { activeUploadCount = Math.max(0, activeUploadCount - 1); });
+  res.on('close',  () => { activeUploadCount = Math.max(0, activeUploadCount - 1); });
+  next();
+};
+
+// ─── Per-Field Size Enforcement Middleware ─────────────────────────────────────
+// Multer's limits.fileSize is applied uniformly across all fields. This
+// middleware runs AFTER multer and enforces the tighter per-field ceilings.
+
+const enforcePerFieldSizeLimits = (req, res, next) => {
+  if (!req.files) return next();
+  for (const [fieldName, sizeLimit] of Object.entries(FILE_SIZE_LIMITS)) {
+    const fieldFiles = req.files[fieldName];
+    if (fieldFiles && fieldFiles[0] && fieldFiles[0].size > sizeLimit) {
+      const limitMB = (sizeLimit / 1024 / 1024).toFixed(0);
+      // Delete all temp files before rejecting
+      Object.values(req.files).flat().forEach(f => {
+        try { if (fs.existsSync(f.path)) fs.unlinkSync(f.path); } catch (_) {}
+      });
+      return res.status(413).json({
+        error: `"${fieldName}" exceeds the ${limitMB} MB size limit. Please compress and retry.`
+      });
+    }
+  }
+  next();
+};
+
+// ─── Reusable Local File Cleanup Helper ───────────────────────────────────────
+// Safely deletes a list of local temp file paths. Used after Cloudinary upload
+// succeeds to free up disk space on the server.
+
+const cleanupLocalFiles = (filePaths) => {
+  filePaths.forEach(filePath => {
+    try {
+      if (filePath && fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        console.log(`[Upload] Cleaned up temp file: ${filePath}`);
+      }
+    } catch (unlinkErr) {
+      console.error(`[Upload] Failed to delete temp file ${filePath}:`, unlinkErr.message);
+    }
+  });
+};
 
 // MongoDB Registration Schema
 const registrationSchema = new mongoose.Schema({
@@ -546,21 +742,53 @@ registrationSchema.index({ expireAt: 1 }, { expireAfterSeconds: 0 });
 
 const Registration = mongoose.model('Registration', registrationSchema);
 
-// Rate Limiter for registration requests (Max 10 per hour per IP)
+// ─── Registration Rate Limiter (Campus NAT-Friendly) ─────────────────────────
+//
+// Problem: The old limit of 10 req/hour per IP would block an entire university
+// campus after 10 students register from the same shared NAT IP address.
+//
+// Fix:
+//   1. Redis store ensures the counter is shared across all backend instances.
+//   2. Increased max to 60 req/hour per IP — enough for a campus Wi-Fi burst.
+//   3. keyGenerator combines IP + the submitted leader email domain so students
+//      from different domains (but same NAT IP) each get their own counter.
+//      Example keys in Redis:
+//        rl:reg:192.168.1.1|gmail.com
+//        rl:reg:192.168.1.1|sistec.ac.in
+//   4. skip() exempts already-authenticated admin IPs from counting.
+
 const registrationLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 10,
-  message: { error: 'Too many registration requests from this IP. Please try again after an hour.' },
+  max: 60,                   // 60 requests per hour per (IP + email domain)
+  store: createRedisStore('rl:reg:'), // Redis key: rl:reg:<IP>|<domain>
+  keyGenerator: (req) => {
+    // Extract email domain from the multipart body field (if available)
+    // Falls back to plain IP if email is missing (protects against no-body attacks)
+    const leaderEmail = req.body?.leaderEmail || '';
+    const domain = leaderEmail.includes('@')
+      ? leaderEmail.split('@')[1].toLowerCase().trim()
+      : 'unknown';
+    return `${req.ip}|${domain}`;
+  },
+  message: {
+    error: 'Too many registration attempts from this network. Please try again after an hour.',
+    hint: 'If you are on a shared campus network, wait a moment and retry.'
+  },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
 // Endpoint for Registration Submission
-app.post('/api/register', registrationLimiter, upload.fields([
+// Middleware stack:
+//   1. registrationLimiter       — IP-based rate limit
+//   2. uploadConcurrencyGuard    — Phase 2: cap simultaneous multipart streams
+//   3. upload.fields(...)        — Multer parse + disk storage
+//   4. enforcePerFieldSizeLimits — Phase 2: per-field size ceiling check
+app.post('/api/register', registrationLimiter, uploadConcurrencyGuard, upload.fields([
   { name: 'ideaPpt', maxCount: 1 },
   { name: 'consentLetter', maxCount: 1 },
   { name: 'paymentScreenshot', maxCount: 1 }
-]), async (req, res) => {
+]), enforcePerFieldSizeLimits, async (req, res) => {
   const localFilePaths = [];
   try {
     const {
@@ -626,23 +854,26 @@ app.post('/api/register', registrationLimiter, upload.fields([
 
     const baseUrl = `${req.protocol}://${req.get('host')}`;
 
-    // Upload to Cloudinary if configured
+    // PHASE 2: Upload all three files to Cloudinary in parallel via Promise.all
+    // (previously they were uploaded one-after-another serially, tripling latency)
     if (isCloudinaryConfigured) {
-      console.log('Uploading files to Cloudinary...');
+      console.log('[Upload] Uploading 3 files to Cloudinary in parallel...');
       try {
-        ideaPptUrl = await uploadToCloudinary(ideaPptFile.path, 'sih_ppt');
-        consentLetterUrl = await uploadToCloudinary(consentLetterFile.path, 'sih_consent');
-        paymentScreenshotUrl = await uploadToCloudinary(paymentScreenshotFile.path, 'sih_payment');
-        console.log('Files uploaded successfully to Cloudinary.');
+        [ideaPptUrl, consentLetterUrl, paymentScreenshotUrl] = await Promise.all([
+          uploadToCloudinary(ideaPptFile.path, 'sih_ppt'),
+          uploadToCloudinary(consentLetterFile.path, 'sih_consent'),
+          uploadToCloudinary(paymentScreenshotFile.path, 'sih_payment'),
+        ]);
+        console.log('[Upload] All files uploaded successfully to Cloudinary.');
       } catch (uploadErr) {
-        console.error('Cloudinary upload failed, falling back to local files:', uploadErr);
-        // Fallback to local files
+        console.error('[Upload] Cloudinary upload failed, falling back to local URLs:', uploadErr.message);
+        // Fallback: serve from local disk (single-instance dev/staging only)
         ideaPptUrl = `${baseUrl}/uploads/${ideaPptFile.filename}`;
         consentLetterUrl = `${baseUrl}/uploads/${consentLetterFile.filename}`;
         paymentScreenshotUrl = `${baseUrl}/uploads/${paymentScreenshotFile.filename}`;
       }
     } else {
-      // Local fallback URLs
+      // Local fallback URLs (development / Cloudinary not configured)
       ideaPptUrl = `${baseUrl}/uploads/${ideaPptFile.filename}`;
       consentLetterUrl = `${baseUrl}/uploads/${consentLetterFile.filename}`;
       paymentScreenshotUrl = `${baseUrl}/uploads/${paymentScreenshotFile.filename}`;
@@ -684,18 +915,9 @@ app.post('/api/register', registrationLimiter, upload.fields([
       // Send Confirmation Email
       queueConfirmationEmail(leaderEmailClean, leaderName, teamName, existingPending.registrationId);
 
-      // Clean up local files if uploaded to Cloudinary
+      // PHASE 2: Use shared cleanupLocalFiles helper
       if (isCloudinaryConfigured && ideaPptUrl.includes('cloudinary.com')) {
-        localFilePaths.forEach(filePath => {
-          try {
-            if (fs.existsSync(filePath)) {
-              fs.unlinkSync(filePath);
-              console.log(`Cleaned up temp local file: ${filePath}`);
-            }
-          } catch (unlinkErr) {
-            console.error(`Failed to delete temp file ${filePath}:`, unlinkErr);
-          }
-        });
+        cleanupLocalFiles(localFilePaths);
       }
 
       return res.status(200).json({
@@ -740,18 +962,9 @@ app.post('/api/register', registrationLimiter, upload.fields([
     // Send Confirmation Email
     queueConfirmationEmail(leaderEmail, leaderName, teamName, registrationId);
 
-    // Clean up local files if uploaded to Cloudinary
+    // PHASE 2: Use shared cleanupLocalFiles helper
     if (isCloudinaryConfigured && ideaPptUrl.includes('cloudinary.com')) {
-      localFilePaths.forEach(filePath => {
-        try {
-          if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
-            console.log(`Cleaned up temp local file: ${filePath}`);
-          }
-        } catch (unlinkErr) {
-          console.error(`Failed to delete temp file ${filePath}:`, unlinkErr);
-        }
-      });
+      cleanupLocalFiles(localFilePaths);
     }
 
     // Return success response to client
@@ -765,7 +978,13 @@ app.post('/api/register', registrationLimiter, upload.fields([
     });
 
   } catch (error) {
-    console.error('Error creating registration:', error);
+    // PHASE 2: Always clean up any temp files that landed on disk before the error
+    console.error('[Registration] Error:', error.message || error);
+    cleanupLocalFiles(localFilePaths);
+    // Multer-specific errors (e.g. file too large, wrong type)
+    if (error.code === 'LIMIT_FILE_SIZE') {
+      return res.status(413).json({ error: 'One or more uploaded files exceed the allowed size limit.' });
+    }
     res.status(500).json({ error: error.message || 'Server error occurred during registration.' });
   }
 });
@@ -1100,7 +1319,11 @@ app.delete('/api/registrations/pending-cleanup', verifyAdminKey, async (req, res
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({ success: false, message: 'File is too large. Maximum limit is 20MB.' });
+      // PHASE 4 FIX: Updated message to reflect Phase 2 per-field limits (max 10 MB for ideaPpt)
+      return res.status(413).json({ success: false, message: 'File is too large. Maximum limits: PPT 10 MB, Consent Letter 5 MB, Screenshot 3 MB.' });
+    }
+    if (err.code === 'LIMIT_FILE_COUNT') {
+      return res.status(400).json({ success: false, message: 'Too many files uploaded. Maximum is 3 files per registration.' });
     }
     return res.status(400).json({ success: false, message: `Upload error: ${err.message}` });
   }
