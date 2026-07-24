@@ -1644,7 +1644,7 @@ export default function RegisterModal({ onClose }) {
                     {registrationResult.registrationId}
                   </div>
                   <p className="text-xs text-[var(--ink-soft)] max-w-md mx-auto pt-2">
-                    Save this ID for references. Abstract guidelines and event notifications will be sent to <strong className="text-[var(--ink)]">{formData.leaderEmail}</strong>.
+                    Save this ID for reference. Abstract guidelines, submission templates, and PPT format are available directly on our website.
                   </p>
                 </div>
                 <div className="pt-6">
