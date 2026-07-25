@@ -110,7 +110,7 @@ export default function About({ isStandalone = false }) {
             </ul>
 
             {/* Stats Cards Grid (Compact Horizontal Layout: Icon Side-by-Side with Text) */}
-            <div className="grid grid-cols-3 gap-2 xs:gap-3 sm:gap-4 pt-3 font-sans">
+            <div className="grid grid-cols-1 xs:grid-cols-3 gap-2 xs:gap-3 sm:gap-4 pt-3 font-sans">
               {stats.map((stat, index) => (
                 <div 
                   key={index}

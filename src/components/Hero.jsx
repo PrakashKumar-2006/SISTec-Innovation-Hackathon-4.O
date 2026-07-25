@@ -102,12 +102,12 @@ export default function Hero({ onRegisterClick, onViewChange }) {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 md:gap-6 xl:gap-16 items-center">
 
           {/* ── LEFT COLUMN: Text and branding ── */}
-          <div className="md:col-span-6 flex flex-col items-center sm:items-start text-center sm:text-left space-y-4 sm:space-y-6 md:space-y-5 xl:space-y-10 relative">
+          <div className="md:col-span-6 flex flex-col items-center md:items-start text-center md:text-left space-y-4 sm:space-y-6 md:space-y-5 xl:space-y-10 relative">
 
             {/* Department Full-Width Header — above the banner */}
             <div className="w-full">
               <div
-                className="flex items-center justify-center sm:justify-between border-b border-[var(--line)]/60 pb-2 sm:pb-2.5 select-none gap-2 text-center sm:text-left flex-wrap sm:flex-nowrap"
+                className="flex items-center justify-center md:justify-between border-b border-[var(--line)]/60 pb-2 sm:pb-2.5 select-none gap-2 text-center md:text-left flex-wrap sm:flex-nowrap"
                 style={{ fontFamily: "'Outfit', sans-serif" }}
               >
                 <span className="hidden md:flex gap-1.5 shrink-0">
@@ -115,7 +115,7 @@ export default function Hero({ onRegisterClick, onViewChange }) {
                     <span key={i} className="w-2 h-2 rounded-full bg-[var(--marigold)] inline-block" />
                   ))}
                 </span>
-                <span className="flex items-center sm:items-baseline gap-1.5 sm:gap-2 flex-wrap justify-center sm:justify-start">
+                <span className="flex items-center justify-center md:justify-start gap-1.5 sm:gap-2 flex-wrap">
                   <span className="text-[10px] xs:text-xs sm:text-sm md:text-sm lg:text-base font-bold text-[#6B5B49] uppercase tracking-normal">Department of</span>
                   <span className="text-xs xs:text-sm sm:text-2xl md:text-xl lg:text-2xl xl:text-3xl font-black text-[#8C3A16] uppercase tracking-wider font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>CSE | AI &amp; ML | IOT</span>
                 </span>
@@ -128,7 +128,7 @@ export default function Hero({ onRegisterClick, onViewChange }) {
             </div>
 
             {/* ── Banner Branding Block: Logo | Divider | Text ── */}
-            <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-3 sm:gap-0 relative z-10 w-full text-center sm:text-left">
+            <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3 sm:gap-0 relative z-10 w-full text-center md:text-left">
 
               {/* Logo */}
               <div className="flex-shrink-0 flex flex-col items-center justify-center">
@@ -148,17 +148,17 @@ export default function Hero({ onRegisterClick, onViewChange }) {
               </div>
 
               {/* SISTec Innovation Hackathon 4.0 Stacked Heading */}
-              <div className="flex flex-col items-center sm:items-start justify-center flex-1 min-w-0">
-                <h1 className="leading-[0.95] tracking-tight text-center sm:text-left select-none" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
-                  <div className="flex items-baseline justify-center sm:justify-start">
+              <div className="flex flex-col items-center md:items-start justify-center flex-1 min-w-0">
+                <h1 className="leading-[0.95] tracking-tight text-center md:text-left select-none" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+                  <div className="flex items-baseline justify-center md:justify-start">
                     <span className="text-[#D97B33] font-black text-2xl xs:text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-6xl leading-none">S</span>
                     <span className="text-[#3D2210] font-black text-xl xs:text-2xl sm:text-3xl md:text-2xl lg:text-3xl xl:text-5xl">ISTec</span>
                   </div>
-                  <div className="flex items-baseline justify-center sm:justify-start -mt-0.5 sm:-mt-2">
+                  <div className="flex items-baseline justify-center md:justify-start -mt-0.5 sm:-mt-2">
                     <span className="text-[#D97B33] font-black text-2xl xs:text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-6xl leading-none">I</span>
                     <span className="text-[#3D2210] font-black text-xl xs:text-2xl sm:text-3xl md:text-2xl lg:text-3xl xl:text-5xl">nnovation</span>
                   </div>
-                  <div className="flex items-baseline justify-center sm:justify-start -mt-0.5 sm:-mt-2">
+                  <div className="flex items-baseline justify-center md:justify-start -mt-0.5 sm:-mt-2">
                     <span className="text-[#D97B33] font-black text-2xl xs:text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-6xl leading-none">H</span>
                     <span className="text-[#3D2210] font-black text-xl xs:text-2xl sm:text-3xl md:text-2xl lg:text-3xl xl:text-5xl">ackathon</span>
                   </div>
@@ -171,9 +171,9 @@ export default function Hero({ onRegisterClick, onViewChange }) {
             </div>
 
             {/* Countdown Box & Register Now Button Row */}
-            <div className="flex flex-col sm:flex-row md:flex-row lg:flex-row items-center sm:items-start md:items-center justify-start gap-2.5 sm:gap-3 md:gap-2.5 lg:gap-3 xl:gap-5 w-full relative z-10 flex-wrap sm:flex-nowrap">
+            <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-start lg:items-start justify-center md:justify-between gap-3 sm:gap-4 md:gap-3 lg:gap-4 xl:gap-5 w-full relative z-10 flex-wrap sm:flex-nowrap">
               {/* Countdown — Unit Cards */}
-              <div className="flex flex-col items-center sm:items-start md:items-start gap-1 relative z-10 shrink-0">
+              <div className="flex flex-col items-center md:items-start gap-1 relative z-10 shrink-0">
                 {/* Live badge */}
                 <div className="flex items-center gap-1.5 select-none bg-[#8C3A16] px-2 py-0.5 rounded-full shadow-xs border border-[#8C3A16]">
                   <span className="relative flex h-1.5 w-1.5">
@@ -184,7 +184,7 @@ export default function Hero({ onRegisterClick, onViewChange }) {
                 </div>
 
                 {/* Units row with colons */}
-                <div className="flex items-center justify-center sm:justify-start gap-0.5 xs:gap-1 sm:gap-1.5">
+                <div className="flex items-center justify-center md:justify-start gap-0.5 xs:gap-1 sm:gap-1.5">
                   {renderUnit(timeLeft.days, 'Days')}
                   <span className="text-[#8C3A16] font-black text-xs xs:text-sm sm:text-base md:text-sm lg:text-lg xl:text-2xl -mt-3.5 sm:-mt-4 animate-pulse select-none">:</span>
                   {renderUnit(timeLeft.hours, 'Hrs')}
@@ -198,18 +198,18 @@ export default function Hero({ onRegisterClick, onViewChange }) {
               {/* Register Now Button Pill */}
               <button
                 onClick={onRegisterClick}
-                className="flex items-center justify-between gap-2 px-2.5 py-1.5 xs:px-3 xs:py-2 md:px-2.5 md:py-1.5 lg:px-3 lg:py-2 xl:px-4 xl:py-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] hover:from-[#6B3213] hover:to-[#A64B1E] transition-all duration-300 shadow-md hover:shadow-xl group cursor-pointer border border-[#C97F1B]/40 hover:scale-[1.02] active:scale-95 text-left shrink-0 mt-1 sm:mt-0"
+                className="flex items-center justify-between gap-2 px-2.5 py-1.5 xs:px-3 xs:py-2 md:px-3 md:py-2 lg:px-3 lg:py-2 xl:px-4 xl:py-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] hover:from-[#6B3213] hover:to-[#A64B1E] transition-all duration-300 shadow-md hover:shadow-xl group cursor-pointer border border-[#C97F1B]/40 hover:scale-[1.02] active:scale-95 text-left shrink-0 mt-1 md:mt-2 lg:mt-0"
               >
                 <div className="flex flex-col">
-                  <span className="text-[10.5px] xs:text-xs md:text-[10.5px] lg:text-xs xl:text-sm font-black tracking-wider uppercase text-white leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+                  <span className="text-[10.5px] xs:text-xs md:text-[11px] lg:text-xs xl:text-sm font-black tracking-wider uppercase text-white leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
                     Register now
                   </span>
-                  <span className="text-[7.5px] xs:text-[8px] md:text-[7.5px] lg:text-[8.5px] xl:text-[9px] font-bold text-white/95 bg-black/25 px-1.5 py-0.5 rounded-full border border-white/20 mt-0.5 w-fit">
+                  <span className="text-[7.5px] xs:text-[8px] md:text-[8px] lg:text-[8.5px] xl:text-[9px] font-bold text-white/95 bg-black/25 px-1.5 py-0.5 rounded-full border border-white/20 mt-0.5 w-fit">
                     Team Size: 4 Members
                   </span>
                 </div>
-                <div className="w-5.5 h-5.5 xs:w-6 xs:h-6 md:w-5.5 md:h-5.5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 rounded-full bg-white text-[#8C3A16] flex items-center justify-center shrink-0 shadow-sm group-hover:translate-x-0.5 transition-transform duration-300 ml-0.5">
-                  <ArrowRight size={12} className="md:w-[11px] md:h-[11px] lg:w-[13px] lg:h-[13px] xl:w-[15px] xl:h-[15px]" strokeWidth={2.5} />
+                <div className="w-5.5 h-5.5 xs:w-6 xs:h-6 md:w-6 md:h-6 lg:w-6 lg:h-6 xl:w-7 xl:h-7 rounded-full bg-white text-[#8C3A16] flex items-center justify-center shrink-0 shadow-sm group-hover:translate-x-0.5 transition-transform duration-300 ml-0.5">
+                  <ArrowRight size={12} className="md:w-[12px] md:h-[12px] lg:w-[13px] lg:h-[13px] xl:w-[15px] xl:h-[15px]" strokeWidth={2.5} />
                 </div>
               </button>
             </div>

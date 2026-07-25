@@ -104,8 +104,8 @@ export default function Themes({ onViewChange, isStandalone = false }) {
           </div>
         </div>
 
-        {/* Tracks Grid: 2 columns on mobile, 2 on md, 3 on lg */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
+        {/* Tracks Grid: 1 column on mobile, 2 on sm, 3 on lg */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
           {themes.map((theme, idx) => (
             <div
               key={idx}
