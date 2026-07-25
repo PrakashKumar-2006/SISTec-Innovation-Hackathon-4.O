@@ -75,16 +75,16 @@ export default function Hero({ onRegisterClick, onViewChange }) {
     const display = formatNumber(value);
     return (
       <div className="flex flex-col items-center shrink-0">
-        <div className="bg-[#FFFDF7] border-2 border-[#E3D7C5] shadow-md sm:shadow-lg rounded-xl sm:rounded-2xl w-[44px] xs:w-[54px] sm:w-[68px] md:w-[56px] lg:w-[72px] xl:w-[84px] h-[44px] xs:h-[54px] sm:h-[68px] md:h-[56px] lg:h-[72px] xl:h-[84px] flex items-center justify-center relative overflow-hidden group hover:border-[#8C3A16] hover:shadow-xl transition-all duration-300 shrink-0">
+        <div className="bg-[#FFFDF7] border-2 border-[#E3D7C5] shadow-md sm:shadow-lg rounded-xl sm:rounded-2xl w-[40px] xs:w-[48px] sm:w-[56px] md:w-[46px] lg:w-[54px] xl:w-[72px] h-[40px] xs:h-[48px] sm:h-[56px] md:h-[46px] lg:h-[54px] xl:h-[72px] flex items-center justify-center relative overflow-hidden group hover:border-[#8C3A16] hover:shadow-xl transition-all duration-300 shrink-0">
           <div className="absolute top-0 inset-x-0 h-0.5 sm:h-1 bg-gradient-to-r from-[#8C3A16] to-[#C97F1B] opacity-90" />
           <span
-            className="text-base xs:text-xl sm:text-3xl md:text-2xl lg:text-3xl xl:text-4xl text-[#8C3A16] leading-none select-none tracking-tight font-black tabular-nums text-center"
+            className="text-sm xs:text-base sm:text-2xl md:text-lg lg:text-2xl xl:text-3xl text-[#8C3A16] leading-none select-none tracking-tight font-black tabular-nums text-center"
             style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900, fontVariantNumeric: 'tabular-nums' }}
           >
             {display}
           </span>
         </div>
-        <span className="text-[7px] xs:text-[8px] sm:text-[9.5px] xl:text-[10px] font-black !text-white tracking-[0.08em] sm:tracking-[0.15em] xl:tracking-[0.18em] uppercase mt-1 sm:mt-1.5 font-sans bg-[#8C3A16] px-1.5 xs:px-2 sm:px-2.5 py-0.5 rounded-full border border-[#8C3A16] shrink-0 shadow-xs">
+        <span className="text-[6.5px] xs:text-[7.5px] sm:text-[8.5px] md:text-[7.5px] lg:text-[8.5px] xl:text-[9.5px] font-black !text-white tracking-[0.08em] sm:tracking-[0.12em] xl:tracking-[0.18em] uppercase mt-0.5 sm:mt-1 font-sans bg-[#8C3A16] px-1 xs:px-1.5 sm:px-2 py-0.5 rounded-full border border-[#8C3A16] shrink-0 shadow-xs">
           {label}
         </span>
       </div>
@@ -171,26 +171,26 @@ export default function Hero({ onRegisterClick, onViewChange }) {
             </div>
 
             {/* Countdown Box & Register Now Button Row */}
-            <div className="flex flex-col sm:flex-row md:flex-col xl:flex-row items-center sm:items-start md:items-center xl:items-start justify-between gap-3 sm:gap-4 w-full relative z-10">
+            <div className="flex flex-col sm:flex-row md:flex-row lg:flex-row items-center sm:items-start md:items-center justify-start gap-2.5 sm:gap-3 md:gap-2.5 lg:gap-3 xl:gap-5 w-full relative z-10 flex-wrap sm:flex-nowrap">
               {/* Countdown — Unit Cards */}
-              <div className="flex flex-col items-center sm:items-start md:items-center xl:items-start gap-1.5 relative z-10 w-full sm:w-auto">
+              <div className="flex flex-col items-center sm:items-start md:items-start gap-1 relative z-10 shrink-0">
                 {/* Live badge */}
-                <div className="flex items-center gap-1.5 select-none bg-[#8C3A16] px-2.5 py-0.5 rounded-full shadow-xs border border-[#8C3A16]">
+                <div className="flex items-center gap-1.5 select-none bg-[#8C3A16] px-2 py-0.5 rounded-full shadow-xs border border-[#8C3A16]">
                   <span className="relative flex h-1.5 w-1.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
                   </span>
-                  <span className="text-[8.5px] sm:text-[9.5px] font-black uppercase tracking-[0.18em] !text-white font-sans">Live Countdown</span>
+                  <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.15em] !text-white font-sans">Live Countdown</span>
                 </div>
 
                 {/* Units row with colons */}
-                <div className="flex items-center justify-center sm:justify-start gap-1 xs:gap-1.5 sm:gap-2 w-full">
+                <div className="flex items-center justify-center sm:justify-start gap-0.5 xs:gap-1 sm:gap-1.5">
                   {renderUnit(timeLeft.days, 'Days')}
-                  <span className="text-[#8C3A16] font-black text-sm xs:text-base sm:text-xl xl:text-3xl -mt-3 sm:-mt-4 animate-pulse select-none">:</span>
+                  <span className="text-[#8C3A16] font-black text-xs xs:text-sm sm:text-base md:text-sm lg:text-lg xl:text-2xl -mt-3.5 sm:-mt-4 animate-pulse select-none">:</span>
                   {renderUnit(timeLeft.hours, 'Hrs')}
-                  <span className="text-[#8C3A16] font-black text-sm xs:text-base sm:text-xl xl:text-3xl -mt-3 sm:-mt-4 animate-pulse select-none">:</span>
+                  <span className="text-[#8C3A16] font-black text-xs xs:text-sm sm:text-base md:text-sm lg:text-lg xl:text-2xl -mt-3.5 sm:-mt-4 animate-pulse select-none">:</span>
                   {renderUnit(timeLeft.minutes, 'Mins')}
-                  <span className="text-[#8C3A16] font-black text-sm xs:text-base sm:text-xl xl:text-3xl -mt-3 sm:-mt-4 animate-pulse select-none">:</span>
+                  <span className="text-[#8C3A16] font-black text-xs xs:text-sm sm:text-base md:text-sm lg:text-lg xl:text-2xl -mt-3.5 sm:-mt-4 animate-pulse select-none">:</span>
                   {renderUnit(timeLeft.seconds, 'Secs')}
                 </div>
               </div>
@@ -198,18 +198,18 @@ export default function Hero({ onRegisterClick, onViewChange }) {
               {/* Register Now Button Pill */}
               <button
                 onClick={onRegisterClick}
-                className="flex items-center justify-between gap-3 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] hover:from-[#6B3213] hover:to-[#A64B1E] transition-all duration-300 shadow-md hover:shadow-xl group cursor-pointer border border-[#C97F1B]/40 hover:scale-[1.02] active:scale-95 text-left w-fit shrink-0 mt-1"
+                className="flex items-center justify-between gap-2 px-2.5 py-1.5 xs:px-3 xs:py-2 md:px-2.5 md:py-1.5 lg:px-3 lg:py-2 xl:px-4 xl:py-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] hover:from-[#6B3213] hover:to-[#A64B1E] transition-all duration-300 shadow-md hover:shadow-xl group cursor-pointer border border-[#C97F1B]/40 hover:scale-[1.02] active:scale-95 text-left shrink-0 mt-1 sm:mt-0"
               >
                 <div className="flex flex-col">
-                  <span className="text-xs sm:text-sm font-black tracking-wider uppercase text-white leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+                  <span className="text-[10.5px] xs:text-xs md:text-[10.5px] lg:text-xs xl:text-sm font-black tracking-wider uppercase text-white leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
                     Register now
                   </span>
-                  <span className="text-[8.5px] sm:text-[9px] font-bold text-white/95 bg-black/25 px-2 py-0.5 rounded-full border border-white/20 mt-0.5 w-fit">
+                  <span className="text-[7.5px] xs:text-[8px] md:text-[7.5px] lg:text-[8.5px] xl:text-[9px] font-bold text-white/95 bg-black/25 px-1.5 py-0.5 rounded-full border border-white/20 mt-0.5 w-fit">
                     Team Size: 4 Members
                   </span>
                 </div>
-                <div className="w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full bg-white text-[#8C3A16] flex items-center justify-center shrink-0 shadow-sm group-hover:translate-x-1 transition-transform duration-300 ml-1">
-                  <ArrowRight size={13} className="sm:w-[15px] sm:h-[15px]" strokeWidth={2.5} />
+                <div className="w-5.5 h-5.5 xs:w-6 xs:h-6 md:w-5.5 md:h-5.5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 rounded-full bg-white text-[#8C3A16] flex items-center justify-center shrink-0 shadow-sm group-hover:translate-x-0.5 transition-transform duration-300 ml-0.5">
+                  <ArrowRight size={12} className="md:w-[11px] md:h-[11px] lg:w-[13px] lg:h-[13px] xl:w-[15px] xl:h-[15px]" strokeWidth={2.5} />
                 </div>
               </button>
             </div>
