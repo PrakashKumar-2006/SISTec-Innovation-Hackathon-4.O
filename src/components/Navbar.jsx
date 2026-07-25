@@ -108,7 +108,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
           ? 'bg-brand-card/95 backdrop-blur-xl border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.3)] py-3 sm:py-4'
           : 'bg-transparent border-transparent py-5 sm:py-6'
           }`}>
-          <div className="max-w-[1280px] mx-auto px-4 sm:px-8">
+          <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
             <div className="flex items-center justify-between">
 
               {/* Logo */}
@@ -127,13 +127,13 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
               </div>
 
               {/* Desktop Menu */}
-              <div className="hidden lg:flex items-center gap-1">
+              <div className="hidden md:flex items-center gap-0.5 xl:gap-1">
                 {navItems.map((item, idx) => (
                   <div key={idx} className="relative group py-2">
                     {item.dropdown ? (
                       <button
                         onClick={() => toggleDropdown(idx)}
-                        className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 transition-colors duration-200 cursor-pointer border-none bg-transparent relative ${isNavItemActive(item)
+                        className={`flex items-center gap-1 xl:gap-1.5 text-xs xl:text-sm font-semibold px-1.5 md:px-2 xl:px-3 py-1.5 transition-colors duration-200 cursor-pointer border-none bg-transparent relative ${isNavItemActive(item)
                           ? 'text-[#8C3A16] font-bold'
                           : 'text-[#241708]/80 hover:text-[#8C3A16]'
                           }`}
@@ -160,7 +160,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
                             onViewChange && onViewChange('landing', item.href);
                           }
                         }}
-                        className={`inline-block text-sm font-semibold px-3 py-1.5 transition-colors duration-200 relative ${isNavItemActive(item)
+                        className={`inline-block text-xs xl:text-sm font-semibold px-1.5 md:px-2 xl:px-3 py-1.5 transition-colors duration-200 relative ${isNavItemActive(item)
                           ? 'text-[#8C3A16] font-bold'
                           : 'text-[#241708]/80 hover:text-[#8C3A16]'
                           }`}
@@ -267,17 +267,17 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
               </div>
 
               {/* Action Button */}
-              <div className="hidden lg:block">
+              <div className="hidden md:block">
                 <button
                   onClick={onRegisterClick}
-                  className="px-6 py-2.5 rounded-xl bg-btn-gradient text-sm font-bold tracking-wide text-white shadow-[0_4px_16px_rgba(140,58,22,0.25)] hover:shadow-[0_8px_24px_rgba(140,58,22,0.4)] hover:-translate-y-0.5 active:translate-y-0 hover:scale-[1.03] active:scale-95 transition-all duration-300 cursor-pointer border border-[#C97F1B]/40 btn-premium-animate"
+                  className="px-3 md:px-4 xl:px-6 py-2 xl:py-2.5 rounded-xl bg-btn-gradient text-xs xl:text-sm font-bold tracking-wide text-white shadow-[0_4px_16px_rgba(140,58,22,0.25)] hover:shadow-[0_8px_24px_rgba(140,58,22,0.4)] hover:-translate-y-0.5 active:translate-y-0 hover:scale-[1.03] active:scale-95 transition-all duration-300 cursor-pointer border border-[#C97F1B]/40 btn-premium-animate"
                 >
                   Register Now
                 </button>
               </div>
 
               {/* Mobile Menu Actions */}
-              <div className="lg:hidden flex items-center gap-2">
+              <div className="md:hidden flex items-center gap-2">
                 <button
                   onClick={onRegisterClick}
                   className="px-3.5 py-1.5 rounded-xl bg-btn-gradient text-xs font-bold text-white shadow-md border border-[#C97F1B]/40 active:scale-95 transition-all cursor-pointer hover:shadow-[0_0_15px_rgba(140,58,22,0.3)] btn-premium-animate"
@@ -297,7 +297,7 @@ export default function Navbar({ onRegisterClick, currentView, onViewChange }) {
 
           {/* Mobile Drawer (absolute overlay for full-width layout) */}
           {isOpen && (
-            <div className="lg:hidden absolute top-full left-0 w-full bg-[#FFFDF7] border-b border-[#EBDAB9] p-5 flex flex-col gap-3.5 shadow-[0_20px_40px_rgba(43,26,19,0.12)] animate-fade-in max-h-[calc(100vh-80px)] overflow-y-auto z-50">
+            <div className="md:hidden absolute top-full left-0 w-full bg-[#FFFDF7] border-b border-[#EBDAB9] p-5 flex flex-col gap-3.5 shadow-[0_20px_40px_rgba(43,26,19,0.12)] animate-fade-in max-h-[calc(100vh-80px)] overflow-y-auto z-50">
               {navItems.map((item, idx) => (
                 <div key={idx} className="flex flex-col">
                   {item.dropdown ? (

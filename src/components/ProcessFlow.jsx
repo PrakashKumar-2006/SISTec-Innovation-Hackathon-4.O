@@ -194,7 +194,7 @@ export default function ProcessFlow({ isStandalone = false, onViewChange }) {
         }
       `}} />
 
-      <div className="max-w-[1300px] mx-auto px-4 sm:px-6 relative z-10">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
         
         {/* Section Heading */}
         <div className="max-w-2xl mx-auto text-center mb-10 sm:mb-12">
