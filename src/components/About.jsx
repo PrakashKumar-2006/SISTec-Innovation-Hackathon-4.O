@@ -54,9 +54,9 @@ export default function About({ isStandalone = false }) {
             </div>
             
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] leading-[1.1] font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
-              SIH is{' '}
+              Objectives of{' '}
               <span className="text-[var(--marigold-deep)] block sm:inline">
-                Organized by SISTec Ratibad
+                SIH 4.0
               </span>
             </h2>
 

@@ -31,7 +31,7 @@ export default function FAQs() {
     },
     {
       q: 'What are the prizes to be won?',
-      a: 'The champion team wins ₹50,000, the runner-up wins ₹30,000, and the second runner-up secures ₹20,000. Additionally, top teams receive certificates, college trophies, and direct internship interview vouchers.'
+      a: 'Winners will be selected for each theme, competing for a total prize pool of up to ₹1 Lakh!'
     },
     {
       q: 'Miscellaneous Information',
