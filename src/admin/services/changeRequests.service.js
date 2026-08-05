@@ -14,5 +14,15 @@ export const changeRequestsService = {
   // Approve or Reject a change request
   updateRequestStatus: async (id, status, adminRemarks = '') => {
     return api.patch(`/change-requests/${id}/status`, { status, adminRemarks });
+  },
+
+  // Get toggle setting for public form
+  getToggleSetting: async () => {
+    return api.get('/change-requests/settings/toggle');
+  },
+
+  // Update toggle setting
+  updateToggleSetting: async (enablePSChangeRequest) => {
+    return api.patch('/change-requests/settings/toggle', { enablePSChangeRequest });
   }
 };

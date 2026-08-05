@@ -35,7 +35,8 @@ const systemSettingsSchema = new mongoose.Schema({
     defaultPaginationSize: { type: Number, default: 10 },
     dashboardRefreshIntervalSeconds: { type: Number, default: 60 },
     defaultTimeZone: { type: String, default: 'Asia/Kolkata' },
-    dateFormat: { type: String, default: 'MMM dd, yyyy' }
+    dateFormat: { type: String, default: 'MMM dd, yyyy' },
+    enablePSChangeRequest: { type: Boolean, default: false }
   },
 
   maintenance: {

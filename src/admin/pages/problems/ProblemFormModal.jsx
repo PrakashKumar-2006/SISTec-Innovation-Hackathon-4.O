@@ -18,12 +18,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 // Validation Schema
 const problemSchema = z.object({
   psNumber: z.string().min(2, "PS Number must be at least 2 characters").max(20, "Too long"),
-  title: z.string().min(5, "Title must be at least 5 characters").max(200, "Title is too long"),
+  title: z.string().min(5, "Problem Statement must be at least 5 characters").max(200, "Problem Statement is too long"),
   org: z.string().min(2, "Organization is required").max(100, "Organization is too long"),
   category: z.enum(['Software', 'Hardware', 'Hardware/Software', 'Other']),
-  domain: z.string().min(2, "Domain is required"),
-  detailedDescription: z.string().min(10, "Description must be at least 10 characters"),
-  techStack: z.string().optional(),
+  domain: z.string().min(2, "Domain Bucket is required"),
+  theme: z.string().min(2, "Theme is required"),
+  detailedDescription: z.string().min(10, "Problem Description must be at least 10 characters"),
   status: z.enum(['Active', 'Inactive']).default('Active'),
 });
 
@@ -44,8 +44,8 @@ export default function ProblemFormModal({ isOpen, onClose, onSubmit, initialDat
       org: '',
       category: 'Software',
       domain: '',
+      theme: '',
       detailedDescription: '',
-      techStack: '',
       status: 'Active',
     }
   });
@@ -59,8 +59,8 @@ export default function ProblemFormModal({ isOpen, onClose, onSubmit, initialDat
           org: initialData.org || '',
           category: initialData.category || 'Software',
           domain: initialData.domain || '',
+          theme: initialData.theme || '',
           detailedDescription: initialData.detailedDescription || '',
-          techStack: initialData.techStack || '',
           status: initialData.status || 'Active',
         });
       } else {
@@ -70,8 +70,8 @@ export default function ProblemFormModal({ isOpen, onClose, onSubmit, initialDat
           org: '',
           category: 'Software',
           domain: '',
+          theme: '',
           detailedDescription: '',
-          techStack: '',
           status: 'Active',
         });
       }
@@ -129,10 +129,10 @@ export default function ProblemFormModal({ isOpen, onClose, onSubmit, initialDat
             </div>
 
             <div className="space-y-2 md:col-span-2">
-              <Label>Problem Statement / Title <span className="text-destructive">*</span></Label>
+              <Label>Problem Statement <span className="text-destructive">*</span></Label>
               <Input 
                 {...register('title')} 
-                placeholder="Problem statement title..." 
+                placeholder="Problem statement..." 
                 className={`bg-brand-dark border-brand-purple/30 text-brand-text ${errors.title ? 'border-destructive' : ''}`}
               />
               {errors.title && <p className="text-destructive text-xs">{errors.title.message}</p>}
@@ -147,19 +147,29 @@ export default function ProblemFormModal({ isOpen, onClose, onSubmit, initialDat
               />
               {errors.org && <p className="text-destructive text-xs">{errors.org.message}</p>}
             </div>
+            
+            <div className="space-y-2">
+              <Label>Theme <span className="text-destructive">*</span></Label>
+              <Input 
+                {...register('theme')} 
+                placeholder="e.g. Smart Education" 
+                className={`bg-brand-dark border-brand-purple/30 text-brand-text ${errors.theme ? 'border-destructive' : ''}`}
+              />
+              {errors.theme && <p className="text-destructive text-xs">{errors.theme.message}</p>}
+            </div>
 
             <div className="space-y-2">
               <Label>Domain Bucket <span className="text-destructive">*</span></Label>
               <Input 
                 {...register('domain')} 
-                placeholder="e.g. Smart Automation" 
+                placeholder="e.g. Artificial Intelligence" 
                 className={`bg-brand-dark border-brand-purple/30 text-brand-text ${errors.domain ? 'border-destructive' : ''}`}
               />
               {errors.domain && <p className="text-destructive text-xs">{errors.domain.message}</p>}
             </div>
 
             <div className="space-y-2 md:col-span-2">
-              <Label>Detailed Description <span className="text-destructive">*</span></Label>
+              <Label>Problem Description <span className="text-destructive">*</span></Label>
               <textarea 
                 {...register('detailedDescription')} 
                 placeholder="Provide a full description of the problem..."
@@ -168,14 +178,7 @@ export default function ProblemFormModal({ isOpen, onClose, onSubmit, initialDat
               {errors.detailedDescription && <p className="text-destructive text-xs">{errors.detailedDescription.message}</p>}
             </div>
 
-            <div className="space-y-2 md:col-span-2">
-              <Label>Tech Stack (Optional)</Label>
-              <Input 
-                {...register('techStack')} 
-                placeholder="e.g. React, Node.js, Python" 
-                className="bg-brand-dark border-brand-purple/30 text-brand-text"
-              />
-            </div>
+
 
             <div className="space-y-2">
               <Label>Status</Label>

@@ -768,7 +768,8 @@ const registrationLimiter = rateLimit({
     const domain = leaderEmail.includes('@')
       ? leaderEmail.split('@')[1].toLowerCase().trim()
       : 'unknown';
-    return `${req.ip}|${domain}`;
+    const clientIp = req['ip'];
+    return `${clientIp}|${domain}`;
   },
   message: {
     error: 'Too many registration attempts from this network. Please try again after an hour.',

@@ -85,7 +85,7 @@ router.get('/:id', roleMiddleware(['Super Admin', 'Admin', 'Moderator', 'Viewer'
 // Create a new problem statement
 router.post('/', roleMiddleware(['Super Admin', 'Admin', 'Moderator']), async (req, res) => {
   try {
-    const { psNumber, title, org, category, domain, detailedDescription, techStack, status } = req.body;
+    const { psNumber, title, org, category, domain, detailedDescription, theme, status } = req.body;
     
     // Check if PSID already exists
     const existing = await ProblemStatement.findOne({ psNumber: psNumber.toUpperCase() });
@@ -100,7 +100,7 @@ router.post('/', roleMiddleware(['Super Admin', 'Admin', 'Moderator']), async (r
       category,
       domain,
       detailedDescription,
-      techStack,
+      theme,
       status: status || 'Active',
       createdBy: req.admin.id
     });
@@ -117,7 +117,7 @@ router.post('/', roleMiddleware(['Super Admin', 'Admin', 'Moderator']), async (r
 // Update problem statement
 router.put('/:id', roleMiddleware(['Super Admin', 'Admin', 'Moderator']), async (req, res) => {
   try {
-    const { psNumber, title, org, category, domain, detailedDescription, techStack, status } = req.body;
+    const { psNumber, title, org, category, domain, detailedDescription, theme, status } = req.body;
     
     const updated = await ProblemStatement.findByIdAndUpdate(
       req.params.id,
@@ -178,14 +178,15 @@ router.get('/export/excel', roleMiddleware(['Super Admin', 'Admin']), async (req
   try {
     const problems = await ProblemStatement.find().lean();
     
-    const formattedData = problems.map(ps => ({
-      'PS Number': ps.psNumber,
-      'Title': ps.title,
+    const formattedData = problems.map((ps, index) => ({
+      'S No': index + 1,
       'Organization': ps.org,
+      'Problem Statement': ps.title,
+      'PS Number': ps.psNumber,
       'Category': ps.category,
-      'Domain': ps.domain,
-      'Description': ps.detailedDescription,
-      'Tech Stack': ps.techStack || '',
+      'Theme': ps.theme || '',
+      'Domain Bucket': ps.domain,
+      'Problem Description': ps.detailedDescription,
       'Status': ps.status
     }));
 
@@ -211,13 +212,14 @@ router.get('/export/excel', roleMiddleware(['Super Admin', 'Admin']), async (req
 router.get('/export/template', roleMiddleware(['Super Admin', 'Admin', 'Moderator', 'Viewer']), (req, res) => {
   try {
     const templateData = [{
-      'PS Number': 'PS001',
-      'Title': 'AI-based Smart Attendance System',
+      'S No': 1,
       'Organization': 'Ministry of Education',
+      'Problem Statement': 'AI-based Smart Attendance System',
+      'PS Number': 'PS001',
       'Category': 'Software',
-      'Domain': 'Artificial Intelligence',
-      'Description': 'Develop an AI-based system to accurately identify students...',
-      'Tech Stack': 'React, Python, OpenCV',
+      'Theme': 'Smart Education',
+      'Domain Bucket': 'Artificial Intelligence',
+      'Problem Description': 'Develop an AI-based system to accurately identify students...',
       'Status': 'Active'
     }];
 
@@ -255,53 +257,67 @@ router.post('/import', roleMiddleware(['Super Admin', 'Admin']), upload.single('
     }
 
     const errors = [];
+    const skipped = [];
     const bulkOps = [];
     const validCategories = ['Software', 'Hardware', 'Hardware/Software', 'Other'];
     const validStatuses = ['Active', 'Inactive'];
 
-    data.forEach((row, index) => {
+    // Pre-fetch existing PS Numbers
+    const existingPSDocs = await ProblemStatement.find({}, { psNumber: 1 }).lean();
+    const existingPSNumbers = new Set(existingPSDocs.map(doc => doc.psNumber.toUpperCase()));
+
+    data.forEach((rawRow, index) => {
       const rowNum = index + 2; // +1 for 0-index, +1 for header row
       
-      const psNumber = row['PS Number']?.toString().trim();
-      const title = row['Title']?.toString().trim();
-      const org = row['Organization']?.toString().trim();
-      const category = row['Category']?.toString().trim() || 'Software';
-      const domain = row['Domain']?.toString().trim();
-      const description = row['Description']?.toString().trim();
-      const techStack = row['Tech Stack']?.toString().trim();
-      const status = row['Status']?.toString().trim() || 'Active';
+      // Normalize keys: lowercase, trim, and strip extra spaces
+      const row = {};
+      for (const key in rawRow) {
+        if (Object.prototype.hasOwnProperty.call(rawRow, key)) {
+          const normalizedKey = key.trim().toLowerCase().replace(/\s+/g, ' ');
+          row[normalizedKey] = rawRow[key];
+        }
+      }
+
+      const psNumber = (row['ps number'] || row['ps_number'])?.toString().trim();
+      const title = (row['problem statement'] || row['title'] || row['statement'])?.toString().trim();
+      const org = (row['organization'] || row['ogranization'] || row['ugranization'] || row['org'] || row['sponsoring organization'])?.toString().trim();
+      const category = (row['category'])?.toString().trim() || 'Software';
+      const theme = (row['theme'])?.toString().trim();
+      const domain = (row['domain bucket'] || row['domain'])?.toString().trim();
+      const description = (row['problem description'] || row['description'] || row['detailed description'])?.toString().trim();
+      const status = (row['status'])?.toString().trim() || 'Active';
 
       if (!psNumber) errors.push(`Row ${rowNum}: PS Number is missing`);
-      if (!title) errors.push(`Row ${rowNum}: Title is missing`);
+      if (!title) errors.push(`Row ${rowNum}: Problem Statement is missing`);
       if (!org) errors.push(`Row ${rowNum}: Organization is missing`);
-      if (!domain) errors.push(`Row ${rowNum}: Domain is missing`);
-      if (!description) errors.push(`Row ${rowNum}: Description is missing`);
+      if (!theme) errors.push(`Row ${rowNum}: Theme is missing`);
+      if (!domain) errors.push(`Row ${rowNum}: Domain Bucket is missing`);
+      if (!description) errors.push(`Row ${rowNum}: Problem Description is missing`);
       if (!validCategories.includes(category)) errors.push(`Row ${rowNum}: Invalid Category (${category})`);
       if (!validStatuses.includes(status)) errors.push(`Row ${rowNum}: Invalid Status (${status})`);
 
-      if (psNumber && title && org && domain && description && validCategories.includes(category) && validStatuses.includes(status)) {
-        bulkOps.push({
-          updateOne: {
-            filter: { psNumber },
-            update: {
-              $set: {
+      if (psNumber && title && org && theme && domain && description && validCategories.includes(category) && validStatuses.includes(status)) {
+        if (existingPSNumbers.has(psNumber.toUpperCase())) {
+          skipped.push(`Row ${rowNum}: PS Number ${psNumber} already exists.`);
+        } else {
+          bulkOps.push({
+            insertOne: {
+              document: {
+                psNumber,
                 title,
                 org,
                 category,
                 domain,
                 detailedDescription: description,
-                techStack,
+                theme,
                 status,
-                updatedBy: req.admin.id
-              },
-              $setOnInsert: {
-                psNumber,
                 createdBy: req.admin.id
               }
-            },
-            upsert: true
-          }
-        });
+            }
+          });
+          // Add to set to prevent duplicates within the same file
+          existingPSNumbers.add(psNumber.toUpperCase());
+        }
       }
     });
 
@@ -313,14 +329,19 @@ router.post('/import', roleMiddleware(['Super Admin', 'Admin']), upload.single('
       });
     }
 
-    if (bulkOps.length > 0) {
-      const result = await ProblemStatement.bulkWrite(bulkOps);
+    if (bulkOps.length > 0 || skipped.length > 0) {
+      let inserted = 0;
+      if (bulkOps.length > 0) {
+        const result = await ProblemStatement.bulkWrite(bulkOps);
+        inserted = result.insertedCount;
+      }
       res.json({
         success: true,
-        message: 'Import successful',
+        message: 'Import processed',
         data: {
-          inserted: result.upsertedCount,
-          updated: result.modifiedCount
+          inserted,
+          skipped: skipped.length,
+          skippedDetails: skipped
         }
       });
     } else {

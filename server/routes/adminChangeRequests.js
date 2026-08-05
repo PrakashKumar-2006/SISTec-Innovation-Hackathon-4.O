@@ -31,6 +31,43 @@ const transporter = nodemailer.createTransport({
 
 router.use(authMiddleware);
 
+// GET /api/admin/change-requests/settings/toggle
+router.get('/settings/toggle', roleMiddleware(['Super Admin', 'Admin', 'Moderator']), async (req, res) => {
+  try {
+    let SystemSettings;
+    try {
+      SystemSettings = mongoose.model('SystemSettings');
+    } catch (e) {
+      SystemSettings = require('../models/SystemSettings');
+    }
+    const settings = await SystemSettings.getSettings();
+    res.json({ success: true, data: { enablePSChangeRequest: settings.application?.enablePSChangeRequest || false } });
+  } catch (error) {
+    console.error('Error fetching settings:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+});
+
+// PATCH /api/admin/change-requests/settings/toggle
+router.patch('/settings/toggle', roleMiddleware(['Super Admin', 'Admin', 'Moderator']), async (req, res) => {
+  try {
+    let SystemSettings;
+    try {
+      SystemSettings = mongoose.model('SystemSettings');
+    } catch (e) {
+      SystemSettings = require('../models/SystemSettings');
+    }
+    const settings = await SystemSettings.getSettings();
+    if (!settings.application) settings.application = {};
+    settings.application.enablePSChangeRequest = req.body.enablePSChangeRequest;
+    await settings.save();
+    res.json({ success: true, data: { enablePSChangeRequest: settings.application.enablePSChangeRequest } });
+  } catch (error) {
+    console.error('Error updating settings:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+});
+
 // GET /api/admin/change-requests
 router.get('/', roleMiddleware(['Super Admin', 'Admin', 'Moderator', 'Viewer']), async (req, res) => {
   try {

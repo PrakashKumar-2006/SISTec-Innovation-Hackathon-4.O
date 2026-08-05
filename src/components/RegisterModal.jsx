@@ -353,6 +353,7 @@ const defaultFormData = {
   member3Name: '', member3Gender: '', member3Email: '', member3Phone: '',
   psid: '',
   psTitle: '',
+  theme: '',
   ideaPpt: null,
   consentLetter: null,
   paymentScreenshot: null,
@@ -1198,7 +1199,8 @@ export default function RegisterModal({ onClose }) {
                                   setFormData(prev => ({
                                     ...prev,
                                     psid: selectedId,
-                                    psTitle: psObj ? (psObj.title || psObj.statement) : prev.psTitle
+                                    psTitle: psObj ? (psObj.title || psObj.statement) : prev.psTitle,
+                                    theme: psObj ? psObj.theme : prev.theme
                                   }));
                                   setErrors(prev => {
                                     const newErrs = { ...prev };
@@ -1230,7 +1232,8 @@ export default function RegisterModal({ onClose }) {
                                   setFormData(prev => ({
                                     ...prev,
                                     psTitle: selectedTitle,
-                                    psid: psObj ? psObj.psNumber : prev.psid
+                                    psid: psObj ? psObj.psNumber : prev.psid,
+                                    theme: psObj ? psObj.theme : prev.theme
                                   }));
                                   setErrors(prev => {
                                     const newErrs = { ...prev };
