@@ -353,7 +353,6 @@ const defaultFormData = {
   member3Name: '', member3Gender: '', member3Email: '', member3Phone: '',
   psid: '',
   psTitle: '',
-  theme: '',
   ideaPpt: null,
   consentLetter: null,
   paymentScreenshot: null,
