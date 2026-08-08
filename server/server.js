@@ -761,6 +761,7 @@ const registrationLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 60,                   // 60 requests per hour per (IP + email domain)
   store: createRedisStore('rl:reg:'), // Redis key: rl:reg:<IP>|<domain>
+  validate: false,
   keyGenerator: (req) => {
     // Extract email domain from the multipart body field (if available)
     // Falls back to plain IP if email is missing (protects against no-body attacks)
