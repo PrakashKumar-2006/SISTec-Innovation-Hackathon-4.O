@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, MapPin, Mail, Send, CheckCircle2, MessageSquare, Clock, ArrowLeft, UploadCloud, Search, AlertCircle, FileText, X } from 'lucide-react';
 import axios from 'axios';
-import contactImg from '../../contact image.png';
+const contactImg = '/contact image.png';
 
 const ALL_CATEGORIES = [
   'General Inquiry',
