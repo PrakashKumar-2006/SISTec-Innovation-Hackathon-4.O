@@ -780,7 +780,7 @@ export default function RegisterModal({ onClose }) {
     { num: 2, title: 'Team Members', desc: 'Add up to 3 members (Max 4 Total)' },
     { num: 3, title: 'Track', desc: 'Pick a problem domain' },
     { num: 4, title: 'Review & Submit', desc: 'Confirm and lock it in' },
-    { num: 5, title: 'Payment', desc: 'Complete your registration' },
+    { num: 5, title: 'Payment details', desc: 'Complete your registration' },
   ];
 
   return (
@@ -1522,154 +1522,140 @@ export default function RegisterModal({ onClose }) {
                         </div>
                       )}
 
-                      {/* Step 5: Payment (Side-by-Side Left-Right Layout) */}
+                      {/* Step 5: Payment (Pixel-Perfect Match to Mockup Design) */}
                       {step === 5 && (
-                        <div className="animate-fade-in text-left font-sans py-1">
-                          <div className="space-y-3.5">
+                        <div className="animate-fade-in text-left font-sans py-2">
+                          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
                             
-                            {/* Minimal Fee Header Banner */}
-                            <div className="flex items-center justify-between px-4 py-2.5 rounded-2xl bg-[#FAF6EE] border border-[#EBE1D3]">
-                              <div>
-                                <span className="text-[10px] font-extrabold text-[#8C3A16] uppercase tracking-wider block">Registration Fee</span>
-                                <span className="text-xs text-[var(--ink-soft)] font-medium">SISTec Innovation Hackathon 4.0</span>
-                              </div>
-                              <div className="flex items-center gap-1.5">
-                                <span className="text-2xl font-black text-[#8C3A16]">
+                            {/* LEFT COLUMN (7 cols): Soft Beige Card with Price & Centered QR Code */}
+                            <div className="md:col-span-7 p-6 rounded-3xl bg-[#FAF6EE] border border-[#EBE1D3] shadow-xs flex flex-col items-center text-center space-y-3.5">
+                              {/* Header Label */}
+                              <span className="text-[11px] font-extrabold text-[#8C3A16] uppercase tracking-widest block">
+                                SCAN QR CODE TO PAY
+                              </span>
+
+                              {/* Price Banner */}
+                              <div className="flex items-center justify-center gap-1.5">
+                                <span className="text-3xl font-black text-[#8C3A16] tracking-tight">
                                   {formData.isIeeeCsiMember === 'Yes' ? '₹1,200' : '₹1,500'}
                                 </span>
                                 {formData.isIeeeCsiMember === 'Yes' && (
-                                  <span className="text-[9px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-200">
+                                  <span className="text-[9px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-200 ml-1">
                                     IEEE/CSI
                                   </span>
                                 )}
                               </div>
-                            </div>
 
-                            {/* Main Side-by-Side Grid (Left: QR Code & Link | Right: Inputs & Upload) */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
-                              
-                              {/* LEFT COLUMN: QR Code & Payment Link */}
-                              <div className="p-4 rounded-2xl bg-white border border-[#EBE1D3] shadow-xs flex flex-col items-center text-center justify-between space-y-3">
-                                <div className="space-y-0.5">
-                                  <span className="text-xs font-black text-[#8C3A16] uppercase tracking-wider block">Scan or Pay Online</span>
-                                  <p className="text-[10px] text-[#A09080] font-medium">Use PhonePe, GPay, Paytm, Any UPI or Card</p>
+                              {/* Large QR Code Container */}
+                              <div 
+                                onClick={handleCcavenueRedirect}
+                                className="p-2 bg-white rounded-2xl border border-[#EBE1D3] shadow-sm cursor-pointer hover:border-[#8C3A16] transition-all group"
+                                title="Click to open HDFC CCAvenue Payment Portal"
+                              >
+                                <div className="w-44 h-44 sm:w-48 sm:h-48 flex items-center justify-center overflow-hidden rounded-xl bg-white">
+                                  <img 
+                                    src="/ccavenue-qr.png" 
+                                    alt="Payment QR Code" 
+                                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
+                                  />
                                 </div>
+                              </div>
 
-                                {/* QR Code Container */}
-                                <div 
-                                  onClick={handleCcavenueRedirect}
-                                  className="p-1.5 bg-white rounded-2xl border border-[#EBE1D3] shadow-sm cursor-pointer hover:border-[#8C3A16] transition-all group"
-                                  title="Click to open HDFC CCAvenue Payment Portal"
-                                >
-                                  <div className="w-36 h-36 sm:w-40 sm:h-40 flex items-center justify-center overflow-hidden rounded-xl bg-white">
-                                    <img 
-                                      src="/ccavenue-qr.png" 
-                                      alt="Payment QR Code" 
-                                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
-                                    />
-                                  </div>
-                                </div>
-
-                                {/* Direct Action Link */}
+                              {/* Footer Apps List & Direct Gateway Link */}
+                              <div className="space-y-1 pt-0.5">
+                                <p className="text-[10px] text-[#A09080] font-bold tracking-wide">
+                                  GPay · PhonePe · Paytm · Any UPI
+                                </p>
                                 <button
                                   type="button"
                                   onClick={handleCcavenueRedirect}
-                                  className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#FAF6EE] border border-[#EBE1D3] hover:bg-[#F5ECE0] text-xs font-extrabold text-[#8C3A16] transition-all cursor-pointer w-full"
+                                  className="inline-flex items-center gap-1 text-[11px] font-extrabold text-[#8C3A16] hover:underline cursor-pointer border-none bg-transparent pt-0.5"
                                 >
-                                  <span>Open HDFC CCAvenue Page</span>
-                                  <ExternalLink size={13} />
+                                  <span>Or click to Pay via HDFC CCAvenue</span>
+                                  <ExternalLink size={12} />
                                 </button>
                               </div>
+                            </div>
 
-                              {/* RIGHT COLUMN: Transaction Verification Form */}
-                              <div className="p-4 rounded-2xl bg-[#FAF6EE]/60 border border-[#EBE1D3] shadow-xs flex flex-col justify-between space-y-3">
-                                <div className="border-b border-[#EBE1D3] pb-2">
-                                  <span className="text-xs font-black text-[#8C3A16] uppercase tracking-wider block">Submit Payment Details</span>
-                                  <p className="text-[10px] text-[#A09080] font-medium">Enter UTR and upload receipt to confirm</p>
-                                </div>
-
-                                <div className="space-y-3 flex-grow flex flex-col justify-center">
-                                  {/* Transaction ID */}
-                                  <div>
-                                    <label className="block text-[11px] font-bold text-[var(--ink)] mb-1">
-                                      Transaction ID / UTR <span className="text-[var(--danger)]">*</span>
-                                    </label>
-                                    <input
-                                      type="text"
-                                      name="transactionId"
-                                      value={formData.transactionId}
-                                      onChange={handleInputChange}
-                                      placeholder="Enter 12-digit UTR / Ref No."
-                                      className={`register-input w-full px-3.5 py-2.5 rounded-xl bg-white border ${errors.transactionId ? 'border-red-400 error' : 'border-[#EBE1D3] focus:border-[var(--orange)]'
-                                        } focus:outline-none text-xs text-[var(--ink)] font-semibold shadow-xs`}
-                                    />
-                                    {errors.transactionId && (
-                                      <p className="text-[10px] text-red-600 mt-1 flex items-center gap-1 font-semibold">
-                                        <AlertCircle size={10} /> {errors.transactionId}
-                                      </p>
-                                    )}
-                                  </div>
-
-                                  {/* Payment Screenshot Upload */}
-                                  <div>
-                                    <label className="block text-[11px] font-bold text-[var(--ink)] mb-1">
-                                      Payment Screenshot <span className="text-[var(--danger)]">*</span>
-                                    </label>
-                                    <label
-                                      htmlFor="paymentScreenshot-file"
-                                      className="flex items-center gap-3 px-3.5 py-2 rounded-xl bg-white cursor-pointer transition-all border border-dashed"
-                                      style={{
-                                        borderColor: errors.paymentScreenshot ? '#FCA5A5' : formData.paymentScreenshot ? '#6EE7B7' : '#D6C9B8'
-                                      }}
-                                    >
-                                      <Upload size={15} className={formData.paymentScreenshot ? 'text-emerald-600' : 'text-[var(--orange)]'} />
-                                      <div className="flex-1 min-w-0">
-                                        <p className="text-xs font-bold text-[var(--ink)] truncate">
-                                          {formData.paymentScreenshot ? formData.paymentScreenshot.name : (fileMetaHints.paymentScreenshot || 'Choose Screenshot')}
-                                        </p>
-                                        <p className="text-[9px] text-[#B0A090]">PNG, JPG or PDF</p>
-                                      </div>
-                                      <span
-                                        className="shrink-0 px-3 py-1 rounded-xl text-[11px] font-bold whitespace-nowrap transition-all shadow-xs"
-                                        style={{
-                                          background: formData.paymentScreenshot
-                                            ? 'rgba(52,211,153,0.18)'
-                                            : 'linear-gradient(135deg, var(--orange), var(--orange-deep))',
-                                          color: formData.paymentScreenshot ? '#047857' : '#ffffff',
-                                        }}
-                                      >
-                                        {formData.paymentScreenshot ? 'Change' : 'Browse'}
-                                      </span>
-                                      <input
-                                        type="file"
-                                        id="paymentScreenshot-file"
-                                        className="hidden"
-                                        accept=".png,.jpg,.jpeg,.pdf"
-                                        onChange={(e) => handleFileChange(e, 'paymentScreenshot')}
-                                      />
-                                    </label>
-
-                                    {formData.paymentScreenshot && (
-                                      <button
-                                        type="button"
-                                        onClick={() => previewLocalFile(formData.paymentScreenshot)}
-                                        className="mt-1 flex items-center gap-1 text-[10px] text-[var(--orange-deep)] hover:underline font-bold"
-                                      >
-                                        <Eye size={12} />
-                                        <span>Preview Screenshot</span>
-                                      </button>
-                                    )}
-
-                                    {errors.paymentScreenshot && (
-                                      <p className="text-[10px] text-red-600 mt-1 flex items-center gap-1 font-semibold">
-                                        <AlertCircle size={10} /> {errors.paymentScreenshot}
-                                      </p>
-                                    )}
-                                  </div>
-                                </div>
-
+                            {/* RIGHT COLUMN (5 cols): Transaction Verification Inputs */}
+                            <div className="md:col-span-5 space-y-4 flex flex-col justify-center">
+                              {/* Transaction ID */}
+                              <div>
+                                <label className="block text-[11px] font-extrabold text-[#6B3213] uppercase tracking-wider mb-1.5">
+                                  Transaction ID / UTR *
+                                </label>
+                                <input
+                                  type="text"
+                                  name="transactionId"
+                                  value={formData.transactionId}
+                                  onChange={handleInputChange}
+                                  placeholder="Enter 12-digit UTR / Ref No."
+                                  className={`register-input w-full px-4 py-3 rounded-2xl bg-[var(--input-bg)] border ${errors.transactionId ? 'border-red-400 error' : 'border-[#EBE1D3] focus:border-[var(--orange)]'
+                                    } focus:outline-none text-xs text-[var(--ink)] font-semibold shadow-xs`}
+                                />
+                                {errors.transactionId && (
+                                  <p className="text-[10px] text-red-600 mt-1 flex items-center gap-1 font-semibold">
+                                    <AlertCircle size={10} /> {errors.transactionId}
+                                  </p>
+                                )}
                               </div>
 
+                              {/* Payment Screenshot Upload */}
+                              <div>
+                                <label className="block text-[11px] font-extrabold text-[#6B3213] uppercase tracking-wider mb-1.5">
+                                  Payment Screenshot *
+                                </label>
+                                <label
+                                  htmlFor="paymentScreenshot-file"
+                                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl bg-[var(--input-bg)] cursor-pointer transition-all border border-dashed"
+                                  style={{
+                                    borderColor: errors.paymentScreenshot ? '#FCA5A5' : formData.paymentScreenshot ? '#6EE7B7' : '#D6C9B8'
+                                  }}
+                                >
+                                  <Upload size={16} className={formData.paymentScreenshot ? 'text-emerald-600' : 'text-[var(--orange)]'} />
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-xs font-bold text-[var(--ink)] truncate">
+                                      {formData.paymentScreenshot ? formData.paymentScreenshot.name : (fileMetaHints.paymentScreenshot || 'Choose Screenshot')}
+                                    </p>
+                                    <p className="text-[9px] text-[#B0A090]">PNG, JPG or PDF</p>
+                                  </div>
+                                  <span
+                                    className="shrink-0 px-3.5 py-1.5 rounded-xl text-[11px] font-bold whitespace-nowrap transition-all shadow-xs"
+                                    style={{
+                                      background: formData.paymentScreenshot
+                                        ? 'rgba(52,211,153,0.18)'
+                                        : 'linear-gradient(135deg, var(--orange), var(--orange-deep))',
+                                      color: formData.paymentScreenshot ? '#047857' : '#ffffff',
+                                    }}
+                                  >
+                                    {formData.paymentScreenshot ? 'Change' : 'Browse'}
+                                  </span>
+                                  <input
+                                    type="file"
+                                    id="paymentScreenshot-file"
+                                    className="hidden"
+                                    accept=".png,.jpg,.jpeg,.pdf"
+                                    onChange={(e) => handleFileChange(e, 'paymentScreenshot')}
+                                  />
+                                </label>
+
+                                {formData.paymentScreenshot && (
+                                  <button
+                                    type="button"
+                                    onClick={() => previewLocalFile(formData.paymentScreenshot)}
+                                    className="mt-1 flex items-center gap-1 text-[10px] text-[var(--orange-deep)] hover:underline font-bold"
+                                  >
+                                    <Eye size={12} />
+                                    <span>Preview Screenshot</span>
+                                  </button>
+                                )}
+
+                                {errors.paymentScreenshot && (
+                                  <p className="text-[10px] text-red-600 mt-1 flex items-center gap-1 font-semibold">
+                                    <AlertCircle size={10} /> {errors.paymentScreenshot}
+                                  </p>
+                                )}
+                              </div>
                             </div>
 
                           </div>
