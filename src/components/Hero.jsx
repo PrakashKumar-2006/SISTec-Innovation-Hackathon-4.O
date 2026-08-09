@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Rocket, ArrowRight, Bell, Megaphone, Users, FileText, Trophy, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Rocket, ArrowRight, Bell, Megaphone, Users, FileText, Trophy, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 const hackathonLogo = '/hackathon_logo_transparent.webp';
 
 export default function Hero({ onRegisterClick, onViewChange }) {
@@ -92,14 +92,14 @@ export default function Hero({ onRegisterClick, onViewChange }) {
   };
 
   return (
-    <section id="home" className="relative min-h-fit md:min-h-[calc(100vh-80px)] bg-brand-darker pt-20 pb-8 sm:pt-24 sm:pb-12 flex items-center">
+    <section id="home" className="relative bg-brand-darker pt-20 pb-6 sm:pt-24 sm:pb-8">
       {/* Background Visual Grid & Glowing effects */}
       <div className="absolute inset-0 tech-grid opacity-[0.03] pointer-events-none"></div>
       <div className="absolute top-1/4 left-10 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-[var(--vermilion)]/5 rounded-full blur-[100px] sm:blur-[140px] pointer-events-none -z-10 animate-pulse-slow"></div>
       <div className="absolute bottom-10 right-10 w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-[var(--marigold)]/5 rounded-full blur-[120px] sm:blur-[160px] pointer-events-none -z-10"></div>
 
       <div className="max-w-[1440px] mx-auto px-3.5 sm:px-8 lg:px-12 w-full relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 md:gap-6 xl:gap-16 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 md:gap-6 xl:gap-12 items-start">
 
           {/* ── LEFT COLUMN: Text and branding ── */}
           <div className="md:col-span-6 flex flex-col items-center md:items-start text-center md:text-left space-y-4 sm:space-y-6 md:space-y-5 xl:space-y-10 relative">
@@ -242,6 +242,14 @@ export default function Hero({ onRegisterClick, onViewChange }) {
                 {/* Soft gradient bottom vignette */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none z-10"></div>
 
+                {/* Official Tagline Badge Overlay ON TOP OF THE HERO IMAGE */}
+                <div className="absolute top-2.5 left-2.5 sm:top-3.5 sm:left-3.5 z-30 flex items-center gap-1.5 sm:gap-2 bg-black/80 backdrop-blur-md text-white px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border border-[#C97F1B]/40 shadow-2xl hover:scale-105 transition-transform duration-300 select-none">
+                  <Sparkles size={13} className="text-amber-300 animate-pulse shrink-0" />
+                  <span className="text-[10.5px] xs:text-xs sm:text-sm font-black tracking-wide italic font-sans text-amber-200" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                    "Solutions for Solution Providers"
+                  </span>
+                </div>
+
                 {/* Live Campus Event Badge */}
                 <div className="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-md text-white px-2.5 py-0.5 rounded-full border border-white/20 text-[8.5px] sm:text-[9.5px] font-bold flex items-center gap-1.5 shadow-md z-20">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
@@ -330,7 +338,7 @@ export default function Hero({ onRegisterClick, onViewChange }) {
                       Problem Statements
                     </p>
                     <p className="text-[9.5px] sm:text-[10px] font-bold text-[#6B5B49] truncate mt-0.5">
-                      20+ Statements Out
+                      40+ Statements Out
                     </p>
                   </div>
                 </div>
@@ -344,7 +352,7 @@ export default function Hero({ onRegisterClick, onViewChange }) {
           </div>
 
           {/* ── BOTTOM ROW (FULL WIDTH): 3 Stats Row Synchronized Across Both Columns ── */}
-          <div className="md:col-span-12 w-full pt-4 sm:pt-6 border-t border-[var(--line)]/60 relative z-10 mt-2 sm:mt-4">
+          <div className="md:col-span-12 w-full pt-3 sm:pt-4 border-t border-[var(--line)]/60 relative z-10 mt-1 sm:mt-2">
             <div className="grid grid-cols-3 gap-2 sm:gap-4 lg:gap-6 w-full">
               {/* Card 1: Participants */}
               <div className="flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-1.5 sm:gap-3.5 p-2.5 xs:p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-[#FAF6EE] border border-[#E3D7C5] hover:border-[#8C3A16] transition-all duration-300 shadow-xs sm:shadow-sm hover:shadow-md hover:-translate-y-0.5 group cursor-pointer">
@@ -368,7 +376,7 @@ export default function Hero({ onRegisterClick, onViewChange }) {
                 </div>
                 <div className="overflow-hidden">
                   <span className="block text-xs xs:text-sm sm:text-2xl font-black text-[#8C3A16] font-display tracking-tight leading-none" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                    20+
+                    40+
                   </span>
                   <span className="block text-[7.5px] xs:text-[8.5px] sm:text-[10.5px] font-extrabold text-[#6B5B49] tracking-wider uppercase mt-0.5 sm:mt-1 truncate">
                     Problems
