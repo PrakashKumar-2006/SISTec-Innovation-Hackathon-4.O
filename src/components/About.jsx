@@ -52,8 +52,6 @@ export default function About({ isStandalone = false }) {
                 <span className="text-base sm:text-2xl md:text-3xl font-black text-[#8C3A16] font-display uppercase tracking-wider" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>CSE | AI &amp; ML | IOT</span>
               </p>
             </div>
-<<<<<<< HEAD
-            
             <div className="space-y-2">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
                 <span className="text-[var(--clay)]">SIH 4.0</span>{' '}
@@ -64,16 +62,6 @@ export default function About({ isStandalone = false }) {
                 Organized by SISTec Ratibad
               </p>
             </div>
-=======
-
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] leading-[1.1] font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
-              SISTec Ratibad Presents{' '}
-              <span className="text-[var(--marigold-deep)] block sm:inline">
-                SIH 4.0
-              </span>
-              {' '}For
-            </h2>
->>>>>>> 56f3a1dfc067a8e74fe8092d32c891586fba1740
 
 
             <div className="space-y-6 pt-2">
@@ -155,7 +143,6 @@ export default function About({ isStandalone = false }) {
 
           {/* Right Column: Mobile Phone Video Showcase Frame */}
           <div className="lg:col-span-6 flex flex-col justify-center items-center">
-<<<<<<< HEAD
             <div className="relative w-full max-w-[280px] sm:max-w-[310px] md:max-w-[330px]">
               
               {/* Decorative behind screen glow */}
@@ -176,17 +163,6 @@ export default function About({ isStandalone = false }) {
 
                 {/* Screen Container (Aspect 9:16 portrait vertical ratio) */}
                 <div className="relative w-full aspect-[9/16] rounded-[32px] overflow-hidden bg-brand-darker border border-white/10 shadow-inner">
-=======
-            <div className="relative w-full max-w-xl lg:max-w-2xl">
-
-              {/* Decorative behind screen glow */}
-              <div className="absolute -top-12 -right-12 w-64 h-64 bg-brand-gold/10 rounded-full blur-[80px] -z-10 animate-pulse-slow"></div>
-              <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-brand-orange/5 rounded-full blur-[80px] -z-10"></div>
-
-              {/* Premium Gradient Outer Frame */}
-              <div className="relative p-1.5 rounded-[2.2rem] bg-gradient-to-tr from-brand-orange/40 via-brand-pink/20 to-transparent shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-white/10 backdrop-blur-3xl">
-                <div className="relative w-full aspect-[4/3] sm:aspect-video rounded-[1.8rem] overflow-hidden bg-brand-darker">
->>>>>>> 56f3a1dfc067a8e74fe8092d32c891586fba1740
                   <iframe
                     className="w-full h-full border-none rounded-[32px]"
                     loading="lazy"
