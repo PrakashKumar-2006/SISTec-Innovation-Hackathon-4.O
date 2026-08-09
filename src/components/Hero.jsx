@@ -243,15 +243,15 @@ export default function Hero({ onRegisterClick, onViewChange }) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none z-10"></div>
 
                 {/* Official Tagline Badge Overlay ON TOP OF THE HERO IMAGE */}
-                <div className="absolute top-2.5 left-2.5 sm:top-3.5 sm:left-3.5 z-30 flex items-center gap-1.5 sm:gap-2 bg-black/80 backdrop-blur-md text-white px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border border-[#C97F1B]/40 shadow-2xl hover:scale-105 transition-transform duration-300 select-none">
-                  <Sparkles size={13} className="text-amber-300 animate-pulse shrink-0" />
-                  <span className="text-[10.5px] xs:text-xs sm:text-sm font-black tracking-wide italic font-sans text-amber-200" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                <div className="absolute top-2 left-2 sm:top-3.5 sm:left-3.5 z-30 flex items-center gap-1 sm:gap-2 bg-black/80 backdrop-blur-md text-white px-2.5 sm:px-4 py-0.5 sm:py-1.5 rounded-full border border-[#C97F1B]/40 shadow-2xl hover:scale-105 transition-transform duration-300 select-none max-w-[62%] xs:max-w-[70%] sm:max-w-none">
+                  <Sparkles size={12} className="text-amber-300 animate-pulse shrink-0" />
+                  <span className="text-[9px] xs:text-[10.5px] sm:text-sm font-black tracking-wide italic font-sans text-amber-200 truncate" style={{ fontFamily: "'Outfit', sans-serif" }}>
                     "Solutions for Solution Providers"
                   </span>
                 </div>
 
                 {/* Live Campus Event Badge */}
-                <div className="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-md text-white px-2.5 py-0.5 rounded-full border border-white/20 text-[8.5px] sm:text-[9.5px] font-bold flex items-center gap-1.5 shadow-md z-20">
+                <div className="absolute top-2 right-2 sm:top-3.5 sm:right-3.5 bg-black/60 backdrop-blur-md text-white px-2 sm:px-2.5 py-0.5 rounded-full border border-white/20 text-[7.5px] xs:text-[8.5px] sm:text-[9.5px] font-bold flex items-center gap-1 sm:gap-1.5 shadow-md z-20 shrink-0">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
                   <span>SIH 4.0 SISTec-R</span>
                 </div>
