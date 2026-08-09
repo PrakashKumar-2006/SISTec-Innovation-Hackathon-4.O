@@ -29,6 +29,7 @@ const REDIS_URL = process.env.REDIS_URL;
 if (REDIS_URL) {
   try {
     redisClient = new Redis(REDIS_URL, {
+      family: 4,
       // Limit retry storms on connection failure
       maxRetriesPerRequest: 1,
       retryStrategy: (times) => {
