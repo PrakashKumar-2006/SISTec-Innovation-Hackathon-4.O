@@ -33,8 +33,9 @@ const problemStatementSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Detailed description is required'],
   },
-  techStack: {
+  theme: {
     type: String,
+    required: [true, 'Theme is required'],
     trim: true,
   },
   status: {

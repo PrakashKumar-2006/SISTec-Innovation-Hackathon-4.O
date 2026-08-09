@@ -173,7 +173,7 @@ export default function ProblemsList() {
     },
     {
       accessorKey: 'title',
-      header: 'Title',
+      header: 'Problem Statement',
       cell: ({ row }) => (
         <div className="max-w-[200px] truncate" title={row.original.title}>
           <span className="font-medium text-brand-text">{row.original.title}</span>
@@ -193,6 +193,11 @@ export default function ProblemsList() {
       accessorKey: 'category',
       header: 'Category',
       cell: ({ row }) => <span className="text-xs text-brand-gray bg-brand-dark px-2 py-1 rounded border border-brand-purple/20">{row.original.category}</span>,
+    },
+    {
+      accessorKey: 'theme',
+      header: 'Theme',
+      cell: ({ row }) => <span className="text-xs text-brand-gray truncate max-w-[120px] inline-block">{row.original.theme || '-'}</span>,
     },
     {
       accessorKey: 'domain',
@@ -315,7 +320,7 @@ export default function ProblemsList() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-gray" />
           <Input
             type="search"
-            placeholder="Search by PSID, Title, or Org..."
+            placeholder="Search by PSID, Problem Statement, or Org..."
             className="pl-10 bg-brand-dark border-brand-purple/30 text-brand-text placeholder:text-brand-gray focus-visible:ring-brand-gold"
             value={searchTerm}
             onChange={(e) => {

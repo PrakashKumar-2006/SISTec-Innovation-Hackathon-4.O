@@ -41,6 +41,28 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB
 });
 
+// GET /api/public/support/config
+router.get('/config', async (req, res) => {
+  try {
+    let SystemSettings;
+    try {
+      SystemSettings = mongoose.model('SystemSettings');
+    } catch (e) {
+      SystemSettings = require('../models/SystemSettings');
+    }
+    const settings = await SystemSettings.getSettings();
+    res.status(200).json({
+      success: true,
+      data: {
+        enablePSChangeRequest: settings.application?.enablePSChangeRequest || false
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching support config:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+});
+
 // GET /api/public/support/verify-registration/:code
 router.get('/verify-registration/:code', async (req, res) => {
   try {

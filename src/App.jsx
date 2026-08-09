@@ -35,6 +35,19 @@ export default function App() {
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
+    // Check if returning from CCAvenue payment redirect (e.g., ?order_status=Success or ?txnid=...)
+    const params = new URLSearchParams(window.location.search);
+    if (
+      params.has('order_status') ||
+      params.has('txnid') ||
+      params.has('tracking_id') ||
+      params.has('payment_status') ||
+      params.has('status') ||
+      params.has('payment')
+    ) {
+      setShowRegister(true);
+    }
+
     const handleScroll = () => {
       if (window.scrollY > 400) {
         setShowBackToTop(true);

@@ -330,11 +330,14 @@ export default function ProblemStatements() {
                   <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-44 text-[#8C3A16] font-display">
                     Category
                   </th>
+                  <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-44 text-[#8C3A16] font-display">
+                    Theme
+                  </th>
                   <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-48 text-[#8C3A16] font-display">
                     Domain Bucket
                   </th>
                   <th className="px-6 py-4.5 text-[11px] font-black uppercase tracking-wider w-44 text-center text-[#8C3A16] font-display">
-                    Description
+                    Problem Description
                   </th>
                 </tr>
               </thead>
@@ -373,6 +376,11 @@ export default function ProblemStatements() {
                       {/* Category */}
                       <td className="px-6 py-5 text-xs text-[#6B5B49] font-bold">
                         {item.category}
+                      </td>
+
+                      {/* Theme */}
+                      <td className="px-6 py-5 text-xs text-[#8C3A16] font-bold">
+                        {item.theme || 'N/A'}
                       </td>
 
                       {/* Domain Bucket */}
@@ -507,7 +515,7 @@ export default function ProblemStatements() {
                         onClick={() => setActiveModalItem(item)}
                         className="w-full mt-1 py-2.5 rounded-xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] text-xs font-black text-white transition-all text-center cursor-pointer active:scale-[0.98] shadow-md border-none"
                       >
-                        View Details & Tech Stack →
+                        View Details & Theme →
                       </button>
                     </div>
                   );
@@ -609,6 +617,9 @@ export default function ProblemStatements() {
                                 {item.category}
                               </span>
                               <span className="px-2 py-0.5 rounded-full border border-[#E3D7C5] bg-[#FFE8D6] text-[#8C3A16] text-[9px] font-black uppercase">
+                                {item.theme || 'N/A'}
+                              </span>
+                              <span className="px-2 py-0.5 rounded-full border border-[#E3D7C5] bg-[#FFE8D6] text-[#8C3A16] text-[9px] font-black uppercase">
                                 {item.domain}
                               </span>
                             </div>
@@ -666,6 +677,9 @@ export default function ProblemStatements() {
                   {activeModalItem.category}
                 </span>
                 <span className="px-3 py-0.5 rounded-full border border-[#E3D7C5] bg-[#FFE8D6] text-[#8C3A16] text-[10px] font-black uppercase">
+                  {activeModalItem.theme || 'N/A'}
+                </span>
+                <span className="px-3 py-0.5 rounded-full border border-[#E3D7C5] bg-[#FFE8D6] text-[#8C3A16] text-[10px] font-black uppercase">
                   {activeModalItem.domain}
                 </span>
               </div>
@@ -695,9 +709,9 @@ export default function ProblemStatements() {
                 </div>
 
                 <div className="space-y-1.5 pt-4 border-t border-[#E3D7C5]/60">
-                  <h4 className="text-[10px] font-black tracking-widest text-[#8C3A16] uppercase">Suggested Technologies</h4>
+                  <h4 className="text-[10px] font-black tracking-widest text-[#8C3A16] uppercase">Theme</h4>
                   <p className="text-xs font-mono font-extrabold text-[#8C3A16] tracking-wide">
-                    {activeModalItem.techStack}
+                    {activeModalItem.theme || 'N/A'}
                   </p>
                 </div>
               </div>

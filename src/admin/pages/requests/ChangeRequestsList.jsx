@@ -12,6 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import StatusBadge from '../../components/common/StatusBadge';
 import RequestReviewModal from './RequestReviewModal';
 import { format } from 'date-fns';
+import { Switch } from '../../components/ui/switch';
+import { Label } from '../../components/ui/label';
 
 export default function ChangeRequestsList() {
   const { user } = useAuth();
@@ -40,6 +42,28 @@ export default function ChangeRequestsList() {
 
   const requestsData = response?.data?.data || [];
   const totalCount = response?.data?.pagination?.total || 0;
+
+  // Toggle state query
+  const { data: toggleResponse } = useQuery({
+    queryKey: ['change-requests-toggle'],
+    queryFn: () => changeRequestsService.getToggleSetting(),
+  });
+  const isToggleEnabled = toggleResponse?.data?.data?.enablePSChangeRequest || false;
+
+  const toggleMutation = useMutation({
+    mutationFn: (newValue) => changeRequestsService.updateToggleSetting(newValue),
+    onSuccess: () => {
+      toast({ title: 'Setting updated successfully', variant: 'success' });
+      queryClient.invalidateQueries(['change-requests-toggle']);
+    },
+    onError: (err) => {
+      toast({ title: 'Failed to update setting', description: err.message, variant: 'destructive' });
+    }
+  });
+
+  const handleToggleChange = (checked) => {
+    toggleMutation.mutate(checked);
+  };
 
   const statusMutation = useMutation({
     mutationFn: ({ id, status, adminRemarks }) => changeRequestsService.updateRequestStatus(id, status, adminRemarks),
@@ -125,10 +149,25 @@ export default function ChangeRequestsList() {
 
   return (
     <div className="space-y-6 pb-12">
-      <PageHeader 
-        title="Problem Statement Change Requests" 
-        description="Review and process requests from teams wanting to switch their problem statements." 
-      />
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <PageHeader 
+          title="Problem Statement Change Requests" 
+          description="Review and process requests from teams wanting to switch their problem statements." 
+        />
+        {canReview && (
+          <div className="flex items-center space-x-2 bg-brand-card px-4 py-2 rounded-xl border border-brand-purple/20">
+            <Switch 
+              id="ps-change-toggle" 
+              checked={isToggleEnabled}
+              onCheckedChange={handleToggleChange}
+              disabled={toggleMutation.isLoading}
+            />
+            <Label htmlFor="ps-change-toggle" className="text-sm font-medium text-brand-text">
+              Enable Public Option
+            </Label>
+          </div>
+        )}
+      </div>
 
       <div className="bg-brand-card rounded-2xl p-4 border border-brand-purple/20 shadow-card-shadow flex flex-col md:flex-row gap-4 items-center justify-between">
         <div className="relative w-full md:w-96">

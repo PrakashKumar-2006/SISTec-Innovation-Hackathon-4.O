@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, MapPin, Mail, Send, CheckCircle2, MessageSquare, Clock, ArrowLeft, UploadCloud, Search, AlertCircle, FileText, X } from 'lucide-react';
 import axios from 'axios';
-import contactImg from '../../contact image.png';
+const contactImg = '/contact image.png';
 
-const CATEGORIES = [
+const ALL_CATEGORIES = [
   'General Inquiry',
   'Registration Support',
   'Payment Related Query',
@@ -14,6 +14,7 @@ const CATEGORIES = [
 ];
 
 export default function Contact({ onViewChange }) {
+  const [categories, setCategories] = useState(ALL_CATEGORIES.filter(c => c !== 'Problem Statement Change Request'));
   const [category, setCategory] = useState('General Inquiry');
   const [form, setForm] = useState({
     name: '', email: '', phone: '', subject: '', message: '',
@@ -32,6 +33,26 @@ export default function Contact({ onViewChange }) {
   const [isSent, setIsSent] = useState(false);
   const [referenceId, setReferenceId] = useState('');
   const [submitError, setSubmitError] = useState('');
+
+  // Fetch public config for feature flags
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const backendUrl = import.meta.env.VITE_API_URL || '';
+        const res = await axios.get(`${backendUrl}/api/public/support/config`);
+        if (res.data?.success) {
+          if (res.data.data.enablePSChangeRequest) {
+            setCategories(ALL_CATEGORIES);
+          } else {
+            setCategories(ALL_CATEGORIES.filter(c => c !== 'Problem Statement Change Request'));
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load support config', error);
+      }
+    };
+    fetchConfig();
+  }, []);
 
   // Reset certain fields when category changes
   useEffect(() => {
@@ -305,7 +326,7 @@ export default function Contact({ onViewChange }) {
                     className="w-full px-4 py-2.5 rounded-xl bg-[#FAF6EE] border border-[#E3D7C5] focus:border-[#8C3A16] focus:bg-[#FFFDF7] focus:ring-2 focus:ring-[#8C3A16]/10 focus:outline-none text-[#241708] font-bold text-xs sm:text-sm transition-all appearance-none cursor-pointer"
                     style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%238C3A16\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2.5\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.85rem center', backgroundSize: '1.1em' }}
                   >
-                    {CATEGORIES.map(cat => (
+                    {categories.map(cat => (
                       <option key={cat} value={cat} className="bg-[#FFFDF7] text-[#241708] font-bold">{cat}</option>
                     ))}
                   </select>

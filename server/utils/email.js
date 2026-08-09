@@ -49,7 +49,7 @@ const sendConfirmationEmail = async (leaderEmail, leaderName, teamName, registra
           
           <p><strong>Next Steps:</strong></p>
           <ul style="padding-left: 20px;">
-            <li>Abstract guidelines and submission templates will be sent to this email address shortly.</li>
+            <li>Abstract guidelines, submission templates, and PPT format are available directly on our website.</li>
             <li>Ensure your team members are notified of the success.</li>
           </ul>
           

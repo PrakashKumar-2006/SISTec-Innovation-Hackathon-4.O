@@ -93,7 +93,7 @@ export default function Themes({ onViewChange, isStandalone = false }) {
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-blue/5 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute top-0 left-0 w-96 h-96 bg-brand-gold/5 rounded-full blur-[120px] pointer-events-none"></div>
 
-      <div className="max-w-[1440px] mx-auto px-3 sm:px-8 relative z-10">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
         
         {/* Header Row */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-white/5 mb-16">
@@ -104,8 +104,8 @@ export default function Themes({ onViewChange, isStandalone = false }) {
           </div>
         </div>
 
-        {/* Tracks Grid: 2 columns on mobile, 2 on md, 3 on lg */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
+        {/* Tracks Grid: 1 column on mobile, 2 on sm, 3 on lg */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
           {themes.map((theme, idx) => (
             <div
               key={idx}

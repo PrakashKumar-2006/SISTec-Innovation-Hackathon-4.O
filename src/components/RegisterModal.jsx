@@ -1,7 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { X, Send, CheckCircle2, AlertCircle, Upload, ArrowLeft, ArrowRight, Check, Eye, CreditCard, RotateCcw, ChevronDown, User, Users, FileText, Target, Award, FileCheck } from 'lucide-react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { createPortal } from 'react-dom';
+import { X, Send, CheckCircle2, AlertCircle, Upload, ArrowLeft, ArrowRight, Check, Eye, CreditCard, RotateCcw, ChevronDown, User, Users, FileText, Target, Award, FileCheck, ExternalLink, ShieldCheck } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { MP_COLLEGES_DATA } from '../data/mpColleges';
+
+// Helper to normalize strings for flexible matching (removes hyphens, dots, parentheses, extra spaces)
+function cleanStr(str) {
+  return (str || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 // ---------------------------------------------------------------------------
 // CustomSelect — native <select> replacement with controllable max-height
@@ -57,6 +68,213 @@ function CustomSelect({ value, onChange, options, placeholder, hasError, disable
             </button>
           ))}
         </div>
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// CollegeAutocomplete — searchable MP college suggestions dropdown (React Portal)
+// ---------------------------------------------------------------------------
+function CollegeAutocomplete({ value, onChange, hasError, name }) {
+  const [open, setOpen] = useState(false);
+  const [highlightIndex, setHighlightIndex] = useState(-1);
+  const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
+  const inputRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const listRef = useRef(null);
+
+  // Recalculate screen position of input box
+  const updateCoords = useCallback(() => {
+    if (inputRef.current) {
+      const rect = inputRef.current.getBoundingClientRect();
+      setCoords({
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
+      });
+    }
+  }, []);
+
+  // Recalculate coords on open, resize, scroll
+  useEffect(() => {
+    if (open) {
+      updateCoords();
+      window.addEventListener('resize', updateCoords);
+      window.addEventListener('scroll', updateCoords, true);
+    }
+    return () => {
+      window.removeEventListener('resize', updateCoords);
+      window.removeEventListener('scroll', updateCoords, true);
+    };
+  }, [open, updateCoords]);
+
+  // Close on outside click (checks both input wrapper and portaled dropdown)
+  useEffect(() => {
+    const handler = (e) => {
+      const inWrapper = wrapperRef.current && wrapperRef.current.contains(e.target);
+      const inList = listRef.current && listRef.current.contains(e.target);
+      if (!inWrapper && !inList) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const rawQuery = (value || '').trim();
+  const normalizedQuery = cleanStr(rawQuery);
+
+  // Filter & rank colleges based on user query (supports full name, short forms & acronyms)
+  const suggestions = useMemo(() => {
+    if (!normalizedQuery) {
+      return MP_COLLEGES_DATA.map((item) => item.name).slice(0, 35);
+    }
+
+    const queryTokens = normalizedQuery.split(' ').filter(Boolean);
+    const scoredResults = [];
+
+    for (const item of MP_COLLEGES_DATA) {
+      const nameClean = cleanStr(item.name);
+      const shortCleanList = (item.short || []).map((s) => cleanStr(s));
+
+      let score = 0;
+
+      // 1. Check short-form exact match or prefix match (highest priority)
+      const hasExactShortMatch = shortCleanList.some((s) => s === normalizedQuery);
+      const hasPrefixShortMatch = shortCleanList.some((s) => s.startsWith(normalizedQuery) || normalizedQuery.startsWith(s));
+
+      if (hasExactShortMatch) {
+        score += 100;
+      } else if (hasPrefixShortMatch) {
+        score += 70;
+      }
+
+      // 2. Check token matching in full name or short list
+      const matchesAllTokens = queryTokens.every((token) => {
+        return nameClean.includes(token) || shortCleanList.some((s) => s.includes(token));
+      });
+
+      if (matchesAllTokens) {
+        score += 40;
+        if (nameClean.startsWith(normalizedQuery)) {
+          score += 20;
+        }
+      }
+
+      if (score > 0) {
+        scoredResults.push({ name: item.name, score });
+      }
+    }
+
+    // Sort by score descending
+    scoredResults.sort((a, b) => b.score - a.score);
+
+    return scoredResults.map((r) => r.name).slice(0, 35);
+  }, [normalizedQuery]);
+
+  const handleKeyDown = (e) => {
+    if (!open) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        setOpen(true);
+        updateCoords();
+      }
+      return;
+    }
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightIndex((prev) => (prev + 1) % suggestions.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightIndex((prev) => (prev <= 0 ? suggestions.length - 1 : prev - 1));
+    } else if (e.key === 'Enter') {
+      if (highlightIndex >= 0 && highlightIndex < suggestions.length) {
+        e.preventDefault();
+        selectOption(suggestions[highlightIndex]);
+      }
+    } else if (e.key === 'Escape') {
+      setOpen(false);
+    }
+  };
+
+  const selectOption = (college) => {
+    onChange({ target: { name: name || 'instituteName', value: college } });
+    setOpen(false);
+    setHighlightIndex(-1);
+  };
+
+  // Scroll highlighted element into view automatically
+  useEffect(() => {
+    if (highlightIndex >= 0 && listRef.current) {
+      const activeEl = listRef.current.children[highlightIndex];
+      if (activeEl) {
+        activeEl.scrollIntoView({ block: 'nearest' });
+      }
+    }
+  }, [highlightIndex]);
+
+  return (
+    <div ref={wrapperRef} className="relative w-full">
+      <input
+        ref={inputRef}
+        type="text"
+        name={name || 'instituteName'}
+        value={value}
+        onChange={(e) => {
+          onChange(e);
+          setOpen(true);
+          setHighlightIndex(-1);
+          updateCoords();
+        }}
+        onFocus={() => {
+          setOpen(true);
+          updateCoords();
+        }}
+        onKeyDown={handleKeyDown}
+        placeholder="Type college or short form (e.g. SISTec, LNCT, MANIT, SGSITS, MITS...)"
+        className={`register-input w-full px-3 py-2.5 rounded-xl bg-[var(--input-bg)] border ${
+          hasError ? 'border-[var(--danger)] bg-[var(--input-err-bg)] error' : 'border-[var(--line)] focus:border-[var(--orange)]'
+        } focus:outline-none text-[13px] text-[var(--ink)] placeholder-[var(--input-placeholder)] shadow-sm`}
+        autoComplete="off"
+      />
+
+      {open && suggestions.length > 0 && createPortal(
+        <div
+          ref={listRef}
+          className="fixed rounded-xl border border-[var(--line)] bg-white shadow-2xl overflow-hidden py-1 animate-fade-in custom-scrollbar"
+          style={{
+            top: `${coords.top}px`,
+            left: `${coords.left}px`,
+            width: `${coords.width}px`,
+            maxHeight: `${Math.min(160, Math.max(110, window.innerHeight - coords.top - 25))}px`,
+            overflowY: 'auto',
+            zIndex: 999999,
+          }}
+        >
+          {suggestions.map((college, idx) => {
+            const isSelected = college === value;
+            const isHighlighted = idx === highlightIndex;
+            return (
+              <button
+                key={college}
+                type="button"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  selectOption(college);
+                }}
+                onMouseEnter={() => setHighlightIndex(idx)}
+                className={`w-full text-left px-3 py-2 text-xs transition-colors flex items-center justify-between gap-2 border-b border-gray-50 last:border-0 ${
+                  isHighlighted ? 'bg-amber-50 text-[var(--orange-deep)] font-semibold' : 'hover:bg-gray-50 text-[var(--ink)]'
+                } ${isSelected ? 'font-bold text-[var(--orange)] bg-orange-50/60' : ''}`}
+              >
+                <span className="truncate">{college}</span>
+                {isSelected && <Check size={12} className="text-[var(--orange)] shrink-0" />}
+              </button>
+            );
+          })}
+        </div>,
+        document.body
       )}
     </div>
   );
@@ -133,7 +351,6 @@ const defaultFormData = {
   member1Name: '', member1Gender: '', member1Email: '', member1Phone: '',
   member2Name: '', member2Gender: '', member2Email: '', member2Phone: '',
   member3Name: '', member3Gender: '', member3Email: '', member3Phone: '',
-  member4Name: '', member4Gender: '', member4Email: '', member4Phone: '',
   psid: '',
   psTitle: '',
   ideaPpt: null,
@@ -168,12 +385,49 @@ export default function RegisterModal({ onClose }) {
   const { data: problemStatements = [], isLoading: isLoadingPS } = useQuery({
     queryKey: ['publicProblemStatements'],
     queryFn: async () => {
-      const response = await axios.get(`${backendUrl}/api/public/problem-statements`);
-      return response.data.data;
+      try {
+        const response = await axios.get(`${backendUrl}/api/public/problem-statements`);
+        return response.data.data || [];
+      } catch (err) {
+        return [];
+      }
     }
   });
 
-  const uniqueDomains = [...new Set(problemStatements.map(item => item.domain))];
+  const FALLBACK_THEMES = useMemo(() => [
+    'AgriTech',
+    'EduTech',
+    'Urban Mobility',
+    'Healthcare & Biotech',
+    'Fintech & Web3',
+    'AI & Open Innovation',
+    'Software & Hardware',
+    'Other'
+  ], []);
+
+  const FALLBACK_PROBLEM_STATEMENTS = useMemo(() => [
+    { psNumber: 'WE-01', title: 'Women Safety & Emergency Response Platform', statement: 'Women Safety & Emergency Response Platform', domain: 'Women Empowerment', category: 'Software' },
+    { psNumber: 'PS001', title: 'AI-based Smart Attendance & Engagement System', statement: 'AI-based Smart Attendance & Engagement System', domain: 'Artificial Intelligence', category: 'Software' },
+    { psNumber: 'PS004', title: 'Real-time Disease Outbreak Prediction Platform', statement: 'Real-time Disease Outbreak Prediction Platform', domain: 'Healthcare', category: 'Software' },
+    { psNumber: 'PS006', title: 'Smart Waste Segregation and Collection System', statement: 'Smart Waste Segregation and Collection System', domain: 'Environment', category: 'Hardware/Software' },
+    { psNumber: 'PS008', title: 'Digital Twin for Traffic Management', statement: 'Digital Twin for Traffic Management', domain: 'Urban Planning', category: 'Software' },
+    { psNumber: 'PS007', title: 'Cybersecurity Threat Detection for Government Portals', statement: 'Cybersecurity Threat Detection for Government Portals', domain: 'Cybersecurity', category: 'Software' },
+    { psNumber: 'PS009', title: 'AI Crop Disease Diagnosis & Soil Health Assistant', statement: 'AI Crop Disease Diagnosis & Soil Health Assistant', domain: 'Agriculture', category: 'Software' },
+    { psNumber: 'PS010', title: 'Smart Microgrid Power Distribution & Solar Optimization', statement: 'Smart Microgrid Power Distribution & Solar Optimization', domain: 'Smart Grid', category: 'Hardware/Software' },
+    { psNumber: 'OPEN-01', title: 'Open Innovation / Student Choice Project', statement: 'Open Innovation / Student Choice Project', domain: 'Other', category: 'Software/Hardware' }
+  ], []);
+
+  const activeProblemStatements = useMemo(() => {
+    return (problemStatements && problemStatements.length > 0)
+      ? problemStatements
+      : FALLBACK_PROBLEM_STATEMENTS;
+  }, [problemStatements, FALLBACK_PROBLEM_STATEMENTS]);
+
+  const uniqueDomains = useMemo(() => {
+    const fetchedDomains = (activeProblemStatements || []).map(item => item.domain).filter(Boolean);
+    const combined = Array.from(new Set([...fetchedDomains, ...FALLBACK_THEMES]));
+    return combined;
+  }, [activeProblemStatements, FALLBACK_THEMES]);
 
   // Lazy initializers — restore from saved session if available
   const [step, setStep] = useState(() => RegistrationSession.load()?.step ?? 1);
@@ -216,6 +470,39 @@ export default function RegisterModal({ onClose }) {
   const [registrationResult, setRegistrationResult] = useState(null);
 
   const autoSaveTimerRef = useRef(null);
+
+  // Open Official HDFC / CCAvenue Gateway in a Small Centered Popup Window
+  const handleCcavenueRedirect = () => {
+    // 1. Save current step and form progress in localStorage session
+    RegistrationSession.save(5, formData);
+    
+    // 2. Calculate centered popup dimensions
+    const width = 850;
+    const height = 700;
+    const left = Math.max(0, (window.innerWidth - width) / 2);
+    const top = Math.max(0, (window.innerHeight - height) / 2);
+
+    // 3. Open compact floating window over the main website page
+    window.open(
+      "https://formbuilder.ccavenue.com/live/hdfc-bank/sistec-r",
+      "HDFCCCAvenuePaymentWindow",
+      `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+    );
+  };
+
+  // Auto-detect returning parameters from payment redirect
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const txnid = params.get('txnid') || params.get('tracking_id') || params.get('order_id') || params.get('reference_no') || params.get('bank_ref_no');
+    const status = params.get('order_status') || params.get('status') || params.get('payment_status') || params.get('payment');
+
+    if (txnid || (status && (status.toLowerCase().includes('success') || status.toLowerCase().includes('ok')))) {
+      setStep(5);
+      if (txnid) {
+        setFormData((prev) => ({ ...prev, transactionId: txnid }));
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (registrationResult) return;
@@ -315,7 +602,6 @@ export default function RegisterModal({ onClose }) {
       validateMember(1);
       validateMember(2);
       validateMember(3);
-      validateMember(4);
     }
 
     if (currentStep === 3) {
@@ -420,7 +706,7 @@ export default function RegisterModal({ onClose }) {
       submitData.append('instituteName', formData.instituteName);
 
       const members = [];
-      for (let i = 1; i <= 4; i++) {
+      for (let i = 1; i <= 3; i++) {
         const name = formData[`member${i}Name`]?.trim();
         if (name) {
           members.push({
@@ -490,10 +776,10 @@ export default function RegisterModal({ onClose }) {
 
   const stepLabels = [
     { num: 1, title: 'Team & Leader details', desc: 'Who\'s leading this team?' },
-    { num: 2, title: 'Team Members', desc: 'Add up to 6 members' },
+    { num: 2, title: 'Team Members', desc: 'Add up to 3 members (Max 4 Total)' },
     { num: 3, title: 'Track', desc: 'Pick a problem domain' },
     { num: 4, title: 'Review & Submit', desc: 'Confirm and lock it in' },
-    { num: 5, title: 'Payment', desc: 'Complete your registration' },
+    { num: 5, title: 'Payment details', desc: 'Complete your registration' },
   ];
 
   return (
@@ -662,7 +948,7 @@ export default function RegisterModal({ onClose }) {
                 {/* Dynamic Form Header (Desktop) */}
                 <div className="hidden md:flex justify-between items-start mb-6 shrink-0 border-b border-[var(--line)]/60 pb-5 pr-12">
                   <div className="flex flex-col gap-1 text-left">
-                    <h3 className="text-2xl font-black text-[var(--ink)] tracking-tight">{stepLabels[step - 1].title} details</h3>
+                    <h3 className="text-2xl font-black text-[var(--ink)] tracking-tight">{stepLabels[step - 1].title}</h3>
                     <p className="text-[13px] text-[var(--ink-soft)]">{stepLabels[step - 1].desc}</p>
                   </div>
                   <div className="px-4 py-1.5 rounded-full bg-[#FAF6EE] border border-[var(--line)] text-[#C66522] text-[11px] font-bold whitespace-nowrap">
@@ -693,7 +979,7 @@ export default function RegisterModal({ onClose }) {
 
                 {/* Main Form Body */}
                 <div className="flex-1 min-h-0 overflow-hidden px-1 py-1 flex flex-col">
-                  <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar pr-2 flex flex-col">
+                  <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar flex flex-col">
                     <div className="my-auto py-4 w-full">
 
                       {errors.submit && (
@@ -749,20 +1035,28 @@ export default function RegisterModal({ onClose }) {
 
                             <div>
                               <label className="block text-[13px] font-bold text-[var(--ink)] mb-1.5">
-                                College / Institution <span className="text-[var(--danger)]">*</span>
+                                IEEE/CSI Member <span className="text-[var(--danger)]">*</span>
                               </label>
-                              <input
-                                type="text"
-                                name="instituteName"
-                                value={formData.instituteName}
+                              <select
+                                name="isIeeeCsiMember"
+                                value={formData.isIeeeCsiMember}
                                 onChange={handleInputChange}
-                                placeholder="College name"
-                                className={`register-input w-full px-3 py-2.5 rounded-xl bg-[var(--input-bg)] border ${errors.instituteName ? 'border-[var(--danger)] bg-[var(--input-err-bg)] error' : 'border-[var(--line)] focus:border-[var(--orange)]'
-                                  } focus:outline-none text-[13px] text-[var(--ink)] placeholder-[var(--input-placeholder)] shadow-sm`}
-                              />
-                              {errors.instituteName && (
+                                className={`register-select w-full px-3 py-2.5 rounded-xl bg-[var(--input-bg)] border ${errors.isIeeeCsiMember ? 'border-[var(--danger)] bg-[var(--input-err-bg)] error' : 'border-[var(--line)] focus:border-[var(--orange)]'
+                                  } focus:outline-none text-[13px] text-[var(--ink)] cursor-pointer appearance-none shadow-sm`}
+                                style={{
+                                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238C3A16'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                                  backgroundRepeat: 'no-repeat',
+                                  backgroundPosition: 'right 0.85rem center',
+                                  backgroundSize: '1em'
+                                }}
+                              >
+                                <option value="" disabled className="text-[var(--input-placeholder)]">Select Membership Status</option>
+                                <option value="Yes" className="text-[var(--ink)]">Yes</option>
+                                <option value="No" className="text-[var(--ink)]">No</option>
+                              </select>
+                              {errors.isIeeeCsiMember && (
                                 <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
-                                  <AlertCircle size={10} /> {errors.instituteName}
+                                  <AlertCircle size={10} /> {errors.isIeeeCsiMember}
                                 </p>
                               )}
                             </div>
@@ -824,12 +1118,8 @@ export default function RegisterModal({ onClose }) {
                                   backgroundSize: '1em'
                                 }}
                               >
-                                {isLoadingPS ? (
-                                  <option value="" disabled className="text-[var(--input-placeholder)]">Loading Themes...</option>
-                                ) : (
-                                  <option value="" disabled className="text-[var(--input-placeholder)]">Select Category Theme</option>
-                                )}
-                                {!isLoadingPS && uniqueDomains.map((domain) => (
+                                <option value="" disabled className="text-[var(--input-placeholder)]">Select Category Theme</option>
+                                {uniqueDomains.map((domain) => (
                                   <option key={domain} value={domain} className="text-[var(--ink)] py-1">
                                     {domain}
                                   </option>
@@ -873,28 +1163,17 @@ export default function RegisterModal({ onClose }) {
 
                             <div className="md:col-span-2">
                               <label className="block text-[13px] font-bold text-[var(--ink)] mb-1.5">
-                                IEEE/CSI Member <span className="text-[var(--danger)]">*</span>
+                                College / Institution <span className="text-[var(--danger)]">*</span>
                               </label>
-                              <select
-                                name="isIeeeCsiMember"
-                                value={formData.isIeeeCsiMember}
+                              <CollegeAutocomplete
+                                name="instituteName"
+                                value={formData.instituteName}
                                 onChange={handleInputChange}
-                                className={`register-select w-full px-3 py-2.5 rounded-xl bg-[var(--input-bg)] border ${errors.isIeeeCsiMember ? 'border-[var(--danger)] bg-[var(--input-err-bg)] error' : 'border-[var(--line)] focus:border-[var(--orange)]'
-                                  } focus:outline-none text-[13px] text-[var(--ink)] cursor-pointer appearance-none shadow-sm`}
-                                style={{
-                                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238C3A16'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
-                                  backgroundRepeat: 'no-repeat',
-                                  backgroundPosition: 'right 0.85rem center',
-                                  backgroundSize: '1em'
-                                }}
-                              >
-                                <option value="" disabled className="text-[var(--input-placeholder)]">Select Membership Status</option>
-                                <option value="Yes" className="text-[var(--ink)]">Yes</option>
-                                <option value="No" className="text-[var(--ink)]">No</option>
-                              </select>
-                              {errors.isIeeeCsiMember && (
+                                hasError={!!errors.instituteName}
+                              />
+                              {errors.instituteName && (
                                 <p className="text-[10px] text-red-600 mt-0.5 flex items-center gap-1 font-semibold">
-                                  <AlertCircle size={10} /> {errors.isIeeeCsiMember}
+                                  <AlertCircle size={10} /> {errors.instituteName}
                                 </p>
                               )}
                             </div>
@@ -910,7 +1189,7 @@ export default function RegisterModal({ onClose }) {
                           </div>
 
                           <div className="space-y-2">
-                            {[1, 2, 3, 4].map((num) => (
+                            {[1, 2, 3].map((num) => (
                               <div key={num} className="p-2.5 rounded-2xl bg-[#FAF6EE] border border-[#EBE1D3] flex items-center gap-2.5 shadow-sm">
                                 <span className="w-7 h-7 rounded-xl bg-[var(--orange)]/15 text-[var(--orange-deep)] flex items-center justify-center text-[10px] font-black shrink-0">
                                   M{num}
@@ -976,16 +1255,19 @@ export default function RegisterModal({ onClose }) {
                               </label>
                               <CustomSelect
                                 value={formData.psid}
-                                placeholder={isLoadingPS ? 'Loading...' : 'Select PSID'}
-                                disabled={isLoadingPS}
+                                placeholder="Select PSID"
                                 hasError={!!errors.psid}
-                                options={problemStatements.map(ps => ({ value: ps.psNumber, label: ps.psNumber }))}
+                                options={activeProblemStatements.map(ps => ({ 
+                                  value: ps.psNumber || ps.ps_number, 
+                                  label: `${ps.psNumber || ps.ps_number} - ${(ps.statement || ps.title || '').slice(0, 38)}...` 
+                                }))}
                                 onChange={(selectedId) => {
-                                  const psObj = problemStatements.find(ps => ps.psNumber === selectedId);
+                                  const psObj = activeProblemStatements.find(ps => (ps.psNumber === selectedId || ps.ps_number === selectedId));
                                   setFormData(prev => ({
                                     ...prev,
                                     psid: selectedId,
-                                    psTitle: psObj ? (psObj.title || psObj.statement) : prev.psTitle
+                                    psTitle: psObj ? (psObj.title || psObj.statement) : prev.psTitle,
+                                    theme: psObj ? psObj.theme : prev.theme
                                   }));
                                   setErrors(prev => {
                                     const newErrs = { ...prev };
@@ -1011,13 +1293,17 @@ export default function RegisterModal({ onClose }) {
                                 value={formData.psTitle}
                                 placeholder="Select Problem Statement Title..."
                                 hasError={!!errors.psTitle}
-                                options={problemStatements.map(ps => ({ value: ps.statement || ps.title, label: ps.statement || ps.title }))}
+                                options={activeProblemStatements.map(ps => ({ 
+                                  value: ps.statement || ps.title, 
+                                  label: ps.statement || ps.title 
+                                }))}
                                 onChange={(selectedTitle) => {
-                                  const psObj = problemStatements.find(ps => (ps.statement === selectedTitle || ps.title === selectedTitle));
+                                  const psObj = activeProblemStatements.find(ps => (ps.statement === selectedTitle || ps.title === selectedTitle));
                                   setFormData(prev => ({
                                     ...prev,
                                     psTitle: selectedTitle,
-                                    psid: psObj ? psObj.psNumber : prev.psid
+                                    psid: psObj ? (psObj.psNumber || psObj.ps_number) : prev.psid,
+                                    theme: psObj ? psObj.theme : prev.theme
                                   }));
                                   setErrors(prev => {
                                     const newErrs = { ...prev };
@@ -1212,13 +1498,13 @@ export default function RegisterModal({ onClose }) {
                           </div>
 
                           {/* Team Members Card (if any) */}
-                          {[1, 2, 3, 4].some(n => formData[`member${n}Name`]?.trim()) && (
+                          {[1, 2, 3].some(n => formData[`member${n}Name`]?.trim()) && (
                             <div className="p-4 rounded-2xl bg-[#FAF6EE] border border-[#EBE1D3] space-y-3">
                               <div className="border-b border-[#EBE1D3] pb-2">
                                 <span className="text-[10px] font-black uppercase tracking-widest text-[#8C3A16]">Team Members</span>
                               </div>
-                              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                                {[1, 2, 3, 4].map(num => {
+                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                                {[1, 2, 3].map(num => {
                                   const name = formData[`member${num}Name`]?.trim();
                                   if (!name) return null;
                                   return (
@@ -1235,16 +1521,21 @@ export default function RegisterModal({ onClose }) {
                         </div>
                       )}
 
-                      {/* Step 5: Payment (Essential & Minimal) */}
+                      {/* Step 5: Payment (Pixel-Perfect Match to Mockup Design) */}
                       {step === 5 && (
                         <div className="animate-fade-in text-left font-sans py-2">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                            
+                            {/* LEFT COLUMN (7 cols): Soft Beige Card with Price & Centered QR Code */}
+                            <div className="md:col-span-7 p-6 rounded-3xl bg-[#FAF6EE] border border-[#EBE1D3] shadow-xs flex flex-col items-center text-center space-y-3.5">
+                              {/* Header Label */}
+                              <span className="text-[11px] font-extrabold text-[#8C3A16] uppercase tracking-widest block">
+                                SCAN QR CODE TO PAY
+                              </span>
 
-                            {/* Left: QR Code & Amount */}
-                            <div className="flex flex-col items-center text-center p-4 rounded-2xl bg-[#FAF6EE] border border-[#EBE1D3] space-y-2">
-                              <span className="text-[11px] font-bold text-[#A09080] uppercase tracking-wider">Scan QR Code to Pay</span>
-                              <div className="flex items-baseline gap-1">
-                                <span className="text-2xl font-black text-[#8C3A16]">
+                              {/* Price Banner */}
+                              <div className="flex items-center justify-center gap-1.5">
+                                <span className="text-3xl font-black text-[#8C3A16] tracking-tight">
                                   {formData.isIeeeCsiMember === 'Yes' ? '₹1,200' : '₹1,500'}
                                 </span>
                                 {formData.isIeeeCsiMember === 'Yes' && (
@@ -1254,23 +1545,42 @@ export default function RegisterModal({ onClose }) {
                                 )}
                               </div>
 
-                              <div className="p-2.5 bg-white rounded-2xl border border-[#EBE1D3] shadow-sm">
-                                <div className="w-36 h-36 flex items-center justify-center overflow-hidden rounded-xl">
-                                  {formData.isIeeeCsiMember === 'Yes' ? (
-                                    <img src="/qr1.jpeg" alt="QR Code" className="w-full h-full object-contain" />
-                                  ) : (
-                                    <img src="/qr2.jpeg" alt="QR Code" className="w-full h-full object-contain" />
-                                  )}
+                              {/* Large QR Code Container */}
+                              <div 
+                                onClick={handleCcavenueRedirect}
+                                className="p-2 bg-white rounded-2xl border border-[#EBE1D3] shadow-sm cursor-pointer hover:border-[#8C3A16] transition-all group"
+                                title="Click to open HDFC CCAvenue Payment Portal"
+                              >
+                                <div className="w-44 h-44 sm:w-48 sm:h-48 flex items-center justify-center overflow-hidden rounded-xl bg-white">
+                                  <img 
+                                    src="/ccavenue-qr.png" 
+                                    alt="Payment QR Code" 
+                                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
+                                  />
                                 </div>
                               </div>
-                              <p className="text-[10px] text-[#A09080] font-semibold">GPay · PhonePe · Paytm · Any UPI</p>
+
+                              {/* Footer Apps List & Direct Gateway Link */}
+                              <div className="space-y-1 pt-0.5">
+                                <p className="text-[10px] text-[#A09080] font-bold tracking-wide">
+                                  GPay · PhonePe · Paytm · Any UPI
+                                </p>
+                                <button
+                                  type="button"
+                                  onClick={handleCcavenueRedirect}
+                                  className="inline-flex items-center gap-1 text-[11px] font-extrabold text-[#8C3A16] hover:underline cursor-pointer border-none bg-transparent pt-0.5"
+                                >
+                                  <span>Or click to Pay via HDFC CCAvenue</span>
+                                  <ExternalLink size={12} />
+                                </button>
+                              </div>
                             </div>
 
-                            {/* Right: Essential Proof Form */}
-                            <div className="space-y-3.5 p-2">
+                            {/* RIGHT COLUMN (5 cols): Transaction Verification Inputs */}
+                            <div className="md:col-span-5 space-y-4 flex flex-col justify-center">
                               {/* Transaction ID */}
                               <div>
-                                <label className="block text-[11px] font-extrabold text-[#6B3213] uppercase tracking-wider mb-1">
+                                <label className="block text-[11px] font-extrabold text-[#6B3213] uppercase tracking-wider mb-1.5">
                                   Transaction ID / UTR *
                                 </label>
                                 <input
@@ -1279,8 +1589,8 @@ export default function RegisterModal({ onClose }) {
                                   value={formData.transactionId}
                                   onChange={handleInputChange}
                                   placeholder="Enter 12-digit UTR / Ref No."
-                                  className={`register-input w-full px-3.5 py-2.5 rounded-xl bg-[var(--input-bg)] border ${errors.transactionId ? 'border-[var(--danger)] bg-[var(--input-err-bg)] error' : 'border-[var(--line)] focus:border-[var(--orange)]'
-                                    } focus:outline-none text-xs text-[var(--ink)] font-semibold shadow-sm`}
+                                  className={`register-input w-full px-4 py-3 rounded-2xl bg-[var(--input-bg)] border ${errors.transactionId ? 'border-red-400 error' : 'border-[#EBE1D3] focus:border-[var(--orange)]'
+                                    } focus:outline-none text-xs text-[var(--ink)] font-semibold shadow-xs`}
                                 />
                                 {errors.transactionId && (
                                   <p className="text-[10px] text-red-600 mt-1 flex items-center gap-1 font-semibold">
@@ -1291,12 +1601,12 @@ export default function RegisterModal({ onClose }) {
 
                               {/* Payment Screenshot Upload */}
                               <div>
-                                <label className="block text-[11px] font-extrabold text-[#6B3213] uppercase tracking-wider mb-1">
+                                <label className="block text-[11px] font-extrabold text-[#6B3213] uppercase tracking-wider mb-1.5">
                                   Payment Screenshot *
                                 </label>
                                 <label
                                   htmlFor="paymentScreenshot-file"
-                                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-[var(--input-bg)] cursor-pointer transition-all border border-dashed"
+                                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl bg-[var(--input-bg)] cursor-pointer transition-all border border-dashed"
                                   style={{
                                     borderColor: errors.paymentScreenshot ? '#FCA5A5' : formData.paymentScreenshot ? '#6EE7B7' : '#D6C9B8'
                                   }}
@@ -1309,7 +1619,7 @@ export default function RegisterModal({ onClose }) {
                                     <p className="text-[9px] text-[#B0A090]">PNG, JPG or PDF</p>
                                   </div>
                                   <span
-                                    className="shrink-0 px-4 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all shadow-sm"
+                                    className="shrink-0 px-3.5 py-1.5 rounded-xl text-[11px] font-bold whitespace-nowrap transition-all shadow-xs"
                                     style={{
                                       background: formData.paymentScreenshot
                                         ? 'rgba(52,211,153,0.18)'
@@ -1429,7 +1739,7 @@ export default function RegisterModal({ onClose }) {
                     {registrationResult.registrationId}
                   </div>
                   <p className="text-xs text-[var(--ink-soft)] max-w-md mx-auto pt-2">
-                    Save this ID for references. Abstract guidelines and event notifications will be sent to <strong className="text-[var(--ink)]">{formData.leaderEmail}</strong>.
+                    Save this ID for reference. Abstract guidelines, submission templates, and PPT format are available directly on our website.
                   </p>
                 </div>
                 <div className="pt-6">

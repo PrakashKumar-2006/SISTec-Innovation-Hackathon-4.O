@@ -5,21 +5,21 @@ export default function About({ isStandalone = false }) {
 
   // Stats data with descriptions and icons
   const stats = [
-    { 
-      label: 'Coding Duration', 
-      value: '24 Hours', 
+    {
+      label: 'Coding Duration',
+      value: '24 Hours',
       description: 'Non-stop hacking & creation',
       icon: <Sparkles className="w-5 h-5 text-brand-orange" />
     },
-    { 
-      label: 'Total Prize Pool', 
-      value: '₹1 Lakh+', 
+    {
+      label: 'Total Prize Pool',
+      value: '₹1 Lakh+',
       description: 'Cash rewards & awards',
       icon: <Trophy className="w-5 h-5 text-brand-gold" />
     },
-    { 
-      label: 'Nationwide Teams', 
-      value: '100+ Teams', 
+    {
+      label: 'Nationwide Teams',
+      value: '100+ Teams',
       description: 'Top talent from India',
       icon: <Users className="w-5 h-5 text-brand-pink" />
     }
@@ -41,10 +41,10 @@ export default function About({ isStandalone = false }) {
 
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-          
+
           {/* Left Column: Rich Text & Event Highlights */}
           <div className="lg:col-span-6 space-y-8 text-left">
-            
+
             {/* Top Dot Accent & CSE Dept Title (unboxed to match hero banner) */}
             <div className="space-y-3">
               <p className="flex items-baseline gap-2 whitespace-nowrap">
@@ -52,6 +52,7 @@ export default function About({ isStandalone = false }) {
                 <span className="text-base sm:text-2xl md:text-3xl font-black text-[#8C3A16] font-display uppercase tracking-wider" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>CSE | AI &amp; ML | IOT</span>
               </p>
             </div>
+<<<<<<< HEAD
             
             <div className="space-y-2">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
@@ -63,8 +64,18 @@ export default function About({ isStandalone = false }) {
                 Organized by SISTec Ratibad
               </p>
             </div>
+=======
 
-            
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] leading-[1.1] font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+              SISTec Ratibad Presents{' '}
+              <span className="text-[var(--marigold-deep)] block sm:inline">
+                SIH 4.0
+              </span>
+              {' '}For
+            </h2>
+>>>>>>> 56f3a1dfc067a8e74fe8092d32c891586fba1740
+
+
             <div className="space-y-6 pt-2">
               <div className="flex items-start gap-4 pb-5 border-b border-[#E3D7C5]/60 group">
                 <div className="w-11 h-11 rounded-2xl bg-[#FFE8D6] text-[#8C3A16] shrink-0 border border-[#E3D7C5] flex items-center justify-center mt-0.5 shadow-2xs group-hover:scale-105 transition-transform duration-300">
@@ -114,15 +125,15 @@ export default function About({ isStandalone = false }) {
             </ul>
 
             {/* Stats Cards Grid (Compact Horizontal Layout: Icon Side-by-Side with Text) */}
-            <div className="grid grid-cols-3 gap-2 xs:gap-3 sm:gap-4 pt-3 font-sans">
+            <div className="grid grid-cols-1 xs:grid-cols-3 gap-2 xs:gap-3 sm:gap-4 pt-3 font-sans">
               {stats.map((stat, index) => (
-                <div 
+                <div
                   key={index}
                   className="p-2 xs:p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-[#FFFDF7] border-2 border-[#E3D7C5] hover:border-[#8C3A16] flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-1.5 sm:gap-3.5 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 relative group overflow-hidden"
                 >
                   {/* Hover Left Accent Line */}
                   <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#8C3A16] to-[#C97F1B] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"></div>
-                  
+
                   <div className="w-7 h-7 xs:w-8 xs:h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#8C3A16]/10 border border-[#8C3A16]/20 flex items-center justify-center shrink-0">
                     {stat.icon}
                   </div>
@@ -144,6 +155,7 @@ export default function About({ isStandalone = false }) {
 
           {/* Right Column: Mobile Phone Video Showcase Frame */}
           <div className="lg:col-span-6 flex flex-col justify-center items-center">
+<<<<<<< HEAD
             <div className="relative w-full max-w-[280px] sm:max-w-[310px] md:max-w-[330px]">
               
               {/* Decorative behind screen glow */}
@@ -164,6 +176,17 @@ export default function About({ isStandalone = false }) {
 
                 {/* Screen Container (Aspect 9:16 portrait vertical ratio) */}
                 <div className="relative w-full aspect-[9/16] rounded-[32px] overflow-hidden bg-brand-darker border border-white/10 shadow-inner">
+=======
+            <div className="relative w-full max-w-xl lg:max-w-2xl">
+
+              {/* Decorative behind screen glow */}
+              <div className="absolute -top-12 -right-12 w-64 h-64 bg-brand-gold/10 rounded-full blur-[80px] -z-10 animate-pulse-slow"></div>
+              <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-brand-orange/5 rounded-full blur-[80px] -z-10"></div>
+
+              {/* Premium Gradient Outer Frame */}
+              <div className="relative p-1.5 rounded-[2.2rem] bg-gradient-to-tr from-brand-orange/40 via-brand-pink/20 to-transparent shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-white/10 backdrop-blur-3xl">
+                <div className="relative w-full aspect-[4/3] sm:aspect-video rounded-[1.8rem] overflow-hidden bg-brand-darker">
+>>>>>>> 56f3a1dfc067a8e74fe8092d32c891586fba1740
                   <iframe
                     className="w-full h-full border-none rounded-[32px]"
                     loading="lazy"

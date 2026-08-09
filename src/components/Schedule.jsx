@@ -294,7 +294,7 @@ export default function Schedule({ isStandalone = false }) {
 
   return (
     <section id="schedule" className="relative py-16 sm:py-24 bg-[var(--paper)] text-[#241708] overflow-hidden border-t border-[#EBDAB9]">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
         
         {/* Header */}
         <div className="text-center mb-10 sm:mb-14">
