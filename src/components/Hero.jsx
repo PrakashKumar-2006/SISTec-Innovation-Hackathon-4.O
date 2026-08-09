@@ -234,7 +234,7 @@ export default function Hero({ onRegisterClick, onViewChange }) {
                     alt={img.title}
                     loading={idx === 0 ? "eager" : "lazy"}
                     decoding="async"
-                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${idx === currentSlide ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 z-0'
+                    className={`absolute inset-0 w-full h-full object-cover transform-gpu transition-all duration-1000 ease-in-out ${idx === currentSlide ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 z-0'
                       }`}
                   />
                 ))}

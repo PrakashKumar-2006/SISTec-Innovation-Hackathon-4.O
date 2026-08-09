@@ -5,35 +5,44 @@
 @layer base {
   html {
     font-family: 'Plus Jakarta Sans', sans-serif;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: 'Outfit', sans-serif !important;
+  body {
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
-  /* Custom Scrollbar */
+  /* GPU Hardware Acceleration Helper */
+  .gpu-accelerate {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform, opacity;
+  }
+
+  /* Custom Smooth Scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 9px;
+    height: 9px;
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--paper);
+    background: #FAF6EE;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--marigold);
-    border-radius: 4px;
-    border: 2px solid var(--paper);
+    background: linear-[#8C3A16] to-[#C97F1B];
+    background-color: var(--marigold-deep);
+    border-radius: 6px;
+    border: 2px solid #FAF6EE;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--marigold-deep);
+    background-color: var(--clay);
   }
 }
 
@@ -227,15 +236,16 @@
 /* Scroll Reveal Animations (AOS-like smooth effects) */
 .reveal-on-scroll {
   opacity: 0;
-  transform: translateY(40px) scale(0.98);
-  transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), 
-              transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translate3d(0, 32px, 0) scale(0.98);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .reveal-on-scroll.is-revealed {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
 /* Diagonal Clip-Path for Hero Image Slant */
@@ -853,15 +863,16 @@ h6.text-white {
 /* Scroll Reveal Animations (AOS-like smooth effects) */
 .reveal-on-scroll {
   opacity: 0;
-  transform: translateY(40px) scale(0.98);
-  transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translate3d(0, 32px, 0) scale(0.98);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .reveal-on-scroll.is-revealed {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
 /* Diagonal Clip-Path for Hero Image Slant */
