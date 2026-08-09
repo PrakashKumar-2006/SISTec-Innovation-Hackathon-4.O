@@ -53,12 +53,16 @@ export default function About({ isStandalone = false }) {
               </p>
             </div>
             
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--clay)] leading-[1.1] font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
-              SIH is{' '}
-              <span className="text-[var(--marigold-deep)] block sm:inline">
+            <div className="space-y-2">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
+                <span className="text-[var(--clay)]">SIH 4.0</span>{' '}
+                <span className="text-[var(--marigold-deep)] inline-block whitespace-nowrap">COMING SOON!</span>
+              </h2>
+              <p className="text-xs sm:text-sm font-bold text-[#6B5B49] uppercase tracking-widest flex items-center gap-2 pt-1">
+                <span className="w-6 h-[2px] bg-[#C97F1B]"></span>
                 Organized by SISTec Ratibad
-              </span>
-            </h2>
+              </p>
+            </div>
 
             
             <div className="space-y-6 pt-2">
@@ -138,30 +142,44 @@ export default function About({ isStandalone = false }) {
             </div>
           </div>
 
-          {/* Right Column: Futuristic Video Screen Showcase */}
+          {/* Right Column: Mobile Phone Video Showcase Frame */}
           <div className="lg:col-span-6 flex flex-col justify-center items-center">
-            <div className="relative w-full max-w-xl lg:max-w-2xl">
+            <div className="relative w-full max-w-[280px] sm:max-w-[310px] md:max-w-[330px]">
               
               {/* Decorative behind screen glow */}
-              <div className="absolute -top-12 -right-12 w-64 h-64 bg-brand-gold/10 rounded-full blur-[80px] -z-10 animate-pulse-slow"></div>
-              <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-brand-orange/5 rounded-full blur-[80px] -z-10"></div>
+              <div className="absolute -top-10 -right-10 w-64 h-64 bg-brand-gold/15 rounded-full blur-[90px] -z-10 animate-pulse-slow"></div>
+              <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-brand-orange/10 rounded-full blur-[90px] -z-10"></div>
               
-              {/* Premium Gradient Outer Frame */}
-              <div className="relative p-1.5 rounded-[2.2rem] bg-gradient-to-tr from-brand-orange/40 via-brand-pink/20 to-transparent shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-white/10 backdrop-blur-3xl">
-                <div className="relative w-full aspect-[4/3] sm:aspect-video rounded-[1.8rem] overflow-hidden bg-brand-darker">
+              {/* Premium Smartphone Outer Frame */}
+              <div className="relative p-3.5 rounded-[44px] bg-gradient-to-b from-[#4A3B32] via-[#2A1D16] to-[#120B07] shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_35px_rgba(201,127,27,0.15)] border-2 border-[#8C3A16]/40 backdrop-blur-3xl">
+                
+                {/* Smartphone Notch / Dynamic Island */}
+                <div className="absolute top-5 left-1/2 -translate-x-1/2 w-28 sm:w-32 h-4 sm:h-4.5 bg-black rounded-full z-20 flex items-center justify-between px-3 border border-white/10 shadow-inner">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#1e293b] border border-white/20"></div>
+                  <div className="w-2 h-2 rounded-full bg-[#0f172a] border border-white/20"></div>
+                </div>
+
+                {/* Speaker Bar at Top */}
+                <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-12 h-1 bg-[#4A3B32]/60 rounded-full z-20"></div>
+
+                {/* Screen Container (Aspect 9:16 portrait vertical ratio) */}
+                <div className="relative w-full aspect-[9/16] rounded-[32px] overflow-hidden bg-brand-darker border border-white/10 shadow-inner">
                   <iframe
-                    className="w-full h-full border-none rounded-[1.8rem]"
+                    className="w-full h-full border-none rounded-[32px]"
                     loading="lazy"
-                    src="https://www.youtube.com/embed/CM4Q8pvKgG4?autoplay=1&mute=1&loop=1&playlist=CM4Q8pvKgG4&playsinline=1&controls=1&rel=0"
+                    src="https://www.youtube.com/embed/aBTJ32tFzJs?autoplay=1&mute=1&loop=1&playlist=aBTJ32tFzJs&playsinline=1&controls=1&rel=0"
                     title="SISTec Innovation Hackathon (SIH 4.0)"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerPolicy="strict-origin-when-cross-origin"
                     allowFullScreen
                   ></iframe>
                 </div>
+
+                {/* Home Indicator Bar */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-28 sm:w-32 h-1 bg-white/30 rounded-full z-20"></div>
               </div>
 
-              {/* Extra branding details below video */}
+              {/* Branding details below phone */}
               <div className="mt-6 flex justify-center text-[10px] sm:text-xs text-brand-gray/80 font-semibold font-mono">
                 <span className="flex items-center gap-1.5">
                   <CheckCircle2 size={14} className="text-brand-gold" />
