@@ -1,7 +1,30 @@
-import React from 'react';
-import { Sparkles, Trophy, Users, CheckCircle2 } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Sparkles, Trophy, Users, CheckCircle2, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
 export default function About({ isStandalone = false }) {
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+  const iframeRef = useRef(null);
+
+  const togglePlay = () => {
+    if (!iframeRef.current) return;
+    const command = isPlaying ? 'pauseVideo' : 'playVideo';
+    iframeRef.current.contentWindow.postMessage(
+      JSON.stringify({ event: 'command', func: command, args: '' }),
+      '*'
+    );
+    setIsPlaying(!isPlaying);
+  };
+
+  const toggleMute = () => {
+    if (!iframeRef.current) return;
+    const command = isMuted ? 'unMute' : 'mute';
+    iframeRef.current.contentWindow.postMessage(
+      JSON.stringify({ event: 'command', func: command, args: '' }),
+      '*'
+    );
+    setIsMuted(!isMuted);
+  };
 
   // Stats data with descriptions and icons
   const stats = [
@@ -162,16 +185,53 @@ export default function About({ isStandalone = false }) {
                 <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-12 h-1 bg-[#4A3B32]/60 rounded-full z-20"></div>
 
                 {/* Screen Container (Aspect 9:16 portrait vertical ratio) */}
-                <div className="relative w-full aspect-[9/16] rounded-[32px] overflow-hidden bg-brand-darker border border-white/10 shadow-inner">
+                <div className="relative w-full aspect-[9/16] rounded-[32px] overflow-hidden bg-black border border-white/10 shadow-inner group">
                   <iframe
-                    className="w-full h-full border-none rounded-[32px]"
+                    ref={iframeRef}
+                    className="w-full h-full border-none rounded-[32px] scale-[1.04]"
                     loading="lazy"
-                    src="https://www.youtube.com/embed/aBTJ32tFzJs?autoplay=1&mute=1&loop=1&playlist=aBTJ32tFzJs&playsinline=1&controls=1&rel=0"
+                    src="https://www.youtube.com/embed/aBTJ32tFzJs?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=aBTJ32tFzJs&playsinline=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1"
                     title="SISTec Innovation Hackathon (SIH 4.0)"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
                   ></iframe>
+
+                  {/* Invisible Overlay to catch screen tap/click for Play/Pause */}
+                  <div 
+                    onClick={togglePlay}
+                    className="absolute inset-0 z-10 bg-transparent cursor-pointer"
+                    title={isPlaying ? "Click to Pause" : "Click to Play"}
+                  />
+
+                  {/* Top & Bottom Gradient Masking (Visible only on hover) */}
+                  <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-black/80 via-black/30 to-transparent pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                  {/* Ultra-Clean Glassmorphism Floating Controls (Visible ONLY on HOVER) */}
+                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 bg-black/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto scale-95 group-hover:scale-100">
+                    {/* Play / Pause Toggle Button */}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); togglePlay(); }}
+                      className="p-1.5 rounded-full bg-white/15 hover:bg-white/30 text-white transition-all duration-200 active:scale-90 cursor-pointer"
+                      title={isPlaying ? "Pause Video" : "Play Video"}
+                    >
+                      {isPlaying ? <Pause size={15} className="text-white fill-white" /> : <Play size={15} className="text-white fill-white translate-x-0.5" />}
+                    </button>
+
+                    <div className="w-[1px] h-3.5 bg-white/25" />
+
+                    {/* Mute / Unmute Toggle Button */}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); toggleMute(); }}
+                      className="p-1.5 rounded-full bg-white/15 hover:bg-white/30 text-white transition-all duration-200 active:scale-90 cursor-pointer flex items-center gap-1.5"
+                      title={isMuted ? "Unmute Sound" : "Mute Sound"}
+                    >
+                      {isMuted ? <VolumeX size={15} className="text-red-400" /> : <Volume2 size={15} className="text-emerald-400" />}
+                      <span className="text-[10px] font-extrabold tracking-wider uppercase text-white/90">
+                        {isMuted ? "Muted" : "Sound On"}
+                      </span>
+                    </button>
+                  </div>
                 </div>
 
                 {/* Home Indicator Bar */}
