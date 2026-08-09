@@ -171,7 +171,7 @@ export default function Hero({ onRegisterClick, onViewChange }) {
             </div>
 
             {/* Countdown Box & Register Now Button Row */}
-            <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-center md:items-start lg:items-start justify-center md:justify-between gap-3 sm:gap-4 md:gap-3 lg:gap-4 xl:gap-5 w-full relative z-10 flex-wrap sm:flex-nowrap">
+            <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-center sm:items-center md:items-start lg:items-center justify-center md:justify-between gap-3 sm:gap-4 md:gap-3 lg:gap-4 xl:gap-5 w-full relative z-10 flex-wrap sm:flex-nowrap">
               {/* Countdown — Unit Cards */}
               <div className="flex flex-col items-center md:items-start gap-1 relative z-10 shrink-0">
                 {/* Live badge */}
@@ -195,10 +195,10 @@ export default function Hero({ onRegisterClick, onViewChange }) {
                 </div>
               </div>
 
-              {/* Register Now Button Pill */}
+              {/* Register Now Button Pill — Perfectly aligned vertically with timer cards */}
               <button
                 onClick={onRegisterClick}
-                className="flex items-center justify-between gap-2 px-2.5 py-1.5 xs:px-3 xs:py-2 md:px-3 md:py-2 lg:px-3 lg:py-2 xl:px-4 xl:py-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] hover:from-[#6B3213] hover:to-[#A64B1E] transition-all duration-300 shadow-md hover:shadow-xl group cursor-pointer border border-[#C97F1B]/40 hover:scale-[1.02] active:scale-95 text-left shrink-0 mt-1 md:mt-2 lg:mt-0"
+                className="flex items-center justify-between gap-2 px-2.5 py-1.5 xs:px-3 xs:py-2 md:px-3 md:py-2 lg:px-3 lg:py-2 xl:px-4 xl:py-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#8C3A16] via-[#A64B1E] to-[#C97F1B] hover:from-[#6B3213] hover:to-[#A64B1E] transition-all duration-300 shadow-md hover:shadow-xl group cursor-pointer border border-[#C97F1B]/40 hover:scale-[1.02] active:scale-95 text-left shrink-0 self-center sm:self-center md:self-start lg:self-center mt-2 sm:mt-3 md:mt-3 lg:mt-3"
               >
                 <div className="flex flex-col">
                   <span className="text-[10.5px] xs:text-xs md:text-[11px] lg:text-xs xl:text-sm font-black tracking-wider uppercase text-white leading-tight font-display" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900 }}>
