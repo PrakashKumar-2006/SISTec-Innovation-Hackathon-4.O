@@ -37,6 +37,7 @@ dist-ssr/
 
 # Environment secrets
 .env
+.env.atlas-backup
 .env.production
 .env.local
 
