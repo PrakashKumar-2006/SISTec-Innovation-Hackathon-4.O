@@ -1,0 +1,15 @@
+to install the redis in windows, open the powershell as administrator then
+
+install command: wingnet install MemuraiDeveloper
+
+verify installation and connection: memurai-cli -- version, mermurai-cli ping. expected output PONG.
+
+Server Control:
+net start Memuai
+net stop Memurai
+Restart-Service Memurai
+
+To check connection with our website:
+cd "/d D:\SIH web 4.0\SISTec-Innovation-Hackathon-4.O\server"
+
+node -e "require('dotenv').config(); const {redisClient}=require('./utils/redisClient'); setTimeout(async()=>{try{console.log('PING:',await redisClient.ping())}catch(e){console.log('ERR:',e.message)}process.exit()},1500)"
