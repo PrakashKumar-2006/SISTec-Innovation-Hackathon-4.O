@@ -23,7 +23,6 @@
     "nodemailer": "^9.0.3",
     "qpdf": "^0.1.0-prealpha.1",
     "rate-limit-redis": "^6.0.0",
-    "razorpay": "^2.9.8",
     "sharp": "^0.35.3",
     "xlsx": "^0.18.5",
     "xss-clean": "^0.1.4",

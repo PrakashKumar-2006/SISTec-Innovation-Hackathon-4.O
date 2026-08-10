@@ -60,7 +60,6 @@
 | bcryptjs | Password Hashing | ^3.0.3 | Yes |
 | multer | File Upload Middleware | ^1.4.5-lts.1 | Yes |
 | xlsx | Excel Export/Import | ^0.18.5 | Yes |
-| Razorpay | Payments Processing | ^2.9.8 | Yes |
 | express-rate-limit | Rate Limiting | ^8.6.0 | Yes |
 | helmet | Security Headers | ^8.3.0 | Yes |
 
@@ -185,9 +184,6 @@ Uploaded files (idea PPTs, consent letters, payment screenshots) are stored on t
 | `MONGODB_URI` | Yes | MongoDB connection string | `mongodb://127.0.0.1:27017/sih_registrations` |
 | `REDIS_URL` | No | Optional Redis for rate-limiting | `redis://localhost:6379` |
 | `UPLOAD_DIR` | No | Local file storage root (relative to `server/`) | `./storage` |
-| `RAZORPAY_KEY_ID` | Yes | Razorpay API Key | `rzp_test_xxxx` |
-| `RAZORPAY_KEY_SECRET` | Yes | Razorpay Secret | `secret_xxxx` |
-| `REGISTRATION_FEE_INR` | Yes | Fee amount for payment processing | `150` |
 | `EMAIL_HOST` | Yes | SMTP Host | `smtp.gmail.com` |
 | `EMAIL_PORT` | Yes | SMTP Port | `587` |
 | `EMAIL_USER` | Yes | Email Sender Address | `you@gmail.com` |
@@ -231,6 +227,17 @@ You need to create **two** environment files:
 - Files are validated and archived into local private storage (`UPLOAD_DIR`) by the PDF/image processors.
 - Express saves the relative storage key (e.g. `pdfs/2026/08/<hex>.pdf`) into the MongoDB document.
 - Admins in the dashboard view/download files through the authenticated `/api/admin/files/:fileId` endpoint.
+
+---
+
+## 16.1 PAYMENT PROCESSING (MANUAL / CCAVENUE)
+
+- **Model**: Manual payment verification. Registration is *not* gated on a live payment gateway.
+- On the payment step (Step 5) the user scans the public QR (`public/ccavenue-qr.png`) or opens the HDFC CCAvenue form (`https://formbuilder.ccavenue.com/live/hdfc-bank/sistec-r`) in a popup to pay the fee (₹1,200 IEEE/CSI members, ₹1,500 otherwise).
+- The user then enters the transaction ID / UTR and uploads a payment screenshot alongside the registration form.
+- `POST /api/register` stores the registration with `paymentStatus: 'completed'` and `verificationStatus: 'pending'` — "completed" here means the form was submitted, not that payment was independently confirmed.
+- Admins manually review the transaction ID and payment screenshot in the dashboard and set `verificationStatus` to `verified` (or `flagged`).
+- The registration fee is computed server-side from the `isIeeeCsiMember` field. There is **no** Razorpay/Razorpay Checkout integration.
 
 ---
 
@@ -284,7 +291,7 @@ echo "VITE_API_URL=http://localhost:5000" > .env
 **STEP 6:** Setup backend environment file.
 ```bash
 cp server/.env.example server/.env
-# Open server/.env in a code editor and fill in MongoDB URI, Razorpay, and Email credentials.
+# Open server/.env in a code editor and fill in MongoDB URI and Email credentials.
 # Make sure to add SUPER_ADMIN_EMAIL and SUPER_ADMIN_PASSWORD for Step 8.
 ```
 **STEP 7:** Start your local MongoDB server (or ensure MongoDB Atlas URI is active).
@@ -367,7 +374,7 @@ Before deploying:
 - Host backend (e.g., Render, Railway, AWS) and define production environment variables inside the dashboard.
 - Secure MongoDB with proper authentication and IP Whitelists (Atlas).
 - Consider setting up DKIM/SPF on your sending domain to prevent Nodemailer emails from going to spam.
-- Switch Razorpay to Live Mode keys.
+- Ensure the CCAvenue form link (`https://formbuilder.ccavenue.com/live/hdfc-bank/sistec-r`) and the public QR code are current before opening registrations.
 
 ---
 

@@ -17,7 +17,6 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
-const Razorpay = require('razorpay');
 const nodemailer = require('nodemailer');
 const { authMiddleware } = require("./middleware/auth");
 const { maintenanceMiddleware } = require("./middleware/maintenance");
@@ -25,12 +24,6 @@ const { sendConfirmationEmail, sendSelectionEmail, sendVerificationEmail } = req
 const { createRedisStore } = require('./utils/redisClient');
 
 const app = express();
-
-// Initialize Razorpay SDK client
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_placeholder',
-  key_secret: process.env.RAZORPAY_KEY_SECRET || 'secret_placeholder'
-});
 
 // Setup Nodemailer SMTP Transporter (Removed, now in utils/email.js)
 
@@ -377,7 +370,7 @@ app.set('trust proxy', 1);
 app.use(helmet({
   contentSecurityPolicy: false,
   crossOriginResourcePolicy: { policy: "cross-origin" }, // Allows frontend to load images/files served statically
-  crossOriginOpenerPolicy: false, // Allows Razorpay popups to communicate with the main window
+  crossOriginOpenerPolicy: false, // Allows the HDFC CCAvenue payment popup to communicate with the main window
   crossOriginEmbedderPolicy: false,
   dnsPrefetchControl: { allow: false },
   frameguard: { action: 'deny' }, // Prevent clickjacking
@@ -1170,176 +1163,6 @@ app.post('/api/register', registrationLimiter, uploadConcurrencyGuard, upload.fi
 });
 
 const crypto = require('crypto');
-
-// Cryptographic Payment Verification Route
-app.post('/api/payment/verify', async (req, res) => {
-  try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-
-    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-      logPaymentEvent('VERIFICATION_FAILED', {
-        ip: req.ip,
-        payload: { error: 'Missing tokens' }
-      });
-      return res.status(400).json({ error: 'Missing required payment verification tokens.' });
-    }
-
-    // 1. Generate expected signature using SHA256 HMAC
-    const signSource = razorpay_order_id + '|' + razorpay_payment_id;
-    const expectedSignature = crypto
-      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || 'secret_placeholder')
-      .update(signSource.toString())
-      .digest('hex');
-
-    // 2. Check if signature matches
-    if (expectedSignature === razorpay_signature) {
-      logPaymentEvent('SIGNATURE_VERIFIED', {
-        orderId: razorpay_order_id,
-        paymentId: razorpay_payment_id,
-        ip: req.ip
-      });
-
-      // 2.1 Check if order is already processed to ensure idempotency
-      const existingReg = await Registration.findOne({ paymentOrderId: razorpay_order_id });
-      if (!existingReg) {
-        return res.status(404).json({ error: 'Associated registration record not found.' });
-      }
-
-      if (existingReg.paymentStatus === 'completed') {
-        return res.status(200).json({
-          success: true,
-          message: 'Payment already verified and registration finalized.',
-          registrationId: existingReg.registrationId,
-          teamName: existingReg.teamName
-        });
-      }
-
-      // 3. Generate a secure, unique Registration ID (SIH4-001, SIH4-002...)
-      const registrationId = await generateNextRegistrationId();
-
-      // 4. Update the pending registration document in MongoDB
-      const updatedReg = await Registration.findOneAndUpdate(
-        { paymentOrderId: razorpay_order_id },
-        { 
-          paymentStatus: 'completed',
-          paymentId: razorpay_payment_id,
-          registrationId: registrationId,
-          $unset: { expireAt: "" }
-        },
-        { new: true }
-      );
-
-      if (!updatedReg) {
-        return res.status(404).json({ error: 'Associated registration record not found.' });
-      }
-
-      logPaymentEvent('REGISTRATION_COMPLETED', {
-        registrationId: updatedReg.registrationId,
-        orderId: razorpay_order_id,
-        paymentId: razorpay_payment_id,
-        ip: req.ip
-      });
-
-      // 5. Queue Email confirmation in background (Retry Queue)
-      queueConfirmationEmail(
-        updatedReg.leaderEmail,
-        updatedReg.leaderName,
-        updatedReg.teamName,
-        updatedReg.registrationId
-      );
-
-      res.status(200).json({
-        success: true,
-        message: 'Payment verified and registration finalized.',
-        registrationId: updatedReg.registrationId,
-        teamName: updatedReg.teamName
-      });
-    } else {
-      logPaymentEvent('SIGNATURE_FAILED', {
-        orderId: razorpay_order_id,
-        paymentId: razorpay_payment_id,
-        ip: req.ip
-      });
-      res.status(400).json({ error: 'Payment signature verification failed. Tampering detected.' });
-    }
-  } catch (err) {
-    console.error('Error during payment verification:', err);
-    res.status(500).json({ error: err.message || 'Server error verifying transaction.' });
-  }
-});
-
-// Razorpay Webhook callback route (verifies webhook events using raw req.rawBody)
-app.post('/api/payment/webhook', async (req, res) => {
-  try {
-    logPaymentEvent('WEBHOOK_RECEIVED', {
-      ip: req.ip,
-      payload: { event: req.body?.event }
-    });
-
-    const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
-    const signature = req.headers['x-razorpay-signature'];
-
-    if (!secret || !signature) {
-      // Webhook not fully configured or missing headers - ignore/acknowledge
-      return res.status(200).send('Webhook configured but skipped signature verification.');
-    }
-
-    const expectedSignature = crypto
-      .createHmac('sha256', secret)
-      .update(req.rawBody)
-      .digest('hex');
-
-    if (expectedSignature === signature) {
-      logPaymentEvent('WEBHOOK_VERIFIED', {
-        ip: req.ip,
-        payload: { event: req.body?.event }
-      });
-
-      const eventData = req.body;
-      
-      // If payment is captured or order is paid
-      if (eventData.event === 'order.paid' || eventData.event === 'payment.captured') {
-        const payloadOrder = eventData.payload.order?.entity || eventData.payload.payment?.entity;
-        const orderId = payloadOrder?.order_id || payloadOrder?.id;
-        const paymentId = eventData.payload.payment?.entity?.id || '';
-
-        if (orderId) {
-          const reg = await Registration.findOne({ paymentOrderId: orderId });
-          if (reg && reg.paymentStatus !== 'completed') {
-            reg.paymentStatus = 'completed';
-            reg.paymentId = paymentId;
-            reg.registrationId = await generateNextRegistrationId();
-            reg.expireAt = undefined; // Unsets the expireAt TTL index field in Mongoose/MongoDB
-            const savedReg = await reg.save();
-            console.log(`Webhook updated registration for order ${orderId} successfully.`);
-
-            logPaymentEvent('REGISTRATION_COMPLETED', {
-              registrationId: savedReg.registrationId,
-              orderId: orderId,
-              paymentId: paymentId,
-              ip: req.ip
-            });
-            
-            // Queue confirmation email asynchronously (Retry Queue)
-            queueConfirmationEmail(
-              savedReg.leaderEmail,
-              savedReg.leaderName,
-              savedReg.teamName,
-              savedReg.registrationId
-            );
-          }
-        }
-      }
-      res.status(200).send('OK');
-    } else {
-      logPaymentEvent('WEBHOOK_SIGNATURE_FAILED', { ip: req.ip });
-      res.status(400).send('Invalid webhook signature');
-    }
-  } catch (err) {
-    console.error('Webhook processing error:', err);
-    res.status(500).send('Webhook server error');
-  }
-});
 
 // Middleware to verify administrative API Key
 const verifyAdminKey = (req, res, next) => {

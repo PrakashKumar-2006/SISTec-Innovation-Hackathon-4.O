@@ -358,26 +358,6 @@ const defaultFormData = {
   paymentScreenshot: null,
 };
 
-const loadRazorpayScript = () => {
-  return new Promise((resolve) => {
-    if (window.Razorpay) {
-      resolve(true);
-      return;
-    }
-    const existing = document.querySelector('script[src*="checkout.razorpay.com"]');
-    if (existing) {
-      existing.addEventListener('load', () => resolve(true));
-      existing.addEventListener('error', () => resolve(false));
-      return;
-    }
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.onload = () => resolve(true);
-    script.onerror = () => resolve(false);
-    document.body.appendChild(script);
-  });
-};
-
 export default function RegisterModal({ onClose }) {
   const backendUrl = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '');
 
@@ -741,7 +721,7 @@ export default function RegisterModal({ onClose }) {
       }
 
       if (!response.ok) {
-        setErrors({ submit: data.error || 'Failed to initialize order. Please try again.' });
+        setErrors({ submit: data.message || data.error || `Registration failed. Please try again. (Server responded with status ${response.status})` });
         setIsSubmitting(false);
         return;
       }
