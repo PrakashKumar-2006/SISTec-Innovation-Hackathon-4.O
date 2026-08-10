@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Selection = require('../models/Selection');
+const File = require('../models/File');
 const { authMiddleware, roleMiddleware } = require('../middleware/auth');
 const { queueVerificationEmail } = require('../server');
 
@@ -9,6 +10,42 @@ const { queueVerificationEmail } = require('../server');
 router.use(authMiddleware);
 
 const xlsx = require('xlsx');
+
+// Archived files are served through the auth-protected files endpoint keyed by
+// the MongoDB File document _id. Registration fields store relative storage
+// keys (pdfs/... / images/... / documents/...) which are resolved to File docs
+// and mapped to a signed download URL; legacy external URLs (/uploads) pass
+// through unchanged.
+const FILES_FIELDS = ['ideaPpt', 'consentLetter', 'paymentScreenshot'];
+const STORAGE_KEY_PREFIX = /^(images|pdfs|documents)\//;
+
+const isStorageKey = (value) => typeof value === 'string' && STORAGE_KEY_PREFIX.test(value);
+
+async function mapTeamsFiles(req, teams) {
+  // Batch-resolve storage keys -> File document _ids in a single query.
+  const keys = [];
+  for (const team of teams) {
+    for (const field of FILES_FIELDS) {
+      if (isStorageKey(team[field])) keys.push(team[field]);
+    }
+  }
+  const idByKey = new Map();
+  if (keys.length) {
+    const docs = await File.find({ storageKey: { $in: keys } }).select('_id storageKey').lean();
+    for (const doc of docs) idByKey.set(doc.storageKey, doc._id.toString());
+  }
+  const base = `${req.protocol}://${req.get('host')}`;
+  const token = encodeURIComponent((req.headers.authorization || '').split(' ')[1] || '');
+  for (const team of teams) {
+    for (const field of FILES_FIELDS) {
+      const value = team[field];
+      if (!isStorageKey(value)) continue;
+      const fileId = idByKey.get(value);
+      team[field] = fileId ? `${base}/api/admin/files/${fileId}?token=${token}` : value;
+    }
+  }
+  return teams;
+}
 
 // Helper to build the shared team query
 const buildTeamQuery = async (queryParams) => {
@@ -70,6 +107,7 @@ router.get('/', roleMiddleware(['Super Admin', 'Admin', 'Moderator', 'Viewer']),
       .skip(skip)
       .limit(limit)
       .lean();
+    await mapTeamsFiles(req, teams);
       
     res.json({
       success: true,
@@ -142,7 +180,7 @@ router.get('/:id', roleMiddleware(['Super Admin', 'Admin', 'Moderator', 'Viewer'
     if (!team) {
       return res.status(404).json({ success: false, message: 'Team not found' });
     }
-    res.json({ success: true, data: team });
+    res.json({ success: true, data: (await mapTeamsFiles(req, [team]))[0] });
   } catch (error) {
     console.error('Error fetching team details:', error);
     res.status(500).json({ success: false, message: 'Failed to fetch team details' });

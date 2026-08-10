@@ -16,6 +16,9 @@ server/node_modules/
 server/uploads/*
 !server/uploads/.gitkeep
 
+# Local file storage (images/pdfs/documents) — created at runtime
+server/storage/
+
 # Build directories
 dist/
 dist-ssr/

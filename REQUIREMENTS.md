@@ -7,7 +7,7 @@
 **Frontend**: React (Vite) with Tailwind CSS and shadcn/ui.  
 **Backend**: Express.js on Node.js.  
 **Database**: MongoDB with Mongoose ODM.  
-**File Storage**: Cloudinary (via multer and cloudinary SDK).  
+**File Storage**: Local private storage on the backend (`UPLOAD_DIR`) via multer + sharp (images) + qpdf (PDFs).
 **Authentication**: JWT-based authentication for the Admin Dashboard.  
 **Email System**: Nodemailer with a MongoDB-backed atomic email queue.  
 **Admin Dashboard**: Embedded within the frontend under `/admin` routes.  
@@ -26,8 +26,8 @@
              /       |        \
             /        |         \
            /         |          \
-   MongoDB       Cloudinary    Nodemailer (SMTP)
- (Data & Logs)  (File Storage) (Email Notifications)
+   MongoDB            Local Storage    Nodemailer (SMTP)
+ (Data & Logs)     (File Storage)   (Email Notifications)
            \
             EmailQueue (MongoDB collection for async retry)
 ```
@@ -54,7 +54,7 @@
 | Framer Motion | Animations | ^12.42.2 | Yes |
 | Express | Backend Web Framework | ^4.19.2 | Yes |
 | MongoDB / Mongoose | Database & ODM | ^8.2.1 | Yes |
-| Cloudinary | Cloud File Storage | ^2.10.0 | Yes |
+| Local Private Storage | File Storage | built-in (multer + sharp + qpdf) | Yes |
 | Nodemailer | Email Sending | ^9.0.3 | Yes |
 | jsonwebtoken (JWT) | Auth Tokens | ^9.0.3 | Yes |
 | bcryptjs | Password Hashing | ^3.0.3 | Yes |
@@ -158,14 +158,16 @@ The project uses MongoDB. It can be run locally or via MongoDB Atlas.
 
 ---
 
-## 11. CLOUDINARY SETUP
+## 11. LOCAL FILE STORAGE SETUP
 
-Cloudinary is required for storing uploaded files (e.g., student ID proofs, PPTs).
-- **Variables Required** (in `server/.env`):
-  - `CLOUDINARY_CLOUD_NAME=<your-value>`
-  - `CLOUDINARY_API_KEY=<your-value>`
-  - `CLOUDINARY_API_SECRET=<your-value>`
-- **Upload Config**: Uses multer middleware to parse files in memory/temp and then uploads securely to Cloudinary using the SDK.
+Uploaded files (idea PPTs, consent letters, payment screenshots) are stored on the backend's local disk under `UPLOAD_DIR` (defaults to `server/storage`), organized into `images/`, `pdfs/`, and `documents/` subdirectories. This directory is private and is never served publicly; files are delivered to admins through the authenticated `/api/admin/files/:fileId` endpoint.
+- **Variables** (in `server/.env`):
+  - `UPLOAD_DIR=<path>` (optional; relative paths resolve against `server/`, absolute paths are used as-is)
+- **Upload Pipeline**: `multer` parses the multipart upload, then:
+  - PDFs are validated/optimized with `qpdf` and archived under `pdfs/`.
+  - Raster images (consent letter, payment screenshot) are re-encoded to WebP with `sharp` and archived under `images/`.
+  - Anything else (PPT/PPTX decks, unprocessable files) is archived verbatim under `documents/`.
+- File metadata (owner, field, storage key, checksum) is tracked in the `File` MongoDB collection so a record's files can be replaced or cleaned up safely.
 
 ---
 
@@ -182,9 +184,7 @@ Cloudinary is required for storing uploaded files (e.g., student ID proofs, PPTs
 | `PORT` | No | Backend Express port | `5000` |
 | `MONGODB_URI` | Yes | MongoDB connection string | `mongodb://127.0.0.1:27017/sih_registrations` |
 | `REDIS_URL` | No | Optional Redis for rate-limiting | `redis://localhost:6379` |
-| `CLOUDINARY_CLOUD_NAME` | Yes | Cloudinary Cloud Name | `your_cloud_name` |
-| `CLOUDINARY_API_KEY` | Yes | Cloudinary Key | `your_api_key` |
-| `CLOUDINARY_API_SECRET`| Yes | Cloudinary Secret | `your_api_secret` |
+| `UPLOAD_DIR` | No | Local file storage root (relative to `server/`) | `./storage` |
 | `RAZORPAY_KEY_ID` | Yes | Razorpay API Key | `rzp_test_xxxx` |
 | `RAZORPAY_KEY_SECRET` | Yes | Razorpay Secret | `secret_xxxx` |
 | `REGISTRATION_FEE_INR` | Yes | Fee amount for payment processing | `150` |
@@ -223,15 +223,14 @@ You need to create **two** environment files:
 
 ---
 
-## 16. CLOUDINARY + FILE UPLOAD WORKFLOW
+## 16. FILE UPLOAD WORKFLOW
 
 - User fills a form on the Public Website.
 - Form sends `multipart/form-data` to the Backend via Axios.
 - Express parses files using `multer`.
-- Express uploads file buffers to Cloudinary using `cloudinary.uploader.upload_stream`.
-- Cloudinary responds with a secure URL (e.g. `https://res.cloudinary.com/...`).
-- Express saves this secure URL into the MongoDB document.
-- Admins in the dashboard click the URL to safely view/download files.
+- Files are validated and archived into local private storage (`UPLOAD_DIR`) by the PDF/image processors.
+- Express saves the relative storage key (e.g. `pdfs/2026/08/<hex>.pdf`) into the MongoDB document.
+- Admins in the dashboard view/download files through the authenticated `/api/admin/files/:fileId` endpoint.
 
 ---
 
@@ -285,7 +284,7 @@ echo "VITE_API_URL=http://localhost:5000" > .env
 **STEP 6:** Setup backend environment file.
 ```bash
 cp server/.env.example server/.env
-# Open server/.env in a code editor and fill in MongoDB URI, Cloudinary, Razorpay, and Email credentials.
+# Open server/.env in a code editor and fill in MongoDB URI, Razorpay, and Email credentials.
 # Make sure to add SUPER_ADMIN_EMAIL and SUPER_ADMIN_PASSWORD for Step 8.
 ```
 **STEP 7:** Start your local MongoDB server (or ensure MongoDB Atlas URI is active).
@@ -332,7 +331,6 @@ Run these from `/server`:
 - [ ] Git installed
 - [ ] Dependencies installed (`npm install` & `cd server && npm install`)
 - [ ] MongoDB connected
-- [ ] Cloudinary connected
 - [ ] Environment variables configured (both `.env` & `server/.env`)
 - [ ] Email configured
 - [ ] Super Admin created
@@ -357,7 +355,6 @@ Run these from `/server`:
 - **Port in Use**: If Vite or Express complains about `EADDRINUSE`, kill the offending process or change the port in `.env` / `vite.config.js`.
 - **MongoDB Connection Failure**: Ensure the MongoDB service is running (e.g. `services.msc` on Windows, or `systemctl status mongod` on Linux) or check your Atlas IP Whitelist.
 - **CORS Errors**: Ensure `VITE_API_URL` exactly matches the backend protocol, hostname, and port.
-- **Cloudinary Failures**: Verify your keys. A trailing space in the `.env` can break the Cloudinary SDK authentication.
 - **Nodemailer Errors**: If using Gmail, ensure "App Passwords" are generated via Google 2FA settings, as standard passwords will be rejected.
 
 ---
@@ -388,7 +385,7 @@ Before deploying:
 ## 28. BACKUP & DATA SAFETY
 
 - **MongoDB**: Use `mongodump` for local setups or automated backups within MongoDB Atlas.
-- **Files**: Cloudinary handles redundancy internally.
+- **Files**: Back up the local storage directory (`UPLOAD_DIR`, e.g. `server/storage`) alongside the database.
 - Keep a secure backup of your production `.env` files in a password manager.
 
 ---
@@ -407,7 +404,7 @@ Before deploying:
 1. `git clone <repo>`
 2. `npm i && cd server && npm i && cd ..`
 3. `echo "VITE_API_URL=http://localhost:5000" > .env`
-4. Copy `server/.env.example` to `server/.env` and insert DB/Cloudinary keys.
+4. Copy `server/.env.example` to `server/.env` and insert DB keys.
 5. `node server/seed-admin.js`
 6. `npm run dev`
 

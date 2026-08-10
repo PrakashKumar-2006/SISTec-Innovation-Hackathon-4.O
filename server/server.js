@@ -8,7 +8,11 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
-const cloudinary = require('cloudinary').v2;
+const storageService = require('./utils/storage');
+const fileService = require('./utils/fileService');
+const File = require('./models/File');
+const imageProcessor = require('./utils/imageProcessor');
+const pdfProcessor = require('./utils/pdfProcessor');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -302,98 +306,65 @@ setInterval(processEmailQueue, 60 * 1000);
  */
 const generateNextRegistrationId = async () => {
   try {
-    // Strictly match numeric registration IDs (SIH4-001, SIH4-002...)
-    const regs = await Registration.find(
-      { registrationId: { $regex: /^SIH4-\d+$/ } },
-      { registrationId: 1 }
+    const counters = mongoose.connection.db.collection('sih_counters');
+    // Seed the counter once (atomically) with the highest existing numeric ID so
+    // pre-existing registrations are honored and no ID is ever reused.
+    await counters.updateOne(
+      { _id: 'registrationId' },
+      { $setOnInsert: { seq: await computeCurrentMaxRegistrationNum() } },
+      { upsert: true }
     );
-
-    let maxNum = 0;
-    regs.forEach(r => {
-      if (r.registrationId) {
-        const match = r.registrationId.match(/^SIH4-(\d+)$/);
-        if (match) {
-          const num = parseInt(match[1], 10);
-          if (num > maxNum) maxNum = num;
-        }
-      }
-    });
-
-    // If no numeric SIH4-001 format registration exists yet in DB
-    if (maxNum === 0) {
-      const totalCount = await Registration.countDocuments({
-        $or: [{ paymentStatus: 'completed' }, { verificationStatus: 'verified' }]
-      });
-      maxNum = totalCount;
+    // Atomically claim the next value; concurrent callers always get distinct IDs.
+    const next = await counters.findOneAndUpdate(
+      { _id: 'registrationId' },
+      { $inc: { seq: 1 } },
+      { returnDocument: 'after', upsert: false }
+    );
+    if (!next || typeof next.seq !== 'number') {
+      throw new Error('registration ID counter not initialized');
     }
-
-    const nextNum = maxNum + 1;
-    const paddedNum = String(nextNum).padStart(3, '0');
-    return `SIH4-${paddedNum}`;
+    return `SIH4-${String(next.seq).padStart(3, '0')}`;
   } catch (err) {
     console.error('Error generating registration ID:', err);
     return `SIH4-001`;
   }
 };
 
-// Configure Cloudinary
-// ─── PHASE 4: Cloudinary Production Boot Validation ────────────────────────────
-//
-// Problem: When Cloudinary credentials are missing in production, files silently
-// fall back to local disk storage on the instance that handled the request.
-// Under a load balancer, the admin viewing the file might hit a DIFFERENT
-// instance — which doesn't have that file — and receive a 404 Not Found.
-//
-// Fix: In NODE_ENV=production, abort server startup immediately if Cloudinary
-// is not properly configured. This makes the misconfiguration visible at deploy
-// time rather than silently corrupting user data.
-
-const isCloudinaryConfigured =
-  process.env.CLOUDINARY_CLOUD_NAME &&
-  process.env.CLOUDINARY_CLOUD_NAME !== 'your_cloud_name' &&
-  process.env.CLOUDINARY_API_KEY &&
-  process.env.CLOUDINARY_API_SECRET;
-
-if (isCloudinaryConfigured) {
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key:    process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-  });
-  console.log('[Cloudinary] Storage configured successfully.');
-} else if (process.env.NODE_ENV === 'production') {
-  // Hard fail in production — local disk fallback is NOT safe across multiple nodes
-  console.error(
-    '\n[FATAL] Cloudinary is NOT configured but NODE_ENV=production.\n' +
-    'Files uploaded to one instance will NOT be accessible from other instances.\n' +
-    'Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET\n' +
-    'in your hosting platform environment variables, then redeploy.\n'
+const computeCurrentMaxRegistrationNum = async () => {
+  // Strictly match numeric registration IDs (SIH4-001, SIH4-002...)
+  const regs = await Registration.find(
+    { registrationId: { $regex: /^SIH4-\d+$/ } },
+    { registrationId: 1 }
   );
-  process.exit(1);
-} else {
-  console.warn(
-    '[Cloudinary] Not configured — files will be stored locally in server/uploads/.\n' +
-    '             This is fine for local development but will cause 404 errors\n' +
-    '             under a load balancer. Set CLOUDINARY_* env vars for production.'
-  );
-}
 
-// Helper to upload files to Cloudinary
-const uploadToCloudinary = async (filePath, folder = 'sih_files') => {
-  return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload(
-      filePath,
-      {
-        folder: folder,
-        resource_type: 'auto', // Auto handles PPT, PDF, DOCX, PNG, etc.
-      },
-      (error, result) => {
-        if (error) return reject(error);
-        resolve(result.secure_url);
+  let maxNum = 0;
+  regs.forEach(r => {
+    if (r.registrationId) {
+      const match = r.registrationId.match(/^SIH4-(\d+)$/);
+      if (match) {
+        const num = parseInt(match[1], 10);
+        if (num > maxNum) maxNum = num;
       }
-    );
+    }
   });
+
+  // If no numeric SIH4-001 format registration exists yet in DB
+  if (maxNum === 0) {
+    const totalCount = await Registration.countDocuments({
+      $or: [{ paymentStatus: 'completed' }, { verificationStatus: 'verified' }]
+    });
+    maxNum = totalCount;
+  }
+
+  return maxNum;
 };
+
+// ─── File Storage ─────────────────────────────────────────────────────────────
+// Uploaded files are archived in private object storage rooted at UPLOAD_DIR
+// (default: server/storage). The tree is never exposed via Express static
+// middleware; every artifact is served through the auth-protected admin files
+// endpoint (GET /api/admin/files/:fileId).
+
 const PORT = process.env.PORT || 5000;
 
 // PHASE 1 FIX: Trust the first proxy hop so that req.ip correctly reflects
@@ -488,6 +459,23 @@ if (!fs.existsSync(uploadsDir)) {
 // Serve uploads folder statically (for downloading receipts/files)
 app.use('/uploads', express.static(uploadsDir));
 
+// ─── Local File Storage Foundation ──────────────────────────────────────────
+// Creates the storage tree ({UPLOAD_DIR}/images, pdfs, documents, tmp) on boot.
+// This tree holds all archived uploads and is NEVER exposed as a public static
+// directory — artifacts are served exclusively through the auth-protected
+// admin files endpoint.
+storageService.ensureDirectories()
+  .then(() => console.log(`[Storage] Ready. Root: ${storageService.getRoot()}`))
+  .catch((err) => console.error('[Storage] Failed to initialize directories:', err.message));
+
+if (path.resolve(storageService.getRoot()) === path.resolve(uploadsDir)) {
+  console.warn(
+    '[Storage] WARNING: UPLOAD_DIR points at the publicly served "uploads" directory.\n' +
+    '           Files stored there would be publicly accessible. Set UPLOAD_DIR to a\n' +
+    '           dedicated directory (e.g. UPLOAD_DIR=./storage) that is not served statically.'
+  );
+}
+
 const adminAuthRoutes = require("./routes/adminAuth");
 const adminTeamsRoutes = require("./routes/adminTeams");
 const adminProblemsRoutes = require("./routes/adminProblems");
@@ -505,6 +493,14 @@ const publicSupportRoutes = require("./routes/publicSupport");
 app.use('/api/admin/login', authLimiter);
 
 app.use('/api/admin', adminAuthRoutes);
+
+// Auth-protected file serving for archived artifacts. Mounted BEFORE the global
+// admin auth middleware because it also accepts the token via the ?token= query
+// string (plain <a href> clicks from the admin dashboard cannot attach headers).
+// Files are addressed by their MongoDB File document _id — a raw filesystem path
+// or storage key is never accepted from the client.
+const adminFilesRoutes = require("./routes/adminFiles");
+app.use('/api/admin/files', adminFilesRoutes);
 
 // Apply auth & maintenance middleware to all other admin routes
 app.use('/api/admin', authMiddleware, maintenanceMiddleware);
@@ -557,7 +553,6 @@ mongoose.connect(MONGODB_URI)
 //   2. Per-field MIME-type validation prevents disguised binary uploads.
 //   3. A concurrency semaphore (MAX_CONCURRENT_UPLOADS) throttles multipart
 //      stream parsing to prevent memory exhaustion under spike conditions.
-//   4. Cloudinary uploads run in parallel via Promise.all instead of serially.
 
 // Per-field size limits (in bytes)
 const FILE_SIZE_LIMITS = {
@@ -573,7 +568,7 @@ const ALLOWED_MIMES = {
   paymentScreenshot: ['image/jpeg', 'image/png'],
 };
 
-// Multer disk storage (temp landing pad before Cloudinary upload)
+// Multer disk storage (temp landing pad before archival into private storage)
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadsDir);
@@ -589,16 +584,24 @@ const fileFilter = (req, file, cb) => {
   const allowedExtensions = ['.pdf', '.ppt', '.pptx', '.jpg', '.jpeg', '.png'];
   const ext = path.extname(file.originalname).toLowerCase();
 
+  // Tag rejections with status 400 so the global error handler returns a client
+  // error instead of a misleading 500 (these are invalid uploads, not server faults).
+  const reject = (message) => {
+    const err = new Error(message);
+    err.status = 400;
+    return cb(err);
+  };
+
   if (!allowedExtensions.includes(ext)) {
-    return cb(new Error(`Invalid file extension "${ext}". Allowed: PDF, PPT, PPTX, JPG, JPEG, PNG`));
+    return reject(`Invalid file extension "${ext}". Allowed: PDF, PPT, PPTX, JPG, JPEG, PNG`);
   }
 
   const allowedMimes = ALLOWED_MIMES[file.fieldname];
   if (allowedMimes && !allowedMimes.includes(file.mimetype)) {
-    return cb(new Error(
+    return reject(
       `Invalid file type for "${file.fieldname}". ` +
       `Got "${file.mimetype}", expected one of: ${allowedMimes.join(', ')}`
-    ));
+    );
   }
 
   cb(null, true);
@@ -661,9 +664,8 @@ const enforcePerFieldSizeLimits = (req, res, next) => {
 };
 
 // ─── Reusable Local File Cleanup Helper ───────────────────────────────────────
-// Safely deletes a list of local temp file paths. Used after Cloudinary upload
-// succeeds to free up disk space on the server.
-
+// Safely deletes a list of local temp file paths. Multer landing-pad files are
+// always removed once their bytes have been archived in private storage.
 const cleanupLocalFiles = (filePaths) => {
   filePaths.forEach(filePath => {
     try {
@@ -676,6 +678,31 @@ const cleanupLocalFiles = (filePaths) => {
     }
   });
 };
+
+// ─── Raw Upload Archival Helper ───────────────────────────────────────────────
+// Copies an uploaded file that isn't transformed by the PDF/image pipelines
+// (e.g. a PPT/PPTX idea deck, or an image that failed re-encoding) verbatim
+// into private storage as a `document`. The registration stores the relative
+// storage key; File docs are persisted AFTER the registration is saved (the
+// ownerRef is the registration _id), mirroring the image/PDF metadata step.
+async function archiveRawUpload({ filePath, originalName, mimeType, field }) {
+  const data = await fs.promises.readFile(filePath);
+  const ext = path.extname(originalName || '').toLowerCase().replace(/^\./, '') || 'bin';
+  const storageKey = storageService.generateStorageKey('documents', ext);
+  await storageService.saveFile(storageKey, data);
+  return {
+    kind: 'document',
+    field,
+    category: 'document',
+    storageKey,
+    originalName: storageService.safeOriginalName(originalName),
+    mimeType: mimeType || 'application/octet-stream',
+    size: data.length,
+    sha256: storageService.computeChecksum(data),
+    processed: { status: 'done', tool: 'archive' },
+    uploadedBy: { type: 'public' },
+  };
+}
 
 // MongoDB Registration Schema
 const registrationSchema = new mongoose.Schema({
@@ -742,6 +769,51 @@ registrationSchema.index({ expireAt: 1 }, { expireAfterSeconds: 0 });
 
 const Registration = mongoose.model('Registration', registrationSchema);
 
+// ─── Orphaned File Sweeper ────────────────────────────────────────────────────
+//
+// MongoDB's TTL index removes expired pending registration *documents*, but it
+// cannot reach the File docs / bytes that belong to them. This sweeper runs
+// periodically and reaps File artifacts whose owner registration no longer
+// exists, so the storage tree never leaks. A grace period prevents reaping
+// files whose registration is still being written by an in-flight request.
+const FILE_ORPHAN_GRACE_MS = 24 * 60 * 60 * 1000; // 24h safety window
+const FILE_ORPHAN_MAX_BATCH = 2000;
+
+async function sweepOrphanedFiles() {
+  try {
+    const graceDate = new Date(Date.now() - FILE_ORPHAN_GRACE_MS);
+    const candidates = await File.find({
+      ownerType: 'registration',
+      ownerRef: { $exists: true },
+      createdAt: { $lte: graceDate },
+    })
+      .select('_id ownerRef')
+      .limit(FILE_ORPHAN_MAX_BATCH)
+      .lean();
+    if (!candidates.length) return;
+
+    const ownerIds = [...new Set(candidates.map((d) => String(d.ownerRef)))];
+    const owners = await Registration.find({ _id: { $in: ownerIds } }).select('_id').lean();
+    const alive = new Set(owners.map((o) => String(o._id)));
+
+    const orphanOwners = [
+      ...new Set(candidates.filter((d) => !alive.has(String(d.ownerRef))).map((d) => d.ownerRef)),
+    ];
+    if (!orphanOwners.length) return;
+
+    const result = await fileService.deleteFilesForOwners(orphanOwners, { ownerType: 'registration' });
+    console.log(
+      `[FileSweeper] Reaped ${result.deletedDocs} file(s) for ${orphanOwners.length} orphaned owner(s).`
+    );
+  } catch (err) {
+    console.error('[FileSweeper] Error during orphaned file sweep:', err.message);
+  }
+}
+
+// First pass shortly after boot, then every 6 hours.
+setTimeout(sweepOrphanedFiles, 60 * 1000);
+setInterval(sweepOrphanedFiles, 6 * 60 * 60 * 1000);
+
 // ─── Registration Rate Limiter (Campus NAT-Friendly) ─────────────────────────
 //
 // Problem: The old limit of 10 req/hour per IP would block an entire university
@@ -792,6 +864,9 @@ app.post('/api/register', registrationLimiter, uploadConcurrencyGuard, upload.fi
   { name: 'paymentScreenshot', maxCount: 1 }
 ]), enforcePerFieldSizeLimits, async (req, res) => {
   const localFilePaths = [];
+  const imageResults = [];
+  const pdfResults = [];
+  const archivedResults = []; // storageKeys from archiveRawUpload (raw archives)
   try {
     const {
       teamName,
@@ -808,18 +883,22 @@ app.post('/api/register', registrationLimiter, uploadConcurrencyGuard, upload.fi
       transactionId
     } = req.body;
 
-    // Check files
-    if (!req.files || !req.files['ideaPpt'] || !req.files['consentLetter'] || !req.files['paymentScreenshot']) {
-      return res.status(400).json({ error: 'Idea PPT, Consent Letter, and Payment Screenshot are all required.' });
+    // Keep track of local files to clean up later (including partial uploads)
+    const ideaPptFile = req.files?.['ideaPpt']?.[0];
+    const consentLetterFile = req.files?.['consentLetter']?.[0];
+    const paymentScreenshotFile = req.files?.['paymentScreenshot']?.[0];
+
+    for (const fieldFiles of Object.values(req.files || {})) {
+      if (Array.isArray(fieldFiles)) {
+        for (const f of fieldFiles) localFilePaths.push(f.path);
+      }
     }
 
-    // Keep track of local files to clean up later
-    const ideaPptFile = req.files['ideaPpt'][0];
-    const consentLetterFile = req.files['consentLetter'][0];
-    const paymentScreenshotFile = req.files['paymentScreenshot'][0];
-    localFilePaths.push(ideaPptFile.path);
-    localFilePaths.push(consentLetterFile.path);
-    localFilePaths.push(paymentScreenshotFile.path);
+    // Check files
+    if (!ideaPptFile || !consentLetterFile || !paymentScreenshotFile) {
+      cleanupLocalFiles(localFilePaths);
+      return res.status(400).json({ error: 'Idea PPT, Consent Letter, and Payment Screenshot are all required.' });
+    }
 
     // Parse members from string
     let parsedMembers = [];
@@ -827,6 +906,7 @@ app.post('/api/register', registrationLimiter, uploadConcurrencyGuard, upload.fi
       try {
         parsedMembers = typeof members === 'string' ? JSON.parse(members) : members;
       } catch (err) {
+        cleanupLocalFiles(localFilePaths);
         return res.status(400).json({ error: 'Invalid members format.' });
       }
     }
@@ -841,6 +921,7 @@ app.post('/api/register', registrationLimiter, uploadConcurrencyGuard, upload.fi
     });
 
     if (existingCompleted) {
+      cleanupLocalFiles(localFilePaths);
       return res.status(200).json({ 
         success: true,
         alreadyRegistered: true,
@@ -850,35 +931,108 @@ app.post('/api/register', registrationLimiter, uploadConcurrencyGuard, upload.fi
       });
     }
 
-    let ideaPptUrl = '';
-    let consentLetterUrl = '';
-    let paymentScreenshotUrl = '';
+    // ─── Local storage pipeline ───────────────────────────────────────────────
+    // Every accepted upload is archived in private storage (UPLOAD_DIR):
+    //  - PDF fields run through the qpdf validation/optimization pipeline.
+    //  - Raster images are re-encoded to WebP via sharp.
+    //  - Anything else (PPT/PPTX decks, unprocessable images) is archived
+    //    verbatim as a `document`.
+    // The registration stores the RELATIVE storage key, never an external URL.
+    let ideaPptKey = '';
+    let consentLetterKey = '';
+    let paymentScreenshotKey = '';
 
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
-
-    // PHASE 2: Upload all three files to Cloudinary in parallel via Promise.all
-    // (previously they were uploaded one-after-another serially, tripling latency)
-    if (isCloudinaryConfigured) {
-      console.log('[Upload] Uploading 3 files to Cloudinary in parallel...');
+    // PHASE 2.6: Process PDF fields (ideaPpt / consentLetter) through the qpdf
+    // pipeline. Structurally valid PDFs are validated, losslessly optimized,
+    // and archived in private object storage; the registration stores the
+    // RELATIVE storage key (e.g. "pdfs/2026/08/<hex>.pdf") instead of a URL.
+    // A corrupt or invalid PDF rejects the entire registration (400); a valid
+    // PDF that fails only the optimization step keeps its original bytes and
+    // is marked processed.failed — registration still succeeds.
+    const pdfFields = [
+      { field: 'ideaPpt', file: ideaPptFile },
+      { field: 'consentLetter', file: consentLetterFile },
+    ];
+    for (const { field, file } of pdfFields) {
+      const isPdf = /^application\/pdf$/i.test(file.mimetype || '');
+      if (!isPdf) continue;
       try {
-        [ideaPptUrl, consentLetterUrl, paymentScreenshotUrl] = await Promise.all([
-          uploadToCloudinary(ideaPptFile.path, 'sih_ppt'),
-          uploadToCloudinary(consentLetterFile.path, 'sih_consent'),
-          uploadToCloudinary(paymentScreenshotFile.path, 'sih_payment'),
-        ]);
-        console.log('[Upload] All files uploaded successfully to Cloudinary.');
-      } catch (uploadErr) {
-        console.error('[Upload] Cloudinary upload failed, falling back to local URLs:', uploadErr.message);
-        // Fallback: serve from local disk (single-instance dev/staging only)
-        ideaPptUrl = `${baseUrl}/uploads/${ideaPptFile.filename}`;
-        consentLetterUrl = `${baseUrl}/uploads/${consentLetterFile.filename}`;
-        paymentScreenshotUrl = `${baseUrl}/uploads/${paymentScreenshotFile.filename}`;
+        const result = await pdfProcessor.processPdfFile({
+          filePath: file.path,
+          originalName: file.originalname,
+          field,
+        });
+        pdfResults.push(result);
+        console.log(`[PdfProcessor] "${field}" -> ${result.storageKey} (${result.size} bytes, sha256=${result.sha256.slice(0, 8)})`);
+        if (field === 'ideaPpt') ideaPptKey = result.storageKey;
+        else if (field === 'consentLetter') consentLetterKey = result.storageKey;
+      } catch (pdfErr) {
+        console.error(`[PdfProcessor] "${field}" rejected: ${pdfErr.message}`);
+        throw pdfErr;
       }
-    } else {
-      // Local fallback URLs (development / Cloudinary not configured)
-      ideaPptUrl = `${baseUrl}/uploads/${ideaPptFile.filename}`;
-      consentLetterUrl = `${baseUrl}/uploads/${consentLetterFile.filename}`;
-      paymentScreenshotUrl = `${baseUrl}/uploads/${paymentScreenshotFile.filename}`;
+    }
+
+    // PHASE 2.5: Normalize raster images (consent letter + payment screenshot)
+    // into WebP and archive a durable copy in private object storage. If an
+    // image cannot be processed, the raw bytes are archived verbatim as a
+    // document so the admin can still review it — registration is never
+    // blocked by this step.
+    const rasterImageFields = [
+      { field: 'consentLetter', file: consentLetterFile, maxOutputBytes: 2 * 1024 * 1024 },
+      { field: 'paymentScreenshot', file: paymentScreenshotFile, maxOutputBytes: 2 * 1024 * 1024 },
+    ];
+    for (const { field, file, maxOutputBytes } of rasterImageFields) {
+      const isRaster = /^image\/(jpe?g|png|webp|gif|bmp|tiff?)$/i.test(file.mimetype || '');
+      if (!isRaster) continue;
+      let result = null;
+      try {
+        result = await imageProcessor.processImageFile({
+          filePath: file.path,
+          originalName: file.originalname,
+          field,
+          maxOutputBytes,
+        });
+        imageResults.push(result);
+        console.log(`[ImageProcessor] "${field}" -> ${result.storageKey} (${result.width}x${result.height}, ${result.size} bytes)`);
+      } catch (imgErr) {
+        console.warn(`[ImageProcessor] Processing failed for "${field}", archiving raw: ${imgErr.message}`);
+      }
+      let key = result ? result.storageKey : null;
+      if (!key) {
+        const archived = await archiveRawUpload({
+          filePath: file.path,
+          originalName: file.originalname,
+          mimeType: file.mimetype,
+          field,
+        });
+        archivedResults.push(archived);
+        key = archived.storageKey;
+      }
+      if (field === 'consentLetter') consentLetterKey = key;
+      else paymentScreenshotKey = key;
+    }
+
+    // Finalize: every field must map to a storage key. Anything not handled by
+    // the PDF/image pipelines (PPT/PPTX decks, edge-case MIME types) is
+    // archived verbatim under documents/.
+    const rawUploadFields = [
+      { field: 'ideaPpt', file: ideaPptFile, current: ideaPptKey },
+      { field: 'consentLetter', file: consentLetterFile, current: consentLetterKey },
+      { field: 'paymentScreenshot', file: paymentScreenshotFile, current: paymentScreenshotKey },
+    ];
+    for (const { field, file, current } of rawUploadFields) {
+      if (current) continue;
+      const archived = await archiveRawUpload({
+        filePath: file.path,
+        originalName: file.originalname,
+        mimeType: file.mimetype,
+        field,
+      });
+      archivedResults.push(archived);
+      const key = archived.storageKey;
+      if (field === 'ideaPpt') ideaPptKey = key;
+      else if (field === 'consentLetter') consentLetterKey = key;
+      else paymentScreenshotKey = key;
     }
 
     // 2. Order Locking / Reuse existing pending registration if it exists
@@ -899,9 +1053,9 @@ app.post('/api/register', registrationLimiter, uploadConcurrencyGuard, upload.fi
       existingPending.psTitle = psTitle;
       existingPending.isIeeeCsiMember = isIeeeCsiMember;
       existingPending.transactionId = transactionId;
-      existingPending.ideaPpt = ideaPptUrl;
-      existingPending.consentLetter = consentLetterUrl;
-      existingPending.paymentScreenshot = paymentScreenshotUrl;
+      existingPending.ideaPpt = ideaPptKey;
+      existingPending.consentLetter = consentLetterKey;
+      existingPending.paymentScreenshot = paymentScreenshotKey;
       existingPending.amountPaid = isIeeeCsiMember === 'Yes' ? 1200 : 1500;
       existingPending.paymentStatus = 'completed';
       existingPending.verificationStatus = 'pending';
@@ -914,13 +1068,23 @@ app.post('/api/register', registrationLimiter, uploadConcurrencyGuard, upload.fi
 
       await existingPending.save();
 
+      // Persist normalized metadata for the new files and supersede the old
+      // ones. Ordering: new bytes are already saved -> the registration is
+      // updated above -> new File docs are inserted -> old File docs are
+      // removed -> old bytes are deleted last. A failure here keeps the old
+      // files and removes the newly-created files (see utils/fileService.js).
+      await fileService.syncRegistrationFiles(existingPending._id, {
+        imageResults,
+        pdfResults,
+        archivedResults,
+      });
+
       // Send Confirmation Email
       queueConfirmationEmail(leaderEmailClean, leaderName, teamName, existingPending.registrationId);
 
-      // PHASE 2: Use shared cleanupLocalFiles helper
-      if (isCloudinaryConfigured && ideaPptUrl.includes('cloudinary.com')) {
-        cleanupLocalFiles(localFilePaths);
-      }
+      // PHASE 2: Use shared cleanupLocalFiles helper — all bytes are now
+      // archived in private storage, so the multer temp files can always go.
+      cleanupLocalFiles(localFilePaths);
 
       return res.status(200).json({
         success: true,
@@ -950,9 +1114,9 @@ app.post('/api/register', registrationLimiter, uploadConcurrencyGuard, upload.fi
       psTitle,
       isIeeeCsiMember,
       transactionId,
-      ideaPpt: ideaPptUrl,
-      consentLetter: consentLetterUrl,
-      paymentScreenshot: paymentScreenshotUrl,
+      ideaPpt: ideaPptKey,
+      consentLetter: consentLetterKey,
+      paymentScreenshot: paymentScreenshotKey,
       paymentStatus: 'completed',
       verificationStatus: 'pending',
       amountPaid: amountInINR,
@@ -961,13 +1125,19 @@ app.post('/api/register', registrationLimiter, uploadConcurrencyGuard, upload.fi
 
     await newRegistration.save();
 
+    // Persist normalized metadata for the new files (images, PDFs, archives).
+    await fileService.syncRegistrationFiles(newRegistration._id, {
+      imageResults,
+      pdfResults,
+      archivedResults,
+    });
+
     // Send Confirmation Email
     queueConfirmationEmail(leaderEmail, leaderName, teamName, registrationId);
 
-    // PHASE 2: Use shared cleanupLocalFiles helper
-    if (isCloudinaryConfigured && ideaPptUrl.includes('cloudinary.com')) {
-      cleanupLocalFiles(localFilePaths);
-    }
+    // PHASE 2: Use shared cleanupLocalFiles helper — all bytes are now
+    // archived in private storage, so the multer temp files can always go.
+    cleanupLocalFiles(localFilePaths);
 
     // Return success response to client
     res.status(201).json({
@@ -983,9 +1153,17 @@ app.post('/api/register', registrationLimiter, uploadConcurrencyGuard, upload.fi
     // PHASE 2: Always clean up any temp files that landed on disk before the error
     console.error('[Registration] Error:', error.message || error);
     cleanupLocalFiles(localFilePaths);
+    // Remove any bytes/File docs that were processed for a registration that
+    // never committed. Old files belonging to a reused pending registration are
+    // untouched here — syncRegistrationFiles only supersedes them after the
+    // new metadata is committed.
+    await fileService.cleanupFileResults({ imageResults, pdfResults, archivedResults });
     // Multer-specific errors (e.g. file too large, wrong type)
     if (error.code === 'LIMIT_FILE_SIZE') {
       return res.status(413).json({ error: 'One or more uploaded files exceed the allowed size limit.' });
+    }
+    if (error instanceof pdfProcessor.PdfValidationError) {
+      return res.status(400).json({ error: error.message });
     }
     res.status(500).json({ error: error.message || 'Server error occurred during registration.' });
   }
@@ -1301,16 +1479,32 @@ app.post('/api/registrations/:registrationId/refund', verifyAdminKey, async (req
   }
 });
 
-// Admin endpoint: delete all pending (unpaid) registrations — clears stale test orders
+// Admin endpoint: delete all pending (unpaid) registrations — clears stale test
+// orders. Their associated files are deleted too (scoped strictly to the
+// deleted records' ownerRefs, so no other record's file can be removed).
 app.delete('/api/registrations/pending-cleanup', verifyAdminKey, async (req, res) => {
   try {
+    const pending = await Registration.find({ paymentStatus: 'pending' }).select('_id').lean();
+    const ownerRefs = pending.map((r) => r._id);
+
     const result = await Registration.deleteMany({ paymentStatus: 'pending' });
-    console.log(`[ADMIN] Deleted ${result.deletedCount} stale pending registrations.`);
-    logPaymentEvent('ADMIN_PENDING_CLEANUP', { payload: { deletedCount: result.deletedCount } });
+
+    const files = ownerRefs.length
+      ? await fileService.deleteFilesForOwners(ownerRefs, { ownerType: 'registration' })
+      : { deletedDocs: 0, orphanedBytes: 0, orphanedDocs: 0 };
+
+    console.log(
+      `[ADMIN] Deleted ${result.deletedCount} stale pending registrations and ` +
+      `${files.deletedDocs} associated file(s).`
+    );
+    logPaymentEvent('ADMIN_PENDING_CLEANUP', {
+      payload: { deletedCount: result.deletedCount, filesDeleted: files.deletedDocs }
+    });
     res.status(200).json({
       success: true,
-      message: `Deleted ${result.deletedCount} stale pending registrations.`,
-      deletedCount: result.deletedCount
+      message: `Deleted ${result.deletedCount} stale pending registrations and ${files.deletedDocs} associated file(s).`,
+      deletedCount: result.deletedCount,
+      filesDeleted: files.deletedDocs
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

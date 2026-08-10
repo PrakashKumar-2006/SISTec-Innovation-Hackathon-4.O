@@ -28,12 +28,12 @@ export default function GeneralSettings({ data = {}, onChange }) {
           />
         </FormFieldWrapper>
 
-        <FormFieldWrapper label="Logo URL (Cloudinary Asset)">
+        <FormFieldWrapper label="Logo URL">
           <input
             type="url"
             value={data.logoUrl || ''}
             onChange={(e) => onChange('logoUrl', e.target.value)}
-            placeholder="https://res.cloudinary.com/..."
+            placeholder="https://example.com/logo.png"
             className="w-full px-4 py-2 bg-brand-dark border border-brand-purple/30 rounded-md text-brand-text focus:outline-none focus:border-brand-gold transition-colors"
           />
         </FormFieldWrapper>
